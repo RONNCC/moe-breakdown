@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "moe-bias-shapley"
+version = "0.1.0"
+description = "Expert-Shapley bias attribution for MoE and dense LLMs"
+requires-python = ">=3.10"
+dependencies = [
+  "pyyaml>=6.0",
+  "numpy>=1.24",
+  "scipy>=1.10",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

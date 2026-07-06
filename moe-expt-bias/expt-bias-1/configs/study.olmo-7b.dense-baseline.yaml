@@ -1,0 +1,38 @@
+# Experiment 2 (RQ2 / C4) — Primary MoE-vs-dense matched pair: OLMo-7B (dense)
+#
+# Same family/data as OLMoE-1B-7B (study.olmoe.concentration.yaml); only the
+# architecture differs (dense vs sparse-MoE). This is the cleanest
+# matched-capability comparison in the study design (Sec 2.1/2.6).
+#
+# Uses the dense_loo (leave-one-out layer ablation) attribution method since
+# there is no small "active expert set" to exploit — see
+# src/moe_bias_shapley/shapley.py::compute_dense_layer_contrast. Flagged as an
+# approximation, not exact Shapley.
+
+study_name: exp2-dense-baseline-olmo-7b
+
+model_id: allenai/OLMo-7B-hf
+model_family: olmo
+trust_remote_code: false
+torch_dtype: bfloat16
+device_map: auto
+
+benchmarks: [stereoset, bbq]
+shapley_method: dense_loo
+max_prompts: 150   # dense_loo is O(n_layers) forward passes per pair — keep smaller
+seed: 42
+
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 06:00:00
+  cpus_per_task: 8
+  gpus_per_node: 1
+  gpu_type: a100
+  use_gres: true
+  mem: 64G
+  modules: [gcc/12.3.0, python/3.11, cuda/12.1.1]
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown
+  uv_env_dir: /storage/ice1/0/2/sghose7/moe-bias-shapley-venv

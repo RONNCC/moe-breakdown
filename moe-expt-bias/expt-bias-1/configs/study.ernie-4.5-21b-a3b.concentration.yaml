@@ -1,0 +1,37 @@
+# Experiment 1 (RQ1 / C1) — Concentration vs sparsity ladder, point 4/4: ERNIE-4.5-21B-A3B
+#
+# Densest MoE on the ladder (higher N_A/N than Qwen3/OLMoE). Requires
+# trust_remote_code (ERNIE-4.5 custom modeling code) and 4-bit loading.
+#
+# NOTE: verify the exact HF repo id before submitting — Baidu has published
+# several ERNIE-4.5 variants (Base / PT / Chat). Update model_id below to
+# match whichever checkpoint is available at run time.
+
+study_name: exp1-concentration-ernie-4.5-21b-a3b
+
+model_id: baidu/ERNIE-4.5-21B-A3B-PT
+model_family: ernie
+trust_remote_code: true
+torch_dtype: bfloat16
+load_in_4bit: false
+device_map: auto
+
+benchmarks: [stereoset, bbq]
+shapley_method: routing_contrast
+max_prompts: 400
+seed: 42
+
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 06:00:00
+  cpus_per_task: 8
+  gpus_per_node: 2
+  gpu_type: a100
+  use_gres: true
+  mem: 96G
+  modules: [gcc/12.3.0, python/3.11, cuda/12.1.1]
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown
+  uv_env_dir: /storage/ice1/0/2/sghose7/moe-bias-shapley-venv

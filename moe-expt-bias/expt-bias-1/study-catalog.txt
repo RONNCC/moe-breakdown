@@ -1,0 +1,97 @@
+================================================================================
+EXPT-BIAS-1: Is Bias in MoE Concentrated and More Localizable than in Dense LLMs?
+Last updated: 2026-07-06
+================================================================================
+
+OVERVIEW
+--------
+Post-hoc bias-attribution study via expert-level Shapley values. Implements
+the study design in ../study_design_C1_C4.md (claims C1 + C4, extensions
+C2/C3). Computes a bias-Shapley vector phi over MoE experts (or, for dense
+models, transformer FFN layers via leave-one-out approximation), then derives
+concentration/localizability metrics (normalized entropy H, Gini, top-k mass
+fraction) from phi.
+
+Package: src/moe_bias_shapley/
+  config.py      — BiasStudyConfig + SlurmConfig, YAML loading
+  benchmarks.py  — StereoSet / BBQ loaders -> PromptPair (stereo vs anti-stereo)
+  hooks.py       — generic MoE router-hook + dense FFN-layer discovery
+  shapley.py     — routing_contrast (fast/approx), exact ablation Shapley
+                   (2^K over active experts), dense_loo (leave-one-out)
+  metrics.py     — normalized entropy, Gini, top-fraction, localizability ratio
+  reporting.py   — JSON + .npy result serialization
+
+Driver: scripts/run_bias_study.py (single study run)
+Submit: scripts/submit_slurm_study.py --config configs/<study>.yaml
+Env:    scripts/bootstrap_uv_env.sh (uv venv + torch/transformers/datasets)
+Sbatch: slurm/run_bias_study.sbatch
+
+NOTE ON CLUSTER: see ../../moe-routing/RUNNING-ICE.md — ICE nodes are
+temperamental (NVSHMEM/IB quirks, node exclusions). This study only needs
+single-GPU, single-node jobs (no DeepEP/NVSHMEM), so it avoids most of those
+pitfalls, but still follow the module/venv/cache conventions there
+(scratch repo path, $TMPDIR caches, uv envs on /storage or $TMPDIR).
+
+================================================================================
+STUDY INDEX
+================================================================================
+
+Experiment 1 — Concentration vs sparsity ladder (RQ1 / C1)
+  configs/study.olmoe.concentration.yaml            OLMoE-1B-7B      (sparsest, top-1)
+  configs/study.qwen3-30b-a3b.concentration.yaml     Qwen3-30B-A3B    (sparse, top-8/128)
+  configs/study.mixtral-8x7b.concentration.yaml      Mixtral-8x7B     (top-2/8)
+  configs/study.ernie-4.5-21b-a3b.concentration.yaml ERNIE-4.5-21B-A3B (densest MoE)
+  Expected (H1): entropy H monotonically decreases (concentration increases)
+  as N_A/N decreases across this ladder.
+
+Experiment 2 — MoE vs dense localizability (RQ2 / C4)
+  configs/study.olmo-7b.dense-baseline.yaml          OLMo-7B (dense)  — primary matched
+                                                       pair vs OLMoE-1B-7B (same family/data)
+  configs/study.qwen3-8b-dense.dense-baseline.yaml   Qwen3-8B (dense) — secondary cross-check
+                                                       vs Qwen3-30B-A3B
+  Expected (H2): H_MoE < H_dense (localizability ratio LR > 1).
+  Dense attribution uses leave-one-out (LOO) layer ablation — an approximation,
+  not exact Shapley (see shapley.py::compute_dense_layer_contrast docstring).
+
+Experiment 3 — Collectivity check (C2-lite)
+  Not yet a standalone config. Reuses Experiment 1 configs with
+  shapley_method: exact on a small ablation_layer_indices subset to get
+  Shapley interaction values (marginal vs synergy). Run manually via
+  scripts/run_bias_study.py + shapley.compute_exact_shapley_for_pair on a
+  prompt subsample before scaling up.
+
+Experiment 4 — Independent cross-check (robustness)
+  Validates Shapley rankings against expert-ablation disparity drop. Use
+  shapley_method: exact on the top-phi experts flagged by Experiment 1/2 runs;
+  compare the ablation curve against the Shapley ranking. No standalone
+  config yet — depends on Experiment 1/2 output (top_players in result.json).
+
+Experiment 5 — Demographic specificity (RQ3 / C3)
+  configs/study.olmoe.demographic.yaml               OLMoE-1B-7B, per-cohort phi split
+  Produces per_group_phi (result.json: per_group_concentration_metrics) keyed
+  by StereoSet `target` (demographic group). Downstream: compute
+  Jensen-Shannon divergence across cohorts' phi distributions.
+
+================================================================================
+RUNNING
+================================================================================
+
+Dry-run (no GPU, no model download — validates config parsing):
+  cd moe-expt-bias/expt-bias-1
+  python3 scripts/run_bias_study.py --config configs/study.olmoe.concentration.yaml --dry-run
+
+Submit to Slurm from the ICE login node:
+  cd moe-expt-bias/expt-bias-1
+  python3 scripts/submit_slurm_study.py --config configs/study.olmoe.concentration.yaml
+  python3 scripts/submit_slurm_study.py --config configs/study.qwen3-30b-a3b.concentration.yaml
+  python3 scripts/submit_slurm_study.py --config configs/study.mixtral-8x7b.concentration.yaml
+  python3 scripts/submit_slurm_study.py --config configs/study.ernie-4.5-21b-a3b.concentration.yaml
+  python3 scripts/submit_slurm_study.py --config configs/study.olmo-7b.dense-baseline.yaml
+  python3 scripts/submit_slurm_study.py --config configs/study.qwen3-8b-dense.dense-baseline.yaml
+  python3 scripts/submit_slurm_study.py --config configs/study.olmoe.demographic.yaml
+
+Watch:
+  squeue --me
+  tail -f ~/scratch/moe-breakdown-bias-runs/expt-bias-1/<study>/slurm-logs/*.out
+
+================================================================================

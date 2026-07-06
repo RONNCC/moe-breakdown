@@ -1,0 +1,36 @@
+# Experiment 1 (RQ1 / C1) — Concentration vs sparsity ladder, point 3/4: Mixtral-8x7B
+#
+# "Dense-ish" MoE: top-2 routing over 8 experts (N_A/N = 0.25).
+# ~47B total params in bf16 (~94GB) — request 2 A100 GPUs with device_map=auto
+# to shard across GPUs instead of bitsandbytes 4-bit quantization (the
+# installed torch==2.4.0 lacks nn.Module.set_submodule, which the bnb
+# quantizer integration in current transformers requires).
+
+study_name: exp1-concentration-mixtral-8x7b
+
+model_id: mistralai/Mixtral-8x7B-v0.1
+model_family: mixtral
+trust_remote_code: false
+torch_dtype: bfloat16
+load_in_4bit: false
+device_map: auto
+
+benchmarks: [stereoset, bbq]
+shapley_method: routing_contrast
+max_prompts: 400
+seed: 42
+
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 06:00:00
+  cpus_per_task: 8
+  gpus_per_node: 2
+  gpu_type: a100
+  use_gres: true
+  mem: 96G
+  modules: [gcc/12.3.0, python/3.11, cuda/12.1.1]
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown
+  uv_env_dir: /storage/ice1/0/2/sghose7/moe-bias-shapley-venv
