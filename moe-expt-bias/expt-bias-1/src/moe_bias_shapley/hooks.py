@@ -1,12 +1,14 @@
 """Router / expert hook management for MoE models (and FFN-layer hooks for dense).
 
 We rely on the fact that current HF implementations of MoE blocks (OLMoE,
-Mixtral, Phi-3.5-MoE) all expose a `.gate` (router linear layer)
-and a `.experts` (ModuleList of per-expert FFNs) on a "SparseMoeBlock"-style
-submodule. Rather than hardcoding per-architecture module paths (fragile
-across transformers versions), we auto-discover these blocks generically by
-inspecting submodule attributes. This keeps one hooking implementation
-working across the whole model ladder in the study design.
+Mixtral, Phi-3.5-MoE) all expose a router submodule (`.gate` for Mixtral/OLMoE,
+`.router` for Phimoe/Phi-3.5-MoE — see `_get_gate`) and a `.experts` (either an
+`nn.ModuleList` of per-expert FFNs, or a fused single-module implementation
+like OlmoeExperts/PhimoeExperts) on a "SparseMoeBlock"-style submodule. Rather
+than hardcoding per-architecture module paths (fragile across transformers
+versions), we auto-discover these blocks generically by inspecting submodule
+attributes. This keeps one hooking implementation working across the whole
+model ladder in the study design.
 
 For dense models (no MoE blocks found), we fall back to per-transformer-layer
 MLP modules as the "player" set for a leave-one-out layer-ablation
@@ -52,7 +54,15 @@ class RouterCaptureState:
 
 
 def _looks_like_moe_block(module: Any) -> bool:
-    return hasattr(module, "gate") and hasattr(module, "experts")
+    return (hasattr(module, "gate") or hasattr(module, "router")) and hasattr(module, "experts")
+
+
+def _get_gate(module: Any) -> Any:
+    """Return the router/gate submodule, whichever attribute name this
+    architecture uses. Most HF SparseMoeBlock impls use `.gate` (Mixtral,
+    OLMoE), but Phimoe (Phi-3.5-MoE) names it `.router` instead."""
+    gate = getattr(module, "gate", None)
+    return gate if gate is not None else getattr(module, "router", None)
 
 
 def _resolve_num_experts(module: Any) -> int:
@@ -69,7 +79,7 @@ def _resolve_num_experts(module: Any) -> int:
     attributes), then fall back to the block itself, then to Linear shape or
     ModuleList length.
     """
-    gate = getattr(module, "gate", None)
+    gate = _get_gate(module)
     experts = getattr(module, "experts", None)
     for attr in ("num_experts", "n_routed_experts", "num_local_experts"):
         for owner in (gate, experts, module):
@@ -92,7 +102,7 @@ def _resolve_topk(module: Any) -> int:
     """Determine top-k routing count, checking gate/experts submodules first
     (see `_resolve_num_experts` docstring for why the block itself often
     lacks this attribute in newer architectures like OLMoE)."""
-    gate = getattr(module, "gate", None)
+    gate = _get_gate(module)
     experts = getattr(module, "experts", None)
     for attr in ("top_k", "topk", "num_experts_per_tok"):
         for owner in (gate, experts, module):
@@ -114,7 +124,7 @@ def discover_moe_layers(model: Any) -> List[MoeLayerHandle]:
                 layer_index=layer_idx,
                 module_name=name,
                 module=module,
-                gate=module.gate,
+                gate=_get_gate(module),
                 experts=module.experts,
                 num_experts=num_experts,
                 topk=int(topk),
