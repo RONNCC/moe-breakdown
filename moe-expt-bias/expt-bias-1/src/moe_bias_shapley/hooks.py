@@ -104,7 +104,7 @@ def _resolve_topk(module: Any) -> int:
     lacks this attribute in newer architectures like OLMoE)."""
     gate = _get_gate(module)
     experts = getattr(module, "experts", None)
-    for attr in ("top_k", "topk", "num_experts_per_tok"):
+    for attr in ("top_k", "topk", "num_experts_per_tok", "moe_top_k", "num_experts_per_token"):
         for owner in (gate, experts, module):
             val = getattr(owner, attr, None)
             if isinstance(val, int) and val > 0:
