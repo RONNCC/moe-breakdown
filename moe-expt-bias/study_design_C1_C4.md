@@ -96,6 +96,8 @@ Compute H and top-fraction per model across StereoSet+BBQ+WinoGender. **Expected
 ### 3.2 Experiment 2 — MoE vs dense localizability (RQ2 / C4)
 Compute H for OLMoE-1B-7B vs OLMo-7B (and Phi-3.5-MoE vs Phi-3.5-dense). **Expected (H2):** H_MoE < H_dense ⇒ LR > 1. *Figure 3.*
 
+**Compute note (dense LOO):** `dense_loo` requires 2×N_layers + 2 forward passes per pair (32-layer model → 66 passes/pair). At ~0.3 s/pass on 1×A100, the per-job ceiling is **~900 pairs in 5 hr** (ICE GPU-min QOS: 1×A100×5hr = 300 GPU-min ✓). Scaling to more pairs requires horizontal sharding: `submit_slurm_study.py --num-shards N` submits N independent 1-GPU jobs each processing a `pairs[i::N]` slice. Output files land as `result_shard{i}of{N}.json` in the same study directory and are merged post-hoc. The v1 reruns use N=2 (1800 pairs total for 7-8B models; 4000 for Phi-3.5-mini at ~0.1 s/pass). For comparison, `routing_contrast` costs only 2 passes/pair, so 5000 pairs on 1×A100 takes ~50 min.
+
 ### 3.3 Experiment 3 — Collectivity check (C2-lite, strengthens the story)
 Compute **Shapley interaction values** [cf. RealExp, SciDirect S0306457325000949] to split bias into *marginal* vs *synergy* components. Tests whether bias is an *expert-committee* (standing-committees) effect [arXiv 2601.03425]. If synergy dominates, debiasing must target committees, not single experts.
 

@@ -70,6 +70,17 @@ trying to install anything into the module python.
 Results land in `~/scratch/moe-breakdown-bias-runs/expt-bias-1/<study_name>/`
 (`result.json`, `phi.npy`, `player_ids.json`, `slurm-logs/`).
 
+**Dense LOO compute constraint.** `dense_loo` costs 2×N_layers + 2 forward
+passes per pair (32-layer models → 66 passes/pair). On 1×A100 at ~0.3s/pass
+for a 7-8B model, max throughput ≈ 900 pairs/5hr. This is a hard physical
+ceiling — it cannot be worked around by changing wall time without hitting the
+GPU-minute QOS cap (MaxTRESMinsPerJob = 960 GPU-min). The fix is **horizontal
+sharding across multiple 1-GPU jobs**: `submit_slurm_study.py --num-shards 2`
+submits two independent jobs that each process half the pair list
+(`pairs[i::n]`). Results land as `result_shard{i}of{n}.json` in the same study
+directory and are merged post-hoc by globbing. For comparison, `routing_contrast`
+costs only 2 passes/pair — 5000 pairs on 1×A100 takes ~50 min.
+
 ## Known gotchas / bugs already fixed (don't re-discover these)
 1. **StereoSet repo id**: use `McGill-NLP/stereoset` (bare `"stereoset"` no
    longer resolves under current `huggingface_hub`).
@@ -150,6 +161,19 @@ Full results and analysis in `RESEARCH-JOURNAL.md`.
 - Exp7 (proxy-vs-causal Spearman ρ on Mixtral, 20 pairs): job 5483995
 - Exp8 (same-mechanism MoE LOO — method confound resolution): OLMoE (5483997),
   Phi-3.5-MoE (5483998)
+
+**v1 full-dataset reruns — pending (submitted 2026-07-07):**
+- Exp1 v1 (routing_contrast, 5000 pairs): OLMoE (5484028), Phi-3.5-MoE
+  (5484029), Mixtral (5484030), DBRX (5484031), GPT-OSS-120B (5484032)
+- Exp2 v1 (dense LOO, sharded — 2 jobs each, max_prompts per config is the
+  total pool and each shard gets half via `pairs[i::2]`):
+  - OLMo-7B: 1800 pairs → shards 5484046/5484047
+  - Phi-3.5-mini: 4000 pairs → shards 5484048/5484049
+  - Llama-3.1-8B: 1800 pairs → shards 5484050/5484051
+  - Llama-2-7B: 1800 pairs → shards 5484052/5484053
+- Exp5 v1 (demographic, OLMoE, 5000 pairs): job 5484037
+- v1 output files: `result_shard0of2.json` + `result_shard1of2.json`; merge
+  by pooling `n_pairs` and concatenating `phi` arrays before recomputing metrics.
 
 **Key findings:** H0 strongly supported. H1/H2 rejected. DBRX H=0.919 ≈ Mixtral
 at same sparsity — architecture-agnostic diffuseness. See RESEARCH-JOURNAL.md.
