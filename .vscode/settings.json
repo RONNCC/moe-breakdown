@@ -1,0 +1,4 @@
+{
+  "latex-workshop.latex.outDir": "%DIR%/latex_build",
+  "latex-workshop.latex.clean.subfolder.enabled": true
+}

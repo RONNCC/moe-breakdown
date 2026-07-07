@@ -93,4 +93,4 @@ slurm:
   uv_env_dir: /storage/ice1/0/2/sghose7/moe-breakdown-deepep-venv
   deepep_wheel: /storage/ice1/0/2/sghose7/deepep-build/workspace/dist/deep_ep-2.0.0+d4f41e4-cp311-cp311-linux_x86_64.whl
   extra_sbatch_args:
-    - "--exclude=atl1-1-03-013-3-0,atl1-1-03-013-8-0,atl1-1-03-013-13-0,atl1-1-03-012-18-0,atl1-1-03-012-23-0"
+    - "--exclude=atl1-1-03-013-3-0,atl1-1-03-013-8-0,atl1-1-03-013-13-0,atl1-1-03-012-18-0,atl1-1-03-012-23-0,atl1-1-03-017-30-0,atl1-1-03-018-2-0"

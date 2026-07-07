@@ -66,8 +66,12 @@ fi
 
 # NVSHMEM: ibrc and ibdevx transports crash on PACE ICE (exit 139). Stubs at
 # /home/hice1/sghose7/nvshmem-stubs/ intercept dlopen with nvshmemt_init()→1 to
-# skip them. ibgda (IBGDA/GPU Direct RDMA) is NOT stubbed — gdrdrv and
-# nvidia_peermem are loaded on compute nodes, so ibgda can load for LL multi-node.
+# skip them. ibgda is NOT stubbed and is the real IB transport for LL multi-node.
+# NVSHMEM_IBGDA_NIC_HANDLER=cpu_host_memory: PACE ICE does not grant GPU-direct
+# NIC BAR access (cudaHostRegister IoMemory → error=800, nvidia_peermem non-functional).
+# In auto mode, NVSHMEM tries GPU handler, fails, but does NOT retry with CPU handler.
+# Forcing cpu_host_memory makes the CPU ring ibgda doorbells via libibverbs (QP creation
+# works fine). Slower than GPU-initiated IBGDA but functionally correct for all nodes.
 # NVSHMEM_QP_DEPTH: low_latency_dispatch asserts qp_depth >= (tokens_per_rank+1)*2;
 # 32768 covers our 8192-token worst-case with margin.
 # NVSHMEM_BOOTSTRAP=uid avoids PMI/MPI dependency in SLURM srun launches.
@@ -76,6 +80,7 @@ export LD_LIBRARY_PATH="${NVSHMEM_STUBS_DIR}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH
 export NVSHMEM_BOOTSTRAP="${NVSHMEM_BOOTSTRAP:-uid}"
 export NVSHMEM_QP_DEPTH="${NVSHMEM_QP_DEPTH:-32768}"
 export NVSHMEM_DEBUG="${NVSHMEM_DEBUG:-WARN}"
+export NVSHMEM_IBGDA_NIC_HANDLER="${NVSHMEM_IBGDA_NIC_HANDLER:-cpu_host_memory}"
 
 export PYTHONUNBUFFERED=1
 export OMP_NUM_THREADS="${OMP_NUM_THREADS:-$CPUS_PER_TASK}"

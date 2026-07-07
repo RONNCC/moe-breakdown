@@ -1,0 +1,65 @@
+# Minimal 2-node probe to validate NVSHMEM ibgda multi-node LL.
+# DeepEP LEGACY_NUM_MAX_NVL_PEERS=8: each node must provide exactly 8 GPUs so
+# rdma_rank partitions correctly (ranks 0-7 = node 0, ranks 8-15 = node 1).
+# ep=16 on 2 nodes × 8 GPUs/node is the minimum valid multi-node config.
+study_name: probe-ll-multinode
+all2all_backend: deepep_low_latency
+output_root: ~/scratch/moe-breakdown-runs/expt-3-deeptest
+
+hot_expert_count: 1
+routing_weight_mode: uniform
+apply_router_weight_on_input: false
+seed: 42
+warmup_iters: 3
+measure_iters: 5
+collect_buckets: false
+bucket_profile_iters: 0
+bucket_full_events: false
+
+sweep_modes:
+  - full_factorial
+
+baseline:
+  alpha: 1.0
+  tokens: 64
+  parallel:
+    tp: 1
+    ep: 16
+
+kernel_shapes:
+  - name: qwen3_30b_a3b_moe
+    hidden_size: 2048
+    intermediate_size: 768
+    num_experts: 128
+    topk: 8
+    dtype: bfloat16
+
+routing_modes:
+  - uniform
+
+tokens: [1, 64, 512, 4096, 8192]
+
+parallel_points:
+  - {tp: 1, ep: 16}
+
+transport_conditions:
+  - nvlink_default
+
+alphas: [1.0]
+
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 00:20:00
+  cpus_per_task: 8
+  gpus_per_node: 8
+  gpu_type: h200
+  use_gres: true
+  mem: 128G
+  min_nodes: 1
+  modules: [gcc/12.3.0, python/3.11, cuda/13.0.1]
+  workdir: /home/hice1/sghose7/moe-breakdown
+  uv_env_dir: /storage/ice1/0/2/sghose7/moe-breakdown-deepep-venv
+  deepep_wheel: /storage/ice1/0/2/sghose7/deepep-build/workspace/dist/deep_ep-2.0.0+d4f41e4-cp311-cp311-linux_x86_64.whl
+  extra_sbatch_args:
+    - "--exclude=atl1-1-03-013-3-0,atl1-1-03-013-8-0,atl1-1-03-013-13-0,atl1-1-03-012-18-0,atl1-1-03-012-23-0"
