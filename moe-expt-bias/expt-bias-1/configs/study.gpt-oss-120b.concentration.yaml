@@ -1,0 +1,42 @@
+# Experiment 1 extension — GPT-OSS-120B: fills N_A/N gap between OLMoE and Phi
+#
+# N_A/N = 4/128 ≈ 0.031 — sits between OLMoE (0.016) and Phi-3.5-MoE (0.125),
+# which is exactly the gap on the sparsity ladder most important for H1.
+# Architecture: 128 experts, top-4 per token, ~117B total, ~5.1B active/token.
+# License: Apache 2.0 (GT ICE policy: should be fine — US-origin, OpenAI).
+# HuggingFace: openai/gpt-oss-120b
+#
+# Memory: 117B × 2 bytes (bf16) ≈ 234 GB → 3× A100-80GB is tight; 4× is safe.
+# device_map=auto will shard across all 4 GPUs.
+#
+# NOTE: If hooks.py fails to discover MoE layers (the generic detector checks
+# for .gate/.router + .experts attributes), file a bug with the actual module
+# attribute names from `model.named_modules()` and update _looks_like_moe_block.
+
+study_name: exp1-concentration-gpt-oss-120b
+
+model_id: openai/gpt-oss-120b
+model_family: gpt-oss
+trust_remote_code: false
+torch_dtype: bfloat16
+load_in_4bit: false
+device_map: auto
+
+benchmarks: [stereoset, bbq, winogender]
+shapley_method: routing_contrast
+max_prompts: 400
+seed: 42
+
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 08:00:00
+  cpus_per_task: 16
+  gpus_per_node: 4
+  gpu_type: a100
+  use_gres: true
+  mem: 200G
+  modules: [gcc/12.3.0, python/3.11, cuda/12.1.1]
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown

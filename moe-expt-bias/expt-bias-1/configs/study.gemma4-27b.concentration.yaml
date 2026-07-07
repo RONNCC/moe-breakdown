@@ -1,0 +1,46 @@
+# Experiment 1 extension — Gemma 4 27B: MoE at N_A/N ≈ 0.063
+#
+# Gemma 4 is Google's first open MoE release (Gemma 1/2/3 were dense).
+# Architecture: 128 experts, top-8 per token, ~27B total, ~3.8B active/token.
+# N_A/N = 8/128 = 0.063 — sits between OLMoE (0.016) and Phi-3.5-MoE (0.125),
+# close to OLMoE but from a different model family.
+# License: Apache 2.0 (GT ICE policy: fine — Google/US-origin).
+# HuggingFace: google/gemma-4-27b-it
+#
+# NOTE: Use google/gemma-4-27b-it (official Google release). Community
+# "Gemma-4-MoE" variants on HF are upcycles from dense Gemma 4 12B — not the
+# same architecture. The 27B-it model is the real native MoE.
+#
+# Memory: 27B × 2 bytes (bf16) ≈ 54 GB → fits on 1× A100-80GB.
+#
+# NOTE: If hooks.py fails to discover MoE layers, check what attribute names
+# Gemma 4's SparseMoe block uses (may differ from .gate/.router convention).
+# Update _looks_like_moe_block if needed.
+
+study_name: exp1-concentration-gemma4-27b
+
+model_id: google/gemma-4-27b-it
+model_family: gemma4moe
+trust_remote_code: false
+torch_dtype: bfloat16
+load_in_4bit: false
+device_map: auto
+
+benchmarks: [stereoset, bbq, winogender]
+shapley_method: routing_contrast
+max_prompts: 400
+seed: 42
+
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 06:00:00
+  cpus_per_task: 8
+  gpus_per_node: 1
+  gpu_type: a100
+  use_gres: true
+  mem: 80G
+  modules: [gcc/12.3.0, python/3.11, cuda/12.1.1]
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown
