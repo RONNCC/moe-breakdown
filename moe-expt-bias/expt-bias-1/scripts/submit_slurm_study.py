@@ -25,7 +25,11 @@ def _add_if(cmd: list[str], flag: str, value: str | None) -> None:
         cmd.extend([flag, value])
 
 
-def build_sbatch_command(config_path: Path) -> list[str]:
+def build_sbatch_command(
+    config_path: Path,
+    shard_idx: int = 0,
+    num_shards: int = 1,
+) -> list[str]:
     cfg = load_bias_study_config(config_path)
     slurm = cfg.slurm
 
@@ -33,9 +37,13 @@ def build_sbatch_command(config_path: Path) -> list[str]:
     logs_dir = out_dir / "slurm-logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
 
+    job_name = f"bias-{cfg.study_name}"
+    if num_shards > 1:
+        job_name += f"-s{shard_idx}of{num_shards}"
+
     cmd = [
         "sbatch",
-        f"--job-name=bias-{cfg.study_name}",
+        f"--job-name={job_name}",
         f"--nodes=1",
         f"--cpus-per-task={slurm.cpus_per_task}",
         f"--mem={slurm.mem}",
@@ -65,6 +73,9 @@ def build_sbatch_command(config_path: Path) -> list[str]:
         "WORKDIR": workdir,
         "MODULES": " ".join(slurm.modules),
     }
+    if num_shards > 1:
+        export_bits["SHARD_IDX"] = str(shard_idx)
+        export_bits["NUM_SHARDS"] = str(num_shards)
     if uv_env_dir and "$" not in uv_env_dir:
         export_bits["UV_ENV_DIR"] = uv_env_dir
     export_arg = ",".join([k if v is None else f"{k}={v}" for k, v in export_bits.items()])
@@ -77,12 +88,16 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Submit a bias-Shapley study to Slurm")
     p.add_argument("--config", required=True)
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--num-shards", type=int, default=1,
+                   help="Split pairs across N independent jobs (1 = no sharding)")
     args = p.parse_args(argv)
 
-    cmd = build_sbatch_command(Path(args.config))
-    print("[submit]", " ".join(cmd))
-    if not args.dry_run:
-        subprocess.run(cmd, check=True)
+    config_path = Path(args.config)
+    for shard_idx in range(args.num_shards):
+        cmd = build_sbatch_command(config_path, shard_idx=shard_idx, num_shards=args.num_shards)
+        print("[submit]", " ".join(cmd))
+        if not args.dry_run:
+            subprocess.run(cmd, check=True)
     return 0
 
 

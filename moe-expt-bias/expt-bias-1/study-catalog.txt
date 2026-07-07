@@ -167,9 +167,12 @@ Watch:
   tail -f ~/scratch/moe-breakdown-bias-runs/expt-bias-1/<study>/slurm-logs/*.out
 
 ================================================================================
-# v1 reruns — full prompt sets (max_prompts ↑ from 400→5000 for routing_contrast,
-# 400→900 for dense LOO 7-8B, 400→2000 for dense LOO 3.8B Phi-mini)
-# Dense LOO cap: 66 passes/pair × 900 pairs × 0.3s ≈ 4.95hr on 1×A100.
+# v1 reruns — full prompt sets. routing_contrast: max_prompts 5000 (single job).
+# dense LOO: sharded (2 jobs/model), --num-shards 2 submits both at once.
+#   7-8B: 1800 pairs total → 900/shard × 66 passes × 0.3s ≈ 4.95hr each.
+#   Phi-mini (3.8B): 4000 total → 2000/shard × 66 × 0.1s ≈ 3.7hr each.
+#   Each pair of shard jobs: 2 × 1×A100×5hr = 600 GPU-min ✓.
+# Results: result_shard0of2.json / result_shard1of2.json in study output dir.
 # DBRX: ~5s/pair → 5000 pairs ≈ 7hr; 2×H200×7hr = 840 GPU-min ✓.
 
   # Exp1 v1 (routing_contrast, max_prompts: 5000):
@@ -178,11 +181,11 @@ Watch:
   python3 scripts/submit_slurm_study.py --config configs/study.mixtral-8x7b.concentration.v1.yaml
   python3 scripts/submit_slurm_study.py --config configs/study.dbrx.concentration.v1.yaml
   python3 scripts/submit_slurm_study.py --config configs/study.gpt-oss-120b.concentration.v1.yaml
-  # Exp2 v1 (dense LOO):
-  python3 scripts/submit_slurm_study.py --config configs/study.olmo-7b.dense-baseline.v1.yaml
-  python3 scripts/submit_slurm_study.py --config configs/study.phi3.5-mini-dense.dense-baseline.v1.yaml
-  python3 scripts/submit_slurm_study.py --config configs/study.llama-3.1-8b.dense-crosscheck.v1.yaml
-  python3 scripts/submit_slurm_study.py --config configs/study.llama-2-7b.dense-crosscheck-2.v1.yaml
+  # Exp2 v1 (dense LOO, --num-shards 2 → 2 jobs per model):
+  python3 scripts/submit_slurm_study.py --config configs/study.olmo-7b.dense-baseline.v1.yaml --num-shards 2
+  python3 scripts/submit_slurm_study.py --config configs/study.phi3.5-mini-dense.dense-baseline.v1.yaml --num-shards 2
+  python3 scripts/submit_slurm_study.py --config configs/study.llama-3.1-8b.dense-crosscheck.v1.yaml --num-shards 2
+  python3 scripts/submit_slurm_study.py --config configs/study.llama-2-7b.dense-crosscheck-2.v1.yaml --num-shards 2
   # Exp5 v1 (demographic specificity, max_prompts: 5000):
   python3 scripts/submit_slurm_study.py --config configs/study.olmoe.demographic.v1.yaml
 

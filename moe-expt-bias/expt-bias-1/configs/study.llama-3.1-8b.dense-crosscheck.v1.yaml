@@ -1,6 +1,7 @@
-# Experiment 2 v1 — Llama-3.1-8B (dense), full prompt set
-# dense_loo: 32 layers → 66 passes/pair × ~0.3s ≈ 4.95hr for 900 pairs.
-# 1×A100×5hr = 300 GPU-min ✓.
+# Experiment 2 v1 — Llama-3.1-8B (dense), sharded full prompt set
+# Submit with: python3 scripts/submit_slurm_study.py --config ... --num-shards 2
+# dense_loo: 32 layers → 66 passes/pair × ~0.3s ≈ 4.95hr per 900-pair shard.
+# 2 jobs × 1×A100×5hr = 600 GPU-min total ✓.
 # Using NousResearch mirror (ungated) — see original config for rationale.
 
 study_name: exp2-dense-crosscheck-llama-3.1-8b-v1
@@ -13,7 +14,7 @@ device_map: auto
 
 benchmarks: [stereoset, bbq, winogender]
 shapley_method: dense_loo
-max_prompts: 900
+max_prompts: 1800
 seed: 42
 
 output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1

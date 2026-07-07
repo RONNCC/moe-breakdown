@@ -66,5 +66,8 @@ ARGS=(--config "$STUDY_CONFIG")
 if [[ -n "$OUT_DIR" ]]; then
   ARGS+=(--out-dir "$OUT_DIR")
 fi
+if [[ "${NUM_SHARDS:-1}" -gt 1 ]]; then
+  ARGS+=(--shard-idx "${SHARD_IDX:-0}" --num-shards "${NUM_SHARDS:-1}")
+fi
 
 python3 "$ROOT_DIR/scripts/run_bias_study.py" "${ARGS[@]}"

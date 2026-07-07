@@ -1,6 +1,7 @@
-# Experiment 2 v1 — Phi-3.5-mini, full prompt set
-# dense_loo: 3.8B model, ~0.1s/pass → 2000 × 66 × 0.1s ≈ 3.7hr.
-# 1×A100×5hr = 300 GPU-min ✓.
+# Experiment 2 v1 — Phi-3.5-mini, sharded full prompt set
+# Submit with: python3 scripts/submit_slurm_study.py --config ... --num-shards 2
+# dense_loo: 3.8B model, ~0.1s/pass → 4000 total / 2 shards → 2000 pairs each.
+# 2000 × 66 × 0.1s ≈ 3.7hr per shard. 2 jobs × 1×A100×5hr = 600 GPU-min ✓.
 
 study_name: exp2-dense-baseline-phi3.5-mini-v1
 
@@ -12,7 +13,7 @@ device_map: auto
 
 benchmarks: [stereoset, bbq, winogender]
 shapley_method: dense_loo
-max_prompts: 2000
+max_prompts: 4000
 seed: 42
 
 output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1

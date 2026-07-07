@@ -30,10 +30,18 @@ logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(levelname)s %(na
 log = logging.getLogger("run_bias_study")
 
 
-def run_study(cfg: BiasStudyConfig, out_dir: Path, dry_run: bool = False) -> None:
+def run_study(
+    cfg: BiasStudyConfig,
+    out_dir: Path,
+    dry_run: bool = False,
+    shard_idx: int = 0,
+    num_shards: int = 1,
+) -> None:
     log.info("=== Study: %s ===", cfg.study_name)
     log.info("Model: %s | family: %s | shapley_method: %s", cfg.model_id, cfg.model_family, cfg.shapley_method)
     log.info("Benchmarks: %s | max_prompts: %s", cfg.benchmarks, cfg.max_prompts)
+    if num_shards > 1:
+        log.info("Shard: %d / %d", shard_idx, num_shards)
 
     if dry_run:
         log.info("[dry-run] Would load model, load benchmarks, compute attribution, and save to %s", out_dir)
@@ -42,6 +50,10 @@ def run_study(cfg: BiasStudyConfig, out_dir: Path, dry_run: bool = False) -> Non
     pairs = load_benchmarks(cfg.benchmarks, max_items=cfg.max_prompts)
     if not pairs:
         raise RuntimeError("No prompt pairs loaded — check benchmark config")
+
+    if num_shards > 1:
+        pairs = pairs[shard_idx::num_shards]
+        log.info("After sharding: %d pairs (shard %d of %d)", len(pairs), shard_idx, num_shards)
 
     model, tokenizer = load_model_and_tokenizer(cfg)
     device = next(model.parameters()).device
@@ -62,7 +74,13 @@ def run_study(cfg: BiasStudyConfig, out_dir: Path, dry_run: bool = False) -> Non
         "shapley_method": cfg.shapley_method,
         "seed": cfg.seed,
     }
-    save_results(out_dir, result, metadata)
+    shard_tag: str | None = None
+    if num_shards > 1:
+        metadata["shard_idx"] = shard_idx
+        metadata["num_shards"] = num_shards
+        shard_tag = f"shard{shard_idx}of{num_shards}"
+
+    save_results(out_dir, result, metadata, shard_tag=shard_tag)
     log.info("Done. Results in %s", out_dir)
 
 
@@ -71,11 +89,13 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--config", required=True)
     p.add_argument("--out-dir", default=None, help="Override output_root/study_name")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--shard-idx", type=int, default=0, help="0-based shard index")
+    p.add_argument("--num-shards", type=int, default=1, help="Total number of shards (1 = no sharding)")
     args = p.parse_args(argv)
 
     cfg = load_bias_study_config(args.config)
     out_dir = Path(args.out_dir) if args.out_dir else (Path(cfg.output_root).expanduser() / cfg.study_name)
-    run_study(cfg, out_dir, dry_run=args.dry_run)
+    run_study(cfg, out_dir, dry_run=args.dry_run, shard_idx=args.shard_idx, num_shards=args.num_shards)
     return 0
 
 

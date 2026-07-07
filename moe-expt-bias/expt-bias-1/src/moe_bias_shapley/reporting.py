@@ -18,9 +18,14 @@ def save_results(
     out_dir: str | Path,
     result: AttributionResult,
     metadata: Dict[str, Any],
+    shard_tag: Optional[str] = None,
 ) -> Path:
-    """Save an AttributionResult + its concentration metrics + run metadata to
-    `<out_dir>/result.json` and the raw phi vector to `<out_dir>/phi.npy`.
+    """Save an AttributionResult + its concentration metrics + run metadata.
+
+    Single-shard (default): writes result.json / phi.npy.
+    Multi-shard: writes result_<shard_tag>.json / phi_<shard_tag>.npy so that
+    all shards for the same study land in the same directory and can be merged
+    post-hoc by globbing result_shard*.json.
     """
     out_dir = Path(out_dir).expanduser()
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -46,19 +51,24 @@ def save_results(
             for group, phi in result.per_group_phi.items()
         }
 
-    (out_dir / "result.json").write_text(json.dumps(payload, indent=2))
-    np.save(out_dir / "phi.npy", result.phi)
+    result_stem = f"result_{shard_tag}" if shard_tag else "result"
+    phi_stem = f"phi_{shard_tag}" if shard_tag else "phi"
+
+    (out_dir / f"{result_stem}.json").write_text(json.dumps(payload, indent=2))
+    np.save(out_dir / f"{phi_stem}.npy", result.phi)
     (out_dir / "player_ids.json").write_text(json.dumps(result.player_ids))
     if result.routing_freq is not None:
-        np.save(out_dir / "routing_freq.npy", result.routing_freq)
+        routing_stem = f"routing_freq_{shard_tag}" if shard_tag else "routing_freq"
+        np.save(out_dir / f"{routing_stem}.npy", result.routing_freq)
 
     if result.per_group_phi:
         for group, phi in result.per_group_phi.items():
             safe_name = group.replace("/", "_").replace(" ", "_")
-            np.save(out_dir / f"phi_group_{safe_name}.npy", phi.flatten())
+            suffix = f"_{shard_tag}" if shard_tag else ""
+            np.save(out_dir / f"phi_group_{safe_name}{suffix}.npy", phi.flatten())
 
     log.info("Saved bias-Shapley results to %s", out_dir)
-    return out_dir / "result.json"
+    return out_dir / f"{result_stem}.json"
 
 
 def _top_players(result: AttributionResult, n: int = 20) -> list[dict]:

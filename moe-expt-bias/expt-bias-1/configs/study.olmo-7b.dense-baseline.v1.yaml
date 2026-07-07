@@ -1,7 +1,8 @@
-# Experiment 2 v1 — OLMo-7B, full prompt set
+# Experiment 2 v1 — OLMo-7B, sharded full prompt set
+# Submit with: python3 scripts/submit_slurm_study.py --config ... --num-shards 2
 # dense_loo: 32 layers → 66 passes/pair. At ~0.3s/pass on 1×A100:
-# 900 × 66 × 0.3s ≈ 4.95hr → 5hr wall time.
-# 1×A100×5hr = 300 GPU-min ✓ (under 960 QOS cap).
+# 1800 total / 2 shards → 900 pairs each × 66 × 0.3s ≈ 4.95hr.
+# 2 jobs × 1×A100×5hr = 600 GPU-min total ✓.
 
 study_name: exp2-dense-baseline-olmo-7b-v1
 
@@ -13,7 +14,7 @@ device_map: auto
 
 benchmarks: [stereoset, bbq, winogender]
 shapley_method: dense_loo
-max_prompts: 900
+max_prompts: 1800
 seed: 42
 
 output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
