@@ -23,7 +23,7 @@ study_name: exp1-concentration-dbrx
 
 model_id: alpindale/dbrx-instruct
 model_family: dbrx
-trust_remote_code: true
+trust_remote_code: false
 torch_dtype: bfloat16
 load_in_4bit: false
 device_map: auto
