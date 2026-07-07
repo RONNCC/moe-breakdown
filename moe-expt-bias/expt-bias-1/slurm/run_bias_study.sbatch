@@ -26,7 +26,7 @@ if [[ -n "$MODULES" ]]; then
 fi
 
 # HF_HOME persists on /storage (not $TMPDIR) so multi-GB model checkpoints
-# (Qwen3-30B, Mixtral-8x7B, ERNIE-4.5-21B) are downloaded once and reused
+# (Phi-3.5-MoE, Mixtral-8x7B, Phi-3.5-mini, Llama-3.1-8B, OLMoE-1B-7B, OLMo-7B) are downloaded once and reused
 # across study runs instead of every job re-downloading to ephemeral node-local
 # scratch.
 export HF_HOME="${HF_HOME:-$HOME/scratch/hf_cache}"

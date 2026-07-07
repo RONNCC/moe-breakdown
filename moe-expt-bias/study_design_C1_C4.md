@@ -31,7 +31,7 @@ The *method* of attributing behaviour to experts in MoE is established, but **no
 - **RQ3 (C3 — demographic specificity):** Across demographic cohorts (he/she; Black/White/Asian name contexts), do *different experts* fire, or does the *same expert flip* its contribution? I.e., is bias subgroup-specific at the expert level?
 
 ### 1.4 Hypotheses
-- **H1:** Bias-Shapley concentration is *monotonically increasing* as routing sparsity (N_A/N) *decreases* — OLMoE (top-1, N_A/N≈0.06) > Qwen3-30B-A3B (sparse) > Mixtral-8x7B (top-2, 0.25) > ERNIE-4.5-21B-A3B (denser). Motivated by [Expert Strikes Back], where monosemanticity scales with sparsity.
+- **H1:** Bias-Shapley concentration is *monotonically increasing* as routing sparsity (N_A/N) *decreases* — OLMoE (top-1, N_A/N≈0.06) > Phi-3.5-MoE (~0.15) > Mixtral-8x7B (top-2, 0.25). Motivated by [Expert Strikes Back], where monosemanticity scales with sparsity.
 - **H2:** An MoE (OLMoE-1B-7B) shows *more localizable* bias than its dense sibling (OLMo-7B) at matched-or-better capability — the modularity that aids interpretability also aids bias attribution.
 - **H0 (null, also publishable):** Bias attribution is *diffuse and stable* across sparsity/density — correcting the localizability hype.
 
@@ -40,16 +40,19 @@ The *method* of attributing behaviour to experts in MoE is established, but **no
 ## PAGE 2 — Method: Models, Data, Metric, and the Shapley Formulation
 
 ### 2.1 Model ladder (sparsity regimes)
-| Model | Active/Total | N_A/N | Role |
-|---|---|---|---|
-| OLMoE-1B-7B | 1B / 7B | ≈0.06 (top-1) | sparsest |
-| Qwen3-30B-A3B | 3B / 30B | ≈0.06–0.10 | sparse, large |
-| Mixtral-8x7B | 2×7B / 8×7B | 0.25 (top-2) | dense-ish MoE |
-| ERNIE-4.5-21B-A3B | 3B / 21B | higher | densest MoE |
-| OLMo-7B (dense) | 7B / 7B | 1.0 | **dense baseline (same family as OLMoE)** |
-| Llama-3 (≈7–8B dense) | — | 1.0 | dense cross-check |
+*Institutional note: Qwen (and other Chinese-origin models such as DeepSeek/ERNIE) are disallowed on Georgia Tech systems, so the ladder uses only permissively-licensed US/EU models (Apache-2.0 / MIT / Llama Community License) that still span the needed sparsity range.*
 
-The **OLMoE-1B-7B vs OLMo-7B dense** pair is the primary matched comparison: same family, same training data, only the architecture differs [Expert Strikes Back uses exactly this pair]. This controls for data/capability confounds — the cleanest possible MoE-vs-dense test.
+| Model | License / Origin | Active/Total | N_A/N | Role |
+|---|---|---|---|---|
+| OLMoE-1B-7B | Apache-2.0 / AllenAI | 1B / 7B | ≈0.06–0.125 (top-1) | sparsest MoE |
+| Phi-3.5-MoE | MIT / Microsoft | 6.6B / 42B | ≈0.125–0.16 (top-2/16) | mid-sparsity MoE |
+| Mixtral-8x7B | Apache-2.0 / Mistral | 13B / 47B | 0.25 (top-2/8) | densest MoE in ladder |
+| Llama-4-Scout *(optional)* | Llama Community / Meta | 17B / 109B | low (128 experts) | larger MoE if compute allows |
+| OLMo-7B (dense) | Apache-2.0 / AllenAI | 7B / 7B | 1.0 | **dense baseline (same family as OLMoE)** |
+| Phi-3.5 (dense, 3.8B) | MIT / Microsoft | 3.8B / 3.8B | 1.0 | dense sibling of Phi-3.5-MoE |
+| Llama-3.1-8B (dense) | Llama Community / Meta | 8B / 8B | 1.0 | dense cross-check |
+
+The **OLMoE-1B-7B vs OLMo-7B dense** pair is the primary matched comparison: same family, same training data, only the architecture differs [Expert Strikes Back uses exactly this pair]. This controls for data/capability confounds — the cleanest possible MoE-vs-dense test. The **Phi-3.5-MoE vs Phi-3.5-dense** pair is a secondary matched comparison. The ladder spans N_A/N ≈ 0.06 → 0.16 → 0.25 → 1.0, covering the sparsity→density axis needed for C1.
 
 ### 2.2 Benchmarks (bias signals)
 - **StereoSet** [Nadeem et al. 2020, arXiv 2004.09456] — stereotype vs anti-stereotype intrasentence/intersentence logit gaps (gender, race, religion, profession).
@@ -84,10 +87,10 @@ Follow [arXiv 2506.12119]: compare under *matched* total parameters, training co
 ## PAGE 3 — Experiments, Expected Results, and Figures
 
 ### 3.1 Experiment 1 — Concentration vs sparsity (RQ1 / C1)
-Compute H and top-fraction per model across StereoSet+BBQ+WinoGender. **Expected (H1):** monotonic decrease in H as N_A/N decreases — OLMoE most concentrated, ERNIE least. *Figure 2.*
+Compute H and top-fraction per model across StereoSet+BBQ+WinoGender. **Expected (H1):** monotonic decrease in H as N_A/N decreases — OLMoE most concentrated, Mixtral-8x7B least. *Figure 2.*
 
 ### 3.2 Experiment 2 — MoE vs dense localizability (RQ2 / C4)
-Compute H for OLMoE-1B-7B vs OLMo-7B (and Qwen3 vs a dense Qwen). **Expected (H2):** H_MoE < H_dense ⇒ LR > 1. *Figure 3.*
+Compute H for OLMoE-1B-7B vs OLMo-7B (and Phi-3.5-MoE vs Phi-3.5-dense). **Expected (H2):** H_MoE < H_dense ⇒ LR > 1. *Figure 3.*
 
 ### 3.3 Experiment 3 — Collectivity check (C2-lite, strengthens the story)
 Compute **Shapley interaction values** [cf. RealExp, SciDirect S0306457325000949] to split bias into *marginal* vs *synergy* components. Tests whether bias is an *expert-committee* (standing-committees) effect [arXiv 2601.03425]. If synergy dominates, debiasing must target committees, not single experts.
@@ -101,7 +104,7 @@ Compute the expert bias-Shapley vector separately for each demographic cohort (h
 ### 3.6 Expected figures
 - **Fig 1** — schematic: sparsity ladder + the cooperative-game formulation (players = active experts, payoff = bias score).
 - **Fig 2** — concentration (H, y) vs N_A/N (x) across the ladder; monotonic if H1 holds.
-- **Fig 3** — localizability bars: H for MoE vs dense siblings (OLMoE vs OLMo-7B; Qwen3 vs dense Qwen); LR annotated.
+- **Fig 3** — localizability bars: H for MoE vs dense siblings (OLMoE vs OLMo-7B; Phi-3.5-MoE vs Phi-3.5-dense); LR annotated.
 - **Fig 4** — expert-ablation curve: x = fraction of top-biased experts ablated, y = disparity reduction (StereoSet/BBQ). Steep early drop ⇒ concentration ⇒ validates Shapley ranking. Cross-check line from Exp 4 overlaid.
 
 ### 3.6 Connection to safety (optional framing)
@@ -120,9 +123,9 @@ If bias is route-concentrated, it dovetails with **Sparse Safety / Unsafe Routes
 ### 4.2 Threats to validity & mitigations
 | Threat | Mitigation |
 |---|---|
-| "Expert as unit" is contested (polysemous experts) | Restrict primary claims to sparsest models (OLMoE, Qwen3) where [Expert Strikes Back] shows monosemanticity holds; report per-model. |
+| "Expert as unit" is contested (polysemous experts) | Restrict primary claims to sparsest models (OLMoE, Phi-3.5-MoE) where [Expert Strikes Back] shows monosemanticity holds; report per-model. |
 | Routing marginalization (top-K restricts player set) | Also run router-sensitivity analysis; optionally all-N Shapley via RGIS [OpenReview 7kQjbCQwtT]. |
-| Small-model external validity | Include Qwen3-30B-A3B (large, sparse) and ERNIE (large, dense). |
+| Small-model external validity | Include Llama-4-Scout (large, sparse, optional if compute allows) and Llama-3.1-8B (dense cross-check). |
 | Causal vs correlational | Ablation (Exp 4) + Shapley interaction (Exp 3) jointly. |
 
 ### 4.3 Contribution & broader impact
@@ -133,11 +136,11 @@ If bias is route-concentrated, it dovetails with **Sparse Safety / Unsafe Routes
 - **Negative result is also valuable:** if bias is diffuse/stable, it corrects the "MoE is more interpretable ⇒ more controllable" assumption.
 
 ### 4.4 Compute & timeline (≈3–4 months, 1–2 A100-80GB)
-- **Month 1:** TransformerLens/EasyTransformer hooks for OLMoE + Qwen3 routers; reproduce baseline bias scores (StereoSet/BBQ/WinoGender).
+- **Month 1:** TransformerLens/EasyTransformer hooks for OLMoE + Phi-3.5-MoE (+ Mixtral) routers; reproduce baseline bias scores (StereoSet/BBQ/WinoGender).
 - **Month 2:** implement expert-Shapley (top-K exact + RGIS); run C1 across the ladder.
-- **Month 3:** C4 (OLMoE vs OLMo-7B, Qwen3 vs dense); C2-lite interaction values; Exp 4 cross-check.
+- **Month 3:** C4 (OLMoE vs OLMo-7B; Phi-3.5-MoE vs Phi-3.5-dense); C2-lite interaction values; Exp 4 cross-check.
 - **Month 4:** robustness sweeps, writing, figures.
-- OLMoE-1B-7B and Qwen3-30B-A3B fit on 1–2 A100-80GB; Mixtral-8x7B / ERNIE-4.5-21B-A3B need more VRAM or layer-subsampling. Per-token Shapley is cheap (2^K coalitions, K small).
+- OLMoE-1B-7B, Phi-3.5-MoE, and Mixtral-8x7B all fit on 1–2 A100-80GB (only active params computed per token); Llama-4-Scout (optional) needs multi-GPU or 4-bit quantization. Per-token Shapley is cheap (2^K coalitions, K small). Verify TransformerLens / EasyTransformer router hooks for each model (OLMoE, Mixtral supported; Phi-3.5-MoE and Llama-4 may require HF-level manual router capture).
 
 ### 4.5 Future work
 - Extend to the **global-workspace / J-space** locus [Transformer Circuits, July 2026] (deferred per scope).

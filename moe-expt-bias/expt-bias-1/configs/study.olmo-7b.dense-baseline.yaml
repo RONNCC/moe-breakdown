@@ -17,7 +17,7 @@ trust_remote_code: false
 torch_dtype: bfloat16
 device_map: auto
 
-benchmarks: [stereoset, bbq]
+benchmarks: [stereoset, bbq, winogender]
 shapley_method: dense_loo
 max_prompts: 150   # dense_loo is O(n_layers) forward passes per pair — keep smaller
 seed: 42

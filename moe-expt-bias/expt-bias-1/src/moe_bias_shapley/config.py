@@ -36,7 +36,7 @@ class BiasStudyConfig:
     # Family tag used to pick the right hooking strategy:
     #   olmoe   → allenai/OLMoE-1B-7B (top-1, 64 experts)
     #   mixtral → mistralai/Mixtral-8x7B-v0.1 (top-2, 8 experts)
-    #   qwen3   → Qwen/Qwen3-30B-A3B (top-8, 128 experts)
+    #   phi3.5moe → microsoft/Phi-3.5-MoE-instruct (top-2, 16 experts)
     #   olmo    → allenai/OLMo-7B (dense; FFN-layer attribution)
     #   dense   → generic dense model (FFN-layer attribution)
     model_family: str = "olmoe"

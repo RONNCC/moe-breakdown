@@ -1,7 +1,7 @@
 """Router / expert hook management for MoE models (and FFN-layer hooks for dense).
 
 We rely on the fact that current HF implementations of MoE blocks (OLMoE,
-Mixtral, Qwen3-MoE, ERNIE-4.5 MoE) all expose a `.gate` (router linear layer)
+Mixtral, Phi-3.5-MoE) all expose a `.gate` (router linear layer)
 and a `.experts` (ModuleList of per-expert FFNs) on a "SparseMoeBlock"-style
 submodule. Rather than hardcoding per-architecture module paths (fragile
 across transformers versions), we auto-discover these blocks generically by
@@ -59,7 +59,7 @@ def _resolve_num_experts(module: Any) -> int:
     """Determine the number of experts for a SparseMoeBlock-like module.
 
     Different transformers architectures/versions store this differently:
-    - Mixtral/Qwen3-MoE (older style): `.gate` is a plain `nn.Linear` whose
+    - Mixtral (older style): `.gate` is a plain `nn.Linear` whose
       `out_features` == num_experts, and `.experts` is an `nn.ModuleList`.
     - OLMoE (current transformers): `.gate` is a custom `OlmoeTopKRouter` with
       its own `.num_experts` attribute (not `nn.Linear`, no `out_features`),

@@ -1,4 +1,4 @@
-"""Benchmark loading: StereoSet, BBQ, WinoGender.
+"""Benchmark loading: StereoSet, BBQ, WinoGender, C-Eval (fairness-adjacent).
 
 All loaders return a list of PromptPair — stereotype vs anti-stereotype sentence
 pairs from the respective benchmark, plus metadata.
@@ -10,6 +10,12 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 
 log = logging.getLogger(__name__)
+
+# Local cache dir for benchmark artifacts fetched outside `datasets` (e.g. the
+# WinoGender TSV, which is only distributed via GitHub, not a maintained HF
+# dataset repo). Kept off scratch/home per the cluster storage policy — this
+# is a small (~1MB) static text file, safe under $HOME/.cache.
+_CACHE_DIR = "~/.cache/moe_bias_shapley"
 
 
 @dataclass
@@ -187,6 +193,184 @@ def load_bbq(
 
 
 # =========================================================================== #
+# WinoGender                                                                   #
+# =========================================================================== #
+
+# WinoGender (Rudinger et al. 2018) is not distributed as a maintained HF
+# `datasets` repo with stable schema — the canonical source is the authors'
+# GitHub release of pre-rendered sentence templates. We fetch that TSV
+# directly (small, ~1MB, static) rather than guessing at HF mirror repo ids
+# (several exist but are unofficial/inconsistently schema'd).
+_WINOGENDER_TSV_URL = (
+    "https://raw.githubusercontent.com/rudinger/winogender-schemas/"
+    "master/data/all_sentences.tsv"
+)
+
+
+def _fetch_winogender_tsv(cache_dir: str = _CACHE_DIR) -> str:
+    """Download (and cache) the WinoGender all_sentences.tsv file."""
+    import urllib.request
+    from pathlib import Path
+
+    cache_path = Path(cache_dir).expanduser() / "winogender_all_sentences.tsv"
+    if cache_path.exists():
+        return cache_path.read_text()
+
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    log.info("Fetching WinoGender sentence templates from %s", _WINOGENDER_TSV_URL)
+    with urllib.request.urlopen(_WINOGENDER_TSV_URL, timeout=30) as resp:
+        text = resp.read().decode("utf-8")
+    cache_path.write_text(text)
+    return text
+
+
+def load_winogender(
+    max_items: Optional[int] = None,
+    cache_dir: str = _CACHE_DIR,
+) -> List[PromptPair]:
+    """Load WinoGender coreference-gender-stereotype sentences.
+
+    Each `sentid` in the released TSV encodes
+    `{occupation}.{other_participant}.{answer}.{gender}.txt`, where `gender`
+    is one of male/female/neutral and `answer` (0/1) picks which of the two
+    template variants (occupation-focused vs participant-focused) is used.
+    We hold occupation/participant/answer fixed and pair the male- and
+    female-pronoun sentence variants as a counterfactual PromptPair — this
+    is a direct male-vs-female logit-gap test (Sec 2.3's "group-conditional
+    logit difference for counterfactual prompt pairs"), not the original
+    WinoGender paper's BLS-occupation-statistics correlation metric; that
+    distinction is noted here since it's a simplification of the official
+    scoring, consistent with how load_bbq/load_stereoset already adapt their
+    source benchmarks' native format to this study's PromptPair schema.
+    """
+    text = _fetch_winogender_tsv(cache_dir)
+    lines = [ln for ln in text.splitlines() if ln.strip()]
+    if not lines:
+        raise RuntimeError("WinoGender TSV fetch returned no content")
+
+    header = lines[0].split("\t")
+    assert header[:2] == ["sentid", "sentence"], f"Unexpected WinoGender TSV header: {header}"
+
+    # sentid -> sentence text
+    by_id: dict[str, str] = {}
+    for line in lines[1:]:
+        parts = line.split("\t", 1)
+        if len(parts) != 2:
+            continue
+        sentid, sentence = parts
+        by_id[sentid.strip()] = sentence.strip()
+
+    pairs: List[PromptPair] = []
+    seen_keys: set[str] = set()
+    for sentid, male_sentence in by_id.items():
+        if not sentid.endswith(".male.txt"):
+            continue
+        key_prefix = sentid[: -len(".male.txt")]
+        if key_prefix in seen_keys:
+            continue
+        female_sentid = f"{key_prefix}.female.txt"
+        female_sentence = by_id.get(female_sentid)
+        if female_sentence is None:
+            continue
+        seen_keys.add(key_prefix)
+
+        # key_prefix = "{occupation}.{participant}.{answer}"
+        parts = key_prefix.split(".")
+        occupation = parts[0] if parts else "unknown"
+
+        pairs.append(PromptPair(
+            stereo=male_sentence,
+            anti_stereo=female_sentence,
+            bias_type="gender",
+            target=occupation,
+            source="winogender",
+            item_id=key_prefix,
+            extra={"template_key": key_prefix},
+        ))
+
+        if max_items is not None and len(pairs) >= max_items:
+            break
+
+    log.info("Loaded %d WinoGender pairs", len(pairs))
+    return pairs
+
+
+# =========================================================================== #
+# C-Eval (fairness-adjacent subset)                                            #
+# =========================================================================== #
+
+# C-Eval [Huang et al. 2023] is a general Chinese-language knowledge/reasoning
+# exam benchmark (52 subjects) — it does not ship a dedicated "fairness"
+# category with native stereotype/anti-stereotype contrastive pairs the way
+# StereoSet/BBQ/WinoGender do. We use the subjects closest to social/ethical
+# content (ideological_and_moral_cultivation, education_science) and build a
+# PromptPair from each question's correct vs. a plausible distractor answer.
+# This is a materially weaker construct than the other three loaders (it
+# measures a knowledge/confidence gap, not a demographic-stereotype gap), and
+# with the corrected model ladder now excluding all Chinese-origin models
+# (Qwen/DeepSeek/ERNIE disallowed on GT ICE — see study_design_C1_C4.md
+# Sec 2.1), there is no model in the ladder for which Chinese-language
+# fairness testing is a natural fit. This loader is therefore implemented for
+# completeness/future cross-lingual work but is NOT included in any active
+# study config's `benchmarks:` list — see study-catalog.txt for the rationale.
+_CEVAL_SUBJECTS = ["ideological_and_moral_cultivation", "education_science"]
+
+
+def load_ceval_fairness(
+    split: str = "val",
+    subjects: Optional[List[str]] = None,
+    max_items: Optional[int] = None,
+) -> List[PromptPair]:
+    """Load a fairness-adjacent subset of C-Eval as correct-vs-distractor pairs.
+
+    NOTE: see module-level comment above — this is a knowledge-gap proxy, not
+    a true demographic-stereotype benchmark, and is deprioritized/excluded
+    from the default benchmark set now that the model ladder is all-English.
+    """
+    try:
+        from datasets import load_dataset  # type: ignore
+    except ImportError as exc:
+        raise ImportError("Install `datasets` to load C-Eval: pip install datasets") from exc
+
+    subjects = subjects or _CEVAL_SUBJECTS
+    pairs: List[PromptPair] = []
+
+    for subject in subjects:
+        log.info("Loading C-Eval subject=%s split=%s …", subject, split)
+        ds = load_dataset("ceval/ceval-exam", subject, split=split)
+
+        for item in ds:
+            answer_key = str(item.get("answer", "")).strip().upper()
+            if answer_key not in ("A", "B", "C", "D"):
+                continue
+            choices = {k: item.get(k, "") for k in ("A", "B", "C", "D")}
+            correct = choices.get(answer_key, "")
+            distractor_key = next((k for k in ("A", "B", "C", "D") if k != answer_key and choices.get(k)), None)
+            if not correct or distractor_key is None:
+                continue
+            distractor = choices[distractor_key]
+
+            question = item.get("question", "")
+            pairs.append(PromptPair(
+                stereo=f"{question} {distractor}",
+                anti_stereo=f"{question} {correct}",
+                bias_type=subject,
+                target=subject,
+                source="ceval",
+                item_id=str(item.get("id", "")),
+                extra={"answer_key": answer_key, "distractor_key": distractor_key},
+            ))
+
+            if max_items is not None and len(pairs) >= max_items:
+                break
+        if max_items is not None and len(pairs) >= max_items:
+            break
+
+    log.info("Loaded %d C-Eval pairs across %d subjects", len(pairs), len(subjects))
+    return pairs
+
+
+# =========================================================================== #
 # Unified loader                                                                #
 # =========================================================================== #
 
@@ -203,6 +387,10 @@ def load_benchmarks(
             pairs.extend(load_stereoset(max_items=per_bench))
         elif name == "bbq":
             pairs.extend(load_bbq(max_items=per_bench))
+        elif name == "winogender":
+            pairs.extend(load_winogender(max_items=per_bench))
+        elif name == "ceval":
+            pairs.extend(load_ceval_fairness(max_items=per_bench))
         else:
             log.warning("Unknown benchmark %r — skipping", name)
 

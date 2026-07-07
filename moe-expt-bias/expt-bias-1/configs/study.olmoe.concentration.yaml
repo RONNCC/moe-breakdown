@@ -1,13 +1,14 @@
-# Experiment 1 (RQ1 / C1) — Concentration vs sparsity ladder, point 1/4: OLMoE-1B-7B
+# Experiment 1 (RQ1 / C1) — Concentration vs sparsity ladder, point 1/3: OLMoE-1B-7B
 #
 # Sparsest model on the ladder (top-1 routing, N_A/N ≈ 0.06, 64 experts).
 # Bias-Shapley method: routing_contrast (fast, router-weighted counterfactual
 # bias-gap attribution — see src/moe_bias_shapley/shapley.py).
 #
 # Compare concentration metrics (entropy H, Gini, top-fraction) against
-# study.qwen3-30b-a3b.concentration.yaml, study.mixtral-8x7b.concentration.yaml,
-# and study.ernie-4.5-21b-a3b.concentration.yaml to test H1 (monotonic
-# concentration increase as sparsity increases).
+# study.phi3.5-moe.concentration.yaml and study.mixtral-8x7b.concentration.yaml
+# to test H1 (monotonic concentration increase as sparsity increases). Qwen,
+# DeepSeek, and ERNIE are excluded — prohibited on GT ICE systems (see
+# study_design_C1_C4.md Sec 2.1 institutional note).
 
 study_name: exp1-concentration-olmoe-1b-7b
 
@@ -17,7 +18,7 @@ trust_remote_code: false
 torch_dtype: bfloat16
 device_map: auto
 
-benchmarks: [stereoset, bbq]
+benchmarks: [stereoset, bbq, winogender]
 shapley_method: routing_contrast
 max_prompts: 400
 seed: 42

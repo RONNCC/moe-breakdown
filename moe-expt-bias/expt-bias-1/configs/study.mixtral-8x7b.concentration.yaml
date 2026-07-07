@@ -1,4 +1,4 @@
-# Experiment 1 (RQ1 / C1) — Concentration vs sparsity ladder, point 3/4: Mixtral-8x7B
+# Experiment 1 (RQ1 / C1) — Concentration vs sparsity ladder, point 3/3: Mixtral-8x7B
 #
 # "Dense-ish" MoE: top-2 routing over 8 experts (N_A/N = 0.25).
 # ~47B total params in bf16 (~94GB) — request 2 A100 GPUs with device_map=auto
@@ -15,7 +15,7 @@ torch_dtype: bfloat16
 load_in_4bit: false
 device_map: auto
 
-benchmarks: [stereoset, bbq]
+benchmarks: [stereoset, bbq, winogender]
 shapley_method: routing_contrast
 max_prompts: 400
 seed: 42

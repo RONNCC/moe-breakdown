@@ -37,18 +37,19 @@ STUDY INDEX
 ================================================================================
 
 Experiment 1 — Concentration vs sparsity ladder (RQ1 / C1)
-  configs/study.olmoe.concentration.yaml            OLMoE-1B-7B      (sparsest, top-1)
-  configs/study.qwen3-30b-a3b.concentration.yaml     Qwen3-30B-A3B    (sparse, top-8/128)
-  configs/study.mixtral-8x7b.concentration.yaml      Mixtral-8x7B     (top-2/8)
-  configs/study.ernie-4.5-21b-a3b.concentration.yaml ERNIE-4.5-21B-A3B (densest MoE)
+  configs/study.olmoe.concentration.yaml             OLMoE-1B-7B      (sparsest, top-1)
+  configs/study.phi3.5-moe.concentration.yaml         Phi-3.5-MoE      (mid-sparsity, top-2/16)
+  configs/study.mixtral-8x7b.concentration.yaml       Mixtral-8x7B     (densest MoE in ladder, top-2/8)
   Expected (H1): entropy H monotonically decreases (concentration increases)
-  as N_A/N decreases across this ladder.
+  as N_A/N decreases across this ladder. Qwen/DeepSeek/ERNIE excluded —
+  prohibited on GT ICE systems (see ../study_design_C1_C4.md Sec 2.1).
 
 Experiment 2 — MoE vs dense localizability (RQ2 / C4)
-  configs/study.olmo-7b.dense-baseline.yaml          OLMo-7B (dense)  — primary matched
+  configs/study.olmo-7b.dense-baseline.yaml           OLMo-7B (dense)  — primary matched
                                                        pair vs OLMoE-1B-7B (same family/data)
-  configs/study.qwen3-8b-dense.dense-baseline.yaml   Qwen3-8B (dense) — secondary cross-check
-                                                       vs Qwen3-30B-A3B
+  configs/study.phi3.5-mini-dense.dense-baseline.yaml Phi-3.5-mini (dense) — secondary matched
+                                                       pair vs Phi-3.5-MoE
+  configs/study.llama-3.1-8b.dense-crosscheck.yaml    Llama-3.1-8B (dense) — tertiary cross-check
   Expected (H2): H_MoE < H_dense (localizability ratio LR > 1).
   Dense attribution uses leave-one-out (LOO) layer ablation — an approximation,
   not exact Shapley (see shapley.py::compute_dense_layer_contrast docstring).
@@ -57,8 +58,10 @@ Experiment 3 — Collectivity check (C2-lite)
   Not yet a standalone config. Reuses Experiment 1 configs with
   shapley_method: exact on a small ablation_layer_indices subset to get
   Shapley interaction values (marginal vs synergy). Run manually via
-  scripts/run_bias_study.py + shapley.compute_exact_shapley_for_pair on a
-  prompt subsample before scaling up.
+  shapley.compute_shapley_interactions_for_pair (returns per-pair
+  InteractionResult: marginal phi + pairwise interaction values + synergy
+  fraction) on a prompt subsample, then shapley.aggregate_interaction_results
+  to summarize across the subsample, before scaling up.
 
 Experiment 4 — Independent cross-check (robustness)
   Validates Shapley rankings against expert-ablation disparity drop. Use
@@ -83,11 +86,11 @@ Dry-run (no GPU, no model download — validates config parsing):
 Submit to Slurm from the ICE login node:
   cd moe-expt-bias/expt-bias-1
   python3 scripts/submit_slurm_study.py --config configs/study.olmoe.concentration.yaml
-  python3 scripts/submit_slurm_study.py --config configs/study.qwen3-30b-a3b.concentration.yaml
+  python3 scripts/submit_slurm_study.py --config configs/study.phi3.5-moe.concentration.yaml
   python3 scripts/submit_slurm_study.py --config configs/study.mixtral-8x7b.concentration.yaml
-  python3 scripts/submit_slurm_study.py --config configs/study.ernie-4.5-21b-a3b.concentration.yaml
   python3 scripts/submit_slurm_study.py --config configs/study.olmo-7b.dense-baseline.yaml
-  python3 scripts/submit_slurm_study.py --config configs/study.qwen3-8b-dense.dense-baseline.yaml
+  python3 scripts/submit_slurm_study.py --config configs/study.phi3.5-mini-dense.dense-baseline.yaml
+  python3 scripts/submit_slurm_study.py --config configs/study.llama-3.1-8b.dense-crosscheck.yaml
   python3 scripts/submit_slurm_study.py --config configs/study.olmoe.demographic.yaml
 
 Watch:

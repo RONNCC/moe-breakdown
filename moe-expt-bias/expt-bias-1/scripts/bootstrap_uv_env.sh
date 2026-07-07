@@ -37,7 +37,7 @@ TRANSFORMERS_SPEC="${TRANSFORMERS_SPEC:-transformers>=4.44}"
 uv pip install "$TRANSFORMERS_SPEC" accelerate datasets sentencepiece protobuf
 
 # Optional: 4-bit/8-bit loading for the larger models on the ladder
-# (Qwen3-30B-A3B, Mixtral-8x7B, ERNIE-4.5-21B-A3B) on single-GPU nodes.
+# (Phi-3.5-MoE, Mixtral-8x7B, Llama-3.1-8B) on single-GPU nodes.
 if [[ "${INSTALL_BITSANDBYTES:-1}" == "1" ]]; then
   uv pip install bitsandbytes
 fi

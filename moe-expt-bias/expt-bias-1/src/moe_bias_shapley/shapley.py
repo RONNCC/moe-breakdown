@@ -211,27 +211,16 @@ def _shapley_weights(k: int) -> Dict[int, float]:
     return {s: (math.factorial(s) * math.factorial(k - s - 1)) / math.factorial(k) for s in range(k)}
 
 
-def compute_exact_shapley_for_pair(
+def _discover_active_experts(
     model: Any,
     tokenizer: Any,
     pair: PromptPair,
     moe_layer: MoeLayerHandle,
-    device: str = "cuda",
-) -> np.ndarray:
-    """Exact Shapley values for the top-K active experts at `moe_layer`, using
-    expert-output ablation, evaluated on the bias-gap payoff for `pair`.
-
-    Because only the top-K routed experts for the *last* token's forward
-    pass are considered "active" (per Sec 2.4), the player set is small
-    (K, typically 1-8) and 2^K coalitions is tractable.
-
-    NOTE: this requires 2^K forward passes per pair per layer, so it should
-    only be run on a prompt subsample (Experiment 4 cross-check), not the
-    full benchmark set.
-    """
-    import torch
-
-    # 1. Determine the active expert set for this layer using a single fwd pass.
+    device: str,
+    max_k: int = 10,
+) -> List[int]:
+    """Find the top-K active expert set for `moe_layer` on `pair.stereo`,
+    truncated to `max_k` so 2^K coalition enumeration stays tractable."""
     state = attach_router_hooks(model)
     _ = _sequence_logprob(model, tokenizer, pair.stereo, device)
     if moe_layer.layer_index not in state.captured:
@@ -241,18 +230,34 @@ def compute_exact_shapley_for_pair(
     detach_hooks(state)
 
     active_experts = sorted(set(topk_idx.flatten().tolist()))
+    if len(active_experts) > max_k:
+        log.warning(
+            "Active expert set size %d too large for exact Shapley — truncating to %d",
+            len(active_experts), max_k,
+        )
+        active_experts = active_experts[:max_k]
+    return active_experts
+
+
+def _build_coalition_payoff_cache(
+    model: Any,
+    tokenizer: Any,
+    pair: PromptPair,
+    moe_layer: MoeLayerHandle,
+    active_experts: List[int],
+    device: str,
+) -> Dict[frozenset, float]:
+    """Ablate every subset of `active_experts` (2^k forward-pass pairs) and
+    cache the resulting bias-gap payoff V(S) for each coalition S.
+
+    Shared by `compute_exact_shapley_for_pair` (marginal Shapley values) and
+    `compute_shapley_interactions_for_pair` (pairwise interaction/synergy
+    values, Experiment 3) since both need the same full coalition lattice —
+    computing it once avoids duplicating the 2^K forward passes.
+    """
+    import torch
+
     k = len(active_experts)
-    if k == 0:
-        return np.zeros(moe_layer.num_experts, dtype=np.float64)
-    if k > 10:
-        log.warning("Active expert set size %d too large for exact Shapley — truncating to 10", k)
-        active_experts = active_experts[:10]
-        k = 10
-
-    weights = _shapley_weights(k)
-
-    # 2. Monkey-patch the expert list's forward to zero out ablated experts'
-    # contribution for a given coalition mask.
     original_forwards = {e: moe_layer.experts[e].forward for e in active_experts}
 
     def make_zero_forward():
@@ -277,29 +282,180 @@ def compute_exact_shapley_for_pair(
         logp_a = _sequence_logprob(model, tokenizer, pair.anti_stereo, device)
         return _bias_gap_from_logits(logp_s, logp_a)
 
-    phi = np.zeros(moe_layer.num_experts, dtype=np.float64)
+    cache: Dict[frozenset, float] = {}
     try:
-        # Cache payoff(S) for all 2^k coalitions.
-        cache: Dict[frozenset, float] = {}
         for r in range(k + 1):
             for combo in itertools.combinations(active_experts, r):
                 s = frozenset(combo)
                 cache[s] = payoff(set(s))
-
-        for e in active_experts:
-            others = [x for x in active_experts if x != e]
-            total = 0.0
-            for r in range(len(others) + 1):
-                for combo in itertools.combinations(others, r):
-                    s = frozenset(combo)
-                    s_with_e = frozenset(combo + (e,))
-                    marginal = cache[s_with_e] - cache[s]
-                    total += weights[r] * marginal
-            phi[e] = total
     finally:
         restore()
 
+    return cache
+
+
+def compute_exact_shapley_for_pair(
+    model: Any,
+    tokenizer: Any,
+    pair: PromptPair,
+    moe_layer: MoeLayerHandle,
+    device: str = "cuda",
+) -> np.ndarray:
+    """Exact Shapley values for the top-K active experts at `moe_layer`, using
+    expert-output ablation, evaluated on the bias-gap payoff for `pair`.
+
+    Because only the top-K routed experts for the *last* token's forward
+    pass are considered "active" (per Sec 2.4), the player set is small
+    (K, typically 1-8) and 2^K coalitions is tractable.
+
+    NOTE: this requires 2^K forward passes per pair per layer, so it should
+    only be run on a prompt subsample (Experiment 4 cross-check), not the
+    full benchmark set.
+    """
+    active_experts = _discover_active_experts(model, tokenizer, pair, moe_layer, device)
+    k = len(active_experts)
+    phi = np.zeros(moe_layer.num_experts, dtype=np.float64)
+    if k == 0:
+        return phi
+
+    weights = _shapley_weights(k)
+    cache = _build_coalition_payoff_cache(model, tokenizer, pair, moe_layer, active_experts, device)
+
+    for e in active_experts:
+        others = [x for x in active_experts if x != e]
+        total = 0.0
+        for r in range(len(others) + 1):
+            for combo in itertools.combinations(others, r):
+                s = frozenset(combo)
+                s_with_e = frozenset(combo + (e,))
+                marginal = cache[s_with_e] - cache[s]
+                total += weights[r] * marginal
+        phi[e] = total
+
     return phi
+
+
+# =========================================================================== #
+# Experiment 3: Shapley interaction values (collectivity / synergy check)      #
+# =========================================================================== #
+
+@dataclass
+class InteractionResult:
+    """Marginal (phi) vs pairwise-synergy (interaction) decomposition of bias
+    attribution for one MoE layer, aggregated over a prompt subsample."""
+    active_experts: List[int]
+    phi: Dict[int, float]                    # marginal Shapley value per expert
+    interactions: Dict[tuple, float]          # {(e_i, e_j): interaction value}
+    synergy_fraction: float                   # |synergy| / (|marginal| + |synergy|)
+    n_pairs: int
+
+
+def _shapley_interaction_weights(n: int) -> Dict[int, float]:
+    """Coalition weights for the pairwise Shapley interaction index (Grabisch
+    & Roubens), keyed by |S| where S ranges over subsets of N\\{i,j}
+    (|N\\{i,j}| = n - 2)."""
+    import math
+    return {
+        s: (math.factorial(s) * math.factorial(n - s - 2)) / math.factorial(n - 1)
+        for s in range(n - 1)
+    }
+
+
+def compute_shapley_interactions_for_pair(
+    model: Any,
+    tokenizer: Any,
+    pair: PromptPair,
+    moe_layer: MoeLayerHandle,
+    device: str = "cuda",
+) -> InteractionResult:
+    """Decompose the bias-gap payoff at `moe_layer` into per-expert marginal
+    Shapley values and pairwise Shapley *interaction* values (Sec 3.3 / C2-lite
+    collectivity check), using the standard interaction index:
+
+        Phi_ij = sum_{S subseteq N\\{i,j}} w(|S|) *
+                 (V(S+{i,j}) - V(S+{i}) - V(S+{j}) + V(S))
+
+    A large |Phi_ij| relative to the individual |phi_i|, |phi_j| indicates
+    bias is a property of the expert *pair/coalition* (synergy), not either
+    expert alone — evidence for the "standing committees" hypothesis
+    [arXiv 2601.03425] rather than single-expert specialization.
+    """
+    active_experts = _discover_active_experts(model, tokenizer, pair, moe_layer, device)
+    n = len(active_experts)
+    if n < 2:
+        return InteractionResult(active_experts=active_experts, phi={}, interactions={}, synergy_fraction=0.0, n_pairs=0)
+
+    cache = _build_coalition_payoff_cache(model, tokenizer, pair, moe_layer, active_experts, device)
+
+    # Marginal Shapley values (reuse the same cache — no extra forward passes).
+    marginal_weights = _shapley_weights(n)
+    phi: Dict[int, float] = {}
+    for e in active_experts:
+        others = [x for x in active_experts if x != e]
+        total = 0.0
+        for r in range(len(others) + 1):
+            for combo in itertools.combinations(others, r):
+                s = frozenset(combo)
+                s_with_e = frozenset(combo + (e,))
+                total += marginal_weights[r] * (cache[s_with_e] - cache[s])
+        phi[e] = total
+
+    # Pairwise interaction values.
+    interaction_weights = _shapley_interaction_weights(n)
+    interactions: Dict[tuple, float] = {}
+    for i_idx, e_i in enumerate(active_experts):
+        for e_j in active_experts[i_idx + 1:]:
+            rest = [x for x in active_experts if x not in (e_i, e_j)]
+            total = 0.0
+            for r in range(len(rest) + 1):
+                for combo in itertools.combinations(rest, r):
+                    s = frozenset(combo)
+                    s_ij = frozenset(combo + (e_i, e_j))
+                    s_i = frozenset(combo + (e_i,))
+                    s_j = frozenset(combo + (e_j,))
+                    delta = cache[s_ij] - cache[s_i] - cache[s_j] + cache[s]
+                    total += interaction_weights[r] * delta
+            interactions[(e_i, e_j)] = total
+
+    abs_marginal = sum(abs(v) for v in phi.values())
+    abs_synergy = sum(abs(v) for v in interactions.values())
+    synergy_fraction = abs_synergy / (abs_marginal + abs_synergy) if (abs_marginal + abs_synergy) > 0 else 0.0
+
+    return InteractionResult(
+        active_experts=active_experts,
+        phi=phi,
+        interactions=interactions,
+        synergy_fraction=synergy_fraction,
+        n_pairs=1,
+    )
+
+
+def aggregate_interaction_results(results: List[InteractionResult]) -> Dict[str, Any]:
+    """Aggregate per-pair InteractionResults into a single summary dict:
+    mean synergy fraction (the headline C2-lite number) plus the top
+    expert-pairs by mean |interaction| across the subsample.
+    """
+    if not results:
+        return {"n_pairs": 0, "mean_synergy_fraction": 0.0, "top_interactions": []}
+
+    synergy_fracs = [r.synergy_fraction for r in results if r.n_pairs > 0]
+    pair_totals: Dict[tuple, float] = {}
+    pair_counts: Dict[tuple, int] = {}
+    for r in results:
+        for key, val in r.interactions.items():
+            pair_totals[key] = pair_totals.get(key, 0.0) + abs(val)
+            pair_counts[key] = pair_counts.get(key, 0) + 1
+
+    mean_interactions = {k: pair_totals[k] / pair_counts[k] for k in pair_totals}
+    top_interactions = sorted(mean_interactions.items(), key=lambda kv: -kv[1])[:20]
+
+    return {
+        "n_pairs": len(results),
+        "mean_synergy_fraction": float(np.mean(synergy_fracs)) if synergy_fracs else 0.0,
+        "top_interactions": [
+            {"experts": list(k), "mean_abs_interaction": v} for k, v in top_interactions
+        ],
+    }
 
 
 # =========================================================================== #
