@@ -9,7 +9,11 @@ study_name: exp2-dense-baseline-phi3.5-mini
 
 model_id: microsoft/Phi-3.5-mini-instruct
 model_family: dense
-trust_remote_code: true
+# trust_remote_code=false: use transformers' native Phi3ForCausalLM instead of
+# the repo's bundled custom modeling code, which calls the removed
+# DynamicCache.from_legacy_cache API on the installed transformers version
+# (AttributeError). Native support has been in transformers since 4.41.
+trust_remote_code: false
 torch_dtype: bfloat16
 device_map: auto
 
