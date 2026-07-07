@@ -332,7 +332,7 @@ ax1.grid(True, linestyle=":", alpha=0.5)
 
 # Right axis: Selectivity Metric
 ax2 = ax1.twinx()
-line_sel = ax2.plot(x_ablate, y_selectivity, marker="^", markersize=7, color="#2CA02C", linestyle=":", linewidth=2.2, label="Selectivity ($\Delta$Bias / $\Delta$PPL)", zorder=6)
+line_sel = ax2.plot(x_ablate, y_selectivity, marker="^", markersize=7, color="#2CA02C", linestyle=":", linewidth=2.2, label=r"Selectivity ($\Delta$Bias / $\Delta$PPL)", zorder=6)
 ax2.set_ylabel("Selectivity Ratio", color="#2CA02C", fontweight="bold")
 ax2.tick_params(axis='y', labelcolor="#2CA02C")
 ax2.set_ylim(-0.5, 10.0)
