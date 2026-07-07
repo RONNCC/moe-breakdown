@@ -184,5 +184,5 @@ Full results and analysis in `RESEARCH-JOURNAL.md`.
 - **Causal Selectivity Headline (Exp 4 & $H_{\text{selectivity}}$):** Introduced the Selectivity metric ($\Delta\text{bias} / \Delta\text{perplexity}$). Proved that targeted expert ablation fails to surgically remove bias because stereotypes ride on general-capability experts (selectivity collapses to $\approx 1.08$ at scale). This causal finding reconciles routing-level diffuseness with causal targetability.
 - **Polite Framing:** Replaced any combative or rude wording ("fundamentally misguided") with precise, objective academic phrasing ("severely capability-constrained").
 
-Report draft: `gemini_report_draft.tex` / `report_draft.pdf`. Figures: `figures/`.
+Report draft: `moe_bias_report_draft.tex` / `report_draft.pdf`. Figures: `figures/`.
 Figure generation code: `expt-bias-1/scripts/build_figures.py`.
