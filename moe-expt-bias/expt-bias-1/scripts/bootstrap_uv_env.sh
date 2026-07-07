@@ -29,13 +29,14 @@ fi
 uv pip install --upgrade pip setuptools wheel
 uv pip install -e .
 
-# torch>=2.5.0 required for torch.accelerator (needed by transformers MXFP4
-# quantizer used by openai/gpt-oss-120b). CUDA 12.1 wheel index.
-TORCH_SPEC="${TORCH_SPEC:-torch==2.5.1}"
+# torch>=2.6.0 required for torch.accelerator (added in 2.6.0; needed by the
+# transformers MXFP4 quantizer for openai/gpt-oss-120b). CUDA 12.1 wheel index.
+TORCH_SPEC="${TORCH_SPEC:-torch==2.6.0}"
 uv pip install "$TORCH_SPEC" --index-url https://download.pytorch.org/whl/cu121
 
 TRANSFORMERS_SPEC="${TRANSFORMERS_SPEC:-transformers>=4.44}"
-uv pip install "$TRANSFORMERS_SPEC" accelerate datasets sentencepiece protobuf
+# tiktoken required by alpindale/dbrx-instruct custom modeling code (trust_remote_code)
+uv pip install "$TRANSFORMERS_SPEC" accelerate datasets sentencepiece protobuf tiktoken
 
 # Optional: 4-bit/8-bit loading for the larger models on the ladder
 # (Phi-3.5-MoE, Mixtral-8x7B, Llama-3.1-8B) on single-GPU nodes.
