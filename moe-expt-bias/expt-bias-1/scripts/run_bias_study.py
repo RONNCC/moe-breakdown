@@ -53,7 +53,7 @@ def run_study(
 
     if num_shards > 1:
         pairs = pairs[shard_idx::num_shards]
-        log.info("After sharding: %d pairs (shard %d of %d)", len(pairs), shard_idx, num_shards)
+        log.info("After sharding: %d pairs (shard %d of %d)", len(pairs), shard_idx + 1, num_shards)
 
     model, tokenizer = load_model_and_tokenizer(cfg)
     device = next(model.parameters()).device
@@ -76,9 +76,9 @@ def run_study(
     }
     shard_tag: str | None = None
     if num_shards > 1:
-        metadata["shard_idx"] = shard_idx
+        metadata["shard_idx"] = shard_idx + 1
         metadata["num_shards"] = num_shards
-        shard_tag = f"shard{shard_idx}of{num_shards}"
+        shard_tag = f"shard{shard_idx + 1}of{num_shards}"
 
     save_results(out_dir, result, metadata, shard_tag=shard_tag)
     log.info("Done. Results in %s", out_dir)

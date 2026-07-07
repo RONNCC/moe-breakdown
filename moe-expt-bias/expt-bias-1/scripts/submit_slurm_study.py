@@ -39,7 +39,7 @@ def build_sbatch_command(
 
     job_name = f"bias-{cfg.study_name}"
     if num_shards > 1:
-        job_name += f"-s{shard_idx}of{num_shards}"
+        job_name += f"-s{shard_idx + 1}of{num_shards}"
 
     cmd = [
         "sbatch",

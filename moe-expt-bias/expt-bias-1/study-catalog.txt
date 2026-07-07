@@ -172,7 +172,9 @@ Watch:
 #   7-8B: 1800 pairs total → 900/shard × 66 passes × 0.3s ≈ 4.95hr each.
 #   Phi-mini (3.8B): 4000 total → 2000/shard × 66 × 0.1s ≈ 3.7hr each.
 #   Each pair of shard jobs: 2 × 1×A100×5hr = 600 GPU-min ✓.
-# Results: result_shard0of2.json / result_shard1of2.json in study output dir.
+# Results: result_shard1of2.json / result_shard2of2.json in study output dir.
+# NOTE: jobs 5484046-5484053 (submitted before 1-based rename) output
+#   result_shard0of2.json / result_shard1of2.json — glob both patterns.
 # DBRX: ~5s/pair → 5000 pairs ≈ 7hr; 2×H200×7hr = 840 GPU-min ✓.
 
   # Exp1 v1 (routing_contrast, max_prompts: 5000):

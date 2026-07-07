@@ -176,7 +176,9 @@ Full results and analysis in `RESEARCH-JOURNAL.md`.
   - Llama-3.1-8B: 1800 pairs → shards 5484050/5484051
   - Llama-2-7B: 1800 pairs → shards 5484052/5484053
 - Exp5 v1 (demographic, OLMoE, 5000 pairs): job 5484037
-- v1 output files: `result_shard0of2.json` + `result_shard1of2.json`; merge
+- v1 output files: `result_shard1of2.json` + `result_shard2of2.json`; merge
+  (jobs 5484046–5484053 were submitted before the 1-based rename — they output
+  `result_shard0of2.json` / `result_shard1of2.json` instead; glob both patterns)
   by pooling `n_pairs` and concatenating `phi` arrays before recomputing metrics.
 
 **Key findings:** H0 strongly supported. H1/H2 rejected. DBRX H=0.919 ≈ Mixtral

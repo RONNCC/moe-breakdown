@@ -257,7 +257,7 @@ The following are noted for completeness but not yet implemented:
 
 Gemma 4 is excluded from v1 (null bias signal at n=400 — more pairs will not change the finding).
 
-**Sharding for dense LOO:** `dense_loo` costs 66 fwd passes/pair on 32-layer models; the compute ceiling is ~900 pairs/5hr on 1×A100. `submit_slurm_study.py --num-shards 2` submits two independent jobs processing `pairs[0::2]` and `pairs[1::2]` respectively. Results land as `result_shard0of2.json` / `result_shard1of2.json` in the same study directory and are merged post-hoc by pooling `n_pairs` and concatenating `phi` arrays before recomputing metrics.
+**Sharding for dense LOO:** `dense_loo` costs 66 fwd passes/pair on 32-layer models; the compute ceiling is ~900 pairs/5hr on 1×A100. `submit_slurm_study.py --num-shards 2` submits two independent jobs processing `pairs[0::2]` and `pairs[1::2]` respectively. Results land as `result_shard1of2.json` / `result_shard2of2.json` in the same study directory and are merged post-hoc by pooling `n_pairs` and concatenating `phi` arrays before recomputing metrics. **Note:** the first batch of shard jobs (5484046–5484053, submitted 2026-07-07) used 0-based naming (`result_shard0of2.json` / `result_shard1of2.json`); all future sharded runs use 1-based names.
 
 **Config naming:** all v1 configs have `-v1` appended to `study_name` (e.g. `exp1-concentration-olmoe-1b-7b-v1`). Output dirs are separate from the original runs so original results are preserved.
 
