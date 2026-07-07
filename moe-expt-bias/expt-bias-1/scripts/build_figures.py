@@ -206,8 +206,8 @@ print("Generating Figure 3: Metric Discrimination (Sanity Control)...")
 plt.figure(figsize=(7.5, 6))
 
 pairs = ["Pair 1\n(OLMoE-1B-7B vs. OLMo-7B)", "Pair 2\n(Phi-3.5-MoE vs. Phi-3.5-mini)"]
-moe_h = [0.900, 0.889]
-dense_h = [0.719, 0.758]
+moe_h = [0.8786, 0.8779]
+dense_h = [0.7041, 0.7583]
 
 x = np.arange(len(pairs))
 width = 0.32
