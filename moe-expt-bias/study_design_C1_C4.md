@@ -54,6 +54,7 @@ The *method* of attributing behaviour to experts in MoE is established, but **no
 | OLMo-7B (dense) | Apache-2.0 / AllenAI | 7B / 7B | 1.0 | **dense baseline (same family as OLMoE)** |
 | Phi-3.5 (dense, 3.8B) | MIT / Microsoft | 3.8B / 3.8B | 1.0 | dense sibling of Phi-3.5-MoE |
 | Llama-3.1-8B (dense) | Llama Community / Meta | 8B / 8B | 1.0 | dense cross-check |
+| Llama-2-7B (dense) | Llama 2 Community / Meta | 7B / 7B | 1.0 | cross-generation dense cross-check |
 
 The **OLMoE-1B-7B vs OLMo-7B dense** pair is the primary matched comparison: same family, same training data, only the architecture differs [Expert Strikes Back uses exactly this pair]. This controls for data/capability confounds — the cleanest possible MoE-vs-dense test. The **Phi-3.5-MoE vs Phi-3.5-dense** pair is a secondary matched comparison. The ladder spans N_A/N ≈ 0.06 → 0.16 → 0.25 → 1.0, covering the sparsity→density axis needed for C1.
 

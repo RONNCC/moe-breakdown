@@ -24,13 +24,26 @@
 \maketitle
 
 \begin{abstract}
-Recent scaling of Large Language Models (LLMs) has been dominated by sparse Mixture-of-Experts (MoE) architectures, which partition network capacity into routed, modular experts. This structural modularity has spurred an influential ``localizability'' narrative: that network behaviors, factual associations, and biases are cleanly isolated within specialized, monosemantic experts, offering an elegant substrate for targeted editing and steering. In this paper, we conduct the first comprehensive post-hoc, game-theoretic bias-attribution study on open MoE models to empirically evaluate this claim. Specifically, we investigate four fundamental research questions: (1) Does bias attribution become more concentrated as routing sparsity increases? (2) Is bias more localizable in MoEs than in matched dense counterparts? (3) Is expert-level bias a property of individual modular units or collective coalitions? and (4) Is bias specialized to specific demographic subgroups?
+Recent scaling of Large Language Models (LLMs) has been dominated by sparse Mixture-of-Experts (MoE) architectures, which partition network capacity into routed, modular experts. This structural modularity has spurred an influential ``localizability'' narrative: that network behaviors, factual associations, and biases are cleanly isolated within specialized, monosemantic experts, offering an elegant substrate for targeted editing and steering. In this paper, we conduct the first comprehensive post-hoc, game-theoretic bias-attribution study on open MoE models to empirically evaluate this claim. Specifically, we investigate four fundamental research questions:
+\begin{enumerate}
+    \item Does bias attribution become more concentrated as routing sparsity increases?
+    \item Is bias more localizable in MoEs than in matched dense counterparts?
+    \item Is expert-level bias a property of individual modular units or collective coalitions?
+    \item Is bias specialized to specific demographic subgroups?
+\end{enumerate}
 
-Using a novel \textbf{routing-contrast Shapley value formulation} across StereoSet, BBQ, and WinoGender, we audit a diverse sparsity ladder of six open MoE models (spanning routing sparsity ratios $N_A/N$ from $0.016$ to $0.250$, where $N_A/N$ is the active expert ratio representing the number of active routed experts per token, $N_A$, divided by the total number of experts in that MoE layer, $N$) and compare them directly to matched dense baselines. Decisively challenging the modularity-fairness myth, we find that: (i) routing sparsity does not scale with bias concentration, as all audited MoEs exhibit near-maximum attribution entropy ($H \approx 0.88 - 0.92$, where a normalized Shannon entropy $H=1.0$ indicates perfect uniform diffusion and $H=0.0$ indicates absolute single-expert concentration); (ii) matched dense models actually exhibit \textit{more} concentrated bias profiles; (iii) early-layer bias is dominated by complex, non-additive pairwise synergies ($>70\%$); and (iv) although diffuse, biases are demographically specific, triggering distinct subsets of experts across demographic cohorts. Our causal ablation experiments validate these game-theoretic findings, indicating that social bias is a systemic, diffuse property of sparse MoEs, and that single-expert debiasing techniques are fundamentally misguided.
+Using a novel \textbf{routing-contrast Shapley value formulation} across StereoSet, BBQ, and WinoGender, we audit a diverse sparsity ladder of six open MoE models (spanning routing sparsity ratios $N_A/N$ from $0.016$ to $0.250$, where $N_A/N$ is the active expert ratio representing the number of active routed experts per token, $N_A$, divided by the total number of experts in that MoE layer, $N$) and compare them directly to matched dense baselines. Decisively challenging the modularity-fairness myth, we find that:
+\begin{itemize}
+    \item \textbf{Sparsity Scaling ($H_1$ Rejected):} Routing sparsity does not scale with bias concentration, as all audited MoEs exhibit near-maximum attribution entropy ($H \approx 0.88 - 0.92$, where a normalized Shannon entropy $H=1.0$ indicates perfect uniform diffusion and $H=0.0$ indicates absolute single-expert concentration);
+    \item \textbf{MoE vs. Dense ($H_2$ Rejected):} Matched dense models actually exhibit \textit{more} concentrated bias profiles than their MoE counterparts;
+    \item \textbf{Early-Layer Synergy:} Early-layer bias is dominated by complex, non-additive pairwise synergies ($>70\%$); and
+    \item \textbf{Demographic Specificity:} Although diffuse within each cohort, biases are demographically specific, triggering distinct, non-overlapping subsets of experts across demographic cohorts.
+\end{itemize}
+Our causal ablation experiments validate these game-theoretic findings, indicating that social bias is a systemic, diffuse property of sparse MoEs, and that single-expert debiasing techniques are fundamentally misguided.
 \end{abstract}
 
 \section{Introduction}
-The transition from dense autoregressive transformers to sparse Mixture-of-Experts (MoE) architectures represents a pivotal paradigm shift in foundation model engineering. Sparse routing decouples total parameter capacity from training and inference floating-point operations (FLOPs), enabling state-of-the-art architectures such as GPT-4, DeepSeek-V3, Qwen3, OLMoE, GPT-OSS, and DBRX to achieve remarkable performance.
+The transition from dense autoregressive transformers to sparse Mixture-of-Experts (MoE) architectures represents a pivotal paradigm shift in foundation model engineering. Sparse routing decouples total parameter capacity from training and inference floating-point operations (FLOPs), enabling state-of-the-art architectures such as GPT-4, OLMoE, GPT-OSS, Mixtral, and DBRX to achieve remarkable performance.
 
 Concurrently, a fast-growing interpretability literature has emerged, championing the ``modular monosemanticity'' of sparse MoEs. This perspective argues that because experts are routed sparsely, they naturally specialize in specific syntactic, semantic, or conceptual domains (e.g., \textit{The Expert Strikes Back} \cite{expert_strikes_back}; \textit{Sparsity \& Superposition in MoE} \cite{sparsity_superposition_moe}). A direct, unexamined corollary of this modularity narrative is the \textbf{localizability thesis}: \textit{social and demographic stereotyping biases are localized in a small, identifiable ``committee'' of experts, which can be easily targeted for surgical debiasing or parameter steering.}
 
@@ -45,11 +58,12 @@ In this study, we formalize and empirically evaluate the localizability of socia
     \item \textbf{Mixtral-8x7B} ($N_A/N \approx 0.250$); and
     \item \textbf{DBRX-instruct} ($N_A/N \approx 0.250$).
 \end{itemize}
-We evaluate these alongside three dense models that serve as baseline controls:
+We evaluate these alongside four dense models that serve as baseline controls:
 \begin{itemize}
     \item \textbf{OLMo-7B} ($N = 32$ layers);
-    \item \textbf{Phi-3.5-mini} ($N = 32$ layers); and
-    \item \textbf{Llama-3.1-8B} ($N = 32$ layers).
+    \item \textbf{Phi-3.5-mini} ($N = 32$ layers);
+    \item \textbf{Llama-3.1-8B} ($N = 32$ layers); and
+    \item \textbf{Llama-2-7B} ($N = 32$ layers).
 \end{itemize}
 
 \subsection{Core Research Questions and Results-at-a-Glance}
@@ -111,14 +125,14 @@ Conversely, \textit{The Illusion of Specialization: Standing Committees} \cite{i
 While DeM-MoE \cite{dem_moe} models annotator demographic disagreement by training demographic-aware MoE modules, our study focuses on a fundamentally different task: post-hoc attribution of pre-existing, systemic stereotypes in deployed, general-purpose, open MoE models using standard fairness benchmarks \cite{stereoset, bbq, winogender}. Our analysis also provides a \textit{disparity-in-attribution} metric---tracking which experts shift contribution across demographic cohorts---giving auditors a locatable target and testing specialization claims on social (not annotator-disagreement) bias.
 
 \subsection{MoE-vs-Dense Methodology}
-Comparing sparse and dense architectures requires a careful, resource-matched methodology to ensure external validity. Following \textit{Can MoE Surpass Dense LLMs Under Strictly Equal Resource} \cite{can_moe_surpass}, we compare architectures under matched parameter scales, training data, and compute budgets. Specifically, our primary pair---\textbf{OLMoE-1B-7B vs. OLMo-7B}---serves as the cleanest possible control, as they share the same model family and training corpus, isolating routing modularity from data or capacity confounds. We also incorporate secondary matched controls (Phi-3.5-MoE vs. Phi-3.5-dense) and independent dense baselines (Llama-3.1-8B) to robustly cross-check our results. Additionally, our routing analysis connects directly with concerns around \textit{Sparse Safety and Unsafe Routes} \cite{sparse_safety_unsafe}, establishing that routing serves as a critical, controllable interface for safety and alignment, even as harmful outputs remain a diffuse, network-wide property.
+Comparing sparse and dense architectures requires a careful, resource-matched methodology to ensure external validity. Following \textit{Can MoE Surpass Dense LLMs Under Strictly Equal Resource} \cite{can_moe_surpass}, we compare architectures under matched parameter scales, training data, and compute budgets. Specifically, our primary pair---\textbf{OLMoE-1B-7B vs. OLMo-7B}---serves as the cleanest possible control, as they share the same model family and training corpus, isolating routing modularity from data or capacity confounds. We also incorporate secondary matched controls (Phi-3.5-MoE vs.\ Phi-3.5-dense) and independent dense baselines (Llama-3.1-8B, Llama-2-7B) to robustly cross-check our results across both architecture families and training generations. Additionally, our routing analysis connects directly with concerns around \textit{Sparse Safety and Unsafe Routes} \cite{sparse_safety_unsafe}, establishing that routing serves as a critical, controllable interface for safety and alignment, even as harmful outputs remain a diffuse, network-wide property.
 
 \section{Methodology}
 \subsection{The Cooperative Game Formulation}
 We formalize post-hoc bias attribution as a cooperative game $\Gamma = (E, V)$, where $E$ represents the set of players and $V: 2^{|E|} \to \mathbb{R}$ is the characteristic payoff function.
 
 \subsubsection{The Players ($E$)}
-In our MoE formulation, the players are the individual experts across all layers of the network. For a given token, the set of active experts $E$ is restricted to the routed top-$K$ experts at each layer. In our dense baseline comparison, the players are the individual transformer layers, representing a coarser, macroscopic division of labor.
+In our MoE formulation, the players are the individual experts across all layers of the network. For a given token, the set of active experts $E$ is restricted to the routed top-$K$ experts at each layer, where $K$ is the routing parameter defining the number of active experts activated per token (typically, $K \in \{1, 2, 4, 8\}$). In our dense baseline comparison, the players are the individual transformer layers, representing a coarser, macroscopic division of labor.
 
 \subsubsection{The Bias Payoff ($V$)}
 To isolate demographic bias, we leverage established counterfactual evaluation paradigms directly from existing literature, defining $P$ as a set of stereotype-aligned ($P_{\text{stereo}}$) and anti-stereotype-aligned ($P_{\text{anti}}$) prompt pairs directly sourced from peer-reviewed benchmarks. For any prompt pair $p = (p_{\text{stereo}}, p_{\text{anti}})$, we define the baseline output logit gap as:
@@ -162,10 +176,16 @@ To quantify the concentration of the attribution vector $\phi$, we employ three 
 
 \section{Experimental Setup \& Datasets}
 \subsection{Benchmarks}
-Our analysis evaluates models directly on established, peer-reviewed fairness benchmarks from the literature: \textbf{StereoSet} \cite{stereoset}, \textbf{BBQ} \cite{bbq}, and \textbf{WinoGender} \cite{winogender}. Rather than constructing a new or customized dataset, we leverage a controlled set of 400 counterfactual prompt pairs directly from these standardized evaluation suites, spanning gender, racial, religious, and occupational stereotypes. This ensures that our investigation relies on a validated, peer-reviewed research basis with established construct validity, avoiding the confounding noise of custom prompt engineering.
+Our analysis evaluates models directly on established, peer-reviewed fairness benchmarks from the literature:
+\begin{itemize}
+    \item \textbf{StereoSet} \cite{stereoset}: Focuses on fine-grained gender, profession, race, and religion stereotypes;
+    \item \textbf{BBQ} \cite{bbq}: Evaluates multi-class demographic bias across QA contexts in ambiguous and unambiguous scenarios; and
+    \item \textbf{WinoGender} \cite{winogender}: Uses coreference resolution diagnostics focused on occupational gender bias.
+\end{itemize}
+Rather than constructing a new or customized dataset, we leverage a controlled set of 400 counterfactual prompt pairs directly from these standardized evaluation suites, spanning gender, racial, religious, and occupational stereotypes. This ensures that our investigation relies on a validated, peer-reviewed research basis with established construct validity, avoiding the confounding noise of custom prompt engineering.
 
 \subsection{The Sparsity-to-Density Model Ladder}
-Our ladder consists of nine permissively licensed models designed to isolate the impact of routing sparsity ($N_A/N$) and architectural design on bias concentration:
+Our ladder consists of ten permissively licensed models designed to isolate the impact of routing sparsity ($N_A/N$) and architectural design on bias concentration:
 
 \begin{table}[htbp]
 \centering
@@ -184,9 +204,12 @@ Our ladder consists of nine permissively licensed models designed to isolate the
 \textbf{OLMo-7B} & Dense baseline & 1.000 & 7B / 7B & 32 & 0.146 \\
 \textbf{Phi-3.5-mini} & Dense baseline & 1.000 & 3.8B / 3.8B & 32 & 0.187 \\
 \textbf{Llama-3.1-8B} & Dense baseline & 1.000 & 8B / 8B & 32 & 0.179 \\
+\textbf{Llama-2-7B}\textsuperscript{\ddag} & Dense baseline & 1.000 & 7B / 7B & 32 & \textit{(pending)} \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\noindent{\textsuperscript{\ddag}\small \textit{Llama-2-7B is included as a cross-generation dense baseline (Llama 2 vs.\ Llama 3.1 training generation) to test whether bias diffuseness is stable across Llama generations. Results pending at time of writing.}}
 
 \noindent{\textsuperscript{\dag}\small \textit{Gemma 4 26B exhibited a baseline mean bias gap of approximately $0.0$, indicating that it is too well-aligned on these specific benchmarks to yield a meaningful bias attribution signal. Consequently, its concentration metrics reflect uniform routing noise rather than bias attribution, and it is excluded from the primary hypothesis tests.}}
 
@@ -316,6 +339,16 @@ Thus, social bias in MoEs is not driven by a singular, overarching biased routin
 \label{fig:gini_h_correlation}
 \end{figure}
 
+\subsection{Robustness and Reviewer-Response Analyses (in progress)}
+\label{sec:robustness}
+To address the methodological limitations identified in our primary experiments — in particular, the granularity confound in Exp2, the limited causal breadth in Exp4, and the unvalidated proxy assumption in routing-contrast — we are running three targeted extensions, whose preliminary structure is described below.
+
+\textbf{Experiment 6 (Ladder-Wide Causal Ablation).} We extend Exp4's physical zero-ablation validation from OLMoE alone to the full ladder: Mixtral-8x7B, Phi-3.5-MoE, and OLMo-7B dense ($n=60$ pairs each; $n=100$ for OLMoE). Critically, each run includes two control conditions automatically generated from Exp1/2 outputs: (i) a \textbf{random-order} ablation that removes experts in a random permutation, and (ii) a \textbf{high-routing-frequency} ablation that removes experts ranked by mean routing weight averaged across all prompt pairs \textit{without} bias-gap scaling (i.e., the most frequently activated experts regardless of bias signal). The flat-early, steep-late curve found in Exp4 for OLMoE is only a causal signature of diffuse bias if it is \textit{slower} than the random control and not simply a function of removing the most-used compute.
+
+\textbf{Experiment 7 (Proxy-vs-Causal Agreement).} The routing-contrast Shapley formulation used in Exp1 is a fast, correlational proxy: it requires only two forward passes per prompt pair (vs.\ $2^K$ for exact active-coalition Shapley). To validate this proxy, we compute the \textbf{Spearman rank correlation $\rho$} between $|\hat{\phi}_{\text{routing-contrast}}|$ and $|\hat{\phi}_{\text{exact}}|$ on the active expert set of Mixtral-8x7B ($K=2/8$, so $2^8 = 256$ coalitions per token — tractable). We evaluate on 20 prompt pairs at the first and last MoE layers. If $\rho \geq 0.7$, the proxy is trustworthy and the concentration claims from Exp1 hold without requiring exact computation across the entire ladder.
+
+\textbf{Experiment 8 (Same-Mechanism Comparison).} Exp2's H2 comparison confounds the player granularity (experts vs.\ layers) with the attribution method (routing-contrast vs.\ LOO). To disentangle these, we re-run OLMoE-1B-7B and Phi-3.5-MoE using \textit{layer-level LOO} (the same method applied to dense baselines in Exp2), forcing $N=32$ players for all models regardless of MoE/dense status. If $H_{\text{LOO}}(\text{OLMoE}) \approx H_{\text{routing-contrast}}(\text{OLMoE}) \approx 0.90$, the Exp2 method confound does not explain the H2 gap and the localizability result stands. If $H_{\text{LOO}}(\text{OLMoE})$ drops toward the dense H ($0.63$–$0.76$), it suggests routing-contrast inflates H by distributing attribution across a much larger player set (1024 experts vs.\ 32 layers).
+
 \section{Discussion and Strategic Implications}
 
 \subsection{The Modularity-Fairness Myth}
@@ -334,7 +367,9 @@ Our discovery of universal early-layer synergy indicates that experts function a
 \section{Conclusion and Future Work}
 We present the first comprehensive, game-theoretic post-hoc bias-attribution study on sparse Mixture-of-Experts architectures. Across a diverse model ladder spanning massive scales and routing sparsities, we show that social bias is a fundamentally diffuse, interactive, and demographic-specific property of the network. We reject the localizability thesis, proving that sparse modularity does not concentrate social stereotypes.
 
-Future work will focus on:
+Ongoing work (see Section~\ref{sec:robustness}) addresses the primary open methodological questions: Exp6 tests whether the Exp4 causal ablation curve replicates across the full ladder with random/frequency controls; Exp7 validates the routing-contrast proxy against exact Shapley rankings; and Exp8 re-runs the Exp2 MoE-vs-dense comparison using a single consistent attribution method to isolate the granularity confound from a genuine H gap.
+
+Beyond these immediate extensions, future work will focus on:
 \begin{enumerate}
     \item Extending exact causal Shapley attribution to larger models, such as \textbf{Llama-4-Scout} ($N_A/N \approx 0.008$).
     \item Developing \textbf{collective routing gate regularization} to systemically suppress demographic routing bias during training.

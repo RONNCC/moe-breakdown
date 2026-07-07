@@ -50,6 +50,9 @@ Experiment 2 — MoE vs dense localizability (RQ2 / C4)
   configs/study.phi3.5-mini-dense.dense-baseline.yaml Phi-3.5-mini (dense) — secondary matched
                                                        pair vs Phi-3.5-MoE
   configs/study.llama-3.1-8b.dense-crosscheck.yaml    Llama-3.1-8B (dense) — tertiary cross-check
+  configs/study.llama-2-7b.dense-crosscheck-2.yaml    Llama-2-7B (dense)   — cross-generation
+                                                       complement; same scale/depth as 3.1-8B,
+                                                       different training generation (Llama 2 vs 3.1)
   Expected (H2): H_MoE < H_dense (localizability ratio LR > 1).
   Dense attribution uses leave-one-out (LOO) layer ablation — an approximation,
   not exact Shapley (see shapley.py::compute_dense_layer_contrast docstring).
@@ -134,6 +137,7 @@ Submit to Slurm from the ICE login node:
   python3 scripts/submit_slurm_study.py --config configs/study.olmo-7b.dense-baseline.yaml
   python3 scripts/submit_slurm_study.py --config configs/study.phi3.5-mini-dense.dense-baseline.yaml
   python3 scripts/submit_slurm_study.py --config configs/study.llama-3.1-8b.dense-crosscheck.yaml
+  python3 scripts/submit_slurm_study.py --config configs/study.llama-2-7b.dense-crosscheck-2.yaml
   python3 scripts/submit_slurm_study.py --config configs/study.olmoe.demographic.yaml
   # Extensions (Exp1 sparsity-ladder additions):
   python3 scripts/submit_slurm_study.py --config configs/study.dbrx.concentration.yaml
