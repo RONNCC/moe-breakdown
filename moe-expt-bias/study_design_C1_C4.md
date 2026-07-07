@@ -240,7 +240,28 @@ The following are noted for completeness but not yet implemented:
 - **Committee ablation (Exp9):** Ablate top expert *pairs/triplets* from Exp3 interaction results, rather than single experts. Tests whether the synergy (70–74% of early-layer mass) is a property of specific standing committees. Requires `compute_committee_ablation_curve` (new code).
 - **Capability preservation (Exp10):** Measure MMLU accuracy or perplexity on a held-out set before/after ablation, to confirm "debiasing" does not just degrade the model.
 - **Quantization sensitivity:** GPT-OSS-120B uses MXFP4 quantized weights; H=0.880 may reflect weight distribution distortion rather than true routing concentration. A BF16 run or a second quantized comparison point would control for this.
-- **Prompt-set robustness:** Bootstrap resampling over the 400 prompt pairs + subgroup-stratified H across demographic slices (gender/race/religion subsets of StereoSet).
+- **Prompt-set robustness:** Bootstrap resampling over prompt pairs + subgroup-stratified H across demographic slices (gender/race/religion subsets of StereoSet). The original 400-pair runs were a conservative placeholder; v1 reruns (see §6.5) scale to 1800–5000 pairs and directly address this concern. Bootstrap CIs over the larger pool should replace point estimates in the final paper.
+
+### 6.5 v1 — Full-dataset reruns (Exp1 / Exp2 / Exp5)
+
+**Motivation:** The original configs capped `max_prompts: 400` — a conservative placeholder copied from dense LOO configs where compute justified the limit. For `routing_contrast` (2 passes/pair) this was ~33× too conservative. v1 reruns use the full available benchmark data within compute budget.
+
+**Scope and pair counts:**
+
+| Exp | Method | Models | v1 max_prompts | Notes |
+|---|---|---|---|---|
+| Exp1 | routing_contrast | OLMoE, Phi-3.5-MoE, Mixtral, DBRX, GPT-OSS | 5000 | single job each |
+| Exp2 | dense_loo | OLMo-7B, Llama-3.1-8B, Llama-2-7B | 1800 (900/shard) | 2 sharded jobs each |
+| Exp2 | dense_loo | Phi-3.5-mini | 4000 (2000/shard) | 2 sharded jobs; 3.8B faster |
+| Exp5 | routing_contrast | OLMoE | 5000 | demographic specificity |
+
+Gemma 4 is excluded from v1 (null bias signal at n=400 — more pairs will not change the finding).
+
+**Sharding for dense LOO:** `dense_loo` costs 66 fwd passes/pair on 32-layer models; the compute ceiling is ~900 pairs/5hr on 1×A100. `submit_slurm_study.py --num-shards 2` submits two independent jobs processing `pairs[0::2]` and `pairs[1::2]` respectively. Results land as `result_shard0of2.json` / `result_shard1of2.json` in the same study directory and are merged post-hoc by pooling `n_pairs` and concatenating `phi` arrays before recomputing metrics.
+
+**Config naming:** all v1 configs have `-v1` appended to `study_name` (e.g. `exp1-concentration-olmoe-1b-7b-v1`). Output dirs are separate from the original runs so original results are preserved.
+
+**Submitted 2026-07-07:** jobs 5484028–5484032 (Exp1), 5484037 (Exp5), 5484046–5484053 (Exp2 shards).
 
 ---
 
