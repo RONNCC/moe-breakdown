@@ -16,7 +16,12 @@ study_name: exp1-concentration-phi3.5-moe
 
 model_id: microsoft/Phi-3.5-MoE-instruct
 model_family: phi3.5moe
-trust_remote_code: true
+# trust_remote_code=false: transformers>=4.44 has a native "phimoe" module
+# (confirmed: transformers.models.phimoe importable) — using it instead of
+# the repo's custom modeling_phimoe.py avoids a hard dependency on
+# einops/flash_attn, which that custom file unconditionally imports even
+# though we don't need flash-attention for this study.
+trust_remote_code: false
 torch_dtype: bfloat16
 device_map: auto
 
