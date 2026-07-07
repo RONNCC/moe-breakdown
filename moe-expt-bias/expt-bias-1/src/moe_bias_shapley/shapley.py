@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import itertools
 import logging
+import re
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
@@ -39,6 +40,7 @@ from .hooks import (
     attach_router_hooks,
     detach_hooks,
     discover_dense_ffn_layers,
+    discover_moe_layers,
 )
 
 log = logging.getLogger(__name__)
@@ -523,3 +525,119 @@ def compute_dense_layer_contrast(
             "std_bias_gap": float(np.std(gaps)) if gaps else 0.0,
         },
     )
+
+
+# =========================================================================== #
+# Experiment 4: independent ablation cross-check (robustness, Sec 3.4)         #
+# =========================================================================== #
+
+_MOE_PLAYER_RE = re.compile(r"^layer(\d+)-expert(\d+)$")
+_DENSE_PLAYER_RE = re.compile(r"^layer(\d+)-ffn$")
+
+
+def mean_bias_gap_with_players_ablated(
+    model: Any,
+    tokenizer: Any,
+    pairs: List[PromptPair],
+    player_ids_to_ablate: List[str],
+    device: str = "cuda",
+) -> float:
+    """Zero-ablate the given players (parsed from `player_id` strings like
+    "layer3-expert12" or "layer3-ffn", as produced by AttributionResult /
+    saved in player_ids.json) and return the mean bias-gap payoff over
+    `pairs` with those players ablated.
+
+    Generic across MoE-expert and dense-FFN player ids so the same function
+    serves both Experiment 1 (MoE) and Experiment 2 (dense) result rankings
+    for the Experiment 4 cross-check (Sec 3.4): re-derive "biased experts"
+    independently by ablating the top-phi players Shapley flagged and
+    measuring the disparity (bias-gap) drop, without recomputing Shapley.
+    """
+    import torch
+
+    moe_layers = {h.layer_index: h for h in discover_moe_layers(model)}
+    dense_layers = {h.layer_index: h for h in discover_dense_ffn_layers(model)} if not moe_layers else {}
+
+    patched: List[tuple] = []  # (module, attr_path_or_expert_idx, original)
+
+    def zero_forward(x, *args, **kwargs):
+        return torch.zeros_like(x)
+
+    try:
+        for player_id in player_ids_to_ablate:
+            m = _MOE_PLAYER_RE.match(player_id)
+            if m:
+                layer_idx, expert_idx = int(m.group(1)), int(m.group(2))
+                handle = moe_layers.get(layer_idx)
+                if handle is None:
+                    log.warning("Player %s: no MoE layer %d discovered — skipping", player_id, layer_idx)
+                    continue
+                expert = handle.experts[expert_idx]
+                patched.append((expert, "forward", expert.forward))
+                expert.forward = zero_forward
+                continue
+            m = _DENSE_PLAYER_RE.match(player_id)
+            if m:
+                layer_idx = int(m.group(1))
+                handle = dense_layers.get(layer_idx)
+                if handle is None:
+                    log.warning("Player %s: no dense FFN layer %d discovered — skipping", player_id, layer_idx)
+                    continue
+                patched.append((handle.module, "forward", handle.module.forward))
+                handle.module.forward = zero_forward
+                continue
+            log.warning("Unrecognized player_id format %r — skipping", player_id)
+
+        gaps = []
+        for pair in pairs:
+            logp_s = _sequence_logprob(model, tokenizer, pair.stereo, device)
+            logp_a = _sequence_logprob(model, tokenizer, pair.anti_stereo, device)
+            gaps.append(_bias_gap_from_logits(logp_s, logp_a))
+        return float(np.mean(gaps)) if gaps else 0.0
+    finally:
+        for module, attr, original in patched:
+            setattr(module, attr, original)
+
+
+def compute_ablation_curve(
+    model: Any,
+    tokenizer: Any,
+    pairs: List[PromptPair],
+    ranked_player_ids: List[str],
+    device: str = "cuda",
+    steps: Optional[List[int]] = None,
+) -> List[Dict[str, float]]:
+    """Experiment 4 (Sec 3.4) ablation curve: cumulatively zero-ablate the
+    top-`k` players from `ranked_player_ids` (already sorted by |phi|
+    descending — e.g. from result.json's `top_players`, or player_ids.json
+    ordered by phi.npy) for k in `steps`, measuring the resulting mean
+    bias-gap and disparity drop relative to the unablated baseline.
+
+    A steep early drop (most of the disparity removed by ablating only the
+    top few players) validates the Shapley concentration ranking against
+    this independent, purely causal (ablation-based) method.
+    """
+    n = len(ranked_player_ids)
+    if steps is None:
+        # Default: every player up to 10, then every 10% of the remainder.
+        steps = sorted(set([k for k in range(1, min(10, n) + 1)] + [round(f * n) for f in (0.1, 0.2, 0.3, 0.5, 0.75, 1.0)]))
+        steps = [k for k in steps if 0 < k <= n]
+
+    baseline_gap = mean_bias_gap_with_players_ablated(model, tokenizer, pairs, [], device=device)
+
+    curve: List[Dict[str, float]] = []
+    for k in steps:
+        ablated_gap = mean_bias_gap_with_players_ablated(model, tokenizer, pairs, ranked_player_ids[:k], device=device)
+        disparity_drop = (
+            (baseline_gap - ablated_gap) / baseline_gap if baseline_gap != 0 else 0.0
+        )
+        curve.append({
+            "k": k,
+            "fraction_ablated": k / n if n else 0.0,
+            "bias_gap": ablated_gap,
+            "disparity_drop": disparity_drop,
+        })
+        log.info("ablation_curve: k=%d/%d fraction=%.3f bias_gap=%.4f disparity_drop=%.3f",
+                  k, n, k / n if n else 0.0, ablated_gap, disparity_drop)
+
+    return [{"k": 0, "fraction_ablated": 0.0, "bias_gap": baseline_gap, "disparity_drop": 0.0}] + curve
