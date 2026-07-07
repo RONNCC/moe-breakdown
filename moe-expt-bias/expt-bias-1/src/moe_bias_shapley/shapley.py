@@ -607,11 +607,16 @@ def mean_bias_gap_with_players_ablated(
 
     try:
         gaps = []
+        losses = []
         for pair in pairs:
             logp_s = _sequence_logprob(model, tokenizer, pair.stereo, device)
             logp_a = _sequence_logprob(model, tokenizer, pair.anti_stereo, device)
             gaps.append(_bias_gap_from_logits(logp_s, logp_a))
-        return float(np.mean(gaps)) if gaps else 0.0
+            # Average cross-entropy loss is -mean(logprobs)
+            losses.append((-logp_s - logp_a) / 2.0)
+        mean_gap = float(np.mean(gaps)) if gaps else 0.0
+        mean_loss = float(np.mean(losses)) if losses else 0.0
+        return mean_gap, mean_loss
     finally:
         for hh in hook_handles:
             hh.remove()
@@ -630,33 +635,56 @@ def compute_ablation_curve(
 ) -> Dict[str, List[Dict[str, float]]]:
     """Experiment 4 (Sec 3.4) ablation curve: cumulatively zero-ablate the
     top-`k` players from `ranked_player_ids` (already sorted by |phi|
-    descending) for k in `steps`, measuring the resulting mean bias-gap and
-    disparity drop relative to the unablated baseline.
+    descending) for k in `steps`, measuring the resulting mean bias-gap,
+    disparity drop, capability loss, perplexity, and selectivity relative to the
+    unablated baseline.
 
     Returns a dict keyed by curve name. The "phi_ranked" key always present;
     additional keys come from `controls` (e.g. "random", "high_routing").
-    Each value is a list of {k, fraction_ablated, bias_gap, disparity_drop}.
-
-    A steep early drop for phi_ranked (relative to the flat controls) validates
-    the Shapley concentration ranking as a signal, not just a compute proxy.
+    Each value is a list of metrics at step k.
     """
     n = len(ranked_player_ids)
     if steps is None:
         steps = sorted(set([k for k in range(1, min(10, n) + 1)] + [round(f * n) for f in (0.1, 0.2, 0.3, 0.5, 0.75, 1.0)]))
         steps = [k for k in steps if 0 < k <= n]
 
-    baseline_gap = mean_bias_gap_with_players_ablated(model, tokenizer, pairs, [], device=device)
-    head = [{"k": 0, "fraction_ablated": 0.0, "bias_gap": baseline_gap, "disparity_drop": 0.0}]
+    baseline_gap, baseline_loss = mean_bias_gap_with_players_ablated(model, tokenizer, pairs, [], device=device)
+    baseline_ppl = np.exp(baseline_loss)
+    head = [{
+        "k": 0,
+        "fraction_ablated": 0.0,
+        "bias_gap": baseline_gap,
+        "disparity_drop": 0.0,
+        "loss": baseline_loss,
+        "perplexity": baseline_ppl,
+        "perplexity_increase_frac": 0.0,
+        "selectivity": 0.0
+    }]
 
     def _run_curve(ordered_ids: List[str], label: str) -> List[Dict[str, float]]:
         curve: List[Dict[str, float]] = []
         for k in steps:
-            ablated_gap = mean_bias_gap_with_players_ablated(model, tokenizer, pairs, ordered_ids[:k], device=device)
+            ablated_gap, ablated_loss = mean_bias_gap_with_players_ablated(model, tokenizer, pairs, ordered_ids[:k], device=device)
             drop = (baseline_gap - ablated_gap) / baseline_gap if baseline_gap != 0 else 0.0
-            curve.append({"k": k, "fraction_ablated": k / n if n else 0.0,
-                           "bias_gap": ablated_gap, "disparity_drop": drop})
-            log.info("ablation_curve[%s]: k=%d/%d fraction=%.3f bias_gap=%.4f drop=%.3f",
-                      label, k, n, k / n if n else 0.0, ablated_gap, drop)
+            
+            ablated_ppl = np.exp(ablated_loss)
+            ppl_increase_frac = (ablated_ppl - baseline_ppl) / baseline_ppl if baseline_ppl != 0 else 0.0
+            
+            # Selectivity: fractional bias reduction / fractional perplexity increase
+            selectivity = drop / (ppl_increase_frac + 1e-9) if ppl_increase_frac > 0 else 0.0
+            
+            curve.append({
+                "k": k,
+                "fraction_ablated": k / n if n else 0.0,
+                "bias_gap": ablated_gap,
+                "disparity_drop": drop,
+                "loss": ablated_loss,
+                "perplexity": ablated_ppl,
+                "perplexity_increase_frac": ppl_increase_frac,
+                "selectivity": selectivity
+            })
+            log.info("ablation_curve[%s]: k=%d/%d fraction=%.3f bias_gap=%.4f drop=%.3f loss=%.4f ppl=%.2f ppl_inc_frac=%.4f selectivity=%.3f",
+                      label, k, n, k / n if n else 0.0, ablated_gap, drop, ablated_loss, ablated_ppl, ppl_increase_frac, selectivity)
         return head + curve
 
     result: Dict[str, List[Dict[str, float]]] = {

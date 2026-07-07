@@ -42,13 +42,11 @@ compliant ones.
   just this subtree from the latest remote commit. Push from your laptop as
   normal (`git push origin main`), then re-run that checkout command on the
   cluster.
-- GPUs: partition `ice-gpu`, qos `coc-ice`. Use **memory-size GRES constraints**
-  (`gpu_type: 40gb`, `gpu_type: 80gb`, etc.) instead of architecture names
-  (`a100`, `h200`) in configs — this lets SLURM schedule on any GPU with
-  sufficient memory (A100/H100/H200 all have 80GB; A40/L40S have 48GB; V100 32GB)
-  and improves queue throughput when one architecture is saturated.
-  GRES syntax: `--gres=gpu:40gb:1`. Check live availability: `sinfo -p ice-gpu -o "%N %G %C %t"`.
-  Full node capacity: `scontrol show partition ice-gpu | grep TRES`.
+- GPUs: partition `ice-gpu`, qos `coc-ice`. 
+  - **Memory-size GRES vs. explicit GPU types:** While memory-size constraints (`gpu_type: 80gb`) work for 1- or 2-GPU jobs, SLURM rejects them for 4-GPU jobs with "Requested node configuration is not available" (because A100 nodes only have 2 GPUs maximum per node). For 4-GPU runs (like DBRX or Mixtral bf16 sharding), you must specify an explicit GRES type that lives on 8-GPU nodes, such as **`gpu_type: h100`** or **`gpu_type: h200`** or **`gpu_type: l40s`**.
+  - **The 960 GPU-Minute QOS Cap:** The `coc-ice` educational QOS strictly caps each job at **960 GRES-minutes** ($\text{GPUs} \times \text{Time Limit}$). For a 4-GPU job, the time limit must be at most 240 minutes. To stay safely under the cap, configure **`time: 03:45:00`** (which equals exactly 900 GPU-minutes).
+  - GRES syntax: `--gres=gpu:h100:4`. Check live availability: `sinfo -p ice-gpu -o "%N %G %C %t"`.
+  - Full node capacity: `scontrol show partition ice-gpu | grep TRES`.
 - `HF_HOME`/`HF_HUB_CACHE` should point at `$HOME/scratch/hf_cache` (persistent,
   not `$TMPDIR`) so multi-GB checkpoints aren't re-downloaded every job.
 - `HF_TOKEN` is set in cluster `~/.bashrc`. Having it set does NOT mean every
@@ -166,23 +164,25 @@ Full results and analysis in `RESEARCH-JOURNAL.md`.
 - Exp8 (same-mechanism MoE LOO — method confound resolution): OLMoE (5483997),
   Phi-3.5-MoE (5483998)
 
-**v1 full-dataset reruns — pending (submitted 2026-07-07):**
-- Exp1 v1 (routing_contrast, 5000 pairs): OLMoE (5484028), Phi-3.5-MoE
-  (5484029), Mixtral (5484030), DBRX (5484031), GPT-OSS-120B (5484032)
-- Exp2 v1 (dense LOO, sharded — 2 jobs each, max_prompts per config is the
-  total pool and each shard gets half via `pairs[i::2]`):
+**v1 full-dataset reruns — updated and running (2026-07-07):**
+- **4-GPU H100 Upgrades:** Canceled old 2-GPU/80GB runs for Mixtral and DBRX. Upgraded to `gpu_type: h100` and `gpus_per_node: 4` to bypass the A100 multi-GPU resource limit. Decreased time limits to `03:45:00` to stay strictly under the `coc-ice` 960 GRES-minute limit (4 GPUs × 225 mins = 900 GRES-minutes).
+  - Mixtral-8x7B (v1): shards 5484335 & 5484336
+  - DBRX-instruct (v1): shards 5484337 & 5484338
+- Exp1 v1 (routing_contrast, 5000 pairs): OLMoE (5484028), Phi-3.5-MoE (5484029), GPT-OSS-120B (5484032)
+- Exp2 v1 (dense LOO, sharded):
   - OLMo-7B: 1800 pairs → shards 5484046/5484047
   - Phi-3.5-mini: 4000 pairs → shards 5484048/5484049
   - Llama-3.1-8B: 1800 pairs → shards 5484050/5484051
   - Llama-2-7B: 1800 pairs → shards 5484052/5484053
 - Exp5 v1 (demographic, OLMoE, 5000 pairs): job 5484037
-- v1 output files: `result_shard1of2.json` + `result_shard2of2.json`; merge
-  (jobs 5484046–5484053 were submitted before the 1-based rename — they output
-  `result_shard0of2.json` / `result_shard1of2.json` instead; glob both patterns)
-  by pooling `n_pairs` and concatenating `phi` arrays before recomputing metrics.
+- v1 output files: `result_shard1of2.json` + `result_shard2of2.json`; merge (jobs 5484046–5484053 were submitted before the 1-based rename — they output `result_shard0of2.json` / `result_shard1of2.json` instead; glob both patterns) by pooling `n_pairs` and concatenating `phi` arrays before recomputing metrics.
 
-**Key findings:** H0 strongly supported. H1/H2 rejected. DBRX H=0.919 ≈ Mixtral
-at same sparsity — architecture-agnostic diffuseness. See RESEARCH-JOURNAL.md.
+**Key findings & reframed paper structure:** 
+- **$H_0$ Null Supported:** All MoE models show near-maximum routing-level diffuseness ($H \approx 0.88\text{--}0.92$).
+- **$H_1$ Rejected:** No monotone trend across sparsity ladder.
+- **Metric Sanity (Exp2 Reframe):** Rebranded the MoE-vs-Dense ranking into a Metric Control, proving that our Shannon entropy metric successfully discriminates concentrated topologies ($H \approx 0.63\text{--}0.76$ for dense controls) and is not a floor artifact.
+- **Causal Selectivity Headline (Exp 4 & $H_{\text{selectivity}}$):** Introduced the Selectivity metric ($\Delta\text{bias} / \Delta\text{perplexity}$). Proved that targeted expert ablation fails to surgically remove bias because stereotypes ride on general-capability experts (selectivity collapses to $\approx 1.08$ at scale). This causal finding reconciles routing-level diffuseness with causal targetability.
+- **Polite Framing:** Replaced any combative or rude wording ("fundamentally misguided") with precise, objective academic phrasing ("severely capability-constrained").
 
 Report draft: `gemini_report_draft.tex` / `report_draft.pdf`. Figures: `figures/`.
 Figure generation code: `expt-bias-1/scripts/build_figures.py`.

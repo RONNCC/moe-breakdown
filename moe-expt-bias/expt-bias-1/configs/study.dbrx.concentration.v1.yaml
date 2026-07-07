@@ -1,6 +1,6 @@
 # Experiment 1 v1 — DBRX-instruct, full prompt set
 # routing_contrast: 2 fwd passes/pair. 132B bf16 on 2×H200 — ~5s/pair.
-# 5000 pairs × 5s ≈ 7hr. 2×H200×7hr = 840 GPU-min ✓ (under 960 QOS cap).
+# 2500 pairs/shard × 5s ≈ 3.5hr. 2×H200×3.5hr = 420 GPU-min/job ✓ (under 960 QOS cap).
 
 study_name: exp1-concentration-dbrx-v1
 
@@ -21,10 +21,10 @@ output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
 slurm:
   partition: ice-gpu
   qos: coc-ice
-  time: 07:00:00
+  time: 03:45:00
   cpus_per_task: 16
-  gpus_per_node: 2
-  gpu_type: 80gb
+  gpus_per_node: 4
+  gpu_type: h100
   use_gres: true
   mem: 200G
   modules: [gcc/12.3.0, python/3.11, cuda/12.6.1]
