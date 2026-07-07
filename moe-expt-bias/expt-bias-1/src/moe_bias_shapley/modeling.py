@@ -39,6 +39,16 @@ def _patch_dbrx_dynamic_cache() -> None:
             log.info("Patched DynamicCache.from_legacy_cache for DBRX compatibility")
         if not hasattr(DynamicCache, 'to_legacy_cache'):
             def to_legacy_cache(self):
+                # transformers 5.x: DynamicCache.layers is a list of DynamicLayer,
+                # each storing keys/values in .keys/.values (not key_cache/value_cache).
+                # transformers 4.x: stored in .key_cache/.value_cache lists.
+                if hasattr(self, 'layers'):
+                    return tuple(
+                        (layer.keys, layer.values)
+                        for layer in self.layers
+                        if getattr(layer, 'is_initialized', False) and layer.keys.numel() > 0
+                    )
+                # 4.x fallback
                 return tuple(
                     (self.key_cache[i], self.value_cache[i])
                     for i in range(len(self.key_cache))
