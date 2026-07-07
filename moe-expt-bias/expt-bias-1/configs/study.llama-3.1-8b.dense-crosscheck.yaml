@@ -6,12 +6,17 @@
 # (secondary) matched pairs. Not a matched-family pair by itself; used to
 # confirm H2's dense-side entropy isn't an OLMo-specific artifact.
 #
-# NOTE: gated on HF — requires HF_TOKEN with accepted Llama license (already
-# configured in cluster ~/.bashrc per moe-breakdown-cluster.md).
+# NOTE: the official meta-llama/Llama-3.1-8B repo is HF-gated and this
+# cluster account's HF_TOKEN does not (yet) have an approved access grant
+# (job failed with "you are not in the authorized list" even with the token
+# present/propagated via --export=ALL). Using the NousResearch community
+# mirror instead — identical weights/config, still governed by the same
+# Llama Community License, just hosted ungated. Switch back to the official
+# repo id once gated access is approved, if exact-provenance matters.
 
 study_name: exp2-dense-crosscheck-llama-3.1-8b
 
-model_id: meta-llama/Llama-3.1-8B
+model_id: NousResearch/Meta-Llama-3.1-8B
 model_family: llama
 trust_remote_code: false
 torch_dtype: bfloat16
