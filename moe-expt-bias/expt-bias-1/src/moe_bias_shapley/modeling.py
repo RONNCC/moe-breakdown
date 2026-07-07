@@ -42,6 +42,14 @@ def load_model_and_tokenizer(cfg: BiasStudyConfig) -> Tuple[Any, Any]:
             load_in_4bit=cfg.load_in_4bit,
         )
 
-    model = AutoModelForCausalLM.from_pretrained(cfg.model_id, **kwargs)
+    # Pre-load config so we can patch missing attributes before model __init__
+    # runs. Some community models (e.g. alpindale/dbrx-instruct) have a broken
+    # custom DbrxConfig that never sets pad_token_id, causing AttributeError.
+    from transformers import AutoConfig
+    model_config = AutoConfig.from_pretrained(cfg.model_id, trust_remote_code=cfg.trust_remote_code)
+    if not hasattr(model_config, "pad_token_id"):
+        model_config.pad_token_id = 0
+
+    model = AutoModelForCausalLM.from_pretrained(cfg.model_id, config=model_config, **kwargs)
     model.eval()
     return model, tokenizer
