@@ -1,6 +1,5 @@
 # Experiment 1 v1 — Mixtral-8x7B, full prompt set
-# Same as study.mixtral-8x7b.concentration.yaml but max_prompts: 2000.
-# routing_contrast: 2 fwd passes/pair. 47B bf16 on 2×A100 — fits in 6hr.
+# routing_contrast: 2 fwd passes/pair. 47B on 2×A100 — 5000 pairs ≈ 2.8hr.
 
 study_name: exp1-concentration-mixtral-8x7b-v1
 
@@ -13,7 +12,7 @@ device_map: auto
 
 benchmarks: [stereoset, bbq, winogender]
 shapley_method: routing_contrast
-max_prompts: 2000
+max_prompts: 5000
 seed: 42
 
 output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
@@ -21,7 +20,7 @@ output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
 slurm:
   partition: ice-gpu
   qos: coc-ice
-  time: 06:00:00
+  time: 05:00:00
   cpus_per_task: 8
   gpus_per_node: 2
   gpu_type: a100

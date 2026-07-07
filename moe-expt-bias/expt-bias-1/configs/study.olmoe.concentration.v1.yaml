@@ -1,8 +1,5 @@
 # Experiment 1 v1 — OLMoE-1B-7B, full prompt set
-# Same as study.olmoe.concentration.yaml but with max_prompts bumped to 2000.
-# routing_contrast costs only 2 fwd passes/pair, so 2000 pairs ≈ 30 min on
-# 1×A100 — the original 400-pair cap was copied from the more expensive dense
-# LOO configs and was unnecessarily conservative here.
+# routing_contrast: 2 fwd passes/pair — 5000 pairs ≈ 42 min on 1×A100.
 
 study_name: exp1-concentration-olmoe-1b-7b-v1
 
@@ -14,7 +11,7 @@ device_map: auto
 
 benchmarks: [stereoset, bbq, winogender]
 shapley_method: routing_contrast
-max_prompts: 2000
+max_prompts: 5000
 seed: 42
 
 output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1

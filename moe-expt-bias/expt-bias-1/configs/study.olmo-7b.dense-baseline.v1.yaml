@@ -1,9 +1,7 @@
 # Experiment 2 v1 — OLMo-7B, full prompt set
-# Same as study.olmo-7b.dense-baseline.yaml but max_prompts bumped to 700.
-# dense_loo: 32 layers × 2 passes/layer + 2 baseline = 66 passes/pair.
-# At ~0.3s/pass on 1×A100: 700 × 66 × 0.3s ≈ 3.85hr → 4:30:00 wall time.
-# Original had max_prompts: 150 (overly conservative for a 6hr job).
-# 1×A100×4.5hr = 270 GPU-min ✓ (under 960 QOS cap).
+# dense_loo: 32 layers → 66 passes/pair. At ~0.3s/pass on 1×A100:
+# 900 × 66 × 0.3s ≈ 4.95hr → 5hr wall time.
+# 1×A100×5hr = 300 GPU-min ✓ (under 960 QOS cap).
 
 study_name: exp2-dense-baseline-olmo-7b-v1
 
@@ -15,7 +13,7 @@ device_map: auto
 
 benchmarks: [stereoset, bbq, winogender]
 shapley_method: dense_loo
-max_prompts: 700
+max_prompts: 900
 seed: 42
 
 output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
@@ -23,7 +21,7 @@ output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
 slurm:
   partition: ice-gpu
   qos: coc-ice
-  time: 04:30:00
+  time: 05:00:00
   cpus_per_task: 8
   gpus_per_node: 1
   gpu_type: a100

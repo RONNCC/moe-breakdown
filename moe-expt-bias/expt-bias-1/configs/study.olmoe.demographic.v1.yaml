@@ -1,7 +1,5 @@
 # Experiment 5 v1 — OLMoE-1B-7B demographic specificity, full prompt set
-# Same as study.olmoe.demographic.yaml but max_prompts: 2000.
-# routing_contrast: 2 fwd passes/pair → 2000 pairs ≈ 30 min on 1×A100.
-# Original 600-pair cap was conservative given the cheap routing_contrast method.
+# routing_contrast: 2 fwd passes/pair → 5000 pairs ≈ 42 min on 1×A100.
 # More pairs = better per-cohort coverage across StereoSet's 66 target groups.
 
 study_name: exp5-demographic-specificity-olmoe-1b-7b-v1
@@ -14,7 +12,7 @@ device_map: auto
 
 benchmarks: [stereoset, bbq]
 shapley_method: routing_contrast
-max_prompts: 2000
+max_prompts: 5000
 seed: 42
 
 output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
@@ -22,7 +20,7 @@ output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
 slurm:
   partition: ice-gpu
   qos: coc-ice
-  time: 05:00:00
+  time: 04:00:00
   cpus_per_task: 8
   gpus_per_node: 1
   gpu_type: a100
