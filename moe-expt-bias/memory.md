@@ -42,9 +42,13 @@ compliant ones.
   just this subtree from the latest remote commit. Push from your laptop as
   normal (`git push origin main`), then re-run that checkout command on the
   cluster.
-- GPUs: partition `ice-gpu`, qos `coc-ice`. 8 A100s total (4 nodes x 2). Check
-  real capacity with `scontrol show partition ice-gpu | grep TRES` (not just
-  `sinfo`, which can be misleading).
+- GPUs: partition `ice-gpu`, qos `coc-ice`. Use **memory-size GRES constraints**
+  (`gpu_type: 40gb`, `gpu_type: 80gb`, etc.) instead of architecture names
+  (`a100`, `h200`) in configs — this lets SLURM schedule on any GPU with
+  sufficient memory (A100/H100/H200 all have 80GB; A40/L40S have 48GB; V100 32GB)
+  and improves queue throughput when one architecture is saturated.
+  GRES syntax: `--gres=gpu:40gb:1`. Check live availability: `sinfo -p ice-gpu -o "%N %G %C %t"`.
+  Full node capacity: `scontrol show partition ice-gpu | grep TRES`.
 - `HF_HOME`/`HF_HUB_CACHE` should point at `$HOME/scratch/hf_cache` (persistent,
   not `$TMPDIR`) so multi-GB checkpoints aren't re-downloaded every job.
 - `HF_TOKEN` is set in cluster `~/.bashrc`. Having it set does NOT mean every
