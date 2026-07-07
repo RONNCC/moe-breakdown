@@ -1,0 +1,31 @@
+# Experiment 2 v1 — Phi-3.5-mini, full prompt set
+# Same as study.phi3.5-mini-dense.dense-baseline.yaml but max_prompts: 1000.
+# dense_loo: 3.8B model is faster per pass (~0.1s) → 1000 × 66 × 0.1s ≈ 1.8hr.
+# Keeping 4hr wall time (same as original — plenty of headroom at this scale).
+
+study_name: exp2-dense-baseline-phi3.5-mini-v1
+
+model_id: microsoft/Phi-3.5-mini-instruct
+model_family: dense
+trust_remote_code: false
+torch_dtype: bfloat16
+device_map: auto
+
+benchmarks: [stereoset, bbq, winogender]
+shapley_method: dense_loo
+max_prompts: 1000
+seed: 42
+
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 04:00:00
+  cpus_per_task: 8
+  gpus_per_node: 1
+  gpu_type: a100
+  use_gres: true
+  mem: 64G
+  modules: [gcc/12.3.0, python/3.11, cuda/12.1.1]
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown

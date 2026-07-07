@@ -1,0 +1,31 @@
+# Experiment 2 v1 — Llama-2-7B (dense), full prompt set
+# Same as study.llama-2-7b.dense-crosscheck-2.yaml but max_prompts: 700.
+# dense_loo: 32 layers → 66 passes/pair × ~0.3s ≈ 3.85hr for 700 pairs.
+# Wall time: 4:30:00. 1×A100×4.5hr = 270 GPU-min ✓.
+
+study_name: exp2-dense-crosscheck-llama-2-7b-v1
+
+model_id: NousResearch/Llama-2-7b-hf
+model_family: llama
+trust_remote_code: false
+torch_dtype: bfloat16
+device_map: auto
+
+benchmarks: [stereoset, bbq, winogender]
+shapley_method: dense_loo
+max_prompts: 700
+seed: 42
+
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 04:30:00
+  cpus_per_task: 8
+  gpus_per_node: 1
+  gpu_type: a100
+  use_gres: true
+  mem: 48G
+  modules: [gcc/12.3.0, python/3.11, cuda/12.1.1]
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown
