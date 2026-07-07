@@ -79,7 +79,7 @@ Experiment 5 — Demographic specificity (RQ3 / C3)
 EXPERIMENT 1 EXTENSIONS — Sparsity ladder additions (RQ1 / C1 validation)
 ================================================================================
 
-  configs/study.dbrx.concentration.yaml         DBRX-instruct        N_A/N=0.25 (top-4/16, 132B total)
+  configs/study.dbrx.concentration.yaml         DBRX-instruct        N_A/N=0.25 (top-4/16, 132B total) — GATED: needs HF_TOKEN
   configs/study.gpt-oss-120b.concentration.yaml GPT-OSS-120B         N_A/N=0.031 (top-4/128, 117B total)
   configs/study.gemma4-27b.concentration.yaml   Gemma 4 26B          N_A/N=0.063 (top-8/128, ~26B total, 4B active)
                                                                       model_id: google/gemma-4-26B-A4B-it

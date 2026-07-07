@@ -15,9 +15,11 @@
 # NOTE: if torch/bnb 4-bit issues persist (cf. mixtral config note re:
 # nn.Module.set_submodule), bf16 sharding is the safe fallback.
 #
-# License: Databricks Open Model License (non-commercial allowed; check GT ICE
-# policy before submitting — should be fine as it is US-origin).
-# HuggingFace: databricks/dbrx-instruct
+# License: Databricks Open Model License (non-commercial allowed, US-origin).
+# HuggingFace: databricks/dbrx-instruct  ← GATED: requires accepting license
+# on HF and a logged-in HF token on the cluster. Without a token this returns
+# 404. Run `huggingface-cli login` on a compute node (or set HF_TOKEN env var
+# in the sbatch script) before submitting.
 
 study_name: exp1-concentration-dbrx
 

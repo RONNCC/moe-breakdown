@@ -8,8 +8,8 @@
 | Experiment | What it tests | Status |
 |---|---|---|
 | Exp1 — Concentration ladder (OLMoE, Phi-3.5-MoE, Mixtral) | H1: sparsity → concentration | **Done** |
-| Exp1 ext — DBRX (top-4/16, N_A/N=0.25) | H1 arch replicate at N_A/N=0.25 | **Running** — job 5483610 (2× H200) |
-| Exp1 ext — GPT-OSS-120B (top-4/128, N_A/N=0.031) | H1 ladder gap fill | **Running** — job 5483611 (2× H200) |
+| Exp1 ext — DBRX (top-4/16, N_A/N=0.25) | H1 arch replicate at N_A/N=0.25 | **Blocked** — `databricks/dbrx-instruct` is gated; needs HF token with license acceptance |
+| Exp1 ext — GPT-OSS-120B (top-4/128, N_A/N=0.031) | H1 ladder gap fill | **Resubmitting** — MXFP4 quant fix in modeling.py; resubmit after git pull |
 | Exp1 ext — Gemma 4 26B (top-8/128, N_A/N=0.063) | H1 ladder, Google MoE | **Ready to submit** — correct ID: `google/gemma-4-26B-A4B-it`; config updated |
 | Exp2 — Dense baselines (OLMo-7B, Phi-3.5-mini, Llama-3.1-8B) | H2: MoE more localizable than dense | **Done** |
 | Exp3 — Interaction/synergy check (OLMoE, Phi, Mixtral) | C2: marginal vs synergy structure | **Running** — jobs 5483577, 5483584 (Mixtral exp3 completed already) |
