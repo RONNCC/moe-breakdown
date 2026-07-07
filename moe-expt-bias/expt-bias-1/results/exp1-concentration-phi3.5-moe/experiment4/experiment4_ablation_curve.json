@@ -1,0 +1,217 @@
+{
+  "study_name": "exp1-concentration-phi3.5-moe",
+  "model_id": "microsoft/Phi-3.5-MoE-instruct",
+  "model_family": "phi3.5moe",
+  "n_pairs": 60,
+  "n_players": 512,
+  "ablation_curves": {
+    "phi_ranked": [
+      {
+        "k": 0,
+        "fraction_ablated": 0.0,
+        "bias_gap": 0.23582030534744264,
+        "disparity_drop": 0.0
+      },
+      {
+        "k": 1,
+        "fraction_ablated": 0.001953125,
+        "bias_gap": 0.25894436836242674,
+        "disparity_drop": -0.09805798097375276
+      },
+      {
+        "k": 2,
+        "fraction_ablated": 0.00390625,
+        "bias_gap": 0.21480697393417358,
+        "disparity_drop": 0.0891073878575017
+      },
+      {
+        "k": 3,
+        "fraction_ablated": 0.005859375,
+        "bias_gap": 0.2175233562787374,
+        "disparity_drop": 0.07758852250550555
+      },
+      {
+        "k": 4,
+        "fraction_ablated": 0.0078125,
+        "bias_gap": 0.22320558627446493,
+        "disparity_drop": 0.05349292994253391
+      },
+      {
+        "k": 5,
+        "fraction_ablated": 0.009765625,
+        "bias_gap": 0.23832226991653443,
+        "disparity_drop": -0.010609623142526092
+      },
+      {
+        "k": 6,
+        "fraction_ablated": 0.01171875,
+        "bias_gap": 0.217617138226827,
+        "disparity_drop": 0.07719083856581502
+      },
+      {
+        "k": 7,
+        "fraction_ablated": 0.013671875,
+        "bias_gap": 0.21151763598124187,
+        "disparity_drop": 0.10305588117356881
+      },
+      {
+        "k": 8,
+        "fraction_ablated": 0.015625,
+        "bias_gap": 0.21428261200586954,
+        "disparity_drop": 0.09133095349800702
+      },
+      {
+        "k": 9,
+        "fraction_ablated": 0.017578125,
+        "bias_gap": 0.1989119569460551,
+        "disparity_drop": 0.15651047668269757
+      },
+      {
+        "k": 10,
+        "fraction_ablated": 0.01953125,
+        "bias_gap": 0.20048057238260905,
+        "disparity_drop": 0.14985873634912936
+      },
+      {
+        "k": 51,
+        "fraction_ablated": 0.099609375,
+        "bias_gap": 0.15769758224487304,
+        "disparity_drop": 0.33128073084066506
+      },
+      {
+        "k": 102,
+        "fraction_ablated": 0.19921875,
+        "bias_gap": 0.11888472636540731,
+        "disparity_drop": 0.4958673037495642
+      },
+      {
+        "k": 154,
+        "fraction_ablated": 0.30078125,
+        "bias_gap": 0.1934558669726054,
+        "disparity_drop": 0.17964711865002542
+      },
+      {
+        "k": 256,
+        "fraction_ablated": 0.5,
+        "bias_gap": 0.012820847829182943,
+        "disparity_drop": 0.945632977574626
+      },
+      {
+        "k": 384,
+        "fraction_ablated": 0.75,
+        "bias_gap": -0.03516379992167155,
+        "disparity_drop": 1.149112689299013
+      },
+      {
+        "k": 512,
+        "fraction_ablated": 1.0,
+        "bias_gap": 0.020831918716430663,
+        "disparity_drop": 0.9116618957568635
+      }
+    ],
+    "random": [
+      {
+        "k": 0,
+        "fraction_ablated": 0.0,
+        "bias_gap": 0.23582030534744264,
+        "disparity_drop": 0.0
+      },
+      {
+        "k": 1,
+        "fraction_ablated": 0.001953125,
+        "bias_gap": 0.2445986270904541,
+        "disparity_drop": -0.03722462207008868
+      },
+      {
+        "k": 2,
+        "fraction_ablated": 0.00390625,
+        "bias_gap": 0.2623358090718587,
+        "disparity_drop": -0.11243944275854373
+      },
+      {
+        "k": 3,
+        "fraction_ablated": 0.005859375,
+        "bias_gap": 0.2623358090718587,
+        "disparity_drop": -0.11243944275854373
+      },
+      {
+        "k": 4,
+        "fraction_ablated": 0.0078125,
+        "bias_gap": 0.26905754804611204,
+        "disparity_drop": -0.14094309075590314
+      },
+      {
+        "k": 5,
+        "fraction_ablated": 0.009765625,
+        "bias_gap": 0.268969984849294,
+        "disparity_drop": -0.14057177753633535
+      },
+      {
+        "k": 6,
+        "fraction_ablated": 0.01171875,
+        "bias_gap": 0.268969984849294,
+        "disparity_drop": -0.14057177753633535
+      },
+      {
+        "k": 7,
+        "fraction_ablated": 0.013671875,
+        "bias_gap": 0.25596206188201903,
+        "disparity_drop": -0.08541145981852924
+      },
+      {
+        "k": 8,
+        "fraction_ablated": 0.015625,
+        "bias_gap": 0.26154855887095135,
+        "disparity_drop": -0.1091010949443151
+      },
+      {
+        "k": 9,
+        "fraction_ablated": 0.017578125,
+        "bias_gap": 0.26446725527445475,
+        "disparity_drop": -0.12147787649076917
+      },
+      {
+        "k": 10,
+        "fraction_ablated": 0.01953125,
+        "bias_gap": 0.26405699650446574,
+        "disparity_drop": -0.11973816722618925
+      },
+      {
+        "k": 51,
+        "fraction_ablated": 0.099609375,
+        "bias_gap": 0.2743155797322591,
+        "disparity_drop": -0.16323986320049919
+      },
+      {
+        "k": 102,
+        "fraction_ablated": 0.19921875,
+        "bias_gap": 0.14338209629058837,
+        "disparity_drop": 0.3919857915570997
+      },
+      {
+        "k": 154,
+        "fraction_ablated": 0.30078125,
+        "bias_gap": 0.08087522188822428,
+        "disparity_drop": 0.6570472514270226
+      },
+      {
+        "k": 256,
+        "fraction_ablated": 0.5,
+        "bias_gap": -0.042507076263427736,
+        "disparity_drop": 1.1802519770331081
+      },
+      {
+        "k": 384,
+        "fraction_ablated": 0.75,
+        "bias_gap": -0.010176595052083333,
+        "disparity_drop": 1.0431540237262003
+      },
+      {
+        "k": 512,
+        "fraction_ablated": 1.0,
+        "bias_gap": 0.020831918716430663,
+        "disparity_drop": 0.9116618957568635
+      }
+    ]
+  }
+}

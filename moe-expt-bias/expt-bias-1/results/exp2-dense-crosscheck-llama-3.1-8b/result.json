@@ -1,0 +1,111 @@
+{
+  "metadata": {
+    "study_name": "exp2-dense-crosscheck-llama-3.1-8b",
+    "model_id": "NousResearch/Meta-Llama-3.1-8B",
+    "model_family": "llama",
+    "benchmarks": [
+      "stereoset",
+      "bbq",
+      "winogender"
+    ],
+    "shapley_method": "dense_loo",
+    "seed": 42
+  },
+  "method": "dense_loo",
+  "n_pairs": 400,
+  "n_players": 32,
+  "bias_scores": {
+    "mean_bias_gap": 0.17924571871757508,
+    "std_bias_gap": 0.46255197561472583
+  },
+  "concentration_metrics": {
+    "entropy": 0.6300970845941072,
+    "gini": 0.7299968143336719,
+    "top_5_fraction": 0.7486734941342921,
+    "top_10pct_fraction": 0.6983218590825292,
+    "n_players": 32,
+    "n_nonzero": 32
+  },
+  "top_players": [
+    {
+      "player_id": "layer0-ffn",
+      "phi": 0.17174725651741027
+    },
+    {
+      "player_id": "layer1-ffn",
+      "phi": 0.16462143063545226
+    },
+    {
+      "player_id": "layer2-ffn",
+      "phi": 0.028307291269302367
+    },
+    {
+      "player_id": "layer3-ffn",
+      "phi": 0.013317237496376038
+    },
+    {
+      "player_id": "layer4-ffn",
+      "phi": 0.01297727346420288
+    },
+    {
+      "player_id": "layer14-ffn",
+      "phi": 0.011105690002441406
+    },
+    {
+      "player_id": "layer25-ffn",
+      "phi": 0.009962040185928344
+    },
+    {
+      "player_id": "layer5-ffn",
+      "phi": 0.009544678926467896
+    },
+    {
+      "player_id": "layer21-ffn",
+      "phi": 0.008906270265579224
+    },
+    {
+      "player_id": "layer9-ffn",
+      "phi": 0.008487741947174072
+    },
+    {
+      "player_id": "layer27-ffn",
+      "phi": -0.008322973251342774
+    },
+    {
+      "player_id": "layer19-ffn",
+      "phi": 0.007818060517311097
+    },
+    {
+      "player_id": "layer30-ffn",
+      "phi": 0.007326971292495727
+    },
+    {
+      "player_id": "layer28-ffn",
+      "phi": 0.007002552151679993
+    },
+    {
+      "player_id": "layer12-ffn",
+      "phi": 0.006634414792060852
+    },
+    {
+      "player_id": "layer22-ffn",
+      "phi": 0.005389654636383056
+    },
+    {
+      "player_id": "layer13-ffn",
+      "phi": 0.005225977897644043
+    },
+    {
+      "player_id": "layer6-ffn",
+      "phi": 0.005008745789527893
+    },
+    {
+      "player_id": "layer20-ffn",
+      "phi": -0.004936175942420959
+    },
+    {
+      "player_id": "layer7-ffn",
+      "phi": 0.004865770936012268
+    }
+  ]
+}

@@ -1,0 +1,792 @@
+{
+  "metadata": {
+    "study_name": "exp5-demographic-specificity-olmoe-1b-7b-v1",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "model_family": "olmoe",
+    "benchmarks": [
+      "stereoset",
+      "bbq"
+    ],
+    "shapley_method": "routing_contrast",
+    "seed": 42
+  },
+  "method": "routing_contrast",
+  "n_pairs": 5000,
+  "n_players": 1024,
+  "bias_scores": {
+    "mean_bias_gap": 0.2443868749141693,
+    "std_bias_gap": 0.35252967970354593
+  },
+  "concentration_metrics": {
+    "entropy": 0.878624280562932,
+    "gini": 0.6456658511906938,
+    "top_5_fraction": 0.09276401412301855,
+    "top_10pct_fraction": 0.5087567556352717,
+    "n_players": 1024,
+    "n_nonzero": 1024
+  },
+  "top_players": [
+    {
+      "player_id": "layer10-expert4",
+      "phi": 0.012707179924010617
+    },
+    {
+      "player_id": "layer9-expert35",
+      "phi": 0.005499547624641548
+    },
+    {
+      "player_id": "layer0-expert62",
+      "phi": -0.005339169830486525
+    },
+    {
+      "player_id": "layer2-expert35",
+      "phi": -0.005335828105689788
+    },
+    {
+      "player_id": "layer14-expert29",
+      "phi": -0.00493874001261415
+    },
+    {
+      "player_id": "layer15-expert57",
+      "phi": 0.003981372105537621
+    },
+    {
+      "player_id": "layer4-expert44",
+      "phi": -0.0039018240037374647
+    },
+    {
+      "player_id": "layer14-expert19",
+      "phi": 0.003554122399092258
+    },
+    {
+      "player_id": "layer5-expert48",
+      "phi": -0.0032686025641281077
+    },
+    {
+      "player_id": "layer7-expert11",
+      "phi": -0.003179614281774121
+    },
+    {
+      "player_id": "layer4-expert30",
+      "phi": -0.003156263908574902
+    },
+    {
+      "player_id": "layer7-expert60",
+      "phi": -0.0028115052566704047
+    },
+    {
+      "player_id": "layer15-expert31",
+      "phi": 0.0026496229117867363
+    },
+    {
+      "player_id": "layer12-expert24",
+      "phi": 0.0025833874138635345
+    },
+    {
+      "player_id": "layer7-expert50",
+      "phi": -0.002571437675364627
+    },
+    {
+      "player_id": "layer15-expert43",
+      "phi": 0.0025665621978231954
+    },
+    {
+      "player_id": "layer6-expert7",
+      "phi": -0.002536282415411742
+    },
+    {
+      "player_id": "layer10-expert18",
+      "phi": 0.002470360248834141
+    },
+    {
+      "player_id": "layer2-expert41",
+      "phi": -0.0024261326056805336
+    },
+    {
+      "player_id": "layer14-expert47",
+      "phi": 0.0024131166779405573
+    }
+  ],
+  "per_group_concentration_metrics": {
+    "chess player": {
+      "entropy": 0.9111991246005609,
+      "gini": 0.5752196614332966,
+      "top_5_fraction": 0.06534719080158335,
+      "top_10pct_fraction": 0.4132703681795587,
+      "n_players": 1024,
+      "n_nonzero": 1014
+    },
+    "Ethiopian": {
+      "entropy": 0.857624122723813,
+      "gini": 0.7070157104491286,
+      "top_5_fraction": 0.09522183643660433,
+      "top_10pct_fraction": 0.5220635425916811,
+      "n_players": 1024,
+      "n_nonzero": 999
+    },
+    "civil servant": {
+      "entropy": 0.8748446477959544,
+      "gini": 0.6562736015250188,
+      "top_5_fraction": 0.09027310287275898,
+      "top_10pct_fraction": 0.4992572334069988,
+      "n_players": 1024,
+      "n_nonzero": 993
+    },
+    "Crimean": {
+      "entropy": 0.8637937030827705,
+      "gini": 0.6754591480523118,
+      "top_5_fraction": 0.07902499763465289,
+      "top_10pct_fraction": 0.5537760687646329,
+      "n_players": 1024,
+      "n_nonzero": 988
+    },
+    "Ethiopia": {
+      "entropy": 0.8871211143246576,
+      "gini": 0.6449326257525979,
+      "top_5_fraction": 0.07009138736428874,
+      "top_10pct_fraction": 0.4660010889369601,
+      "n_players": 1024,
+      "n_nonzero": 1019
+    },
+    "schoolgirl": {
+      "entropy": 0.8871264205857607,
+      "gini": 0.6398181410692299,
+      "top_5_fraction": 0.07288929577977554,
+      "top_10pct_fraction": 0.46201347834200956,
+      "n_players": 1024,
+      "n_nonzero": 1006
+    },
+    "musician": {
+      "entropy": 0.8862565711621908,
+      "gini": 0.6558667517461816,
+      "top_5_fraction": 0.055859560559268995,
+      "top_10pct_fraction": 0.4470667506143186,
+      "n_players": 1024,
+      "n_nonzero": 997
+    },
+    "Afghanistan": {
+      "entropy": 0.8985000911794309,
+      "gini": 0.6216685189307876,
+      "top_5_fraction": 0.05412817335121514,
+      "top_10pct_fraction": 0.4358577302444723,
+      "n_players": 1024,
+      "n_nonzero": 997
+    },
+    "Hispanic": {
+      "entropy": 0.8805350258581327,
+      "gini": 0.6587448920686081,
+      "top_5_fraction": 0.07679324189540705,
+      "top_10pct_fraction": 0.47209155700541444,
+      "n_players": 1024,
+      "n_nonzero": 1007
+    },
+    "Russian": {
+      "entropy": 0.9133442418900719,
+      "gini": 0.578870593169297,
+      "top_5_fraction": 0.05165471916341447,
+      "top_10pct_fraction": 0.3922509565550865,
+      "n_players": 1024,
+      "n_nonzero": 1014
+    },
+    "Ghanaian": {
+      "entropy": 0.8944328915636126,
+      "gini": 0.6348543236887005,
+      "top_5_fraction": 0.048293362556953545,
+      "top_10pct_fraction": 0.44652458381649884,
+      "n_players": 1024,
+      "n_nonzero": 993
+    },
+    "Cameroon": {
+      "entropy": 0.8829748662630679,
+      "gini": 0.6550822258749095,
+      "top_5_fraction": 0.07286639084785208,
+      "top_10pct_fraction": 0.4690307198047434,
+      "n_players": 1024,
+      "n_nonzero": 1001
+    },
+    "tailor": {
+      "entropy": 0.9039701329842861,
+      "gini": 0.6017545521047094,
+      "top_5_fraction": 0.05373173588138158,
+      "top_10pct_fraction": 0.4402896847120725,
+      "n_players": 1024,
+      "n_nonzero": 1005
+    },
+    "psychologist": {
+      "entropy": 0.9062652112776971,
+      "gini": 0.6068154750601618,
+      "top_5_fraction": 0.04073450893363697,
+      "top_10pct_fraction": 0.41683754848629134,
+      "n_players": 1024,
+      "n_nonzero": 1007
+    },
+    "mover": {
+      "entropy": 0.910693178948626,
+      "gini": 0.5772862826153129,
+      "top_5_fraction": 0.06784699404165874,
+      "top_10pct_fraction": 0.39940075803038166,
+      "n_players": 1024,
+      "n_nonzero": 1001
+    },
+    "Cape Verde": {
+      "entropy": 0.8953176273728114,
+      "gini": 0.6318429783007362,
+      "top_5_fraction": 0.04826740966060175,
+      "top_10pct_fraction": 0.45856902556656637,
+      "n_players": 1024,
+      "n_nonzero": 1003
+    },
+    "herself": {
+      "entropy": 0.9014753118028257,
+      "gini": 0.5962507020996745,
+      "top_5_fraction": 0.07754061583455632,
+      "top_10pct_fraction": 0.41720998757522626,
+      "n_players": 1024,
+      "n_nonzero": 974
+    },
+    "mother": {
+      "entropy": 0.899909772492114,
+      "gini": 0.6001712664155063,
+      "top_5_fraction": 0.07345628947403253,
+      "top_10pct_fraction": 0.4183070893004338,
+      "n_players": 1024,
+      "n_nonzero": 964
+    },
+    "physicist": {
+      "entropy": 0.858437962193644,
+      "gini": 0.6787339427515034,
+      "top_5_fraction": 0.09393293891674288,
+      "top_10pct_fraction": 0.5512683675821946,
+      "n_players": 1024,
+      "n_nonzero": 1005
+    },
+    "male": {
+      "entropy": 0.9073250074349662,
+      "gini": 0.584859753384361,
+      "top_5_fraction": 0.05880619468635506,
+      "top_10pct_fraction": 0.4201745284291525,
+      "n_players": 1024,
+      "n_nonzero": 1013
+    },
+    "prisoner": {
+      "entropy": 0.8980601558476207,
+      "gini": 0.6232313273318448,
+      "top_5_fraction": 0.05006675730496844,
+      "top_10pct_fraction": 0.43951463245819994,
+      "n_players": 1024,
+      "n_nonzero": 997
+    },
+    "prosecutor": {
+      "entropy": 0.9027063352610163,
+      "gini": 0.5959915063866588,
+      "top_5_fraction": 0.06981378308091991,
+      "top_10pct_fraction": 0.4304061880790494,
+      "n_players": 1024,
+      "n_nonzero": 1010
+    },
+    "Sierra Leon": {
+      "entropy": 0.8976889128293349,
+      "gini": 0.6137632060168585,
+      "top_5_fraction": 0.07595690662112183,
+      "top_10pct_fraction": 0.4409342412398889,
+      "n_players": 1024,
+      "n_nonzero": 1008
+    },
+    "Japanese": {
+      "entropy": 0.8699001548212505,
+      "gini": 0.6842872999747662,
+      "top_5_fraction": 0.06497588624493565,
+      "top_10pct_fraction": 0.5271435810937679,
+      "n_players": 1024,
+      "n_nonzero": 985
+    },
+    "producer": {
+      "entropy": 0.8548161263567213,
+      "gini": 0.6899689940800451,
+      "top_5_fraction": 0.0902372570330815,
+      "top_10pct_fraction": 0.5706815119740812,
+      "n_players": 1024,
+      "n_nonzero": 1003
+    },
+    "Eriteria": {
+      "entropy": 0.8982947339153119,
+      "gini": 0.6170822021176472,
+      "top_5_fraction": 0.06684513511871219,
+      "top_10pct_fraction": 0.44018733972205354,
+      "n_players": 1024,
+      "n_nonzero": 999
+    },
+    "Bengali": {
+      "entropy": 0.8715256069483257,
+      "gini": 0.6863153051408343,
+      "top_5_fraction": 0.06093063261789036,
+      "top_10pct_fraction": 0.5034726291282694,
+      "n_players": 1024,
+      "n_nonzero": 999
+    },
+    "grandfather": {
+      "entropy": 0.8990052254520406,
+      "gini": 0.6236175721737164,
+      "top_5_fraction": 0.047485123244760584,
+      "top_10pct_fraction": 0.42835669784239366,
+      "n_players": 1024,
+      "n_nonzero": 976
+    },
+    "himself": {
+      "entropy": 0.9112202807096956,
+      "gini": 0.5750788953337966,
+      "top_5_fraction": 0.06727039176257618,
+      "top_10pct_fraction": 0.38211717987928834,
+      "n_players": 1024,
+      "n_nonzero": 993
+    },
+    "Bible": {
+      "entropy": 0.9146439594256444,
+      "gini": 0.564842581500165,
+      "top_5_fraction": 0.060900587839012525,
+      "top_10pct_fraction": 0.4077062450401391,
+      "n_players": 1024,
+      "n_nonzero": 1005
+    },
+    "Vietnam": {
+      "entropy": 0.9086008363536658,
+      "gini": 0.577805271922495,
+      "top_5_fraction": 0.07531225121028892,
+      "top_10pct_fraction": 0.4047827528702211,
+      "n_players": 1024,
+      "n_nonzero": 996
+    },
+    "bartender": {
+      "entropy": 0.9149019663690685,
+      "gini": 0.5713648273335723,
+      "top_5_fraction": 0.05222877368501469,
+      "top_10pct_fraction": 0.3939640643896343,
+      "n_players": 1024,
+      "n_nonzero": 1001
+    },
+    "Ukrainian": {
+      "entropy": 0.8996270552323115,
+      "gini": 0.6094338346395461,
+      "top_5_fraction": 0.06618703430633122,
+      "top_10pct_fraction": 0.4407007363011689,
+      "n_players": 1024,
+      "n_nonzero": 1006
+    },
+    "Iranian": {
+      "entropy": 0.8687383158926486,
+      "gini": 0.6687236802876964,
+      "top_5_fraction": 0.08636246883458677,
+      "top_10pct_fraction": 0.5317029361036228,
+      "n_players": 1024,
+      "n_nonzero": 1006
+    },
+    "manager": {
+      "entropy": 0.8690872189943837,
+      "gini": 0.6791125517511716,
+      "top_5_fraction": 0.08693112212044102,
+      "top_10pct_fraction": 0.5174005676373007,
+      "n_players": 1024,
+      "n_nonzero": 997
+    },
+    "Norway": {
+      "entropy": 0.8762409283269431,
+      "gini": 0.6611414492464198,
+      "top_5_fraction": 0.08390850801490222,
+      "top_10pct_fraction": 0.5024962288395383,
+      "n_players": 1024,
+      "n_nonzero": 1001
+    },
+    "chemist": {
+      "entropy": 0.8976326546277619,
+      "gini": 0.6128150473729281,
+      "top_5_fraction": 0.07296707043511455,
+      "top_10pct_fraction": 0.42924705483299075,
+      "n_players": 1024,
+      "n_nonzero": 1002
+    },
+    "entrepreneur": {
+      "entropy": 0.894074990869941,
+      "gini": 0.6212503739597486,
+      "top_5_fraction": 0.07524783175788173,
+      "top_10pct_fraction": 0.45278059873815796,
+      "n_players": 1024,
+      "n_nonzero": 1011
+    },
+    "Somalia": {
+      "entropy": 0.9136741117061126,
+      "gini": 0.5802159355956795,
+      "top_5_fraction": 0.04016155902419165,
+      "top_10pct_fraction": 0.40185166936123584,
+      "n_players": 1024,
+      "n_nonzero": 1001
+    },
+    "software developer": {
+      "entropy": 0.8163316817075817,
+      "gini": 0.7570309302955025,
+      "top_5_fraction": 0.1135711440984819,
+      "top_10pct_fraction": 0.6383409791372192,
+      "n_players": 1024,
+      "n_nonzero": 996
+    },
+    "guitarist": {
+      "entropy": 0.8367809424702248,
+      "gini": 0.7275177606464297,
+      "top_5_fraction": 0.10207242370709277,
+      "top_10pct_fraction": 0.6017038907868096,
+      "n_players": 1024,
+      "n_nonzero": 993
+    },
+    "Persian people": {
+      "entropy": 0.8823577302933119,
+      "gini": 0.6586736405984052,
+      "top_5_fraction": 0.06199222134217621,
+      "top_10pct_fraction": 0.4671632439919509,
+      "n_players": 1024,
+      "n_nonzero": 975
+    },
+    "schoolboy": {
+      "entropy": 0.8708467086937055,
+      "gini": 0.6771318816167196,
+      "top_5_fraction": 0.06981421321976625,
+      "top_10pct_fraction": 0.527873769920066,
+      "n_players": 1024,
+      "n_nonzero": 1012
+    },
+    "engineer": {
+      "entropy": 0.8833443772442328,
+      "gini": 0.6436159885510442,
+      "top_5_fraction": 0.07444078147464683,
+      "top_10pct_fraction": 0.49004917706887635,
+      "n_players": 1024,
+      "n_nonzero": 1000
+    },
+    "Columbian": {
+      "entropy": 0.889152140624744,
+      "gini": 0.6444410068779381,
+      "top_5_fraction": 0.05831632080761748,
+      "top_10pct_fraction": 0.4440608241521372,
+      "n_players": 1024,
+      "n_nonzero": 991
+    },
+    "mathematician": {
+      "entropy": 0.8903685307059005,
+      "gini": 0.642847500253931,
+      "top_5_fraction": 0.05783617097459133,
+      "top_10pct_fraction": 0.45936950117409214,
+      "n_players": 1024,
+      "n_nonzero": 1008
+    },
+    "researcher": {
+      "entropy": 0.8451207439741637,
+      "gini": 0.6990010559592115,
+      "top_5_fraction": 0.10611137638553313,
+      "top_10pct_fraction": 0.5725609254946736,
+      "n_players": 1024,
+      "n_nonzero": 1012
+    },
+    "Arab": {
+      "entropy": 0.9015123512786911,
+      "gini": 0.6146728832377346,
+      "top_5_fraction": 0.047823986309348775,
+      "top_10pct_fraction": 0.4193424426953651,
+      "n_players": 1024,
+      "n_nonzero": 981
+    },
+    "assistant": {
+      "entropy": 0.9060402074028109,
+      "gini": 0.5996100186397268,
+      "top_5_fraction": 0.049821660713603694,
+      "top_10pct_fraction": 0.40947820818203345,
+      "n_players": 1024,
+      "n_nonzero": 990
+    },
+    "Saudi Arabian": {
+      "entropy": 0.9003953584383318,
+      "gini": 0.6097288109470214,
+      "top_5_fraction": 0.06280895192462425,
+      "top_10pct_fraction": 0.44028290720004537,
+      "n_players": 1024,
+      "n_nonzero": 992
+    },
+    "historian": {
+      "entropy": 0.8986860075351657,
+      "gini": 0.6114779091455678,
+      "top_5_fraction": 0.06195357873217548,
+      "top_10pct_fraction": 0.44671339897455925,
+      "n_players": 1024,
+      "n_nonzero": 989
+    },
+    "Britain": {
+      "entropy": 0.8659040166487492,
+      "gini": 0.6843335663092325,
+      "top_5_fraction": 0.09530004949685925,
+      "top_10pct_fraction": 0.5118388819753716,
+      "n_players": 1024,
+      "n_nonzero": 992
+    },
+    "Lebanon": {
+      "entropy": 0.9000325079389916,
+      "gini": 0.6171896112939457,
+      "top_5_fraction": 0.05090093174318176,
+      "top_10pct_fraction": 0.43831422479256815,
+      "n_players": 1024,
+      "n_nonzero": 986
+    },
+    "mommy": {
+      "entropy": 0.8532140239897249,
+      "gini": 0.6899277993627738,
+      "top_5_fraction": 0.1112974271139358,
+      "top_10pct_fraction": 0.5524281530553691,
+      "n_players": 1024,
+      "n_nonzero": 989
+    },
+    "Morocco": {
+      "entropy": 0.8954656728429723,
+      "gini": 0.634387540500235,
+      "top_5_fraction": 0.042746083088075496,
+      "top_10pct_fraction": 0.4419798928546712,
+      "n_players": 1024,
+      "n_nonzero": 985
+    },
+    "performing artist": {
+      "entropy": 0.8846626320059167,
+      "gini": 0.6459877136010591,
+      "top_5_fraction": 0.0629807247833129,
+      "top_10pct_fraction": 0.4933733183372572,
+      "n_players": 1024,
+      "n_nonzero": 1011
+    },
+    "butcher": {
+      "entropy": 0.8986002508915345,
+      "gini": 0.6111993447258443,
+      "top_5_fraction": 0.06662834209417869,
+      "top_10pct_fraction": 0.4322921461446496,
+      "n_players": 1024,
+      "n_nonzero": 998
+    },
+    "plumber": {
+      "entropy": 0.9092190934160281,
+      "gini": 0.5752546616315348,
+      "top_5_fraction": 0.0729546286380764,
+      "top_10pct_fraction": 0.4045115408136862,
+      "n_players": 1024,
+      "n_nonzero": 1021
+    },
+    "gentlemen": {
+      "entropy": 0.9020019680838709,
+      "gini": 0.5919805573552894,
+      "top_5_fraction": 0.06798375717043467,
+      "top_10pct_fraction": 0.444501240418371,
+      "n_players": 1024,
+      "n_nonzero": 1004
+    },
+    "nurse": {
+      "entropy": 0.9088852731505723,
+      "gini": 0.5915176546130638,
+      "top_5_fraction": 0.05222761963629713,
+      "top_10pct_fraction": 0.405253740917422,
+      "n_players": 1024,
+      "n_nonzero": 991
+    },
+    "delivery man": {
+      "entropy": 0.8889021490615001,
+      "gini": 0.6356978325066649,
+      "top_5_fraction": 0.07918729518615075,
+      "top_10pct_fraction": 0.4562899605594904,
+      "n_players": 1024,
+      "n_nonzero": 992
+    },
+    "Ecuador": {
+      "entropy": 0.9033789819487994,
+      "gini": 0.598761471433594,
+      "top_5_fraction": 0.07193657309335535,
+      "top_10pct_fraction": 0.41748602370891147,
+      "n_players": 1024,
+      "n_nonzero": 992
+    },
+    "Jordan": {
+      "entropy": 0.9153878267244197,
+      "gini": 0.5695594867913714,
+      "top_5_fraction": 0.05368974081727994,
+      "top_10pct_fraction": 0.39934775233602693,
+      "n_players": 1024,
+      "n_nonzero": 1004
+    },
+    "Spain": {
+      "entropy": 0.9011941180682246,
+      "gini": 0.6144099126685584,
+      "top_5_fraction": 0.05254244364485105,
+      "top_10pct_fraction": 0.434413556708902,
+      "n_players": 1024,
+      "n_nonzero": 1008
+    },
+    "Bangladesh": {
+      "entropy": 0.8878613077546105,
+      "gini": 0.6471997512939853,
+      "top_5_fraction": 0.06222928020727056,
+      "top_10pct_fraction": 0.4543147086348128,
+      "n_players": 1024,
+      "n_nonzero": 991
+    },
+    "African": {
+      "entropy": 0.8897412984532723,
+      "gini": 0.6435264078778435,
+      "top_5_fraction": 0.05698508229222052,
+      "top_10pct_fraction": 0.4624433339781038,
+      "n_players": 1024,
+      "n_nonzero": 993
+    },
+    "Muslim": {
+      "entropy": 0.8900380022024923,
+      "gini": 0.6065476618278717,
+      "top_5_fraction": 0.09492085578581044,
+      "top_10pct_fraction": 0.4200763062654753,
+      "n_players": 1024,
+      "n_nonzero": 1005
+    },
+    "sister": {
+      "entropy": 0.9009378904845257,
+      "gini": 0.6051393245292502,
+      "top_5_fraction": 0.0665448452740985,
+      "top_10pct_fraction": 0.4406795694156791,
+      "n_players": 1024,
+      "n_nonzero": 987
+    },
+    "Iraq": {
+      "entropy": 0.9014483697924491,
+      "gini": 0.6026816899232939,
+      "top_5_fraction": 0.06527560547974103,
+      "top_10pct_fraction": 0.430615078383929,
+      "n_players": 1024,
+      "n_nonzero": 1005
+    },
+    "football player": {
+      "entropy": 0.9143320492736046,
+      "gini": 0.5736735810534184,
+      "top_5_fraction": 0.051402625476737206,
+      "top_10pct_fraction": 0.3951174836427884,
+      "n_players": 1024,
+      "n_nonzero": 1009
+    },
+    "Brahmin": {
+      "entropy": 0.906170725550141,
+      "gini": 0.6032193858750963,
+      "top_5_fraction": 0.04910048954921202,
+      "top_10pct_fraction": 0.41379576459786516,
+      "n_players": 1024,
+      "n_nonzero": 1009
+    },
+    "Norweigan": {
+      "entropy": 0.8863522032208611,
+      "gini": 0.6467548483741488,
+      "top_5_fraction": 0.0689969617139281,
+      "top_10pct_fraction": 0.45420283063503186,
+      "n_players": 1024,
+      "n_nonzero": 998
+    },
+    "Syria": {
+      "entropy": 0.8896563263468807,
+      "gini": 0.6431514364569462,
+      "top_5_fraction": 0.05507055812663301,
+      "top_10pct_fraction": 0.46756243134249087,
+      "n_players": 1024,
+      "n_nonzero": 996
+    },
+    "Yemen": {
+      "entropy": 0.8977559968737396,
+      "gini": 0.6026158310998518,
+      "top_5_fraction": 0.08117465306717819,
+      "top_10pct_fraction": 0.4453554898720078,
+      "n_players": 1024,
+      "n_nonzero": 1007
+    },
+    "politician": {
+      "entropy": 0.8532191391316232,
+      "gini": 0.700709373865668,
+      "top_5_fraction": 0.10077022956605239,
+      "top_10pct_fraction": 0.5578129602887357,
+      "n_players": 1024,
+      "n_nonzero": 996
+    },
+    "Italy": {
+      "entropy": 0.8795169360550946,
+      "gini": 0.648966957220271,
+      "top_5_fraction": 0.07660138558005473,
+      "top_10pct_fraction": 0.506484166355679,
+      "n_players": 1024,
+      "n_nonzero": 987
+    },
+    "commander": {
+      "entropy": 0.9038654991068036,
+      "gini": 0.5936343410512266,
+      "top_5_fraction": 0.07138514284684981,
+      "top_10pct_fraction": 0.4189766251994049,
+      "n_players": 1024,
+      "n_nonzero": 1009
+    },
+    "Eritrean": {
+      "entropy": 0.8960327866055033,
+      "gini": 0.6103398684846831,
+      "top_5_fraction": 0.08365661985181466,
+      "top_10pct_fraction": 0.433706819402439,
+      "n_players": 1024,
+      "n_nonzero": 984
+    },
+    "policeman": {
+      "entropy": 0.8942873109435575,
+      "gini": 0.6315179773492012,
+      "top_5_fraction": 0.059982582412381885,
+      "top_10pct_fraction": 0.4392453118696491,
+      "n_players": 1024,
+      "n_nonzero": 978
+    },
+    "F": {
+      "entropy": 0.8310091386597213,
+      "gini": 0.7458172455112062,
+      "top_5_fraction": 0.11913212049784176,
+      "top_10pct_fraction": 0.5896345539695537,
+      "n_players": 1024,
+      "n_nonzero": 1020
+    },
+    "M": {
+      "entropy": 0.8231402153036234,
+      "gini": 0.7497532769231907,
+      "top_5_fraction": 0.13796349289865562,
+      "top_10pct_fraction": 0.6096760703623919,
+      "n_players": 1024,
+      "n_nonzero": 1018
+    },
+    "Transgender women, transgender men, trans": {
+      "entropy": 0.8245953696134329,
+      "gini": 0.7364658663901609,
+      "top_5_fraction": 0.1526053368086073,
+      "top_10pct_fraction": 0.6001914230103618,
+      "n_players": 1024,
+      "n_nonzero": 1007
+    },
+    "transgender women, trans": {
+      "entropy": 0.8160860390593314,
+      "gini": 0.7549491980212402,
+      "top_5_fraction": 0.15234279131670045,
+      "top_10pct_fraction": 0.6225673055568001,
+      "n_players": 1024,
+      "n_nonzero": 983
+    },
+    "transgender men, trans": {
+      "entropy": 0.7948227873987783,
+      "gini": 0.778870990297003,
+      "top_5_fraction": 0.19241058801202893,
+      "top_10pct_fraction": 0.6468352821570996,
+      "n_players": 1024,
+      "n_nonzero": 891
+    },
+    "Black, African American, Hispanic, Latino": {
+      "entropy": 0.8303280482849085,
+      "gini": 0.7464474559223342,
+      "top_5_fraction": 0.12046384650968242,
+      "top_10pct_fraction": 0.5943107030156556,
+      "n_players": 1024,
+      "n_nonzero": 919
+    }
+  }
+}

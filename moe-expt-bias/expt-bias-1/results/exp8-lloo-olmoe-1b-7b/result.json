@@ -1,0 +1,95 @@
+{
+  "metadata": {
+    "study_name": "exp8-lloo-olmoe-1b-7b",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "model_family": "olmoe",
+    "benchmarks": [
+      "stereoset",
+      "bbq",
+      "winogender"
+    ],
+    "shapley_method": "dense_loo",
+    "seed": 42
+  },
+  "method": "dense_loo",
+  "n_pairs": 100,
+  "n_players": 16,
+  "bias_scores": {
+    "mean_bias_gap": 0.21346107482910157,
+    "std_bias_gap": 0.599548503088857
+  },
+  "concentration_metrics": {
+    "entropy": 0.7513329831783248,
+    "gini": 0.614543153196013,
+    "top_5_fraction": 0.777044532763234,
+    "top_10pct_fraction": 0.538135813819608,
+    "n_players": 16,
+    "n_nonzero": 16
+  },
+  "top_players": [
+    {
+      "player_id": "layer0-ffn",
+      "phi": 0.08293018102645874
+    },
+    {
+      "player_id": "layer15-ffn",
+      "phi": -0.04408637523651123
+    },
+    {
+      "player_id": "layer4-ffn",
+      "phi": 0.02246117115020752
+    },
+    {
+      "player_id": "layer12-ffn",
+      "phi": 0.01830913543701172
+    },
+    {
+      "player_id": "layer11-ffn",
+      "phi": 0.015619478225708007
+    },
+    {
+      "player_id": "layer14-ffn",
+      "phi": 0.011837360858917236
+    },
+    {
+      "player_id": "layer3-ffn",
+      "phi": 0.009326300621032714
+    },
+    {
+      "player_id": "layer13-ffn",
+      "phi": 0.007862772941589356
+    },
+    {
+      "player_id": "layer2-ffn",
+      "phi": -0.0069856071472167965
+    },
+    {
+      "player_id": "layer1-ffn",
+      "phi": -0.0046925520896911625
+    },
+    {
+      "player_id": "layer9-ffn",
+      "phi": -0.0039042186737060546
+    },
+    {
+      "player_id": "layer8-ffn",
+      "phi": 0.0032270097732543944
+    },
+    {
+      "player_id": "layer5-ffn",
+      "phi": -0.002866501808166504
+    },
+    {
+      "player_id": "layer7-ffn",
+      "phi": -0.001093142032623291
+    },
+    {
+      "player_id": "layer10-ffn",
+      "phi": -0.00047521114349365236
+    },
+    {
+      "player_id": "layer6-ffn",
+      "phi": -0.00035365104675292967
+    }
+  ]
+}

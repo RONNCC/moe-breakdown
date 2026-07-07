@@ -1,0 +1,1002 @@
+{
+  "study_name": "exp1-concentration-mixtral-8x7b",
+  "model_id": "mistralai/Mixtral-8x7B-v0.1",
+  "model_family": "mixtral",
+  "n_pairs": 20,
+  "layers": {
+    "layer0": {
+      "module_name": "model.layers.0.mlp",
+      "n_pairs_evaluated": 20,
+      "mean_spearman_rho": -0.08511904761904761,
+      "std_spearman_rho": 0.3731202889149825,
+      "scatter": [
+        {
+          "pair_idx": 0,
+          "n_active": 8,
+          "spearman_rho": -0.6428571428571428,
+          "rc_ranking": [
+            4,
+            7,
+            6,
+            3,
+            0,
+            2,
+            1,
+            5
+          ],
+          "exact_ranking": [
+            2,
+            5,
+            1,
+            4,
+            0,
+            6,
+            3,
+            7
+          ]
+        },
+        {
+          "pair_idx": 1,
+          "n_active": 7,
+          "spearman_rho": -0.1428571428571428,
+          "rc_ranking": [
+            4,
+            1,
+            6,
+            0,
+            3,
+            2,
+            5
+          ],
+          "exact_ranking": [
+            5,
+            1,
+            3,
+            0,
+            2,
+            4,
+            6
+          ]
+        },
+        {
+          "pair_idx": 2,
+          "n_active": 8,
+          "spearman_rho": 0.6190476190476191,
+          "rc_ranking": [
+            6,
+            7,
+            2,
+            0,
+            4,
+            3,
+            5,
+            1
+          ],
+          "exact_ranking": [
+            2,
+            6,
+            4,
+            5,
+            7,
+            0,
+            3,
+            1
+          ]
+        },
+        {
+          "pair_idx": 3,
+          "n_active": 7,
+          "spearman_rho": -0.5,
+          "rc_ranking": [
+            4,
+            6,
+            0,
+            1,
+            3,
+            2,
+            5
+          ],
+          "exact_ranking": [
+            3,
+            1,
+            2,
+            5,
+            0,
+            4,
+            6
+          ]
+        },
+        {
+          "pair_idx": 4,
+          "n_active": 8,
+          "spearman_rho": -0.2857142857142858,
+          "rc_ranking": [
+            2,
+            1,
+            0,
+            4,
+            6,
+            3,
+            5,
+            7
+          ],
+          "exact_ranking": [
+            1,
+            6,
+            5,
+            3,
+            7,
+            4,
+            2,
+            0
+          ]
+        },
+        {
+          "pair_idx": 5,
+          "n_active": 8,
+          "spearman_rho": 0.0714285714285714,
+          "rc_ranking": [
+            4,
+            7,
+            1,
+            3,
+            0,
+            6,
+            5,
+            2
+          ],
+          "exact_ranking": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            7,
+            0,
+            6
+          ]
+        },
+        {
+          "pair_idx": 6,
+          "n_active": 8,
+          "spearman_rho": -0.45238095238095233,
+          "rc_ranking": [
+            6,
+            3,
+            0,
+            1,
+            2,
+            4,
+            5,
+            7
+          ],
+          "exact_ranking": [
+            1,
+            2,
+            0,
+            6,
+            7,
+            4,
+            5,
+            3
+          ]
+        },
+        {
+          "pair_idx": 7,
+          "n_active": 8,
+          "spearman_rho": -0.16666666666666674,
+          "rc_ranking": [
+            7,
+            3,
+            6,
+            5,
+            2,
+            0,
+            1,
+            4
+          ],
+          "exact_ranking": [
+            5,
+            1,
+            3,
+            2,
+            0,
+            7,
+            4,
+            6
+          ]
+        },
+        {
+          "pair_idx": 8,
+          "n_active": 8,
+          "spearman_rho": -0.5952380952380953,
+          "rc_ranking": [
+            4,
+            0,
+            6,
+            1,
+            3,
+            2,
+            5,
+            7
+          ],
+          "exact_ranking": [
+            2,
+            5,
+            3,
+            7,
+            6,
+            1,
+            4,
+            0
+          ]
+        },
+        {
+          "pair_idx": 9,
+          "n_active": 8,
+          "spearman_rho": -0.023809523809523725,
+          "rc_ranking": [
+            4,
+            0,
+            1,
+            5,
+            3,
+            2,
+            7,
+            6
+          ],
+          "exact_ranking": [
+            1,
+            5,
+            3,
+            2,
+            7,
+            0,
+            6,
+            4
+          ]
+        },
+        {
+          "pair_idx": 10,
+          "n_active": 7,
+          "spearman_rho": 0.2142857142857143,
+          "rc_ranking": [
+            3,
+            6,
+            0,
+            4,
+            1,
+            2,
+            5
+          ],
+          "exact_ranking": [
+            6,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1
+          ]
+        },
+        {
+          "pair_idx": 11,
+          "n_active": 8,
+          "spearman_rho": -0.023809523809523725,
+          "rc_ranking": [
+            4,
+            2,
+            6,
+            0,
+            5,
+            7,
+            3,
+            1
+          ],
+          "exact_ranking": [
+            2,
+            3,
+            1,
+            6,
+            4,
+            5,
+            7,
+            0
+          ]
+        },
+        {
+          "pair_idx": 12,
+          "n_active": 7,
+          "spearman_rho": -0.0714285714285714,
+          "rc_ranking": [
+            2,
+            3,
+            1,
+            0,
+            4,
+            5,
+            6
+          ],
+          "exact_ranking": [
+            1,
+            5,
+            2,
+            3,
+            4,
+            0,
+            6
+          ]
+        },
+        {
+          "pair_idx": 13,
+          "n_active": 8,
+          "spearman_rho": -0.0714285714285714,
+          "rc_ranking": [
+            3,
+            2,
+            0,
+            1,
+            6,
+            4,
+            5,
+            7
+          ],
+          "exact_ranking": [
+            1,
+            2,
+            4,
+            5,
+            7,
+            0,
+            3,
+            6
+          ]
+        },
+        {
+          "pair_idx": 14,
+          "n_active": 8,
+          "spearman_rho": -0.6428571428571428,
+          "rc_ranking": [
+            3,
+            6,
+            0,
+            1,
+            2,
+            4,
+            5,
+            7
+          ],
+          "exact_ranking": [
+            5,
+            1,
+            2,
+            6,
+            4,
+            3,
+            0,
+            7
+          ]
+        },
+        {
+          "pair_idx": 15,
+          "n_active": 8,
+          "spearman_rho": -0.11904761904761907,
+          "rc_ranking": [
+            2,
+            3,
+            0,
+            6,
+            7,
+            1,
+            5,
+            4
+          ],
+          "exact_ranking": [
+            1,
+            3,
+            5,
+            6,
+            0,
+            4,
+            2,
+            7
+          ]
+        },
+        {
+          "pair_idx": 16,
+          "n_active": 7,
+          "spearman_rho": -0.1071428571428572,
+          "rc_ranking": [
+            6,
+            3,
+            0,
+            1,
+            2,
+            4,
+            5
+          ],
+          "exact_ranking": [
+            1,
+            3,
+            6,
+            2,
+            5,
+            0,
+            4
+          ]
+        },
+        {
+          "pair_idx": 17,
+          "n_active": 7,
+          "spearman_rho": 0.1428571428571429,
+          "rc_ranking": [
+            6,
+            3,
+            0,
+            4,
+            1,
+            2,
+            5
+          ],
+          "exact_ranking": [
+            4,
+            3,
+            2,
+            6,
+            5,
+            1,
+            0
+          ]
+        },
+        {
+          "pair_idx": 18,
+          "n_active": 8,
+          "spearman_rho": 0.3571428571428571,
+          "rc_ranking": [
+            6,
+            4,
+            0,
+            7,
+            1,
+            2,
+            3,
+            5
+          ],
+          "exact_ranking": [
+            5,
+            4,
+            1,
+            7,
+            6,
+            0,
+            2,
+            3
+          ]
+        },
+        {
+          "pair_idx": 19,
+          "n_active": 8,
+          "spearman_rho": 0.7380952380952381,
+          "rc_ranking": [
+            1,
+            3,
+            5,
+            2,
+            0,
+            6,
+            7,
+            4
+          ],
+          "exact_ranking": [
+            1,
+            5,
+            3,
+            4,
+            2,
+            0,
+            6,
+            7
+          ]
+        }
+      ]
+    },
+    "layer31": {
+      "module_name": "model.layers.31.mlp",
+      "n_pairs_evaluated": 20,
+      "mean_spearman_rho": 0.057738095238095234,
+      "std_spearman_rho": 0.4446436539802894,
+      "scatter": [
+        {
+          "pair_idx": 0,
+          "n_active": 8,
+          "spearman_rho": 0.45238095238095233,
+          "rc_ranking": [
+            5,
+            3,
+            1,
+            4,
+            6,
+            7,
+            2,
+            0
+          ],
+          "exact_ranking": [
+            6,
+            3,
+            5,
+            7,
+            4,
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "pair_idx": 1,
+          "n_active": 7,
+          "spearman_rho": -0.0714285714285714,
+          "rc_ranking": [
+            1,
+            4,
+            6,
+            2,
+            5,
+            0,
+            3
+          ],
+          "exact_ranking": [
+            6,
+            2,
+            3,
+            5,
+            4,
+            1,
+            0
+          ]
+        },
+        {
+          "pair_idx": 2,
+          "n_active": 8,
+          "spearman_rho": 0.40476190476190477,
+          "rc_ranking": [
+            2,
+            6,
+            5,
+            1,
+            7,
+            3,
+            4,
+            0
+          ],
+          "exact_ranking": [
+            1,
+            7,
+            6,
+            5,
+            4,
+            2,
+            3,
+            0
+          ]
+        },
+        {
+          "pair_idx": 3,
+          "n_active": 7,
+          "spearman_rho": 0.3928571428571429,
+          "rc_ranking": [
+            0,
+            3,
+            5,
+            1,
+            6,
+            2,
+            4
+          ],
+          "exact_ranking": [
+            5,
+            3,
+            4,
+            0,
+            1,
+            2,
+            6
+          ]
+        },
+        {
+          "pair_idx": 4,
+          "n_active": 8,
+          "spearman_rho": -0.5952380952380953,
+          "rc_ranking": [
+            0,
+            2,
+            1,
+            5,
+            7,
+            4,
+            3,
+            6
+          ],
+          "exact_ranking": [
+            3,
+            7,
+            6,
+            1,
+            2,
+            5,
+            4,
+            0
+          ]
+        },
+        {
+          "pair_idx": 5,
+          "n_active": 8,
+          "spearman_rho": 0.6904761904761905,
+          "rc_ranking": [
+            6,
+            1,
+            3,
+            2,
+            5,
+            7,
+            0,
+            4
+          ],
+          "exact_ranking": [
+            1,
+            2,
+            5,
+            3,
+            6,
+            7,
+            0,
+            4
+          ]
+        },
+        {
+          "pair_idx": 6,
+          "n_active": 8,
+          "spearman_rho": -0.2857142857142858,
+          "rc_ranking": [
+            4,
+            2,
+            0,
+            7,
+            1,
+            5,
+            3,
+            6
+          ],
+          "exact_ranking": [
+            3,
+            7,
+            1,
+            2,
+            5,
+            0,
+            6,
+            4
+          ]
+        },
+        {
+          "pair_idx": 7,
+          "n_active": 8,
+          "spearman_rho": 0.5714285714285714,
+          "rc_ranking": [
+            2,
+            0,
+            5,
+            4,
+            3,
+            1,
+            6,
+            7
+          ],
+          "exact_ranking": [
+            2,
+            3,
+            4,
+            1,
+            5,
+            0,
+            7,
+            6
+          ]
+        },
+        {
+          "pair_idx": 8,
+          "n_active": 7,
+          "spearman_rho": 0.1785714285714286,
+          "rc_ranking": [
+            0,
+            2,
+            6,
+            3,
+            4,
+            1,
+            5
+          ],
+          "exact_ranking": [
+            2,
+            3,
+            4,
+            1,
+            0,
+            5,
+            6
+          ]
+        },
+        {
+          "pair_idx": 9,
+          "n_active": 8,
+          "spearman_rho": 0.6190476190476191,
+          "rc_ranking": [
+            6,
+            5,
+            0,
+            3,
+            1,
+            2,
+            7,
+            4
+          ],
+          "exact_ranking": [
+            5,
+            1,
+            0,
+            6,
+            7,
+            3,
+            4,
+            2
+          ]
+        },
+        {
+          "pair_idx": 10,
+          "n_active": 8,
+          "spearman_rho": -0.19047619047619047,
+          "rc_ranking": [
+            4,
+            0,
+            5,
+            3,
+            1,
+            7,
+            2,
+            6
+          ],
+          "exact_ranking": [
+            2,
+            1,
+            7,
+            5,
+            4,
+            3,
+            0,
+            6
+          ]
+        },
+        {
+          "pair_idx": 11,
+          "n_active": 7,
+          "spearman_rho": -0.4285714285714286,
+          "rc_ranking": [
+            1,
+            4,
+            3,
+            0,
+            2,
+            6,
+            5
+          ],
+          "exact_ranking": [
+            6,
+            2,
+            1,
+            5,
+            0,
+            4,
+            3
+          ]
+        },
+        {
+          "pair_idx": 12,
+          "n_active": 8,
+          "spearman_rho": -0.6190476190476191,
+          "rc_ranking": [
+            4,
+            1,
+            0,
+            6,
+            5,
+            2,
+            3,
+            7
+          ],
+          "exact_ranking": [
+            2,
+            7,
+            6,
+            1,
+            3,
+            5,
+            0,
+            4
+          ]
+        },
+        {
+          "pair_idx": 13,
+          "n_active": 8,
+          "spearman_rho": 0.30952380952380953,
+          "rc_ranking": [
+            4,
+            2,
+            0,
+            1,
+            5,
+            6,
+            7,
+            3
+          ],
+          "exact_ranking": [
+            4,
+            6,
+            5,
+            1,
+            7,
+            0,
+            2,
+            3
+          ]
+        },
+        {
+          "pair_idx": 14,
+          "n_active": 8,
+          "spearman_rho": -0.6666666666666667,
+          "rc_ranking": [
+            2,
+            4,
+            7,
+            0,
+            5,
+            1,
+            6,
+            3
+          ],
+          "exact_ranking": [
+            1,
+            3,
+            0,
+            6,
+            2,
+            5,
+            7,
+            4
+          ]
+        },
+        {
+          "pair_idx": 15,
+          "n_active": 8,
+          "spearman_rho": 0.5952380952380952,
+          "rc_ranking": [
+            6,
+            1,
+            2,
+            3,
+            7,
+            4,
+            5,
+            0
+          ],
+          "exact_ranking": [
+            2,
+            7,
+            3,
+            6,
+            1,
+            5,
+            4,
+            0
+          ]
+        },
+        {
+          "pair_idx": 16,
+          "n_active": 8,
+          "spearman_rho": -0.04761904761904767,
+          "rc_ranking": [
+            0,
+            2,
+            4,
+            7,
+            3,
+            6,
+            1,
+            5
+          ],
+          "exact_ranking": [
+            1,
+            0,
+            3,
+            4,
+            6,
+            5,
+            2,
+            7
+          ]
+        },
+        {
+          "pair_idx": 17,
+          "n_active": 7,
+          "spearman_rho": 0.3928571428571429,
+          "rc_ranking": [
+            0,
+            1,
+            5,
+            4,
+            3,
+            2,
+            6
+          ],
+          "exact_ranking": [
+            5,
+            3,
+            4,
+            0,
+            1,
+            6,
+            2
+          ]
+        },
+        {
+          "pair_idx": 18,
+          "n_active": 8,
+          "spearman_rho": -0.40476190476190466,
+          "rc_ranking": [
+            4,
+            1,
+            5,
+            2,
+            0,
+            3,
+            7,
+            6
+          ],
+          "exact_ranking": [
+            2,
+            7,
+            3,
+            0,
+            1,
+            6,
+            4,
+            5
+          ]
+        },
+        {
+          "pair_idx": 19,
+          "n_active": 8,
+          "spearman_rho": -0.1428571428571428,
+          "rc_ranking": [
+            0,
+            6,
+            1,
+            2,
+            3,
+            4,
+            5,
+            7
+          ],
+          "exact_ranking": [
+            3,
+            5,
+            4,
+            1,
+            0,
+            2,
+            6,
+            7
+          ]
+        }
+      ]
+    }
+  }
+}

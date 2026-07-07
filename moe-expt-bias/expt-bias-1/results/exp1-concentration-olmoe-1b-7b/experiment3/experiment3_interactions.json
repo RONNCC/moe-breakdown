@@ -1,0 +1,302 @@
+{
+  "study_name": "exp1-concentration-olmoe-1b-7b",
+  "model_id": "allenai/OLMoE-1B-7B-0924",
+  "model_family": "olmoe",
+  "n_pairs": 20,
+  "layers": {
+    "layer0": {
+      "module_name": "model.layers.0.mlp",
+      "n_pairs": 20,
+      "mean_synergy_fraction": 0.7021316183024496,
+      "top_interactions": [
+        {
+          "experts": [
+            5,
+            14
+          ],
+          "mean_abs_interaction": 0.11270616089675974
+        },
+        {
+          "experts": [
+            6,
+            14
+          ],
+          "mean_abs_interaction": 0.11238100054312723
+        },
+        {
+          "experts": [
+            14,
+            18
+          ],
+          "mean_abs_interaction": 0.09305908240023109
+        },
+        {
+          "experts": [
+            5,
+            6
+          ],
+          "mean_abs_interaction": 0.08166102876844018
+        },
+        {
+          "experts": [
+            6,
+            18
+          ],
+          "mean_abs_interaction": 0.0760462065064718
+        },
+        {
+          "experts": [
+            5,
+            18
+          ],
+          "mean_abs_interaction": 0.06637534437671545
+        },
+        {
+          "experts": [
+            5,
+            19
+          ],
+          "mean_abs_interaction": 0.05112038560645291
+        },
+        {
+          "experts": [
+            14,
+            19
+          ],
+          "mean_abs_interaction": 0.045478089272029794
+        },
+        {
+          "experts": [
+            3,
+            17
+          ],
+          "mean_abs_interaction": 0.037236708071496774
+        },
+        {
+          "experts": [
+            6,
+            17
+          ],
+          "mean_abs_interaction": 0.03146833177176313
+        },
+        {
+          "experts": [
+            6,
+            19
+          ],
+          "mean_abs_interaction": 0.03066062283894369
+        },
+        {
+          "experts": [
+            18,
+            19
+          ],
+          "mean_abs_interaction": 0.027591422752097805
+        },
+        {
+          "experts": [
+            15,
+            19
+          ],
+          "mean_abs_interaction": 0.026656097646743544
+        },
+        {
+          "experts": [
+            0,
+            18
+          ],
+          "mean_abs_interaction": 0.025986219209337982
+        },
+        {
+          "experts": [
+            4,
+            17
+          ],
+          "mean_abs_interaction": 0.025958103588018464
+        },
+        {
+          "experts": [
+            5,
+            17
+          ],
+          "mean_abs_interaction": 0.024825866327804764
+        },
+        {
+          "experts": [
+            16,
+            19
+          ],
+          "mean_abs_interaction": 0.022867720444051026
+        },
+        {
+          "experts": [
+            17,
+            18
+          ],
+          "mean_abs_interaction": 0.021807478975366668
+        },
+        {
+          "experts": [
+            17,
+            19
+          ],
+          "mean_abs_interaction": 0.020487486559247207
+        },
+        {
+          "experts": [
+            6,
+            8
+          ],
+          "mean_abs_interaction": 0.019843849847241052
+        }
+      ]
+    },
+    "layer15": {
+      "module_name": "model.layers.15.mlp",
+      "n_pairs": 20,
+      "mean_synergy_fraction": 0.27820597599034336,
+      "top_interactions": [
+        {
+          "experts": [
+            0,
+            23
+          ],
+          "mean_abs_interaction": 0.010676139309292749
+        },
+        {
+          "experts": [
+            10,
+            15
+          ],
+          "mean_abs_interaction": 0.004430113546972639
+        },
+        {
+          "experts": [
+            10,
+            13
+          ],
+          "mean_abs_interaction": 0.0043896355641581996
+        },
+        {
+          "experts": [
+            4,
+            13
+          ],
+          "mean_abs_interaction": 0.004059450531762742
+        },
+        {
+          "experts": [
+            10,
+            11
+          ],
+          "mean_abs_interaction": 0.003806625018044126
+        },
+        {
+          "experts": [
+            13,
+            15
+          ],
+          "mean_abs_interaction": 0.0035892136450167028
+        },
+        {
+          "experts": [
+            0,
+            6
+          ],
+          "mean_abs_interaction": 0.0034724005889066804
+        },
+        {
+          "experts": [
+            7,
+            14
+          ],
+          "mean_abs_interaction": 0.0030372192746117
+        },
+        {
+          "experts": [
+            11,
+            16
+          ],
+          "mean_abs_interaction": 0.002752000093460079
+        },
+        {
+          "experts": [
+            2,
+            15
+          ],
+          "mean_abs_interaction": 0.002743717726497422
+        },
+        {
+          "experts": [
+            2,
+            14
+          ],
+          "mean_abs_interaction": 0.0025882001315790533
+        },
+        {
+          "experts": [
+            12,
+            16
+          ],
+          "mean_abs_interaction": 0.002480873039790563
+        },
+        {
+          "experts": [
+            2,
+            8
+          ],
+          "mean_abs_interaction": 0.0023679835455758177
+        },
+        {
+          "experts": [
+            13,
+            16
+          ],
+          "mean_abs_interaction": 0.00218887521160973
+        },
+        {
+          "experts": [
+            7,
+            21
+          ],
+          "mean_abs_interaction": 0.0020782750750344935
+        },
+        {
+          "experts": [
+            6,
+            23
+          ],
+          "mean_abs_interaction": 0.002051800773257301
+        },
+        {
+          "experts": [
+            7,
+            20
+          ],
+          "mean_abs_interaction": 0.0020468524208775256
+        },
+        {
+          "experts": [
+            14,
+            15
+          ],
+          "mean_abs_interaction": 0.0019963487002854973
+        },
+        {
+          "experts": [
+            4,
+            10
+          ],
+          "mean_abs_interaction": 0.0019436379084511398
+        },
+        {
+          "experts": [
+            2,
+            12
+          ],
+          "mean_abs_interaction": 0.001710568368434906
+        }
+      ]
+    }
+  }
+}

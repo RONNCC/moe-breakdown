@@ -1,0 +1,217 @@
+{
+  "study_name": "exp1-concentration-olmoe-1b-7b",
+  "model_id": "allenai/OLMoE-1B-7B-0924",
+  "model_family": "olmoe",
+  "n_pairs": 100,
+  "n_players": 1024,
+  "ablation_curves": {
+    "phi_ranked": [
+      {
+        "k": 0,
+        "fraction_ablated": 0.0,
+        "bias_gap": 0.21346107482910157,
+        "disparity_drop": 0.0
+      },
+      {
+        "k": 1,
+        "fraction_ablated": 0.0009765625,
+        "bias_gap": 0.21346723794937134,
+        "disparity_drop": -2.8872337847563433e-05
+      },
+      {
+        "k": 2,
+        "fraction_ablated": 0.001953125,
+        "bias_gap": 0.2116162633895874,
+        "disparity_drop": 0.00864237866782572
+      },
+      {
+        "k": 3,
+        "fraction_ablated": 0.0029296875,
+        "bias_gap": 0.2083945393562317,
+        "disparity_drop": 0.02373517268629032
+      },
+      {
+        "k": 4,
+        "fraction_ablated": 0.00390625,
+        "bias_gap": 0.2165840435028076,
+        "disparity_drop": -0.014630155292745105
+      },
+      {
+        "k": 5,
+        "fraction_ablated": 0.0048828125,
+        "bias_gap": 0.2154739022254944,
+        "disparity_drop": -0.009429482157364352
+      },
+      {
+        "k": 6,
+        "fraction_ablated": 0.005859375,
+        "bias_gap": 0.21692691802978514,
+        "disparity_drop": -0.01623641782680217
+      },
+      {
+        "k": 7,
+        "fraction_ablated": 0.0068359375,
+        "bias_gap": 0.21342371940612792,
+        "disparity_drop": 0.00017499875798691653
+      },
+      {
+        "k": 8,
+        "fraction_ablated": 0.0078125,
+        "bias_gap": 0.2181331157684326,
+        "disparity_drop": -0.021887086172837435
+      },
+      {
+        "k": 9,
+        "fraction_ablated": 0.0087890625,
+        "bias_gap": 0.21882716178894043,
+        "disparity_drop": -0.0251384799975124
+      },
+      {
+        "k": 10,
+        "fraction_ablated": 0.009765625,
+        "bias_gap": 0.21155166387557983,
+        "disparity_drop": 0.008945007679036667
+      },
+      {
+        "k": 102,
+        "fraction_ablated": 0.099609375,
+        "bias_gap": 0.17508694887161255,
+        "disparity_drop": 0.1797710706189014
+      },
+      {
+        "k": 205,
+        "fraction_ablated": 0.2001953125,
+        "bias_gap": 0.18691932201385497,
+        "disparity_drop": 0.12434001298127122
+      },
+      {
+        "k": 307,
+        "fraction_ablated": 0.2998046875,
+        "bias_gap": 0.17690637350082397,
+        "disparity_drop": 0.17124762141080543
+      },
+      {
+        "k": 512,
+        "fraction_ablated": 0.5,
+        "bias_gap": 0.07899692058563232,
+        "disparity_drop": 0.6299235321995927
+      },
+      {
+        "k": 768,
+        "fraction_ablated": 0.75,
+        "bias_gap": 0.1225526237487793,
+        "disparity_drop": 0.42587835348015657
+      },
+      {
+        "k": 1024,
+        "fraction_ablated": 1.0,
+        "bias_gap": 0.09403779506683349,
+        "disparity_drop": 0.5594616248319708
+      }
+    ],
+    "random": [
+      {
+        "k": 0,
+        "fraction_ablated": 0.0,
+        "bias_gap": 0.21346107482910157,
+        "disparity_drop": 0.0
+      },
+      {
+        "k": 1,
+        "fraction_ablated": 0.0009765625,
+        "bias_gap": 0.21453680992126464,
+        "disparity_drop": -0.0050394906566657086
+      },
+      {
+        "k": 2,
+        "fraction_ablated": 0.001953125,
+        "bias_gap": 0.21483684539794923,
+        "disparity_drop": -0.0064450653120205325
+      },
+      {
+        "k": 3,
+        "fraction_ablated": 0.0029296875,
+        "bias_gap": 0.21466580629348755,
+        "disparity_drop": -0.005643799298539582
+      },
+      {
+        "k": 4,
+        "fraction_ablated": 0.00390625,
+        "bias_gap": 0.21355855226516723,
+        "disparity_drop": -0.00045665204367451723
+      },
+      {
+        "k": 5,
+        "fraction_ablated": 0.0048828125,
+        "bias_gap": 0.21387911558151246,
+        "disparity_drop": -0.0019583933639684818
+      },
+      {
+        "k": 6,
+        "fraction_ablated": 0.005859375,
+        "bias_gap": 0.213789701461792,
+        "disparity_drop": -0.0015395154969285484
+      },
+      {
+        "k": 7,
+        "fraction_ablated": 0.0068359375,
+        "bias_gap": 0.21420262813568114,
+        "disparity_drop": -0.003473950963534059
+      },
+      {
+        "k": 8,
+        "fraction_ablated": 0.0078125,
+        "bias_gap": 0.21351548433303832,
+        "disparity_drop": -0.0002548919234118882
+      },
+      {
+        "k": 9,
+        "fraction_ablated": 0.0087890625,
+        "bias_gap": 0.2102767825126648,
+        "disparity_drop": 0.014917437846624438
+      },
+      {
+        "k": 10,
+        "fraction_ablated": 0.009765625,
+        "bias_gap": 0.21133807182312012,
+        "disparity_drop": 0.009945621269269542
+      },
+      {
+        "k": 102,
+        "fraction_ablated": 0.099609375,
+        "bias_gap": 0.22142775774002074,
+        "disparity_drop": -0.03732147848172018
+      },
+      {
+        "k": 205,
+        "fraction_ablated": 0.2001953125,
+        "bias_gap": 0.22025187492370604,
+        "disparity_drop": -0.03181282629650974
+      },
+      {
+        "k": 307,
+        "fraction_ablated": 0.2998046875,
+        "bias_gap": 0.20305500745773317,
+        "disparity_drop": 0.048749250324442384
+      },
+      {
+        "k": 512,
+        "fraction_ablated": 0.5,
+        "bias_gap": 0.11927535057067871,
+        "disparity_drop": 0.44123137829146886
+      },
+      {
+        "k": 768,
+        "fraction_ablated": 0.75,
+        "bias_gap": 0.02568342685699463,
+        "disparity_drop": 0.8796809822233072
+      },
+      {
+        "k": 1024,
+        "fraction_ablated": 1.0,
+        "bias_gap": 0.09403779506683349,
+        "disparity_drop": 0.5594616248319708
+      }
+    ]
+  }
+}

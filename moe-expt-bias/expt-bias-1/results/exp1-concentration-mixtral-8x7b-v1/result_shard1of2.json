@@ -1,0 +1,113 @@
+{
+  "metadata": {
+    "study_name": "exp1-concentration-mixtral-8x7b-v1",
+    "model_id": "mistralai/Mixtral-8x7B-v0.1",
+    "model_family": "mixtral",
+    "benchmarks": [
+      "stereoset",
+      "bbq",
+      "winogender"
+    ],
+    "shapley_method": "routing_contrast",
+    "seed": 42,
+    "shard_idx": 1,
+    "num_shards": 2
+  },
+  "method": "routing_contrast",
+  "n_pairs": 2500,
+  "n_players": 256,
+  "bias_scores": {
+    "mean_bias_gap": 0.19759497766494752,
+    "std_bias_gap": 0.35403353155436007
+  },
+  "concentration_metrics": {
+    "entropy": 0.9172642706122688,
+    "gini": 0.5177206057317411,
+    "top_5_fraction": 0.10332904432810983,
+    "top_10pct_fraction": 0.34428047284192237,
+    "n_players": 256,
+    "n_nonzero": 256
+  },
+  "top_players": [
+    {
+      "player_id": "layer27-expert4",
+      "phi": 0.010931005380367042
+    },
+    {
+      "player_id": "layer8-expert1",
+      "phi": -0.008415475979602396
+    },
+    {
+      "player_id": "layer31-expert1",
+      "phi": 0.00758099217910039
+    },
+    {
+      "player_id": "layer30-expert5",
+      "phi": 0.0073585686505111695
+    },
+    {
+      "player_id": "layer15-expert3",
+      "phi": -0.006913352302224161
+    },
+    {
+      "player_id": "layer26-expert1",
+      "phi": 0.006294584111260535
+    },
+    {
+      "player_id": "layer28-expert6",
+      "phi": 0.006195513137627701
+    },
+    {
+      "player_id": "layer10-expert6",
+      "phi": -0.005900659531771668
+    },
+    {
+      "player_id": "layer17-expert0",
+      "phi": 0.005589546958436884
+    },
+    {
+      "player_id": "layer27-expert6",
+      "phi": -0.0051815567556354036
+    },
+    {
+      "player_id": "layer23-expert5",
+      "phi": -0.005086863704323391
+    },
+    {
+      "player_id": "layer26-expert6",
+      "phi": -0.005085196054688586
+    },
+    {
+      "player_id": "layer23-expert6",
+      "phi": 0.004995107876187934
+    },
+    {
+      "player_id": "layer25-expert3",
+      "phi": 0.004753027775808873
+    },
+    {
+      "player_id": "layer13-expert3",
+      "phi": -0.004545119924872623
+    },
+    {
+      "player_id": "layer8-expert5",
+      "phi": 0.004134586110053451
+    },
+    {
+      "player_id": "layer30-expert3",
+      "phi": 0.0041258618248983395
+    },
+    {
+      "player_id": "layer21-expert5",
+      "phi": 0.004018725122246898
+    },
+    {
+      "player_id": "layer13-expert2",
+      "phi": 0.003978620169859672
+    },
+    {
+      "player_id": "layer3-expert2",
+      "phi": 0.003947260482833443
+    }
+  ]
+}

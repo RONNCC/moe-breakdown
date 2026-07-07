@@ -1,0 +1,181 @@
+{
+  "study_name": "exp2-dense-baseline-olmo-7b",
+  "model_id": "allenai/OLMo-7B-hf",
+  "model_family": "olmo",
+  "n_pairs": 60,
+  "n_players": 32,
+  "ablation_curves": {
+    "phi_ranked": [
+      {
+        "k": 0,
+        "fraction_ablated": 0.0,
+        "bias_gap": 0.15684975783030192,
+        "disparity_drop": 0.0
+      },
+      {
+        "k": 1,
+        "fraction_ablated": 0.03125,
+        "bias_gap": -0.011895497639973959,
+        "disparity_drop": 1.075840076545377
+      },
+      {
+        "k": 2,
+        "fraction_ablated": 0.0625,
+        "bias_gap": -0.13363211154937743,
+        "disparity_drop": 1.8519752494228012
+      },
+      {
+        "k": 3,
+        "fraction_ablated": 0.09375,
+        "bias_gap": -0.0372063159942627,
+        "disparity_drop": 1.2372099039803222
+      },
+      {
+        "k": 4,
+        "fraction_ablated": 0.125,
+        "bias_gap": -0.07816937764485678,
+        "disparity_drop": 1.4983710445344096
+      },
+      {
+        "k": 5,
+        "fraction_ablated": 0.15625,
+        "bias_gap": -0.028698007265726726,
+        "disparity_drop": 1.1829649446878683
+      },
+      {
+        "k": 6,
+        "fraction_ablated": 0.1875,
+        "bias_gap": -0.025466577212015788,
+        "disparity_drop": 1.1623628723709505
+      },
+      {
+        "k": 7,
+        "fraction_ablated": 0.21875,
+        "bias_gap": -0.03950583140055339,
+        "disparity_drop": 1.2518705285047067
+      },
+      {
+        "k": 8,
+        "fraction_ablated": 0.25,
+        "bias_gap": -0.03394471009572347,
+        "disparity_drop": 1.216415444724172
+      },
+      {
+        "k": 9,
+        "fraction_ablated": 0.28125,
+        "bias_gap": -0.04639738400777181,
+        "disparity_drop": 1.2958078141119596
+      },
+      {
+        "k": 10,
+        "fraction_ablated": 0.3125,
+        "bias_gap": -0.06395779450734457,
+        "disparity_drop": 1.4077647003863496
+      },
+      {
+        "k": 16,
+        "fraction_ablated": 0.5,
+        "bias_gap": -0.0004805326461791992,
+        "disparity_drop": 1.0030636492706548
+      },
+      {
+        "k": 24,
+        "fraction_ablated": 0.75,
+        "bias_gap": 0.0007234255472819011,
+        "disparity_drop": 0.9953877802727333
+      },
+      {
+        "k": 32,
+        "fraction_ablated": 1.0,
+        "bias_gap": -0.006970516840616862,
+        "disparity_drop": 1.0444407242767846
+      }
+    ],
+    "random": [
+      {
+        "k": 0,
+        "fraction_ablated": 0.0,
+        "bias_gap": 0.15684975783030192,
+        "disparity_drop": 0.0
+      },
+      {
+        "k": 1,
+        "fraction_ablated": 0.03125,
+        "bias_gap": 0.16637141307195027,
+        "disparity_drop": -0.0607055782129417
+      },
+      {
+        "k": 2,
+        "fraction_ablated": 0.0625,
+        "bias_gap": 0.17040282487869263,
+        "disparity_drop": -0.08640795647930789
+      },
+      {
+        "k": 3,
+        "fraction_ablated": 0.09375,
+        "bias_gap": -0.045022837320963544,
+        "disparity_drop": 1.2870443534230662
+      },
+      {
+        "k": 4,
+        "fraction_ablated": 0.125,
+        "bias_gap": -0.03871151606241862,
+        "disparity_drop": 1.2468063489412664
+      },
+      {
+        "k": 5,
+        "fraction_ablated": 0.15625,
+        "bias_gap": -0.03277457555135091,
+        "disparity_drop": 1.2089552193431514
+      },
+      {
+        "k": 6,
+        "fraction_ablated": 0.1875,
+        "bias_gap": 0.031061863899230956,
+        "disparity_drop": 0.8019642215014622
+      },
+      {
+        "k": 7,
+        "fraction_ablated": 0.21875,
+        "bias_gap": 0.1292037804921468,
+        "disparity_drop": 0.17625769858099302
+      },
+      {
+        "k": 8,
+        "fraction_ablated": 0.25,
+        "bias_gap": 0.12266469796498616,
+        "disparity_drop": 0.21794780137500167
+      },
+      {
+        "k": 9,
+        "fraction_ablated": 0.28125,
+        "bias_gap": 0.10657806396484375,
+        "disparity_drop": 0.32050858452614167
+      },
+      {
+        "k": 10,
+        "fraction_ablated": 0.3125,
+        "bias_gap": 0.01615405877431234,
+        "disparity_drop": 0.8970093483230643
+      },
+      {
+        "k": 16,
+        "fraction_ablated": 0.5,
+        "bias_gap": -0.06390480200449626,
+        "disparity_drop": 1.4074268452083671
+      },
+      {
+        "k": 24,
+        "fraction_ablated": 0.75,
+        "bias_gap": 0.04634049733479818,
+        "disparity_drop": 0.704554868456127
+      },
+      {
+        "k": 32,
+        "fraction_ablated": 1.0,
+        "bias_gap": -0.006970516840616862,
+        "disparity_drop": 1.0444407242767846
+      }
+    ]
+  }
+}
