@@ -360,54 +360,74 @@ plt.savefig("moe-expt-bias/figures/fig5_ablation_curve.png")
 plt.close()
 
 
-print("Generating Figure 6: Gini vs H Correlation...")
+print("Generating Figure 6: Demographic JS Divergence Heatmap...")
 # ==============================================================================
-# FIGURE 6 — Gini vs H Correlation
+# FIGURE 6 — Demographic JS Divergence Heatmap (Experiment 5)
 # ==============================================================================
-plt.figure(figsize=(7.5, 5.5))
+from pathlib import Path
+from scipy.spatial.distance import jensenshannon
 
-moe_mask = df["type"] == "MoE"
-dense_mask = df["type"] == "Dense"
-gemma_mask = df["type"] == "Gemma 4 (null bias)"
+groups = [
+    # Gender
+    "M", "F", "male", "sister", "mother",
+    # Race / Religion
+    "African", "Arab", "Hispanic", "Japanese", "Bengali", "Muslim",
+    # Occupations
+    "civil_servant", "software_developer", "nurse", "mover", "butcher", "plumber", "bartender"
+]
 
-# Scatter plots with size proportional to player counts
-plt.scatter(df.loc[moe_mask, "H"], df.loc[moe_mask, "Gini"], s=size_func(df.loc[moe_mask, "n_players"]), color=c_moe, marker="o", edgecolors="white", linewidths=0.8, alpha=0.9, label="MoE Models")
-plt.scatter(df.loc[dense_mask, "H"], df.loc[dense_mask, "Gini"], s=size_func(df.loc[dense_mask, "n_players"]), color=c_dense, marker="s", edgecolors=c_dense, facecolors="none", linewidths=1.5, alpha=0.9, label="Dense Models")
-plt.scatter(df.loc[gemma_mask, "H"], df.loc[gemma_mask, "Gini"], s=size_func(df.loc[gemma_mask, "n_players"]), color=c_gemma, marker="X", edgecolors="white", linewidths=0.5, alpha=0.9, label="Gemma 4 (null bias)")
+display_names = [
+    # Gender
+    "Male Pronouns", "Female Pronouns", "Male Target", "Sister Target", "Mother Target",
+    # Race / Religion
+    "African Cohort", "Arab Cohort", "Hispanic Cohort", "Japanese Cohort", "Bengali Cohort", "Muslim Cohort",
+    # Occupations
+    "Civil Servant", "Software Dev", "Nurse", "Mover", "Butcher", "Plumber", "Bartender"
+]
 
-# Label all models with custom adjustments
-for idx, row in df.iterrows():
-    name = row["model"]
-    x_val = row["H"]
-    y_val = row["Gini"]
-    offset = annotations.get(name, (10, 5))
-    disp_name = "Gemma 4 (null signal)" if name == "Gemma 4 26B" else name
-    plt.annotate(disp_name, (x_val, y_val), textcoords="offset points", xytext=offset, fontsize=8, fontweight="semibold")
+results_path = Path("moe-expt-bias/expt-bias-1/results/exp5-demographic-specificity-olmoe-1b-7b-v1")
+vectors = []
+valid_display_names = []
 
-# Fit and plot regression line ONLY for MoE models
-H_moe = df.loc[moe_mask, "H"].values
-Gini_moe = df.loc[moe_mask, "Gini"].values
-slope, intercept = np.polyfit(H_moe, Gini_moe, 1)
-r_corr = np.corrcoef(H_moe, Gini_moe)[0, 1]
+for g, name in zip(groups, display_names):
+    file_path = results_path / f"phi_group_{g}.npy"
+    if file_path.exists():
+        # Load absolute attribution
+        v = np.load(file_path)
+        v_abs = np.abs(v)
+        # Normalize to probability distribution
+        v_abs /= (v_abs.sum() + 1e-12)
+        vectors.append(v_abs)
+        valid_display_names.append(name)
 
-x_line = np.linspace(0.86, 0.94, 100)
-y_line = slope * x_line + intercept
-plt.plot(x_line, y_line, color=c_moe, linestyle="-.", linewidth=1.2, label=f"MoE Fit (Pearson r = {r_corr:.3f})")
+# Compute pairwise JS Divergence matrix
+num_groups = len(vectors)
+js_matrix = np.zeros((num_groups, num_groups))
+for i in range(num_groups):
+    for j in range(num_groups):
+        js_dist = jensenshannon(vectors[i], vectors[j])
+        # JS Divergence is distance squared
+        js_matrix[i, j] = js_dist ** 2
 
-# Highlight Mixtral/DBRX cluster
-circle = plt.Circle((0.918, 0.535), 0.015, color="#D62728", fill=False, linestyle="--", linewidth=1.2)
-plt.gca().add_patch(circle)
-plt.text(0.920, 0.495, "Mixtral/DBRX\nCluster", color="#D62728", fontsize=7.5, fontweight="bold", ha="left")
+# Plot heatmap
+plt.figure(figsize=(9.5, 8))
+sns.heatmap(
+    js_matrix,
+    xticklabels=valid_display_names,
+    yticklabels=valid_display_names,
+    annot=True,
+    fmt=".2f",
+    cmap="YlOrRd",
+    vmin=0.0,
+    vmax=0.6,
+    cbar_kws={'label': 'Jensen-Shannon Divergence ($D_{JS}$)'}
+)
 
-plt.xlim(0.60, 0.96)
-plt.ylim(0.48, 0.85)
-plt.xlabel("Normalized Shannon Entropy ($H$)", fontweight="bold")
-plt.ylabel("Gini Coefficient ($G$)", fontweight="bold")
-plt.title("Figure 6: Gini Coefficient vs. Normalized Entropy (H) Correlation\n(Strong negative correlation confirms consistent metric directions)")
-plt.grid(True, linestyle=":", alpha=0.5)
-plt.legend(loc="upper right", frameon=True, facecolor="white")
+plt.title("Figure 6: Demographic Subgroup-Specific Expert Routing Pathways\n(Pairwise JS Divergence between Absolute Shapley Attributions in OLMoE-1B-7B)", fontsize=11, pad=15)
+plt.xticks(rotation=45, ha="right", fontsize=8.5)
+plt.yticks(rotation=0, fontsize=8.5)
 plt.tight_layout()
-plt.savefig("moe-expt-bias/figures/fig6_gini_h_correlation.png")
+plt.savefig("moe-expt-bias/figures/fig6_demographic_divergence.png")
 plt.close()
 
 print("All 6 publication-quality figures generated successfully in moe-expt-bias/figures/!")
