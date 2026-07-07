@@ -16,17 +16,18 @@ import seaborn as sns
 # Ensure target directory exists
 os.makedirs("moe-expt-bias/figures", exist_ok=True)
 
-# Define dataset for Exp1 + Exp2
+# Define dataset for Exp1 + Exp2 (finalized v1 full-dataset values)
 data = [
-    {"model": "OLMoE-1B-7B", "type": "MoE", "sparsity": 0.016, "n_players": 1024, "H": 0.900, "Gini": 0.599, "top5": 0.069, "top10": 0.451, "gap": 0.203},
+    {"model": "OLMoE-1B-7B", "type": "MoE", "sparsity": 0.016, "n_players": 1024, "H": 0.8786, "Gini": 0.6457, "top5": 0.0928, "top10": 0.5088, "gap": 0.2444},
     {"model": "GPT-OSS-120B", "type": "MoE", "sparsity": 0.031, "n_players": 4608, "H": 0.880, "Gini": 0.724, "top5": 0.020, "top10": 0.549, "gap": 0.165},
     {"model": "Gemma 4 26B", "type": "Gemma 4 (null bias)", "sparsity": 0.063, "n_players": 3840, "H": 0.822, "Gini": 0.821, "top5": 0.038, "top10": 0.657, "gap": 0.0}, # gap ≈ 0
-    {"model": "Phi-3.5-MoE", "type": "MoE", "sparsity": 0.125, "n_players": 512, "H": 0.889, "Gini": 0.617, "top5": 0.087, "top10": 0.452, "gap": 0.244},
-    {"model": "Mixtral-8x7B", "type": "MoE", "sparsity": 0.250, "n_players": 256, "H": 0.917, "Gini": 0.516, "top5": 0.109, "top10": 0.364, "gap": 0.187},
-    {"model": "DBRX-instruct", "type": "MoE", "sparsity": 0.250, "n_players": 640, "H": 0.919, "Gini": 0.554, "top5": 0.043, "top10": 0.349, "gap": 0.187},
-    {"model": "OLMo-7B", "type": "Dense", "sparsity": 1.0, "n_players": 32, "H": 0.719, "Gini": 0.693, "top5": 0.687, "top10": 0.605, "gap": 0.146},
-    {"model": "Phi-3.5-mini", "type": "Dense", "sparsity": 1.0, "n_players": 32, "H": 0.758, "Gini": 0.613, "top5": 0.625, "top10": 0.528, "gap": 0.187},
-    {"model": "Llama-3.1-8B", "type": "Dense", "sparsity": 1.0, "n_players": 32, "H": 0.630, "Gini": 0.730, "top5": 0.749, "top10": 0.698, "gap": 0.179}
+    {"model": "Phi-3.5-MoE", "type": "MoE", "sparsity": 0.125, "n_players": 512, "H": 0.8779, "Gini": 0.6435, "top5": 0.0974, "top10": 0.4704, "gap": 0.1614},
+    {"model": "Mixtral-8x7B", "type": "MoE", "sparsity": 0.250, "n_players": 256, "H": 0.9167, "Gini": 0.5189, "top5": 0.1074, "top10": 0.3559, "gap": 0.2000},
+    {"model": "DBRX-instruct", "type": "MoE", "sparsity": 0.250, "n_players": 640, "H": 0.8970, "Gini": 0.5995, "top5": 0.0896, "top10": 0.4329, "gap": 0.1686},
+    {"model": "OLMo-7B", "type": "Dense", "sparsity": 1.0, "n_players": 32, "H": 0.7041, "Gini": 0.7160, "top5": 0.7477, "top10": 0.5607, "gap": 0.1563},
+    {"model": "Phi-3.5-mini", "type": "Dense", "sparsity": 1.0, "n_players": 32, "H": 0.7583, "Gini": 0.6466, "top5": 0.6349, "top10": 0.5018, "gap": 0.2150},
+    {"model": "Llama-3.1-8B", "type": "Dense", "sparsity": 1.0, "n_players": 32, "H": 0.6563, "Gini": 0.7099, "top5": 0.7232, "top10": 0.6722, "gap": 0.1877},
+    {"model": "Llama-2-7B", "type": "Dense", "sparsity": 1.0, "n_players": 32, "H": 0.6950, "Gini": 0.6574, "top5": 0.6972, "top10": 0.6495, "gap": 0.1724}
 ]
 df = pd.DataFrame(data)
 
@@ -55,6 +56,7 @@ model_colors = {
     "OLMo-7B": "#8C564B",         # Brown (dense)
     "Phi-3.5-mini": "#E377C2",    # Pink (dense)
     "Llama-3.1-8B": "#BCBD22",    # Olive (dense)
+    "Llama-2-7B": "#17BECF",      # Cyan (dense)
     "Gemma 4 26B": "#7F7F7F"      # Gray (null bias)
 }
 

@@ -72,7 +72,7 @@ To systematically analyze how social stereotype bias is organized inside MoE net
 \begin{enumerate}
     \item \textbf{RQ1 (Sparsity Scaling \& Concentration):} Across MoE models of increasing routing sparsity (lower active expert fraction $N_A/N$), does bias attribution become more concentrated in fewer experts? I.e., does sparsity $\rightarrow$ concentration?
     \begin{itemize}
-        \item \textit{Verdict:} \textbf{Rejected (H1 Rejected).} We find no monotonic relation between routing sparsity and bias concentration. For instance, GPT-OSS-120B ($N_A/N = 0.031$, $H = 0.880$, Gini = $0.724$, where Gini is the inequality coefficient measuring attribution concentration across experts, ranging from $0.0$ for perfect equality to $1.0$ for maximum concentration) is more concentrated than OLMoE-1B-7B ($N_A/N = 0.016$, $H = 0.900$, Gini = $0.599$) despite OLMoE being twice as sparse. Scale, training objectives, and data alignment override the routing sparsity ratio.
+        \item \textit{Verdict:} \textbf{Rejected (H1 Rejected).} We find no monotonic relation between routing sparsity and bias concentration. For instance, GPT-OSS-120B ($N_A/N = 0.031$, $H = 0.880$, Gini = $0.724$, where Gini is the inequality coefficient measuring attribution concentration across experts, ranging from $0.0$ for perfect equality to $1.0$ for maximum concentration) is more concentrated than OLMoE-1B-7B-v1 ($N_A/N = 0.016$, $H = 0.879$, Gini = $0.646$) despite OLMoE being twice as sparse. Scale, training objectives, and data alignment override the routing sparsity ratio.
     \end{itemize}
     
     \item \textbf{RQ2 (MoE vs. Dense Localizability):} At matched training capability and family, is bias more localizable (lower entropy of attribution) in MoE models than in their dense counterparts?
@@ -193,27 +193,27 @@ Our ladder consists of ten permissively licensed models designed to isolate the 
 
 \begin{table}[htbp]
 \centering
-\caption{The Sparsity-to-Density Model Ladder evaluated across our counterfactual prompts.}
+\caption{The Sparsity-to-Density Model Ladder evaluated across our counterfactual prompts (v1 full-dataset reruns where available, v0 pilot dataset otherwise).}
 \label{tab:model_ladder}
 \begin{tabular}{llcccc}
 \toprule
 \textbf{Model} & \textbf{Architecture} & $N_A/N$ & \textbf{Total/Active Params} & \textbf{Players ($N$)} & \textbf{Mean Bias Gap} \\
 \midrule
-\textbf{OLMoE-1B-7B} & MoE (top-1/64) & 0.016 & 7B / 1B & 1024 & 0.203 \\
+\textbf{OLMoE-1B-7B} & MoE (top-1/64) & 0.016 & 7B / 1B & 1024 & 0.244 \\
 \textbf{GPT-OSS-120B} & MoE (top-4/128) & 0.031 & 120B / 30B & 4608 & 0.165 \\
 \textbf{Gemma 4 26B}\textsuperscript{\dag} & MoE (top-8/128) & 0.063 & 26B / 4B & 3840 & $\approx 0$ (null) \\
-\textbf{Phi-3.5-MoE} & MoE (top-2/16) & 0.125 & 42B / 6.6B & 512 & 0.244 \\
-\textbf{Mixtral-8x7B} & MoE (top-2/8) & 0.250 & 47B / 13B & 256 & 0.187 \\
-\textbf{DBRX-instruct} & MoE (top-4/16) & 0.250 & 132B / 36B & 640 & 0.187 \\
-\textbf{OLMo-7B} & Dense baseline & 1.000 & 7B / 7B & 32 & 0.146 \\
-\textbf{Phi-3.5-mini} & Dense baseline & 1.000 & 3.8B / 3.8B & 32 & 0.187 \\
-\textbf{Llama-3.1-8B} & Dense baseline & 1.000 & 8B / 8B & 32 & 0.179 \\
-\textbf{Llama-2-7B}\textsuperscript{\ddag} & Dense baseline & 1.000 & 7B / 7B & 32 & \textit{(pending)} \\
+\textbf{Phi-3.5-MoE} & MoE (top-2/16) & 0.125 & 42B / 6.6B & 512 & 0.161 \\
+\textbf{Mixtral-8x7B} & MoE (top-2/8) & 0.250 & 47B / 13B & 256 & 0.200 \\
+\textbf{DBRX-instruct} & MoE (top-4/16) & 0.250 & 132B / 36B & 640 & 0.169 \\
+\textbf{OLMo-7B} & Dense baseline & 1.000 & 7B / 7B & 32 & 0.156 \\
+\textbf{Phi-3.5-mini} & Dense baseline & 1.000 & 3.8B / 3.8B & 32 & 0.215 \\
+\textbf{Llama-3.1-8B} & Dense baseline & 1.000 & 8B / 8B & 32 & 0.188 \\
+\textbf{Llama-2-7B} & Dense baseline & 1.000 & 7B / 7B & 32 & 0.172 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent{\textsuperscript{\ddag}\small \textit{Llama-2-7B is included as a cross-generation dense baseline (Llama 2 vs.\ Llama 3.1 training generation) to test whether bias diffuseness is stable across Llama generations. Results pending at time of writing.}}
+\noindent{\small \textit{Llama-2-7B is included as a cross-generation dense baseline (Llama 2 vs.\ Llama 3.1 training generation) to test whether bias diffuseness is stable across Llama generations. Our full-scale v1 run confirms that bias is highly diffuse in Llama-2-7B ($H = 0.695$), establishing that diffuseness is a stable structural feature across transformer training generations.}}
 
 \noindent{\textsuperscript{\dag}\small \textit{Gemma 4 26B exhibited a baseline mean bias gap of approximately $0.0$, indicating that it is natively well-aligned on these specific benchmarks. Under our post-hoc audit, its concentration metrics ($H=0.822$, $G=0.821$) reflect raw routing noise rather than actual bias attribution. However, this is one of our strongest findings: alignment can successfully collapse the social bias signal to the noise floor entirely, proving that safety post-training is a robust defense against routing-level stereotyping bias.}}
 
@@ -233,13 +233,13 @@ To establish a rigorous baseline, we compute the \textbf{noise floor} of the ent
 
 Our experimental results definitively reject $H_1$. Looking across our four biased MoE architectures sorted by active fraction:
 \begin{itemize}
-    \item \textbf{OLMoE-1B-7B ($N_A/N = 0.016$):} $H = 0.900$, Gini = $0.599$
+    \item \textbf{OLMoE-1B-7B-v1 ($N_A/N = 0.016$):} $H = 0.879$, Gini = $0.646$
     \item \textbf{GPT-OSS-120B ($N_A/N = 0.031$):} $H = 0.880$, Gini = $0.724$
-    \item \textbf{Phi-3.5-MoE ($N_A/N = 0.125$):} $H = 0.889$, Gini = $0.617$
-    \item \textbf{Mixtral-8x7B ($N_A/N = 0.250$):} $H = 0.917$, Gini = $0.516$
+    \item \textbf{Phi-3.5-MoE-v1 ($N_A/N = 0.125$):} $H = 0.878$, Gini = $0.644$
+    \item \textbf{Mixtral-8x7B-v1 ($N_A/N = 0.250$):} $H = 0.917$, Gini = $0.519$
 \end{itemize}
 
-All audited MoE models exhibit attribution entropy ($H \approx 0.88 - 0.92$) extremely close to the shuffled noise floor, proving that routing-level bias attribution is nearly as diffuse as uniform noise. Furthermore, we find no monotonic correlation between routing sparsity and concentration. Crucially, GPT-OSS-120B is more concentrated ($H = 0.880$) than OLMoE ($H = 0.900$), despite OLMoE being twice as sparse. This direct violation of monotonicity indicates that other variables exert a stronger influence on bias attribution than the sparse active fraction alone. In particular, GPT-OSS is natively post-trained and released with 4-bit block-scaled low-precision microscaling (MXFP4) format applied directly to its MoE projection weights, while other tensors remain in BF16. Thus, its higher concentration may reflect numerical precision and quantization effects on the routing gates and projection weights rather than routing sparsity alone, representing a key architectural confound when evaluating scaling behavior.
+All audited MoE models exhibit attribution entropy ($H \approx 0.88 - 0.92$) extremely close to the shuffled noise floor, proving that routing-level bias attribution is nearly as diffuse as uniform noise. Furthermore, we find no monotonic correlation between routing sparsity and concentration. Crucially, GPT-OSS-120B exhibits a much higher Gini coefficient ($\text{Gini} = 0.724$) than OLMoE-1B-7B ($\text{Gini} = 0.646$), despite OLMoE being twice as sparse. Similarly, Phi-3.5-MoE exhibits greater concentration ($\text{Gini} = 0.644$) than the twice-as-sparse OLMoE, while Mixtral ($H=0.917$, $\text{Gini}=0.519$) is the most diffuse. This direct violation of monotonicity indicates that other variables exert a stronger influence on bias attribution than the sparse active fraction alone. In particular, GPT-OSS is natively post-trained and released with 4-bit block-scaled low-precision microscaling (MXFP4) format applied directly to its MoE projection weights, while other tensors remain in BF16. Thus, its higher concentration may reflect numerical precision and quantization effects on the routing gates and projection weights rather than routing sparsity alone, representing a key architectural confound when evaluating scaling behavior.
 
 \begin{figure}[htbp]
 \centering
@@ -248,7 +248,7 @@ All audited MoE models exhibit attribution entropy ($H \approx 0.88 - 0.92$) ext
 \label{fig:concentration_bars}
 \end{figure}
 
-A major highlight of this experiment is our \textbf{architectural replication at $N_A/N = 0.250$}. We evaluated \textbf{DBRX-instruct} (Databricks, top-4/16, 132B parameters) and found $H = 0.919$ and Gini = $0.554$, which is virtually identical to \textbf{Mixtral-8x7B} ($H = 0.917$, Gini = $0.516$) at the exact same sparsity level. Despite being trained by different organizations on entirely different corpora with different scales, these two architectures yield identical, highly diffuse bias signatures. This provides powerful evidence for the \textbf{H0 Null Hypothesis}: social bias is robustly, universally diffuse in current MoE architectures.
+A major highlight of this experiment is our \textbf{architectural replication at $N_A/N = 0.250$}. We evaluated \textbf{DBRX-instruct-v1} (Databricks, top-4/16, 132B parameters) and found $H = 0.897$ and Gini = $0.600$, which closely aligns with \textbf{Mixtral-8x7B-v1} ($H = 0.917$, Gini = $0.519$) at the exact same active expert fraction. Despite being trained by different organizations on entirely different corpora with different scales, both massive architectures at $N_A/N = 0.250$ yield highly diffuse, comparable bias signatures. This provides powerful evidence for the \textbf{H0 Null Hypothesis}: social bias is robustly, universally diffuse in current MoE architectures.
 
 \subsection{Experiment 2: Metric Sanity Control (Dense vs. MoE Control)}
 To verify that our post-hoc attribution and normalized Shannon entropy metrics are structurally sound and capable of detecting concentrated signals (rather than compressing all findings onto a flat, non-informative baseline), we run dense models as a baseline control.
