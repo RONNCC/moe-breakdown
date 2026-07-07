@@ -3,15 +3,17 @@
 # N_A/N = 4/128 ≈ 0.031 — sits between OLMoE (0.016) and Phi-3.5-MoE (0.125),
 # which is exactly the gap on the sparsity ladder most important for H1.
 # Architecture: 128 experts, top-4 per token, ~117B total, ~5.1B active/token.
-# License: Apache 2.0 (GT ICE policy: should be fine — US-origin, OpenAI).
+# License: Apache 2.0 (GT ICE policy: fine — US-origin, OpenAI).
+#
 # HuggingFace: openai/gpt-oss-120b
 #
-# Memory: 117B × 2 bytes (bf16) ≈ 234 GB → 3× A100-80GB is tight; 4× is safe.
-# device_map=auto will shard across all 4 GPUs.
+# Weights are stored as native MXFP4. Transformers>=5.13 has a built-in
+# QuantizerMXFP4 that handles loading; it requires torch>=2.5 (for
+# torch.accelerator). Bootstrap pins torch>=2.5.0 (upgraded from 2.4.0
+# specifically for this model). H200 (Hopper sm_90) supports MXFP4.
 #
-# NOTE: If hooks.py fails to discover MoE layers (the generic detector checks
-# for .gate/.router + .experts attributes), file a bug with the actual module
-# attribute names from `model.named_modules()` and update _looks_like_moe_block.
+# Memory: MXFP4-quantized MoE weights → single H200 (80GB) per OpenAI docs,
+# but using 2× H200 for headroom with device_map=auto.
 
 study_name: exp1-concentration-gpt-oss-120b
 

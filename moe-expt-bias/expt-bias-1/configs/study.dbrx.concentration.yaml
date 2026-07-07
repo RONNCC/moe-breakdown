@@ -16,14 +16,12 @@
 # nn.Module.set_submodule), bf16 sharding is the safe fallback.
 #
 # License: Databricks Open Model License (non-commercial allowed, US-origin).
-# HuggingFace: databricks/dbrx-instruct  ← GATED: requires accepting license
-# on HF and a logged-in HF token on the cluster. Without a token this returns
-# 404. Run `huggingface-cli login` on a compute node (or set HF_TOKEN env var
-# in the sbatch script) before submitting.
+# HuggingFace: alpindale/dbrx-instruct (community mirror — avoids the gated
+# databricks/dbrx-instruct repo; HF_TOKEN not required for this mirror).
 
 study_name: exp1-concentration-dbrx
 
-model_id: databricks/dbrx-instruct
+model_id: alpindale/dbrx-instruct
 model_family: dbrx
 trust_remote_code: true
 torch_dtype: bfloat16

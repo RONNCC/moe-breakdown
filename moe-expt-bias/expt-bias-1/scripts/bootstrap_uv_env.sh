@@ -29,8 +29,9 @@ fi
 uv pip install --upgrade pip setuptools wheel
 uv pip install -e .
 
-# torch pinned to a CUDA 12.1-compatible wheel to match the `cuda/12.1.1` module.
-TORCH_SPEC="${TORCH_SPEC:-torch==2.4.0}"
+# torch>=2.5.0 required for torch.accelerator (needed by transformers MXFP4
+# quantizer used by openai/gpt-oss-120b). CUDA 12.1 wheel index.
+TORCH_SPEC="${TORCH_SPEC:-torch==2.5.1}"
 uv pip install "$TORCH_SPEC" --index-url https://download.pytorch.org/whl/cu121
 
 TRANSFORMERS_SPEC="${TRANSFORMERS_SPEC:-transformers>=4.44}"
