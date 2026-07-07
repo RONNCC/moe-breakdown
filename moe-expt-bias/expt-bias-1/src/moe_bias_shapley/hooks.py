@@ -81,12 +81,18 @@ def _resolve_num_experts(module: Any) -> int:
     """
     gate = _get_gate(module)
     experts = getattr(module, "experts", None)
-    for attr in ("num_experts", "n_routed_experts", "num_local_experts"):
+    for attr in ("num_experts", "n_routed_experts", "num_local_experts", "moe_num_experts"):
         for owner in (gate, experts, module):
             val = getattr(owner, attr, None)
             if isinstance(val, int) and val > 0:
                 return val
+    # Plain nn.Linear router (e.g. Mixtral, some DBRX custom code)
     out_features = getattr(gate, "out_features", None)
+    if isinstance(out_features, int) and out_features > 0:
+        return out_features
+    # Wrapped router (e.g. DbrxRouter where the Linear lives at .layer)
+    inner = getattr(gate, "layer", None)
+    out_features = getattr(inner, "out_features", None)
     if isinstance(out_features, int) and out_features > 0:
         return out_features
     try:
