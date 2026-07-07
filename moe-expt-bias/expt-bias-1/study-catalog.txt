@@ -76,6 +76,25 @@ Experiment 5 — Demographic specificity (RQ3 / C3)
   Jensen-Shannon divergence across cohorts' phi distributions.
 
 ================================================================================
+EXPERIMENT 1 EXTENSIONS — Sparsity ladder additions (RQ1 / C1 validation)
+================================================================================
+
+  configs/study.dbrx.concentration.yaml         DBRX-instruct        N_A/N=0.25 (top-4/16, 132B total)
+  configs/study.gpt-oss-120b.concentration.yaml GPT-OSS-120B         N_A/N=0.031 (top-4/128, 117B total)
+  configs/study.gemma4-27b.concentration.yaml   Gemma 4 26B          N_A/N=0.063 (top-8/128, ~26B total, 4B active)
+                                                                      model_id: google/gemma-4-26B-A4B-it
+
+  DBRX: architectural replicate at N_A/N=0.25 (same sparsity as Mixtral, different family)
+  GPT-OSS-120B: fills gap between OLMoE (0.016) and Phi-3.5-MoE (0.125) — most valuable addition
+  Gemma 4: sits near OLMoE on the ladder; first open Google MoE model
+
+  Resource notes:
+  - DBRX + GPT-OSS use 2× H200 (141GB/GPU, 282GB total): A100 nodes only have 2/node (160GB
+    max), not enough for 132B/117B bf16. H100×4 hits the 960 GPU-min QOS cap. H200×2 = 360
+    GPU-min at 3hr, well inside cap.
+  - Gemma 4: 1× A100 at 6hr; HF model ID needs verification before rerun.
+
+================================================================================
 RUNNING
 ================================================================================
 
@@ -92,6 +111,14 @@ Submit to Slurm from the ICE login node:
   python3 scripts/submit_slurm_study.py --config configs/study.phi3.5-mini-dense.dense-baseline.yaml
   python3 scripts/submit_slurm_study.py --config configs/study.llama-3.1-8b.dense-crosscheck.yaml
   python3 scripts/submit_slurm_study.py --config configs/study.olmoe.demographic.yaml
+  # Extensions (Exp1 sparsity-ladder additions):
+  python3 scripts/submit_slurm_study.py --config configs/study.dbrx.concentration.yaml
+  python3 scripts/submit_slurm_study.py --config configs/study.gpt-oss-120b.concentration.yaml
+  python3 scripts/submit_slurm_study.py --config configs/study.gemma4-27b.concentration.yaml
+
+ICE GPU-minute QOS (coc-ice): MaxTRESMinsPerJob = gres/gpu=960.
+  1× A100 × 4hr = 240 ✓   2× A100 × 6hr = 720 ✓   2× H200 × 3hr = 360 ✓
+  4× H100 × 8hr = 1920 ✗  4× A100: no node has 4 A100s (max 2/node)
 
 Watch:
   squeue --me

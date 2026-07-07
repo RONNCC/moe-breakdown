@@ -3,17 +3,20 @@
 
 ---
 
-## Status snapshot
+## Status snapshot (updated 2026-07-07)
 
 | Experiment | What it tests | Status |
 |---|---|---|
-| Exp1 — Concentration ladder (OLMoE, Phi-3.5-MoE, Mixtral) | H1: sparsity → concentration | **Done** (routing_contrast, 400 pairs each) |
-| Exp2 — Dense baselines (OLMo-7B, Phi-3.5-mini, Llama-3.1-8B) | H2: MoE more localizable than dense | **Done** (dense LOO, 150–400 pairs) |
-| Exp3 — Interaction/synergy check (OLMoE, Phi, Mixtral) | C2: marginal vs synergy structure | **Running** (3 Slurm jobs, 20 pairs, 2 layers each) |
+| Exp1 — Concentration ladder (OLMoE, Phi-3.5-MoE, Mixtral) | H1: sparsity → concentration | **Done** |
+| Exp1 ext — DBRX (top-4/16, N_A/N=0.25) | H1 arch replicate at N_A/N=0.25 | **Running** — job 5483610 (2× H200) |
+| Exp1 ext — GPT-OSS-120B (top-4/128, N_A/N=0.031) | H1 ladder gap fill | **Running** — job 5483611 (2× H200) |
+| Exp1 ext — Gemma 4 26B (top-8/128, N_A/N=0.063) | H1 ladder, Google MoE | **Ready to submit** — correct ID: `google/gemma-4-26B-A4B-it`; config updated |
+| Exp2 — Dense baselines (OLMo-7B, Phi-3.5-mini, Llama-3.1-8B) | H2: MoE more localizable than dense | **Done** |
+| Exp3 — Interaction/synergy check (OLMoE, Phi, Mixtral) | C2: marginal vs synergy structure | **Running** — jobs 5483577, 5483584 (Mixtral exp3 completed already) |
 | Exp4 — Ablation cross-check (OLMoE, Phi, Mixtral) | Shapley rankings vs causal ablation | **Done** (30 pairs per model) |
 | Exp5 — Demographic specificity (OLMoE) | C3: different experts per demographic group | **Done** (600 pairs, 66 groups) |
 
-Pending: Exp3 results for all three MoE models.
+**Gemma 4 ready to submit:** Correct model ID is `google/gemma-4-26B-A4B-it` (26B total, ~4B active/token, top-8/128). Config updated. Run `python3 scripts/submit_slurm_study.py --config configs/study.gemma4-27b.concentration.yaml` from the ICE login node after pulling.
 
 ---
 

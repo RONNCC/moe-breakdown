@@ -256,42 +256,42 @@ def _build_coalition_payoff_cache(
     `compute_shapley_interactions_for_pair` (pairwise interaction/synergy
     values, Experiment 3) since both need the same full coalition lattice —
     computing it once avoids duplicating the 2^K forward passes.
+
+    Ablation is done via a forward pre-hook on `moe_layer.experts` that zeros
+    the routing weights (`top_k_weights`) for experts not in the coalition.
+    This works for both fused expert modules (OLMoE, Phimoe, Mixtral — which
+    all use `experts.forward(hidden_states, top_k_index, top_k_weights)` in
+    transformers 5.x) and for nn.ModuleList-style architectures (where zero
+    routing weight trivially produces zero contribution via the weighted sum).
     """
-    import torch
-
     k = len(active_experts)
-    original_forwards = {e: moe_layer.experts[e].forward for e in active_experts}
-
-    def make_zero_forward():
-        def zero_forward(x, *args, **kwargs):
-            return torch.zeros_like(x)
-        return zero_forward
-
-    def set_coalition(active_mask: set) -> None:
-        for e in active_experts:
-            if e in active_mask:
-                moe_layer.experts[e].forward = original_forwards[e]
-            else:
-                moe_layer.experts[e].forward = make_zero_forward()
-
-    def restore() -> None:
-        for e in active_experts:
-            moe_layer.experts[e].forward = original_forwards[e]
+    active_set = set(active_experts)
 
     def payoff(active_mask: set) -> float:
-        set_coalition(active_mask)
-        logp_s = _sequence_logprob(model, tokenizer, pair.stereo, device)
-        logp_a = _sequence_logprob(model, tokenizer, pair.anti_stereo, device)
-        return _bias_gap_from_logits(logp_s, logp_a)
+        ablated = active_set - active_mask
+
+        def _pre_hook(module: Any, args: tuple) -> tuple:
+            if not ablated or len(args) < 3:
+                return args
+            hidden_states, top_k_index, top_k_weights = args[0], args[1], args[2]
+            top_k_weights = top_k_weights.clone()
+            for e in ablated:
+                top_k_weights[top_k_index == e] = 0.0
+            return (hidden_states, top_k_index, top_k_weights) + args[3:]
+
+        hook_handle = moe_layer.experts.register_forward_pre_hook(_pre_hook)
+        try:
+            logp_s = _sequence_logprob(model, tokenizer, pair.stereo, device)
+            logp_a = _sequence_logprob(model, tokenizer, pair.anti_stereo, device)
+            return _bias_gap_from_logits(logp_s, logp_a)
+        finally:
+            hook_handle.remove()
 
     cache: Dict[frozenset, float] = {}
-    try:
-        for r in range(k + 1):
-            for combo in itertools.combinations(active_experts, r):
-                s = frozenset(combo)
-                cache[s] = payoff(set(s))
-    finally:
-        restore()
+    for r in range(k + 1):
+        for combo in itertools.combinations(active_experts, r):
+            s = frozenset(combo)
+            cache[s] = payoff(set(s))
 
     return cache
 
@@ -558,36 +558,49 @@ def mean_bias_gap_with_players_ablated(
     moe_layers = {h.layer_index: h for h in discover_moe_layers(model)}
     dense_layers = {h.layer_index: h for h in discover_dense_ffn_layers(model)} if not moe_layers else {}
 
-    patched: List[tuple] = []  # (module, attr_path_or_expert_idx, original)
+    # Group MoE experts to ablate by layer index.
+    ablate_by_moe_layer: Dict[int, set] = {}
+    # Dense FFN layers to ablate (forward-patched, not hook-based).
+    patched_dense: List[tuple] = []
 
-    def zero_forward(x, *args, **kwargs):
-        return torch.zeros_like(x)
+    for player_id in player_ids_to_ablate:
+        m = _MOE_PLAYER_RE.match(player_id)
+        if m:
+            layer_idx, expert_idx = int(m.group(1)), int(m.group(2))
+            if moe_layers.get(layer_idx) is None:
+                log.warning("Player %s: no MoE layer %d discovered — skipping", player_id, layer_idx)
+                continue
+            ablate_by_moe_layer.setdefault(layer_idx, set()).add(expert_idx)
+            continue
+        m = _DENSE_PLAYER_RE.match(player_id)
+        if m:
+            layer_idx = int(m.group(1))
+            handle = dense_layers.get(layer_idx)
+            if handle is None:
+                log.warning("Player %s: no dense FFN layer %d discovered — skipping", player_id, layer_idx)
+                continue
+            patched_dense.append((handle.module, handle.module.forward))
+            handle.module.forward = lambda x, *a, **kw: torch.zeros_like(x)
+            continue
+        log.warning("Unrecognized player_id format %r — skipping", player_id)
+
+    def make_moe_pre_hook(ablated_experts: set):
+        def _pre_hook(module: Any, args: tuple) -> tuple:
+            if len(args) < 3:
+                return args
+            hidden_states, top_k_index, top_k_weights = args[0], args[1], args[2]
+            top_k_weights = top_k_weights.clone()
+            for e in ablated_experts:
+                top_k_weights[top_k_index == e] = 0.0
+            return (hidden_states, top_k_index, top_k_weights) + args[3:]
+        return _pre_hook
+
+    hook_handles = [
+        moe_layers[li].experts.register_forward_pre_hook(make_moe_pre_hook(exp_set))
+        for li, exp_set in ablate_by_moe_layer.items()
+    ]
 
     try:
-        for player_id in player_ids_to_ablate:
-            m = _MOE_PLAYER_RE.match(player_id)
-            if m:
-                layer_idx, expert_idx = int(m.group(1)), int(m.group(2))
-                handle = moe_layers.get(layer_idx)
-                if handle is None:
-                    log.warning("Player %s: no MoE layer %d discovered — skipping", player_id, layer_idx)
-                    continue
-                expert = handle.experts[expert_idx]
-                patched.append((expert, "forward", expert.forward))
-                expert.forward = zero_forward
-                continue
-            m = _DENSE_PLAYER_RE.match(player_id)
-            if m:
-                layer_idx = int(m.group(1))
-                handle = dense_layers.get(layer_idx)
-                if handle is None:
-                    log.warning("Player %s: no dense FFN layer %d discovered — skipping", player_id, layer_idx)
-                    continue
-                patched.append((handle.module, "forward", handle.module.forward))
-                handle.module.forward = zero_forward
-                continue
-            log.warning("Unrecognized player_id format %r — skipping", player_id)
-
         gaps = []
         for pair in pairs:
             logp_s = _sequence_logprob(model, tokenizer, pair.stereo, device)
@@ -595,8 +608,10 @@ def mean_bias_gap_with_players_ablated(
             gaps.append(_bias_gap_from_logits(logp_s, logp_a))
         return float(np.mean(gaps)) if gaps else 0.0
     finally:
-        for module, attr, original in patched:
-            setattr(module, attr, original)
+        for hh in hook_handles:
+            hh.remove()
+        for module, orig_fwd in patched_dense:
+            module.forward = orig_fwd
 
 
 def compute_ablation_curve(
