@@ -1,0 +1,35 @@
+# Experiment 8 (same-mechanism comparison) — Phi-3.5-MoE with layer-LOO
+#
+# Runs dense-style leave-one-out (LOO) layer attribution on Phi-3.5-MoE —
+# same method used for Phi-3.5-mini (dense baseline) — enabling an
+# apples-to-apples H comparison. See study.olmoe.lloo.yaml for rationale.
+#
+# Phi-3.5-MoE has 32 layers × 2 LOO passes per layer × 50 pairs = 3200 forward
+# passes at ~1.5s each ≈ 80 minutes. 3hr time limit is conservative.
+
+study_name: exp8-lloo-phi3.5-moe
+
+model_id: microsoft/Phi-3.5-MoE-instruct
+model_family: phi3.5moe
+trust_remote_code: false
+torch_dtype: bfloat16
+device_map: auto
+
+benchmarks: [stereoset, bbq, winogender]
+shapley_method: dense_loo
+max_prompts: 50
+seed: 42
+
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 03:00:00
+  cpus_per_task: 8
+  gpus_per_node: 2
+  gpu_type: a100
+  use_gres: true
+  mem: 96G
+  modules: [gcc/12.3.0, python/3.11, cuda/12.1.1]
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown

@@ -55,6 +55,7 @@ class AttributionResult:
     n_pairs: int
     bias_scores: Dict[str, float]   # aggregate bias metrics for sanity-checking
     per_group_phi: Optional[Dict[str, np.ndarray]] = None  # for demographic split (RQ3)
+    routing_freq: Optional[np.ndarray] = None  # [num_players] mean routing weight (no bias scaling)
 
 
 def _bias_gap_from_logits(logp_stereo: float, logp_anti: float) -> float:
@@ -109,6 +110,7 @@ def compute_routing_contrast(
     num_layers = len(state.moe_layers)
     max_experts = max(h.num_experts for h in state.moe_layers)
     phi = np.zeros((num_layers, max_experts), dtype=np.float64)
+    routing_freq = np.zeros((num_layers, max_experts), dtype=np.float64)
     per_group_phi: Dict[str, np.ndarray] = {}
 
     gaps: List[float] = []
@@ -163,6 +165,7 @@ def compute_routing_contrast(
 
             contribution = (mean_w_s - mean_w_a) * bias_gap
             phi[li, :n_experts] += contribution
+            routing_freq[li, :n_experts] += (mean_w_s + mean_w_a) / 2.0
 
             if demographic_key is not None:
                 if hasattr(pair, demographic_key):
@@ -180,6 +183,7 @@ def compute_routing_contrast(
 
     if len(pairs) > 0:
         phi /= len(pairs)
+        routing_freq /= len(pairs)
         for g in per_group_phi:
             per_group_phi[g] /= len(pairs)
 
@@ -199,6 +203,7 @@ def compute_routing_contrast(
             "std_bias_gap": float(np.std(gaps)) if gaps else 0.0,
         },
         per_group_phi=per_group_phi or None,
+        routing_freq=routing_freq.flatten(),
     )
 
 
@@ -621,38 +626,42 @@ def compute_ablation_curve(
     ranked_player_ids: List[str],
     device: str = "cuda",
     steps: Optional[List[int]] = None,
-) -> List[Dict[str, float]]:
+    controls: Optional[Dict[str, List[str]]] = None,
+) -> Dict[str, List[Dict[str, float]]]:
     """Experiment 4 (Sec 3.4) ablation curve: cumulatively zero-ablate the
     top-`k` players from `ranked_player_ids` (already sorted by |phi|
-    descending — e.g. from result.json's `top_players`, or player_ids.json
-    ordered by phi.npy) for k in `steps`, measuring the resulting mean
-    bias-gap and disparity drop relative to the unablated baseline.
+    descending) for k in `steps`, measuring the resulting mean bias-gap and
+    disparity drop relative to the unablated baseline.
 
-    A steep early drop (most of the disparity removed by ablating only the
-    top few players) validates the Shapley concentration ranking against
-    this independent, purely causal (ablation-based) method.
+    Returns a dict keyed by curve name. The "phi_ranked" key always present;
+    additional keys come from `controls` (e.g. "random", "high_routing").
+    Each value is a list of {k, fraction_ablated, bias_gap, disparity_drop}.
+
+    A steep early drop for phi_ranked (relative to the flat controls) validates
+    the Shapley concentration ranking as a signal, not just a compute proxy.
     """
     n = len(ranked_player_ids)
     if steps is None:
-        # Default: every player up to 10, then every 10% of the remainder.
         steps = sorted(set([k for k in range(1, min(10, n) + 1)] + [round(f * n) for f in (0.1, 0.2, 0.3, 0.5, 0.75, 1.0)]))
         steps = [k for k in steps if 0 < k <= n]
 
     baseline_gap = mean_bias_gap_with_players_ablated(model, tokenizer, pairs, [], device=device)
+    head = [{"k": 0, "fraction_ablated": 0.0, "bias_gap": baseline_gap, "disparity_drop": 0.0}]
 
-    curve: List[Dict[str, float]] = []
-    for k in steps:
-        ablated_gap = mean_bias_gap_with_players_ablated(model, tokenizer, pairs, ranked_player_ids[:k], device=device)
-        disparity_drop = (
-            (baseline_gap - ablated_gap) / baseline_gap if baseline_gap != 0 else 0.0
-        )
-        curve.append({
-            "k": k,
-            "fraction_ablated": k / n if n else 0.0,
-            "bias_gap": ablated_gap,
-            "disparity_drop": disparity_drop,
-        })
-        log.info("ablation_curve: k=%d/%d fraction=%.3f bias_gap=%.4f disparity_drop=%.3f",
-                  k, n, k / n if n else 0.0, ablated_gap, disparity_drop)
+    def _run_curve(ordered_ids: List[str], label: str) -> List[Dict[str, float]]:
+        curve: List[Dict[str, float]] = []
+        for k in steps:
+            ablated_gap = mean_bias_gap_with_players_ablated(model, tokenizer, pairs, ordered_ids[:k], device=device)
+            drop = (baseline_gap - ablated_gap) / baseline_gap if baseline_gap != 0 else 0.0
+            curve.append({"k": k, "fraction_ablated": k / n if n else 0.0,
+                           "bias_gap": ablated_gap, "disparity_drop": drop})
+            log.info("ablation_curve[%s]: k=%d/%d fraction=%.3f bias_gap=%.4f drop=%.3f",
+                      label, k, n, k / n if n else 0.0, ablated_gap, drop)
+        return head + curve
 
-    return [{"k": 0, "fraction_ablated": 0.0, "bias_gap": baseline_gap, "disparity_drop": 0.0}] + curve
+    result: Dict[str, List[Dict[str, float]]] = {
+        "phi_ranked": _run_curve(ranked_player_ids, "phi_ranked"),
+    }
+    for ctrl_name, ctrl_ids in (controls or {}).items():
+        result[ctrl_name] = _run_curve(ctrl_ids, ctrl_name)
+    return result

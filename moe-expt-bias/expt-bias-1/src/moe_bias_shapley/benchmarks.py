@@ -308,7 +308,7 @@ def load_winogender(
 # This is a materially weaker construct than the other three loaders (it
 # measures a knowledge/confidence gap, not a demographic-stereotype gap), and
 # with the corrected model ladder now excluding all Chinese-origin models
-# (Qwen/DeepSeek/ERNIE disallowed on GT ICE — see study_design_C1_C4.md
+# (Chinese-origin models disallowed on GT ICE — see study_design_C1_C4.md
 # Sec 2.1), there is no model in the ladder for which Chinese-language
 # fairness testing is a natural fit. This loader is therefore implemented for
 # completeness/future cross-lingual work but is NOT included in any active

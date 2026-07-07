@@ -41,8 +41,8 @@ Experiment 1 — Concentration vs sparsity ladder (RQ1 / C1)
   configs/study.phi3.5-moe.concentration.yaml         Phi-3.5-MoE      (mid-sparsity, top-2/16)
   configs/study.mixtral-8x7b.concentration.yaml       Mixtral-8x7B     (densest MoE in ladder, top-2/8)
   Expected (H1): entropy H monotonically decreases (concentration increases)
-  as N_A/N decreases across this ladder. Qwen/DeepSeek/ERNIE excluded —
-  prohibited on GT ICE systems (see ../study_design_C1_C4.md Sec 2.1).
+  as N_A/N decreases across this ladder. Chinese-origin models excluded
+  per GT ICE institutional policy (see ../study_design_C1_C4.md Sec 2.1).
 
 Experiment 2 — MoE vs dense localizability (RQ2 / C4)
   configs/study.olmo-7b.dense-baseline.yaml           OLMo-7B (dense)  — primary matched
@@ -95,6 +95,30 @@ EXPERIMENT 1 EXTENSIONS — Sparsity ladder additions (RQ1 / C1 validation)
   - Gemma 4: 1× A100 at 6hr; HF model ID needs verification before rerun.
 
 ================================================================================
+REVIEWER-PRIORITIZED EXTENSIONS (added 2026-07-07)
+================================================================================
+
+Experiment 6 — Ladder-wide causal ablation (extends Exp4 to full ladder)
+  Reuses existing Exp1 configs; submit via submit_slurm_experiment4.py.
+  Includes random + high-routing controls (auto-generated in run_experiment4_ablation.py).
+  Results land in <result_dir>/experiment4/experiment4_ablation_curve.json
+  Models: OLMoE (n=100), Mixtral (n=60), Phi-3.5-MoE (n=60), OLMo-7B dense (n=60)
+  Key question: does phi-ranked ablation drop faster than random/high-routing controls?
+
+Experiment 7 — Proxy-vs-causal agreement test
+  scripts/run_experiment7_proxy_agreement.py --config configs/study.mixtral-8x7b.concentration.yaml
+  Reuses run_experiment_script.sbatch via submit_slurm_experiment4.py with SCRIPT override.
+  Computes Spearman ρ between routing_contrast ranking and exact Shapley ranking on Mixtral
+  (K=2/8, 2^8=256 coalitions → tractable). 20 pairs, first + last MoE layer.
+  Results: <result_dir>/experiment7/experiment7_proxy_agreement.json
+
+Experiment 8 — Same-mechanism comparison (method-confound resolution)
+  configs/study.olmoe.lloo.yaml          OLMoE with shapley_method: dense_loo
+  configs/study.phi3.5-moe.lloo.yaml     Phi-3.5-MoE with shapley_method: dense_loo
+  Runs layer-level LOO on MoE models for apples-to-apples H vs dense baselines.
+  Key question: does H_lloo(MoE) stay high (≈0.90) or drop toward H_dense (0.63–0.76)?
+
+================================================================================
 RUNNING
 ================================================================================
 
@@ -119,6 +143,20 @@ Submit to Slurm from the ICE login node:
 ICE GPU-minute QOS (coc-ice): MaxTRESMinsPerJob = gres/gpu=960.
   1× A100 × 4hr = 240 ✓   2× A100 × 6hr = 720 ✓   2× H200 × 3hr = 360 ✓
   4× H100 × 8hr = 1920 ✗  4× A100: no node has 4 A100s (max 2/node)
+
+  # Experiment 6 (ladder-wide causal ablation with controls):
+  python3 scripts/submit_slurm_experiment4.py --config configs/study.olmoe.concentration.yaml --max-pairs 100
+  python3 scripts/submit_slurm_experiment4.py --config configs/study.mixtral-8x7b.concentration.yaml --max-pairs 60
+  python3 scripts/submit_slurm_experiment4.py --config configs/study.phi3.5-moe.concentration.yaml --max-pairs 60
+  python3 scripts/submit_slurm_experiment4.py --config configs/study.olmo-7b.dense-baseline.yaml --max-pairs 60
+  # Experiment 7 (proxy-vs-causal agreement on Mixtral):
+  sbatch --job-name=bias-exp7-mixtral --nodes=1 --cpus-per-task=8 --mem=96G --time=04:00:00 \
+    --gres=gpu:a100:2 --partition=ice-gpu --qos=coc-ice \
+    --export=ALL,SCRIPT=scripts/run_experiment7_proxy_agreement.py,STUDY_CONFIG=$(pwd)/configs/study.mixtral-8x7b.concentration.yaml,WORKDIR=/home/hice1/sghose7/scratch/moe-breakdown,MODULES="gcc/12.3.0 python/3.11 cuda/12.1.1" \
+    slurm/run_experiment_script.sbatch
+  # Experiment 8 (same-mechanism comparison):
+  python3 scripts/submit_slurm_study.py --config configs/study.olmoe.lloo.yaml
+  python3 scripts/submit_slurm_study.py --config configs/study.phi3.5-moe.lloo.yaml
 
 Watch:
   squeue --me

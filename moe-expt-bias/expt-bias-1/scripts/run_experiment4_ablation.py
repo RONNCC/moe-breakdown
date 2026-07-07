@@ -36,11 +36,26 @@ logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(levelname)s %(na
 log = logging.getLogger("run_experiment4_ablation")
 
 
-def _load_ranked_player_ids(result_dir: Path) -> list[str]:
+def _load_ranked_player_ids(result_dir: Path) -> tuple[list[str], dict[str, list[str]]]:
     player_ids = json.loads((result_dir / "player_ids.json").read_text())
     phi = np.load(result_dir / "phi.npy")
     order = np.argsort(-np.abs(phi))
-    return [player_ids[i] for i in order]
+    ranked = [player_ids[i] for i in order]
+
+    controls: dict[str, list[str]] = {}
+    # Random control: ablate in random order (seeded for reproducibility).
+    rng = np.random.default_rng(42)
+    random_order = rng.permutation(len(player_ids))
+    controls["random"] = [player_ids[i] for i in random_order]
+    # High-routing-frequency control: ablate experts sorted by activation frequency,
+    # not by bias attribution — tests whether any ablation reduces bias vs phi-ranked.
+    routing_freq_path = result_dir / "routing_freq.npy"
+    if routing_freq_path.exists():
+        routing_freq = np.load(routing_freq_path)
+        freq_order = np.argsort(-routing_freq)
+        controls["high_routing"] = [player_ids[i] for i in freq_order]
+
+    return ranked, controls
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -65,8 +80,9 @@ def main(argv: list[str] | None = None) -> int:
                   "subsample, compute the ablation curve, and save to %s", result_dir, args.max_pairs, out_dir)
         return 0
 
-    ranked_player_ids = _load_ranked_player_ids(result_dir)
-    log.info("Loaded %d ranked players from %s", len(ranked_player_ids), result_dir)
+    ranked_player_ids, controls = _load_ranked_player_ids(result_dir)
+    log.info("Loaded %d ranked players from %s (controls: %s)",
+              len(ranked_player_ids), result_dir, list(controls))
 
     pairs = load_benchmarks(cfg.benchmarks, max_items=args.max_pairs)
     if not pairs:
@@ -75,7 +91,8 @@ def main(argv: list[str] | None = None) -> int:
     model, tokenizer = load_model_and_tokenizer(cfg)
     device = str(next(model.parameters()).device)
 
-    curve = compute_ablation_curve(model, tokenizer, pairs, ranked_player_ids, device=device)
+    curves = compute_ablation_curve(model, tokenizer, pairs, ranked_player_ids,
+                                    device=device, controls=controls)
 
     out_dir.mkdir(parents=True, exist_ok=True)
     payload = {
@@ -84,7 +101,7 @@ def main(argv: list[str] | None = None) -> int:
         "model_family": cfg.model_family,
         "n_pairs": len(pairs),
         "n_players": len(ranked_player_ids),
-        "ablation_curve": curve,
+        "ablation_curves": curves,
     }
     (out_dir / "experiment4_ablation_curve.json").write_text(json.dumps(payload, indent=2))
     log.info("Done. Experiment 4 results in %s", out_dir / "experiment4_ablation_curve.json")

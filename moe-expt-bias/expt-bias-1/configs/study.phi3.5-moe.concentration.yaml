@@ -1,11 +1,8 @@
 # Experiment 1 (RQ1 / C1) — Concentration vs sparsity ladder, point 2/3: Phi-3.5-MoE
 #
-# Mid-sparsity MoE (top-2/16 routing, N_A/N ~ 0.125-0.16, 6.6B/42B active/total).
-# Replaces the disallowed Qwen3-30B-A3B slot in the ladder — Qwen/DeepSeek/ERNIE
-# (Chinese-origin models) are prohibited on GT ICE systems (see login banner +
-# study_design_C1_C4.md Sec 2.1 institutional note). Phi-3.5-MoE is MIT-licensed
-# (Microsoft) and fits the required mid-sparsity slot between OLMoE (top-1) and
-# Mixtral-8x7B (top-2/8).
+# Mid-sparsity MoE (top-2/16 routing, N_A/N ~ 0.125, 6.6B/42B active/total).
+# MIT-licensed (Microsoft); fills the mid-sparsity slot between OLMoE (top-1/64)
+# and Mixtral-8x7B (top-2/8). Complies with GT ICE institutional policy.
 #
 # NOTE: Phi-3.5-MoE's HF modeling code (PhimoeForCausalLM /
 # PhimoeSparseMoeBlock) may require trust_remote_code depending on the

@@ -49,6 +49,8 @@ def save_results(
     (out_dir / "result.json").write_text(json.dumps(payload, indent=2))
     np.save(out_dir / "phi.npy", result.phi)
     (out_dir / "player_ids.json").write_text(json.dumps(result.player_ids))
+    if result.routing_freq is not None:
+        np.save(out_dir / "routing_freq.npy", result.routing_freq)
 
     if result.per_group_phi:
         for group, phi in result.per_group_phi.items():

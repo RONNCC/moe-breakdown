@@ -48,7 +48,8 @@ def run_study(cfg: BiasStudyConfig, out_dir: Path, dry_run: bool = False) -> Non
 
     demographic_key = "target" if "demographic" in cfg.study_name else None
 
-    if cfg.model_family in DENSE_FAMILIES:
+    use_dense_loo = cfg.shapley_method == "dense_loo" or cfg.model_family in DENSE_FAMILIES
+    if use_dense_loo:
         result = compute_dense_layer_contrast(model, tokenizer, pairs, device=str(device))
     else:
         result = compute_routing_contrast(model, tokenizer, pairs, device=str(device), demographic_key=demographic_key)

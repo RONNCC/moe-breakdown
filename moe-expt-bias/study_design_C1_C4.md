@@ -7,7 +7,7 @@
 ## PAGE 1 — Motivation, Questions, and Hypotheses
 
 ### 1.1 Why this matters
-Mixture-of-Experts (MoE) is now the dominant scaling architecture (DeepSeek-V3/R1, Qwen3, OLMoE, GPT-OSS, ERNIE-4.5). Its entire value proposition is **modularity**: sparse routing to specialized experts. A fast-growing interpretability literature argues this modularity makes MoE *more interpretable* than dense models — experts are less polysemantic ("modular monosemanticity"), and the *expert* is a cleaner unit of analysis than the neuron [Expert Strikes Back, arXiv 2604.02178; Sparsity & Superposition in MoE, OpenReview bZqopmfZDE]. 
+Mixture-of-Experts (MoE) is now the dominant scaling architecture (OLMoE, GPT-OSS, Mixtral, Phi-3.5-MoE, DBRX). Its entire value proposition is **modularity**: sparse routing to specialized experts. A fast-growing interpretability literature argues this modularity makes MoE *more interpretable* than dense models — experts are less polysemantic ("modular monosemanticity"), and the *expert* is a cleaner unit of analysis than the neuron [Expert Strikes Back, arXiv 2604.02178; Sparsity & Superposition in MoE, OpenReview bZqopmfZDE]. 
 
 But a central fairness question has gone unasked: **does MoE's modularity make demographic/social bias more *localizable* — and therefore more *fixable* — than in dense models, or does it merely *concentrate* bias into a few experts while the rest stay clean (a fairness risk if those experts are triggered by demographic cues)?** This is the localizability thesis. If true, it reframes debiasing: edit a handful of experts instead of retraining. If false, it corrects the "MoE is more interpretable" narrative with a fairness caveat.
 
@@ -40,14 +40,17 @@ The *method* of attributing behaviour to experts in MoE is established, but **no
 ## PAGE 2 — Method: Models, Data, Metric, and the Shapley Formulation
 
 ### 2.1 Model ladder (sparsity regimes)
-*Institutional note: Qwen (and other Chinese-origin models such as DeepSeek/ERNIE) are disallowed on Georgia Tech systems, so the ladder uses only permissively-licensed US/EU models (Apache-2.0 / MIT / Llama Community License) that still span the needed sparsity range.*
+*Institutional note: All models on the ladder are from US/EU research groups (Apache-2.0 / MIT / Llama Community License) in compliance with Georgia Tech ICE system policies.*
 
 | Model | License / Origin | Active/Total | N_A/N | Role |
 |---|---|---|---|---|
-| OLMoE-1B-7B | Apache-2.0 / AllenAI | 1B / 7B | ≈0.06–0.125 (top-1) | sparsest MoE |
-| Phi-3.5-MoE | MIT / Microsoft | 6.6B / 42B | ≈0.125–0.16 (top-2/16) | mid-sparsity MoE |
-| Mixtral-8x7B | Apache-2.0 / Mistral | 13B / 47B | 0.25 (top-2/8) | densest MoE in ladder |
-| Llama-4-Scout *(optional)* | Llama Community / Meta | 17B / 109B | low (128 experts) | larger MoE if compute allows |
+| OLMoE-1B-7B | Apache-2.0 / AllenAI | 1B / 7B | 0.016 (top-1/64) | sparsest MoE |
+| GPT-OSS-120B *(added)* | Apache-2.0 / Microsoft | ~30B / 120B | 0.031 (top-4/128) | ladder gap fill |
+| Gemma 4 26B *(added)* | Gemma License / Google | ~4B / 26B | 0.063 (top-8/128) | ladder gap fill |
+| Phi-3.5-MoE | MIT / Microsoft | 6.6B / 42B | 0.125 (top-2/16) | mid-sparsity MoE |
+| Mixtral-8x7B | Apache-2.0 / Mistral | 13B / 47B | 0.250 (top-2/8) | densest MoE in ladder |
+| DBRX-instruct *(added)* | Databricks Open Model | 36B / 132B | 0.250 (top-4/16) | arch. replicate at N_A/N=0.25 |
+| Llama-4-Scout *(optional, not run)* | Llama Community / Meta | 17B / 109B | ≈0.008 (top-1/128) | extreme-sparsity extension |
 | OLMo-7B (dense) | Apache-2.0 / AllenAI | 7B / 7B | 1.0 | **dense baseline (same family as OLMoE)** |
 | Phi-3.5 (dense, 3.8B) | MIT / Microsoft | 3.8B / 3.8B | 1.0 | dense sibling of Phi-3.5-MoE |
 | Llama-3.1-8B (dense) | Llama Community / Meta | 8B / 8B | 1.0 | dense cross-check |
@@ -145,6 +148,96 @@ If bias is route-concentrated, it dovetails with **Sparse Safety / Unsafe Routes
 ### 4.5 Future work
 - Extend to the **global-workspace / J-space** locus [Transformer Circuits, July 2026] (deferred per scope).
 - Multilingual and multimodal bias attribution; router-level demographic-cue analysis; downstream debiasing (expert steering) as a follow-up paper.
+
+---
+
+---
+
+## PAGE 5 — Actual Results Summary (Post-Study, 2026-07-07)
+
+*This section was added after data collection completed. All results and discussion are in `RESEARCH-JOURNAL.md`.*
+
+### Hypothesis verdicts (final)
+
+| Hypothesis | Verdict | Key evidence |
+|---|---|---|
+| H1: sparser → more concentrated | **REJECTED** | GPT-OSS (N_A/N=0.031, H=0.880) is more concentrated than OLMoE (0.016, H=0.900) — direct counter-example. No monotone trend on full ladder. |
+| H2: MoE more localizable than dense | **REJECTED** (method confound) | H_dense (0.63–0.76) < H_MoE (0.88–0.92) but dense uses causal LOO vs MoE correlational routing_contrast — method difference confounds interpretation. |
+| H0: diffuse bias in all MoE models | **STRONGLY SUPPORTED** | All 4 MoE models with detectable bias show H ≈ 0.88–0.92. DBRX H=0.919 ≈ Mixtral H=0.917 at N_A/N=0.25 — architecture-agnostic. |
+
+### Final sparsity ladder (Exp1, all models)
+
+| Model | N_A/N | H | Gini | n_players | mean_bias_gap |
+|---|---|---|---|---|---|
+| OLMoE-1B-7B | 0.016 | 0.900 | 0.599 | 1024 | 0.203 |
+| GPT-OSS-120B | 0.031 | 0.880 | 0.724 | 4608 | 0.165 |
+| Gemma 4 26B† | 0.063 | 0.822 | 0.821 | 3840 | ≈0 |
+| Phi-3.5-MoE | 0.125 | 0.889 | 0.617 | 512 | 0.244 |
+| Mixtral-8x7B | 0.250 | 0.917 | 0.516 | 256 | 0.187 |
+| DBRX-instruct | 0.250 | 0.919 | 0.554 | 640 | 0.187 |
+
+†Gemma 4: no detectable bias signal — excluded from H1 analysis.
+
+### Exp3 synergy fractions (pairwise interactions at first/last MoE layer)
+
+Universal finding: 70–74% of early-layer attribution mass is pairwise expert interactions (OLMoE 0.702, Phi 0.744, Mixtral 0.716). Late-layer drops to 0.22–0.28 for OLMoE/Phi; Mixtral stays at 0.503. routing_contrast underestimates diffuseness universally.
+
+### Key new findings not anticipated in original design
+
+1. **Architecture-agnostic diffuseness:** DBRX and Mixtral produce H=0.919 and H=0.917 at the same N_A/N=0.25, from different organizations with different architectures — the null result is architecture-independent.
+2. **Gemma 4 benchmark saturation:** model is too well-aligned for StereoSet/BBQ/WinoGender to detect bias.
+3. **Interaction dominance:** expert-committee effects (synergy) dominate individual marginals at early layers across all three tested architectures.
+
+---
+
+---
+
+## PAGE 6 — Reviewer-Prioritized Extensions (Post-Study, 2026-07-07)
+
+*Added based on analysis of the draft's current weak points: method confound in the MoE–dense comparison, causal validation concentrated in one model/architecture, and the routing-contrast proxy needing independent validation.*
+
+### 6.1 Exp6 — Ladder-wide causal ablation (highest priority)
+
+**Motivation:** The current causal validation (Exp4 ablation cross-check) is run only on OLMoE with 30 prompt pairs. Reviewers will reject the claim that "single-expert debiasing is misguided" if it rests on one architecture. Running the same ablation curve on Mixtral-8x7B (K=2/8, 256 players) and Phi-3.5-MoE (K=2/16, 512 players) confirms the result generalizes. Including OLMo-7B dense extends the cross-architecture ablation to the matched pair used for C4.
+
+**Method:** Extend `run_experiment4_ablation.py` to Mixtral (n=60 pairs), Phi-3.5-MoE (n=60), OLMoE (n=100, upgraded from 30), and OLMo-7B (n=60). Now includes two control conditions:
+- **Random control:** ablate players in random order — flat curve validates that the phi-ranked steep drop is attributional, not arbitrary.
+- **High-routing control:** ablate by routing frequency (most-activated experts first, regardless of bias attribution) — steep drop here would suggest the effect is just a "compute proxy"; a flat curve confirms phi-ranking captures bias specifically.
+
+**Configs/scripts:** `submit_slurm_experiment4.py --config <existing exp1 config> --max-pairs N`. Results land in `<result_dir>/experiment4/`.
+
+**Expected:** phi-ranked ablation curve drops faster than both controls (especially at k=10%, where current OLMoE data shows −0.92 disparity drop). Consistency across Mixtral and Phi-3.5-MoE would make "diffuse but causally real" the hardest finding to refute.
+
+### 6.2 Exp7 — Proxy-vs-causal agreement test
+
+**Motivation:** routing_contrast (Exp1 method) is a 2-forward-pass proxy for the true Shapley values, which require 2^K forward passes. If the proxy and the causal method rank experts differently, the H and Gini numbers from Exp1 are unreliable. If they agree, the proxy is vindicated and the full-ladder results hold.
+
+**Method:** On Mixtral (K=2/8, 2^8=256 coalitions — tractable), run a 20-pair subsample on first and last MoE layers:
+1. Compute per-pair routing_contrast phi over the active expert set.
+2. Compute per-pair exact Shapley phi (active coalitions only) using `compute_exact_shapley_for_pair`.
+3. Spearman rank correlation between |phi_rc| and |phi_exact| restricted to active experts.
+4. Report mean ρ ± std per layer.
+
+**Script:** `run_experiment7_proxy_agreement.py --config configs/study.mixtral-8x7b.concentration.yaml`
+
+**Interpretation:** ρ ≥ 0.7 → proxy trustworthy, Exp1 results stand. ρ < 0.5 → method section needs a caveat narrowing concentration claims to the proxy metric.
+
+### 6.3 Exp8 — Same-mechanism comparison (method-confound resolution)
+
+**Motivation:** The Exp2 result (H_dense ≈ 0.63–0.76 vs H_MoE ≈ 0.88–0.92) supports the H2 rejection, but the comparison confounds attribution method: dense models use LOO (leave-one-out layer ablation) while MoE models use routing_contrast. Running LOO on MoE models produces an apples-to-apples H comparison at the *layer* level, letting us separate "is H lower in dense because of architecture?" from "is H lower in dense because LOO is a coarser decomposition?"
+
+**Method:** Re-run OLMoE and Phi-3.5-MoE with `shapley_method: dense_loo` (forces layer-level LOO regardless of model family, now supported in `run_bias_study.py`). Compare H_lloo(MoE) vs H_lloo(dense). If they converge, the original gap was a method artifact. If H_lloo(MoE) still > H_lloo(dense), the localizability result survives even on matched methodology.
+
+**Configs:** `study.olmoe.lloo.yaml` (n=100, 1×A100, 3hr) and `study.phi3.5-moe.lloo.yaml` (n=50, 2×A100, 3hr).
+
+### 6.4 Future extensions (not submitted in current batch)
+
+The following are noted for completeness but not yet implemented:
+
+- **Committee ablation (Exp9):** Ablate top expert *pairs/triplets* from Exp3 interaction results, rather than single experts. Tests whether the synergy (70–74% of early-layer mass) is a property of specific standing committees. Requires `compute_committee_ablation_curve` (new code).
+- **Capability preservation (Exp10):** Measure MMLU accuracy or perplexity on a held-out set before/after ablation, to confirm "debiasing" does not just degrade the model.
+- **Quantization sensitivity:** GPT-OSS-120B uses MXFP4 quantized weights; H=0.880 may reflect weight distribution distortion rather than true routing concentration. A BF16 run or a second quantized comparison point would control for this.
+- **Prompt-set robustness:** Bootstrap resampling over the 400 prompt pairs + subgroup-stratified H across demographic slices (gender/race/religion subsets of StereoSet).
 
 ---
 

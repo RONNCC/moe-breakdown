@@ -6,9 +6,7 @@
 #
 # Compare concentration metrics (entropy H, Gini, top-fraction) against
 # study.phi3.5-moe.concentration.yaml and study.mixtral-8x7b.concentration.yaml
-# to test H1 (monotonic concentration increase as sparsity increases). Qwen,
-# DeepSeek, and ERNIE are excluded — prohibited on GT ICE systems (see
-# study_design_C1_C4.md Sec 2.1 institutional note).
+# to test H1 (monotonic concentration increase as sparsity increases).
 
 study_name: exp1-concentration-olmoe-1b-7b
 

@@ -1,5 +1,5 @@
 # Research Journal — MoE Bias Attribution Study (expt-bias-1)
-*Last updated: 2026-07-07*
+*Last updated: 2026-07-07 (DBRX Exp1 complete — full results table now final)*
 
 ---
 
@@ -8,11 +8,11 @@
 | Experiment | What it tests | Status |
 |---|---|---|
 | Exp1 — Concentration ladder (OLMoE, Phi-3.5-MoE, Mixtral) | H1: sparsity → concentration | **Done** |
-| Exp1 ext — DBRX (top-4/16, N_A/N=0.25) | H1 arch replicate at N_A/N=0.25 | **Running** — job 5483675, 2×H200, cuda/12.6.1, `alpindale/dbrx-instruct` mirror |
+| Exp1 ext — DBRX (top-4/16, N_A/N=0.25) | H1 arch replicate at N_A/N=0.25 | **Done** — H=0.919, Gini=0.554, mean_bias_gap=0.187 (job 5483900, 2×H200) |
 | Exp1 ext — GPT-OSS-120B (top-4/128, N_A/N=0.031) | H1 ladder gap fill | **Done** — H=0.880, mean_bias_gap=0.165 (real MXFP4 weights, torch 2.6.0+cu126) |
 | Exp1 ext — Gemma 4 26B (top-8/128, N_A/N=0.063) | H1 ladder, Google MoE | **Done** — H=0.822, mean_bias_gap≈0 (null bias signal; model too well-aligned on benchmarks) |
 | Exp2 — Dense baselines (OLMo-7B, Phi-3.5-mini, Llama-3.1-8B) | H2: MoE more localizable than dense | **Done** |
-| Exp3 — Interaction/synergy check | C2: marginal vs synergy structure | **Done (OLMoE)**, Running (Phi-3.5-MoE job 5483584), Running (Mixtral job 5483677) |
+| Exp3 — Interaction/synergy check | C2: marginal vs synergy structure | **Done (all three)** — OLMoE ✓, Phi-3.5-MoE ✓ (job 5483584), Mixtral ✓ (job 5483677) |
 | Exp4 — Ablation cross-check | Shapley rankings vs causal ablation | **Done (OLMoE only)** — 30 pairs |
 | Exp5 — Demographic specificity (OLMoE) | C3: different experts per demographic group | **Done** (600 pairs, 66 groups) |
 
@@ -29,7 +29,7 @@ Sorted by N_A/N ascending (sparsest → densest active fraction):
 | Gemma 4 26B† | MoE, top-8/128 | 0.063 | 3840 | **0.822** | 0.821 | 0.038 | 0.657 | ≈0 |
 | Phi-3.5-MoE | MoE, top-2/16 | 0.125 | 512 | **0.889** | 0.617 | 0.087 | 0.452 | 0.244 |
 | Mixtral-8x7B | MoE, top-2/8 | 0.250 | 256 | **0.917** | 0.516 | 0.109 | 0.364 | 0.187 |
-| DBRX-instruct | MoE, top-4/16 | 0.250 | — | running | — | — | — | — |
+| DBRX-instruct | MoE, top-4/16 | 0.250 | 640 | **0.919** | 0.554 | 0.043 | 0.349 | 0.187 |
 | OLMo-7B | dense | 1.0 | 32 | **0.719** | 0.693 | 0.687 | 0.605 | 0.146 |
 | Phi-3.5-mini | dense | 1.0 | 32 | **0.758** | 0.613 | 0.625 | 0.528 | 0.187 |
 | Llama-3.1-8B | dense | 1.0 | 32 | **0.630** | 0.730 | 0.749 | 0.698 | 0.179 |
@@ -54,8 +54,11 @@ H1 predicts that H decreases (concentration increases) monotonically as N_A/N de
 | 0.031 | GPT-OSS-120B | **0.880** |
 | 0.125 | Phi-3.5-MoE | 0.888 |
 | 0.250 | Mixtral-8x7B | 0.917 |
+| 0.250 | DBRX-instruct | 0.919 |
 
-There is no monotone trend. GPT-OSS-120B is more concentrated (H=0.880) than OLMoE (H=0.900) despite having higher N_A/N — a direct violation of H1. The Phi-OLMoE reversal from the original 3-model ladder persists. Mixtral being the least concentrated at the highest N_A/N is the one observation that partially fits H1, but the effect size is small.
+There is no monotone trend. GPT-OSS-120B is more concentrated (H=0.880) than OLMoE (H=0.900) despite having higher N_A/N — a direct violation of H1. The Phi-OLMoE reversal from the original 3-model ladder persists. Mixtral and DBRX are both the least concentrated at the highest N_A/N, but the effect size is small and does not constitute a trend across the full ladder.
+
+**DBRX architectural replicate (N_A/N=0.25):** DBRX-instruct (Databricks, top-4/16, 132B total/36B active) yields H=0.919, essentially identical to Mixtral-8x7B (Mistral AI, top-2/8, 47B total) at H=0.917. Same routing sparsity (N_A/N=0.25), different organizations, different architectures, different scales — same H. This is the strongest single piece of evidence for H0: diffuseness at N_A/N=0.25 is architecture-agnostic, not a Mistral-specific design artifact.
 
 **Important confound for GPT-OSS:** GPT-OSS-120B is ~120B total params vs OLMoE's 7B and Phi's 42B. The scale difference is large enough that the concentration difference (H=0.880 vs 0.900) may reflect model scale or MXFP4 quantization effects rather than routing sparsity. The ladder is not controlled for scale.
 
@@ -95,21 +98,33 @@ The null result is interesting precisely because it contradicts the "MoE = more 
 
 ---
 
-## Exp3 synergy/interaction results (OLMoE complete; Phi-3.5-MoE + Mixtral running)
+## Exp3 synergy/interaction results (complete — all three MoE models)
 
 Exp3 computes exact Shapley interactions between expert pairs on 20-pair subsamples at 2 MoE layers (first and last MoE layer). The synergy fraction = fraction of total Shapley mass attributable to pairwise interactions (as opposed to individual marginals). High synergy → attribution is NOT decomposable into individual expert contributions.
 
-**OLMoE-1B-7B (complete):**
-| Layer | Mean synergy fraction |
-|---|---|
-| layer0 (first MoE) | **0.702** |
-| layer15 (last MoE) | **0.278** |
+| Model | Layer | Mean synergy fraction |
+|---|---|---|
+| OLMoE-1B-7B | layer0 (first MoE) | **0.702** |
+| OLMoE-1B-7B | layer15 (last MoE) | **0.278** |
+| Phi-3.5-MoE | layer0 (first MoE) | **0.744** |
+| Phi-3.5-MoE | layer31 (last MoE) | **0.219** |
+| Mixtral-8x7B | layer0 (first MoE) | **0.716** |
+| Mixtral-8x7B | layer31 (last MoE) | **0.503** |
 
-Early-layer expert interactions account for ~70% of total bias attribution mass. This is a critical finding: routing_contrast, which assumes additive individual contributions, systematically underestimates the complexity of bias structure. The true attribution is more diffuse AND more interactive than H=0.900 implies. By extension, the H1 analysis based on routing_contrast H-values may be underestimating the diffuseness of all models.
+**Key findings:**
 
-Top interacting expert pairs at layer0: {5,14}, {6,14}, {14,18} (mean |interaction| ≈ 0.10–0.11). These are not random — a small cluster of experts (5, 6, 14, 18, 19) dominate the pairwise interaction structure at layer0.
+1. **Universal early-layer interaction dominance.** All three architectures show 70–74% synergy at the first MoE layer. This pattern holds across top-1 routing (OLMoE), top-2/16 (Phi-3.5-MoE), and top-2/8 (Mixtral). It is not routing-sparsity-specific.
 
-**Phi-3.5-MoE and Mixtral:** results pending (jobs 5483584 and 5483677).
+2. **Late-layer synergy diverges by architecture.** OLMoE and Phi-3.5-MoE both drop to ~22–28% synergy at their last MoE layer — relatively additive. Mixtral is the outlier: last-layer synergy = 0.503, meaning interactions still account for half the attribution mass at the final layer. This may relate to Mixtral's block-sparse MoE structure or larger per-expert capacity.
+
+3. **routing_contrast underestimates diffuseness in all three models.** The linear additive approximation underlying routing_contrast misses the pairwise interaction mass. The actual bias attribution structure is more complex (and more diffuse) than H ≈ 0.88–0.92 implies. This further strengthens H0.
+
+4. **Top-interacting expert clusters at layer0 are consistent.** Each architecture shows a small set of experts dominating interactions:
+   - OLMoE: {5,14}, {6,14}, {14,18} (|interaction| ≈ 0.09–0.11)
+   - Phi-3.5-MoE: {5,8}, {3,8}, {3,11}, {8,9} (|interaction| ≈ 0.07–0.08)
+   - Mixtral: {1,5}, {1,3}, {2,5}, {1,2} (|interaction| ≈ 0.06–0.10)
+   
+   In all cases, a hub expert (14 in OLMoE, 8 in Phi, 1 and 5 in Mixtral) participates in most of the top pairs.
 
 ---
 
@@ -155,10 +170,9 @@ Critical issues:
 
 ### Awaiting results (no action needed)
 
-**1. DBRX Exp1 (job 5483675, running).** If H ≈ 0.917 (matching Mixtral at the same N_A/N=0.25), it strengthens H0 by showing that diffuseness at that sparsity level is architecture-agnostic, not specific to Mistral's design.
+**1. DBRX Exp1 — COMPLETE (job 5483900).** H=0.919, matching Mixtral (H=0.917) at the same N_A/N=0.25. Diffuseness at that sparsity is architecture-agnostic. Main results table is now final — no outstanding data points.
 
-**2. Exp3 Phi-3.5-MoE (job 5483584, running) and Mixtral (job 5483677, submitted).**
-Key question: is the high synergy fraction at layer0 (0.702 in OLMoE) also present in other architectures, or is it OLMoE-specific? If all three MoE models show high synergy fractions, it strongly validates that routing_contrast underestimates diffuseness across the board.
+**2. ~~Exp3 Phi-3.5-MoE and Mixtral~~ — COMPLETE.** All three MoE Exp3 results are in. Early-layer synergy is 70–74% across all architectures — confirms routing_contrast underestimates diffuseness universally.
 
 ### High-value analysis (no new jobs — use existing results)
 
@@ -199,10 +213,10 @@ H1 (sparser → more concentrated) is rejected. Adding GPT-OSS-120B to the spars
 
 H2 (MoE more localizable than dense) is clearly rejected: H_dense (0.63–0.76) < H_MoE (0.88–0.92) across all matched pairs. Dense models' bias is MORE localized. However, this result is confounded by method (causal LOO for dense vs correlational routing_contrast for MoE) — must be prominently caveated.
 
-**New finding from Exp3 (OLMoE):** Expert synergy fractions at layer0 = 0.702. The actual bias attribution is substantially more interactive — and therefore more diffuse — than routing_contrast's linear approximation indicates. This further strengthens H0 and explains why no single expert dominates.
+**New finding from Exp3 (all three MoE models — complete):** Early-layer synergy fractions: OLMoE=0.702, Phi-3.5-MoE=0.744, Mixtral=0.716. This 70–74% early-layer interaction mass is universal across architectures and routing sparsities. The actual bias attribution is substantially more interactive — and therefore more diffuse — than routing_contrast's linear approximation indicates. This further strengthens H0 and explains why no single expert dominates. Late-layer synergy drops for OLMoE (0.278) and Phi (0.219) but stays elevated for Mixtral (0.503).
 
 **Gemma 4 null result:** mean_bias_gap ≈ 0 means the model shows no detectable bias on StereoSet/BBQ/WinoGender. This is likely a well-aligned model effect, not a limitation of the Shapley method. The finding is noteworthy on its own.
 
 **The null result is publishable and scientifically useful:** it corrects a growing assumption ("MoE modularity → interpretability advantage transfers to fairness") with empirical evidence across 5 diverse MoE architectures, and provides the first quantitative bias-Shapley framework for MoE models. The interaction structure finding (high synergy at early layers) is an additional novel contribution.
 
-**Remaining uncertainty:** DBRX result pending. Exp3 Phi/Mixtral synergy fractions pending. These could still shift the picture if they show markedly different synergy structure, but the H0 conclusion is unlikely to change given the consistency across 4 models so far.
+**Data collection complete (2026-07-07).** DBRX confirmed H=0.919 (job 5483900), matching Mixtral (H=0.917) at N_A/N=0.25 — diffuseness at that sparsity is architecture-agnostic (different organizations, different architectures, same H). Full results table is final. No outstanding data collection.
