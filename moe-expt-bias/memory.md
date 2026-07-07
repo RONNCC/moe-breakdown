@@ -16,9 +16,11 @@ the experiment index and how to run things).
 **Chinese-origin models are prohibited on Georgia Tech ICE systems.** The model
 ladder uses only US/EU-origin models (Apache-2.0 / MIT / Llama Community License).
 Current compliant ladder:
-- MoE: OLMoE-1B-7B (sparsest), Phi-3.5-MoE (mid), Mixtral-8x7B (densest in ladder)
+- MoE: OLMoE-1B-7B (sparsest), GPT-OSS-120B, Gemma 4 26B, Phi-3.5-MoE (mid),
+  Mixtral-8x7B (densest in ladder), DBRX-instruct (replicate at N_A/N=0.25)
 - Dense: OLMo-7B (primary, matched to OLMoE), Phi-3.5-mini (secondary, matched
-  to Phi-3.5-MoE), Llama-3.1-8B (tertiary cross-check)
+  to Phi-3.5-MoE), Llama-3.1-8B (tertiary cross-check),
+  Llama-2-7B (cross-generation, job 5484008 running)
 If you ever see configs or results for prohibited Chinese-origin models (e.g. from
 an old branch or stale scratch dir), delete them — don't leave them alongside the
 compliant ones.
@@ -121,9 +123,10 @@ Results land in `~/scratch/moe-breakdown-bias-runs/expt-bias-1/<study_name>/`
 - If several consecutive fresh-terminal SSH attempts all fail identically,
   suspect the corp VPN being on / campus VPN being off, not the cluster.
 
-## Status as of 2026-07-07 — ALL EXPERIMENTS COMPLETE
+## Status as of 2026-07-07 — MAIN RESULTS COMPLETE; REVIEWER EXTENSIONS RUNNING
 
-All data collected. Full results and analysis in `RESEARCH-JOURNAL.md`.
+Main experiment results complete. Reviewer-response extensions submitted 2026-07-07.
+Full results and analysis in `RESEARCH-JOURNAL.md`.
 
 **Exp1 (routing_contrast, 400 pairs) — all 6 models done:**
 - OLMoE-1B-7B → H=0.900, Gini=0.599, mean_bias_gap=0.203
@@ -131,22 +134,25 @@ All data collected. Full results and analysis in `RESEARCH-JOURNAL.md`.
 - Mixtral-8x7B → H=0.917, Gini=0.516, mean_bias_gap=0.187
 - GPT-OSS-120B → H=0.880, Gini=0.724, mean_bias_gap=0.165
 - Gemma 4 26B → H=0.822, Gini=0.821, mean_bias_gap≈0 (null bias signal)
-- DBRX-instruct → H=0.919, Gini=0.554, mean_bias_gap=0.187 (job 5483900)
+- DBRX-instruct → H=0.919, Gini=0.554, mean_bias_gap=0.187
 
-**Exp2 (dense LOO) — all 3 models done:**
+**Exp2 (dense LOO) — 3 done, 1 pending:**
 - OLMo-7B → H=0.719 | Phi-3.5-mini → H=0.758 | Llama-3.1-8B → H=0.630
+- Llama-2-7B → pending (job 5484008)
 
-**Exp3 (exact Shapley interactions) — all 3 MoE models done:**
-- OLMoE: early synergy=0.702, late=0.278
-- Phi-3.5-MoE: early=0.744, late=0.219
-- Mixtral: early=0.716, late=0.503
-
+**Exp3** (exact Shapley interactions, OLMoE/Phi/Mixtral): done.
 **Exp4** (ablation, OLMoE only, n=30): done.
 **Exp5** (demographic, OLMoE, 600 pairs, 66 groups): done.
 
-**Key findings:** H0 strongly supported (H≈0.88–0.92 across all MoE models).
-H1 rejected. H2 rejected (method confound). DBRX H=0.919 ≈ Mixtral H=0.917
-at same N_A/N=0.25 — architecture-agnostic diffuseness confirmed.
+**Reviewer extensions — all pending (submitted 2026-07-07):**
+- Exp6 (ladder-wide ablation + controls): OLMoE n=100 (5483990), Mixtral n=60
+  (5483991), Phi-3.5-MoE n=60 (5483992), OLMo-7B n=60 (5483993)
+- Exp7 (proxy-vs-causal Spearman ρ on Mixtral, 20 pairs): job 5483995
+- Exp8 (same-mechanism MoE LOO — method confound resolution): OLMoE (5483997),
+  Phi-3.5-MoE (5483998)
+
+**Key findings:** H0 strongly supported. H1/H2 rejected. DBRX H=0.919 ≈ Mixtral
+at same sparsity — architecture-agnostic diffuseness. See RESEARCH-JOURNAL.md.
 
 Report draft: `gemini_report_draft.tex` / `report_draft.pdf`. Figures: `figures/`.
 Figure generation code: `expt-bias-1/scripts/build_figures.py`.

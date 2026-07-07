@@ -6,12 +6,15 @@
 
 **Method:** routing_contrast Shapley (φ_e ∝ routing-weight difference × bias payoff) across StereoSet + BBQ + WinoGender benchmarks (400 prompt pairs). Concentration measured via normalized entropy H and Gini coefficient. Also: exact Shapley interactions (Exp3), causal ablation cross-check (Exp4), demographic specificity (Exp5).
 
-**Models run:**
+**Models run / pending:**
 - MoE (Exp1): OLMoE-1B-7B, Phi-3.5-MoE, Mixtral-8x7B, GPT-OSS-120B, Gemma 4 26B, DBRX-instruct
-- Dense (Exp2): OLMo-7B, Phi-3.5-mini, Llama-3.1-8B
+- Dense (Exp2): OLMo-7B, Phi-3.5-mini, Llama-3.1-8B; Llama-2-7B (pending job 5484008)
 - Interactions (Exp3): OLMoE, Phi-3.5-MoE, Mixtral-8x7B
-- Ablation (Exp4): OLMoE only
+- Ablation (Exp4): OLMoE only (n=30)
 - Demographic (Exp5): OLMoE (600 pairs, 66 groups)
+- Ladder-wide ablation + controls (Exp6): OLMoE/Mixtral/Phi/OLMo (pending, jobs 5483990–5483993)
+- Proxy-vs-causal Spearman ρ (Exp7): Mixtral (pending, job 5483995)
+- Same-mechanism MoE LOO (Exp8): OLMoE, Phi-3.5-MoE (pending, jobs 5483997–5483998)
 
 **Hardware:** GT ICE cluster (PACE); 1–2× H200 (141 GB/GPU) for large models; 2× A100 80GB for smaller; SLURM with partition=ice-gpu, qos=coc-ice.
 
@@ -27,13 +30,14 @@
 
 **Cluster storage:** `~/scratch/moe-breakdown-bias-runs/expt-bias-1/<model>/result.json`
 
-**Key findings (complete as of 2026-07-07):**
+**Key findings (main results complete as of 2026-07-07; reviewer extensions pending):**
 - H0 STRONGLY SUPPORTED: all MoE models with detectable bias show H ≈ 0.88–0.92 (near-uniform diffusion)
 - H1 REJECTED: no monotone trend across sparsity ladder; GPT-OSS (0.031, H=0.880) more concentrated than OLMoE (0.016, H=0.900) — direct violation
 - H2 REJECTED (with method confound caveat): H_dense (0.63–0.76) < H_MoE (0.88–0.92), but dense uses causal LOO vs MoE correlational routing_contrast
 - DBRX H=0.919 ≈ Mixtral H=0.917 at same N_A/N=0.25 — architecture-agnostic diffuseness
 - Exp3: 70–74% of early-layer bias attribution mass is pairwise interactions, not individual marginals — routing_contrast underestimates diffuseness
 - Gemma 4 null: mean_bias_gap ≈ 0, model too well-aligned for benchmarks to detect bias
+- Exp6/7/8 pending: ladder-wide ablation controls, proxy-vs-causal validation, same-mechanism H2 replication
 
 **Full results and analysis:** `moe-expt-bias/RESEARCH-JOURNAL.md`
 **Study design:** `moe-expt-bias/study_design_C1_C4.md`
