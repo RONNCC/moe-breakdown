@@ -49,6 +49,13 @@ def load_stereoset(
     # McGill-NLP parquet mirror instead, which has identical fields/schema.
     ds = load_dataset("McGill-NLP/stereoset", subset, split=split)
 
+    # `gold_label` is a nested List(ClassLabel(...)) — nested ClassLabel fields
+    # are NOT auto-decoded to strings on row access (unlike top-level ClassLabel
+    # columns), so iterating rows yields raw ints. Resolve the int->name mapping
+    # from the dataset's own feature schema instead of hardcoding it, in case
+    # the label order ever changes upstream.
+    label_names = ds.features["sentences"]["gold_label"].feature.names
+
     pairs: List[PromptPair] = []
     for item in ds:
         sentences = item["sentences"]
@@ -58,9 +65,10 @@ def load_stereoset(
         stereo_text = None
         anti_text = None
         for text, label in zip(texts, labels):
-            if label == "stereotype":
+            label_name = label_names[label] if isinstance(label, int) else label
+            if label_name == "stereotype":
                 stereo_text = text
-            elif label == "anti-stereotype":
+            elif label_name == "anti-stereotype":
                 anti_text = text
 
         if stereo_text is None or anti_text is None:
