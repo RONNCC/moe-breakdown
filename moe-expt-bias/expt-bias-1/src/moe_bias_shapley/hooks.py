@@ -48,6 +48,7 @@ class RouterCaptureState:
     moe_layers: List[MoeLayerHandle] = field(default_factory=list)
     captured: Dict[int, Dict[str, Any]] = field(default_factory=dict)
     _hook_handles: List[Any] = field(default_factory=list)
+    _patched_forwards: List[Any] = field(default_factory=list)
 
     def clear(self) -> None:
         self.captured = {}
@@ -141,67 +142,62 @@ def discover_moe_layers(model: Any) -> List[MoeLayerHandle]:
 
 
 def attach_router_hooks(model: Any) -> RouterCaptureState:
-    """Attach forward hooks on each MoE block's `.gate` to capture router logits
-    and (if available) the resulting top-k expert indices/weights.
+    """Capture router logits/top-k by monkey-patching each gate's .forward.
 
-    Two hooks are registered per layer:
-    1. Primary: on h.gate (the router submodule). Works for Mixtral/OLMoE/Phi where
-       the gate is a plain nn.Linear or a simple submodule.
-    2. Fallback: on h.module (the outer MoE block, e.g. GptOssMLP). Fires only if the
-       primary hook did not populate state.captured[layer_index]. Re-runs the gate
-       manually using the block's input to capture routing.
+    register_forward_hook is unreliable when accelerate's dispatch_model() has
+    run with device_map="auto": AlignDevicesHook replaces module.forward via
+    direct assignment (MethodType), which means the accelerate wrapper calls
+    the original forward directly rather than through __call__, so PyTorch's
+    hook machinery never fires for those submodules.
 
-    The fallback handles architectures (e.g. openai/gpt-oss-120b, transformers>=5.13)
-    where @use_kernel_forward_from_hub or accelerate device_map hooks prevent the gate
-    submodule's register_forward_hook from firing even when USE_HUB_KERNELS=NO.
+    The fix: patch router.forward at the instance level AFTER dispatch_model
+    has already patched it, so our wrapper sits on top of accelerate's wrapper
+    and composes correctly. This is the same technique accelerate itself uses.
     """
     import torch
 
     state = RouterCaptureState(moe_layers=discover_moe_layers(model))
 
-    def make_gate_hook(layer_index: int, topk: int):
-        def hook(_module, _inputs, output):
-            router_logits = output if not isinstance(output, tuple) else output[0]
+    # Diagnostic: show whether accelerate has already patched these routers.
+    for h in state.moe_layers[:2]:
+        hf_hook = getattr(h.gate, "_hf_hook", None)
+        try:
+            forward_patched = h.gate.forward is not type(h.gate).forward.__get__(h.gate)
+        except Exception:
+            forward_patched = "unknown"
+        log.info(
+            "layer %d gate (%s): _hf_hook=%s, forward_patched=%s",
+            h.layer_index, type(h.gate).__name__,
+            type(hf_hook).__name__ if hf_hook else "None",
+            forward_patched,
+        )
+
+    def make_wrapper(layer_index: int, orig_fwd: Any, topk: int):
+        def patched_forward(hidden_states):
+            out = orig_fwd(hidden_states)
             with torch.no_grad():
-                routing_weights = torch.softmax(router_logits.float(), dim=-1)
-                topk_weight, topk_idx = torch.topk(routing_weights, k=topk, dim=-1)
+                if isinstance(out, tuple):
+                    # GptOssTopKRouter returns (router_logits, router_scores, router_indices)
+                    router_logits = out[0]
+                    routing_weights = torch.softmax(router_logits.float(), dim=-1)
+                    topk_weight, topk_idx = torch.topk(routing_weights, k=topk, dim=-1)
+                else:
+                    # Plain nn.Linear gate (Mixtral) or OlmoeTopKRouter returning logits
+                    router_logits = out
+                    routing_weights = torch.softmax(router_logits.float(), dim=-1)
+                    topk_weight, topk_idx = torch.topk(routing_weights, k=topk, dim=-1)
             state.captured[layer_index] = {
                 "router_logits": router_logits.detach(),
-                "topk_idx": topk_idx.detach(),
-                "topk_weight": topk_weight.detach(),
+                "topk_idx":      topk_idx.detach(),
+                "topk_weight":   topk_weight.detach(),
             }
-        return hook
-
-    def make_outer_fallback_hook(layer_index: int, gate_module: Any, topk: int):
-        # Fires on the outer MoE block after its forward completes.
-        # If the gate hook already captured routing for this layer, this is a no-op.
-        # Otherwise re-runs the gate on the block's input to obtain routing info.
-        def hook(_module, inputs, _output):
-            if layer_index in state.captured:
-                return
-            try:
-                with torch.no_grad():
-                    h_flat = inputs[0].reshape(-1, inputs[0].shape[-1])
-                    gate_out = gate_module(h_flat)
-                    logits = gate_out if not isinstance(gate_out, tuple) else gate_out[0]
-                    routing_weights = torch.softmax(logits.float(), dim=-1)
-                    topk_weight, topk_idx = torch.topk(routing_weights, k=topk, dim=-1)
-                state.captured[layer_index] = {
-                    "router_logits": logits.detach(),
-                    "topk_idx": topk_idx.detach(),
-                    "topk_weight": topk_weight.detach(),
-                }
-            except Exception as e:
-                log.warning("outer_fallback_hook layer %d: %s", layer_index, e)
-        return hook
+            return out
+        return patched_forward
 
     for h in state.moe_layers:
-        handle = h.gate.register_forward_hook(make_gate_hook(h.layer_index, h.topk))
-        state._hook_handles.append(handle)
-        fallback = h.module.register_forward_hook(
-            make_outer_fallback_hook(h.layer_index, h.gate, h.topk)
-        )
-        state._hook_handles.append(fallback)
+        original_forward = h.gate.forward  # capture AFTER dispatch_model ran
+        h.gate.forward = make_wrapper(h.layer_index, original_forward, h.topk)
+        state._patched_forwards.append((h.gate, original_forward))
 
     return state
 
@@ -210,6 +206,9 @@ def detach_hooks(state: RouterCaptureState) -> None:
     for handle in state._hook_handles:
         handle.remove()
     state._hook_handles = []
+    for router, orig_forward in state._patched_forwards:
+        router.forward = orig_forward
+    state._patched_forwards.clear()
 
 
 # --------------------------------------------------------------------------- #
