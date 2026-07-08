@@ -46,8 +46,8 @@ if [[ "${INSTALL_BITSANDBYTES:-1}" == "1" ]]; then
   uv pip install bitsandbytes
 fi
 
-# triton>=3.4.0 required by transformers MXFP4 quantizer for openai/gpt-oss-120b native loading
-# Enforced at the end of installation so other packages cannot downgrade it.
-uv pip install "triton>=3.4.0"
+# triton>=3.4.0 and kernels>=0.12.0 required by transformers MXFP4 quantizer for openai/gpt-oss-120b native loading
+# Enforced at the end of installation so other packages cannot downgrade them.
+uv pip install "triton>=3.4.0" "kernels>=0.12.0"
 
 touch "$READY_MARKER"
