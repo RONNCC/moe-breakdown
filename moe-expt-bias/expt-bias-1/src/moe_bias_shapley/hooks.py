@@ -143,12 +143,23 @@ def discover_moe_layers(model: Any) -> List[MoeLayerHandle]:
 def attach_router_hooks(model: Any) -> RouterCaptureState:
     """Attach forward hooks on each MoE block's `.gate` to capture router logits
     and (if available) the resulting top-k expert indices/weights.
+
+    Two hooks are registered per layer:
+    1. Primary: on h.gate (the router submodule). Works for Mixtral/OLMoE/Phi where
+       the gate is a plain nn.Linear or a simple submodule.
+    2. Fallback: on h.module (the outer MoE block, e.g. GptOssMLP). Fires only if the
+       primary hook did not populate state.captured[layer_index]. Re-runs the gate
+       manually using the block's input to capture routing.
+
+    The fallback handles architectures (e.g. openai/gpt-oss-120b, transformers>=5.13)
+    where @use_kernel_forward_from_hub or accelerate device_map hooks prevent the gate
+    submodule's register_forward_hook from firing even when USE_HUB_KERNELS=NO.
     """
     import torch
 
     state = RouterCaptureState(moe_layers=discover_moe_layers(model))
 
-    def make_hook(layer_index: int, topk: int):
+    def make_gate_hook(layer_index: int, topk: int):
         def hook(_module, _inputs, output):
             router_logits = output if not isinstance(output, tuple) else output[0]
             with torch.no_grad():
@@ -161,9 +172,36 @@ def attach_router_hooks(model: Any) -> RouterCaptureState:
             }
         return hook
 
+    def make_outer_fallback_hook(layer_index: int, gate_module: Any, topk: int):
+        # Fires on the outer MoE block after its forward completes.
+        # If the gate hook already captured routing for this layer, this is a no-op.
+        # Otherwise re-runs the gate on the block's input to obtain routing info.
+        def hook(_module, inputs, _output):
+            if layer_index in state.captured:
+                return
+            try:
+                with torch.no_grad():
+                    h_flat = inputs[0].reshape(-1, inputs[0].shape[-1])
+                    gate_out = gate_module(h_flat)
+                    logits = gate_out if not isinstance(gate_out, tuple) else gate_out[0]
+                    routing_weights = torch.softmax(logits.float(), dim=-1)
+                    topk_weight, topk_idx = torch.topk(routing_weights, k=topk, dim=-1)
+                state.captured[layer_index] = {
+                    "router_logits": logits.detach(),
+                    "topk_idx": topk_idx.detach(),
+                    "topk_weight": topk_weight.detach(),
+                }
+            except Exception as e:
+                log.warning("outer_fallback_hook layer %d: %s", layer_index, e)
+        return hook
+
     for h in state.moe_layers:
-        handle = h.gate.register_forward_hook(make_hook(h.layer_index, h.topk))
+        handle = h.gate.register_forward_hook(make_gate_hook(h.layer_index, h.topk))
         state._hook_handles.append(handle)
+        fallback = h.module.register_forward_hook(
+            make_outer_fallback_hook(h.layer_index, h.gate, h.topk)
+        )
+        state._hook_handles.append(fallback)
 
     return state
 

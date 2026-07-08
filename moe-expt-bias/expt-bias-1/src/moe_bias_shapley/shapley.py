@@ -118,9 +118,15 @@ def compute_routing_contrast(
     for i, pair in enumerate(pairs):
         logp_stereo = _sequence_logprob(model, tokenizer, pair.stereo, device)
         state_stereo = {li: {k: v.clone() for k, v in d.items()} for li, d in state.captured.items()}
+        if i == 0:
+            log.info("routing_contrast pair=0 stereo: state.captured layers=%s",
+                     sorted(state_stereo.keys()) if state_stereo else "EMPTY — hooks not firing")
 
         logp_anti = _sequence_logprob(model, tokenizer, pair.anti_stereo, device)
         state_anti = {li: {k: v.clone() for k, v in d.items()} for li, d in state.captured.items()}
+        if i == 0:
+            log.info("routing_contrast pair=0 anti: state.captured layers=%s",
+                     sorted(state_anti.keys()) if state_anti else "EMPTY — hooks not firing")
 
         bias_gap = _bias_gap_from_logits(logp_stereo, logp_anti)
         gaps.append(bias_gap)
