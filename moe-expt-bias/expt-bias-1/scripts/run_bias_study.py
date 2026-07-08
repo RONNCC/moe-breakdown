@@ -7,6 +7,30 @@ Usage:
 """
 from __future__ import annotations
 
+# Monkey-patch torch.cuda.get_device_properties to provide safe fallbacks for missing
+# attributes (like shared_memory_per_block_optin) on older host drivers/PACE cluster nodes.
+try:
+    import torch
+    _orig_get_device_properties = torch.cuda.get_device_properties
+
+    class SafeDeviceProperties:
+        def __init__(self, props):
+            self._props = props
+
+        def __getattr__(self, name):
+            if name == "shared_memory_per_block_optin":
+                # Hopper H100 allows up to 228 KB of shared memory per block after opt-in
+                return getattr(self._props, "shared_memory_per_block_optin", 228 * 1024)
+            return getattr(self._props, name)
+
+    def safe_get_device_properties(device=None):
+        props = _orig_get_device_properties(device)
+        return SafeDeviceProperties(props)
+
+    torch.cuda.get_device_properties = safe_get_device_properties
+except Exception:
+    pass
+
 import argparse
 import logging
 import sys
