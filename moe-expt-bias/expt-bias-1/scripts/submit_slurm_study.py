@@ -78,6 +78,11 @@ def build_sbatch_command(
         export_bits["NUM_SHARDS"] = str(num_shards)
     if uv_env_dir and "$" not in uv_env_dir:
         export_bits["UV_ENV_DIR"] = uv_env_dir
+    # GPT-OSS uses a fused Triton kernel (MegaBlocksMoeMLP) that bypasses the router
+    # submodule's Python forward, causing our routing hooks to silently never fire.
+    # USE_HUB_KERNELS=NO forces the Python fallback so hooks work correctly.
+    if getattr(cfg, "model_family", "") == "gpt-oss":
+        export_bits["USE_HUB_KERNELS"] = "NO"
     export_arg = ",".join([k if v is None else f"{k}={v}" for k, v in export_bits.items()])
     cmd.append(f"--export={export_arg}")
     cmd.append(str((ROOT / "slurm" / slurm.sbatch_script).resolve()))

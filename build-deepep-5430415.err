@@ -1,0 +1,40 @@
+Lmod Warning:
+-------------------------------------------------------------------------------
+The following dependent module(s) are not currently loaded: gcc-runtime/12.3.0
+(required by: bzip2/1.0.8-izsl3tw, libmd/1.0.4-pqo4msa, libbsd/0.12.2-ux763ge,
+expat/2.6.3-tw2lzkp, ncurses/6.5-56qvrzz, readline/8.2-3oy3hor,
+gdbm/1.23-ltbqylw, libiconv/1.17, pigz/2.8-lyvikup, zstd/1.5.6-2heeec4,
+tar/1.34, gettext/0.22.5-4y76s5s, libffi/3.4.6-r5owf5y, libxcrypt/4.4.35,
+sqlite/3.46.0-tslxtik, util-linux-uuid/2.40.2-mvti2ob, python/3.11.9),
+glibc/2.34-mjdysad (required by: bzip2/1.0.8-izsl3tw, libmd/1.0.4-pqo4msa,
+libbsd/0.12.2-ux763ge, expat/2.6.3-tw2lzkp, ncurses/6.5-56qvrzz,
+readline/8.2-3oy3hor, gdbm/1.23-ltbqylw, libiconv/1.17, pigz/2.8-lyvikup,
+zstd/1.5.6-2heeec4, tar/1.34, gettext/0.22.5-4y76s5s, libffi/3.4.6-r5owf5y,
+libxcrypt/4.4.35, sqlite/3.46.0-tslxtik, util-linux-uuid/2.40.2-mvti2ob,
+python/3.11.9), libxml2/2.10.3 (required by: gettext/0.22.5-4y76s5s),
+xz/5.4.6-dobjhce (required by: tar/1.34, gettext/0.22.5-4y76s5s,
+python/3.11.9), zlib-ng/2.2.1-qb3tqo5 (required by: pigz/2.8-lyvikup,
+sqlite/3.46.0-tslxtik, python/3.11.9)
+-------------------------------------------------------------------------------
+
+
+
+Using Python 3.11.15 environment at: /storage/ice1/0/2/sghose7/moe-breakdown-venv
+Checked 1 package in 13ms
+W0624 23:14:24.427000 936270 torch/utils/cpp_extension.py:140] No CUDA runtime is found, using CUDA_HOME='/usr/local/pace-apps/spack/packages/linux-rhel9-x86_64_v3/none-none/cuda-13.0.1-ne4hey4ce57lmd34nixeikyfribdqln3'
+/storage/ice1/0/2/sghose7/moe-breakdown-venv/lib/python3.11/site-packages/setuptools/_distutils/cmd.py:90: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+!!
+
+        ********************************************************************************
+        Please avoid running ``setup.py`` directly.
+        Instead, use pypa/build, pypa/installer or other
+        standards-based tools.
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+        ********************************************************************************
+
+!!
+  self.initialize_options()

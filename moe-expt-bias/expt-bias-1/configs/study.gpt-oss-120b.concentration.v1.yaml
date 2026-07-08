@@ -1,6 +1,7 @@
 # Experiment 1 v1 — GPT-OSS-120B, full prompt set
-# routing_contrast: 2 fwd passes/pair. 120B MXFP4 on 2×H200 — 5000 pairs ≈ 4.2hr.
-# 2×H200×5hr = 600 GPU-min ✓.
+# routing_contrast: 2 fwd passes/pair. 120B MXFP4 on 2×H100 — 5000 pairs ≈ 4.2hr.
+# 2×H100×5hr = 600 GPU-min ✓. USE_HUB_KERNELS=NO injected by submit script (disables
+# Triton MegaBlocksMoeMLP kernel that would bypass router hooks → all-zero phi).
 
 study_name: exp1-concentration-gpt-oss-120b-v1
 
