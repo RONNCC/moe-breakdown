@@ -40,6 +40,9 @@ TRANSFORMERS_SPEC="${TRANSFORMERS_SPEC:-transformers>=4.44}"
 # tiktoken required by alpindale/dbrx-instruct custom modeling code (trust_remote_code)
 uv pip install "$TRANSFORMERS_SPEC" accelerate datasets sentencepiece protobuf tiktoken
 
+# triton>=3.4.0 required by transformers MXFP4 quantizer for openai/gpt-oss-120b native loading
+uv pip install "triton>=3.4.0"
+
 # Optional: 4-bit/8-bit loading for the larger models on the ladder
 # (Phi-3.5-MoE, Mixtral-8x7B, Llama-3.1-8B) on single-GPU nodes.
 if [[ "${INSTALL_BITSANDBYTES:-1}" == "1" ]]; then
