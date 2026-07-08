@@ -31,9 +31,9 @@ uv pip install -e .
 
 # torch>=2.6.0 required for torch.accelerator (added in 2.6.0; needed by the
 # transformers MXFP4 quantizer for openai/gpt-oss-120b).
-# TORCH_INDEX defaults to cu126; override with TORCH_INDEX=.../cu121 for older nodes.
+# TORCH_INDEX defaults to cu121 to match PACE host driver capability.
 TORCH_SPEC="${TORCH_SPEC:-torch==2.6.0}"
-TORCH_INDEX="${TORCH_INDEX:-https://download.pytorch.org/whl/cu126}"
+TORCH_INDEX="${TORCH_INDEX:-https://download.pytorch.org/whl/cu121}"
 uv pip install "$TORCH_SPEC" --index-url "$TORCH_INDEX"
 
 TRANSFORMERS_SPEC="${TRANSFORMERS_SPEC:-transformers>=4.44}"
