@@ -142,39 +142,35 @@ def discover_moe_layers(model: Any) -> List[MoeLayerHandle]:
 
 
 def attach_router_hooks(model: Any) -> RouterCaptureState:
-    """Capture router logits/top-k by monkey-patching each gate's .forward.
+    """Capture router logits/top-k by monkey-patching each gate's forward.
 
-    register_forward_hook is unreliable when accelerate's dispatch_model() has
-    run with device_map="auto": AlignDevicesHook replaces module.forward via
-    direct assignment (MethodType), which means the accelerate wrapper calls
-    the original forward directly rather than through __call__, so PyTorch's
-    hook machinery never fires for those submodules.
+    When accelerate's dispatch_model() runs with device_map="auto" it calls
+    add_hook_to_module(), which stores the original forward as module._old_forward
+    and replaces module.forward with a partial(new_forward, module) wrapper.
+    That wrapper calls module._old_forward(*args, **kwargs) via attribute lookup
+    on every invocation — NOT a closure over the original. Patching module.forward
+    therefore has no effect; we must patch module._old_forward so our wrapper is
+    in the live call path.
 
-    The fix: patch router.forward at the instance level AFTER dispatch_model
-    has already patched it, so our wrapper sits on top of accelerate's wrapper
-    and composes correctly. This is the same technique accelerate itself uses.
+    For routers that have no AlignDevicesHook (no _old_forward attribute), we
+    fall back to patching module.forward directly, which still works via __call__.
     """
     import torch
 
     state = RouterCaptureState(moe_layers=discover_moe_layers(model))
 
-    # Diagnostic: show whether accelerate has already patched these routers.
     for h in state.moe_layers[:2]:
         hf_hook = getattr(h.gate, "_hf_hook", None)
-        try:
-            forward_patched = h.gate.forward is not type(h.gate).forward.__get__(h.gate)
-        except Exception:
-            forward_patched = "unknown"
         log.info(
-            "layer %d gate (%s): _hf_hook=%s, forward_patched=%s",
+            "layer %d gate (%s): _hf_hook=%s, has_old_forward=%s",
             h.layer_index, type(h.gate).__name__,
             type(hf_hook).__name__ if hf_hook else "None",
-            forward_patched,
+            hasattr(h.gate, "_old_forward"),
         )
 
     def make_wrapper(layer_index: int, orig_fwd: Any, topk: int):
-        def patched_forward(hidden_states):
-            out = orig_fwd(hidden_states)
+        def patched_forward(*args, **kwargs):
+            out = orig_fwd(*args, **kwargs)
             with torch.no_grad():
                 if isinstance(out, tuple):
                     # GptOssTopKRouter returns (router_logits, router_scores, router_indices)
@@ -195,9 +191,18 @@ def attach_router_hooks(model: Any) -> RouterCaptureState:
         return patched_forward
 
     for h in state.moe_layers:
-        original_forward = h.gate.forward  # capture AFTER dispatch_model ran
-        h.gate.forward = make_wrapper(h.layer_index, original_forward, h.topk)
-        state._patched_forwards.append((h.gate, original_forward))
+        if hasattr(h.gate, "_old_forward"):
+            # accelerate installed AlignDevicesHook: new_forward calls
+            # module._old_forward as an attribute lookup on every call.
+            # We must patch _old_forward, not .forward.
+            orig = h.gate._old_forward
+            h.gate._old_forward = make_wrapper(h.layer_index, orig, h.topk)
+            state._patched_forwards.append((h.gate, orig, True))
+        else:
+            # No AlignDevicesHook: patch .forward, which fires through __call__.
+            orig = h.gate.forward
+            h.gate.forward = make_wrapper(h.layer_index, orig, h.topk)
+            state._patched_forwards.append((h.gate, orig, False))
 
     return state
 
@@ -206,8 +211,11 @@ def detach_hooks(state: RouterCaptureState) -> None:
     for handle in state._hook_handles:
         handle.remove()
     state._hook_handles = []
-    for router, orig_forward in state._patched_forwards:
-        router.forward = orig_forward
+    for router, orig_forward, patched_old in state._patched_forwards:
+        if patched_old:
+            router._old_forward = orig_forward
+        else:
+            router.forward = orig_forward
     state._patched_forwards.clear()
 
 
