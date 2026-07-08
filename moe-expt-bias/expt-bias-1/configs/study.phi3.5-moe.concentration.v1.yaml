@@ -22,7 +22,7 @@ slurm:
   time: 05:00:00
   cpus_per_task: 8
   gpus_per_node: 2
-  gpu_type: 80gb
+  gpu_type: h100
   use_gres: true
   mem: 96G
   modules: [gcc/12.3.0, python/3.11, cuda/12.1.1]

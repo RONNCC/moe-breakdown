@@ -30,24 +30,30 @@ from moe_bias_shapley.config import load_bias_study_config  # noqa: E402
 
 # Models to include in the ladder-wide ablation, with tuned max-pairs per model.
 # Smaller max-pairs for large models to stay within QOS GPU-min limits.
+# gpu_type_override / gpus_override: ICE uses model-name GRES labels (l40s, h100, h200),
+# not memory-size labels (40gb, 80gb) as set in the shared configs — override here.
 LADDER = [
-    # (config_path, max_pairs, routing_freq_pairs, time_limit)
-    # OLMoE 1B-7B: fast (1B active / 7B total), 1×40gb
-    ("configs/study.olmoe.concentration.yaml",         60, 200, "03:00:00"),
-    # Mixtral 8x7B: 4×H100, fast per-pass
-    ("configs/study.mixtral-8x7b.concentration.yaml",  30, 100, "02:00:00"),
-    # Phi-3.5-MoE: 42B, 2×80gb
-    ("configs/study.phi3.5-moe.concentration.yaml",    30, 100, "04:00:00"),
-    # OLMo-7B dense: 32 players, no routing_freq needed, very fast
-    ("configs/study.olmo-7b.dense-baseline.yaml",      60,   0, "02:00:00"),
+    # (config_path, max_pairs, routing_freq_pairs, time_limit, gpu_type_override, gpus_override)
+    # OLMoE 1B-7B: ~14GB total, 1×L40S (48GB)
+    ("configs/study.olmoe.concentration.yaml",         60, 200, "03:00:00", "l40s", 1),
+    # Mixtral 8x7B: 4×H100 (config already uses h100, no change needed)
+    ("configs/study.mixtral-8x7b.concentration.yaml",  30, 100, "02:00:00", "h100", 4),
+    # Phi-3.5-MoE: 42B bf16 ~84GB → 2×H100 (80GB each)
+    ("configs/study.phi3.5-moe.concentration.yaml",    30, 100, "04:00:00", "h100", 2),
+    # OLMo-7B dense: ~14GB, 1×L40S
+    ("configs/study.olmo-7b.dense-baseline.yaml",      60,   0, "02:00:00", "l40s", 1),
 ]
 
 
 def submit_one(config_path: str, max_pairs: int, routing_freq_pairs: int, time_limit: str,
-               dry_run: bool) -> None:
+               gpu_type_override: str | None, gpus_override: int | None, dry_run: bool) -> None:
     cfg_path = ROOT / config_path
     cfg = load_bias_study_config(cfg_path)
     slurm = cfg.slurm
+    if gpu_type_override is not None:
+        slurm.gpu_type = gpu_type_override
+    if gpus_override is not None:
+        slurm.gpus_per_node = gpus_override
 
     result_dir = Path(cfg.output_root).expanduser() / cfg.study_name
     out_dir = result_dir / "experiment6"
@@ -111,15 +117,15 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--dry-run", action="store_true")
     args = p.parse_args(argv)
 
-    targets = [(cfg, mp, rfp, tl) for cfg, mp, rfp, tl in LADDER
+    targets = [(cfg, mp, rfp, tl, gt, ng) for cfg, mp, rfp, tl, gt, ng in LADDER
                if args.config is None or Path(cfg).name == Path(args.config).name or cfg == args.config]
 
     if not targets:
         print(f"No matching configs for --config={args.config}")
         return 1
 
-    for cfg_path, max_pairs, rfp, time_limit in targets:
-        submit_one(cfg_path, max_pairs, rfp, time_limit, dry_run=args.dry_run)
+    for cfg_path, max_pairs, rfp, time_limit, gtype, ngpus in targets:
+        submit_one(cfg_path, max_pairs, rfp, time_limit, gtype, ngpus, dry_run=args.dry_run)
 
     return 0
 
