@@ -1,0 +1,760 @@
+{
+  "meta": {
+    "script": "s03_h1_verdict.py",
+    "h1": "sparser (smaller N_A/N) => higher concentration (higher Gini, lower H)",
+    "floors": {
+      "H": 0.02206635242614896,
+      "G": 0.046979481088872954,
+      "mean_abs_dH": 0.013649326705631515,
+      "mean_abs_dG": 0.030472888510949953
+    },
+    "drift_models": [
+      "olmoe-1b-7b",
+      "phi3.5-moe",
+      "mixtral-8x7b",
+      "dbrx"
+    ],
+    "sets": {
+      "all-6": {
+        "models": [
+          "olmoe-1b-7b",
+          "phi3.5-moe",
+          "mixtral-8x7b",
+          "dbrx",
+          "gpt-oss-120b",
+          "gemma4-26b"
+        ],
+        "note": "all stored runs (paper ladder + gpt-oss + gemma)"
+      },
+      "minus-gpt-oss-5": {
+        "models": [
+          "olmoe-1b-7b",
+          "phi3.5-moe",
+          "mixtral-8x7b",
+          "dbrx",
+          "gemma4-26b"
+        ],
+        "note": "advisors' claim: drop GPT-OSS (broken v1) -> H1 purportedly supported"
+      },
+      "paper-ladder-5": {
+        "models": [
+          "olmoe-1b-7b",
+          "phi3.5-moe",
+          "mixtral-8x7b",
+          "dbrx",
+          "gpt-oss-120b"
+        ],
+        "note": "paper ladder: gemma excluded (bias gap ~ 0); gpt-oss kept at v0"
+      },
+      "paper-valid-4": {
+        "models": [
+          "olmoe-1b-7b",
+          "phi3.5-moe",
+          "mixtral-8x7b",
+          "dbrx"
+        ],
+        "note": "paper ladder minus gpt-oss; dbrx shares N_A/N with mixtral"
+      },
+      "unique-sparsity-3": {
+        "models": [
+          "olmoe-1b-7b",
+          "phi3.5-moe",
+          "mixtral-8x7b"
+        ],
+        "note": "cleanest ladder: three distinct N_A/N levels, no broken/dup runs"
+      }
+    }
+  },
+  "ladder": {
+    "olmoe-1b-7b": {
+      "model": "olmoe-1b-7b",
+      "N_A": 16,
+      "N": 1024,
+      "N_A/N": 0.015625,
+      "H": 0.878624280562932,
+      "G": 0.6456658511906938,
+      "source": "v1",
+      "n_pairs": 5000,
+      "v1_broken": false,
+      "v1_missing": false,
+      "dH": -0.021574446943411707,
+      "dG": 0.046979481088872954,
+      "abs_dH": 0.021574446943411707,
+      "abs_dG": 0.046979481088872954
+    },
+    "phi3.5-moe": {
+      "model": "phi3.5-moe",
+      "N_A": 64,
+      "N": 512,
+      "N_A/N": 0.125,
+      "H": 0.877887861975776,
+      "G": 0.6435002382413835,
+      "source": "v1",
+      "n_pairs": 5000,
+      "v1_broken": false,
+      "v1_missing": false,
+      "dH": -0.010610395445186604,
+      "dG": 0.026514009053479004,
+      "abs_dH": 0.010610395445186604,
+      "abs_dG": 0.026514009053479004
+    },
+    "mixtral-8x7b": {
+      "model": "mixtral-8x7b",
+      "N_A": 64,
+      "N": 256,
+      "N_A/N": 0.25,
+      "H": 0.9166801044401266,
+      "G": 0.5188975396849678,
+      "source": "v1",
+      "n_pairs": 5000,
+      "v1_broken": false,
+      "v1_missing": false,
+      "dH": -0.00034611200777878715,
+      "dG": 0.002535472259412197,
+      "abs_dH": 0.00034611200777878715,
+      "abs_dG": 0.002535472259412197
+    },
+    "dbrx": {
+      "model": "dbrx",
+      "N_A": 160,
+      "N": 640,
+      "N_A/N": 0.25,
+      "H": 0.8969766105827284,
+      "G": 0.5995210048310162,
+      "source": "v1",
+      "n_pairs": 5000,
+      "v1_broken": false,
+      "v1_missing": false,
+      "dH": -0.02206635242614896,
+      "dG": 0.045862591642035655,
+      "abs_dH": 0.02206635242614896,
+      "abs_dG": 0.045862591642035655
+    },
+    "gpt-oss-120b": {
+      "model": "gpt-oss-120b",
+      "N_A": 144,
+      "N": 4608,
+      "N_A/N": 0.03125,
+      "H": 0.8795033760468665,
+      "G": 0.7236266024093357,
+      "source": "v0",
+      "n_pairs": 400,
+      "v1_broken": true,
+      "v1_missing": false
+    },
+    "gemma4-26b": {
+      "model": "gemma4-26b",
+      "N_A": 960,
+      "N": 3840,
+      "N_A/N": 0.25,
+      "H": 0.8220791357444899,
+      "G": 0.8214785550577732,
+      "source": "v0",
+      "n_pairs": 400,
+      "v1_broken": false,
+      "v1_missing": true
+    }
+  },
+  "sets": {
+    "all-6": {
+      "set": "all-6",
+      "models": [
+        "olmoe-1b-7b",
+        "phi3.5-moe",
+        "mixtral-8x7b",
+        "dbrx",
+        "gpt-oss-120b",
+        "gemma4-26b"
+      ],
+      "n": 6,
+      "H": {
+        "rho": 0.21251185925162072,
+        "rho_p": 0.686030866008896,
+        "expected_sign": "+ (H1: H rises as N_A/N rises)",
+        "rho_consistent_with_H1": true,
+        "n_distinct_pairs": 12,
+        "n_inversions": 5,
+        "inversions": [
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "phi3.5-moe"
+            ],
+            "delta": -0.0007364185871560069,
+            "abs_delta": 0.0007364185871560069,
+            "floor": 0.02206635242614896
+          },
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "gemma4-26b"
+            ],
+            "delta": -0.056545144818442084,
+            "abs_delta": 0.056545144818442084,
+            "floor": 0.02206635242614896
+          },
+          {
+            "pair": [
+              "gpt-oss-120b",
+              "phi3.5-moe"
+            ],
+            "delta": -0.001615514071090507,
+            "abs_delta": 0.001615514071090507,
+            "floor": 0.02206635242614896
+          },
+          {
+            "pair": [
+              "gpt-oss-120b",
+              "gemma4-26b"
+            ],
+            "delta": -0.057424240302376584,
+            "abs_delta": 0.057424240302376584,
+            "floor": 0.02206635242614896
+          },
+          {
+            "pair": [
+              "phi3.5-moe",
+              "gemma4-26b"
+            ],
+            "delta": -0.05580872623128608,
+            "abs_delta": 0.05580872623128608,
+            "floor": 0.02206635242614896
+          }
+        ],
+        "n_beyond_drift": 3,
+        "beyond_drift_pairs": [
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "gemma4-26b"
+            ],
+            "delta": -0.056545144818442084,
+            "abs_delta": 0.056545144818442084,
+            "floor": 0.02206635242614896
+          },
+          {
+            "pair": [
+              "gpt-oss-120b",
+              "gemma4-26b"
+            ],
+            "delta": -0.057424240302376584,
+            "abs_delta": 0.057424240302376584,
+            "floor": 0.02206635242614896
+          },
+          {
+            "pair": [
+              "phi3.5-moe",
+              "gemma4-26b"
+            ],
+            "delta": -0.05580872623128608,
+            "abs_delta": 0.05580872623128608,
+            "floor": 0.02206635242614896
+          }
+        ],
+        "sparsity_ties": [
+          [
+            "gemma4-26b",
+            "dbrx"
+          ],
+          [
+            "gemma4-26b",
+            "mixtral-8x7b"
+          ],
+          [
+            "dbrx",
+            "mixtral-8x7b"
+          ]
+        ],
+        "drift_floor": 0.02206635242614896,
+        "verdict_point": "no pattern",
+        "verdict_drift": "no pattern"
+      },
+      "G": {
+        "rho": -0.33394720739540396,
+        "rho_p": 0.5177002083054396,
+        "expected_sign": "- (H1: G falls as N_A/N rises)",
+        "rho_consistent_with_H1": true,
+        "n_distinct_pairs": 12,
+        "n_inversions": 4,
+        "inversions": [
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "gpt-oss-120b"
+            ],
+            "delta": 0.07796075121864199,
+            "abs_delta": 0.07796075121864199,
+            "floor": 0.046979481088872954
+          },
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "gemma4-26b"
+            ],
+            "delta": 0.17581270386707948,
+            "abs_delta": 0.17581270386707948,
+            "floor": 0.046979481088872954
+          },
+          {
+            "pair": [
+              "gpt-oss-120b",
+              "gemma4-26b"
+            ],
+            "delta": 0.09785195264843749,
+            "abs_delta": 0.09785195264843749,
+            "floor": 0.046979481088872954
+          },
+          {
+            "pair": [
+              "phi3.5-moe",
+              "gemma4-26b"
+            ],
+            "delta": 0.17797831681638976,
+            "abs_delta": 0.17797831681638976,
+            "floor": 0.046979481088872954
+          }
+        ],
+        "n_beyond_drift": 4,
+        "beyond_drift_pairs": [
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "gpt-oss-120b"
+            ],
+            "delta": 0.07796075121864199,
+            "abs_delta": 0.07796075121864199,
+            "floor": 0.046979481088872954
+          },
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "gemma4-26b"
+            ],
+            "delta": 0.17581270386707948,
+            "abs_delta": 0.17581270386707948,
+            "floor": 0.046979481088872954
+          },
+          {
+            "pair": [
+              "gpt-oss-120b",
+              "gemma4-26b"
+            ],
+            "delta": 0.09785195264843749,
+            "abs_delta": 0.09785195264843749,
+            "floor": 0.046979481088872954
+          },
+          {
+            "pair": [
+              "phi3.5-moe",
+              "gemma4-26b"
+            ],
+            "delta": 0.17797831681638976,
+            "abs_delta": 0.17797831681638976,
+            "floor": 0.046979481088872954
+          }
+        ],
+        "sparsity_ties": [
+          [
+            "mixtral-8x7b",
+            "dbrx"
+          ],
+          [
+            "mixtral-8x7b",
+            "gemma4-26b"
+          ],
+          [
+            "dbrx",
+            "gemma4-26b"
+          ]
+        ],
+        "drift_floor": 0.046979481088872954,
+        "verdict_point": "no pattern",
+        "verdict_drift": "no pattern"
+      },
+      "note": "all stored runs (paper ladder + gpt-oss + gemma)",
+      "verdict_point": "NOT SUPPORTED",
+      "verdict_drift": "NOT SUPPORTED",
+      "interpretation": "all-6: H rho=+0.213 (point no pattern; drift no pattern), inversions 5/12 (3 beyond floor 0.0221); G rho=-0.334 (point no pattern; drift no pattern), inversions 4/12 (4 beyond floor 0.0470); H-inv: olmoe-1b-7b@phi3.5-moe, olmoe-1b-7b@gemma4-26b, gpt-oss-120b@phi3.5-moe, gpt-oss-120b@gemma4-26b, phi3.5-moe@gemma4-26b, G-inv: olmoe-1b-7b@gpt-oss-120b, olmoe-1b-7b@gemma4-26b, gpt-oss-120b@gemma4-26b, phi3.5-moe@gemma4-26b."
+    },
+    "minus-gpt-oss-5": {
+      "set": "minus-gpt-oss-5",
+      "models": [
+        "olmoe-1b-7b",
+        "phi3.5-moe",
+        "mixtral-8x7b",
+        "dbrx",
+        "gemma4-26b"
+      ],
+      "n": 5,
+      "H": {
+        "rho": 0.22360679774997896,
+        "rho_p": 0.7176856442107858,
+        "expected_sign": "+ (H1: H rises as N_A/N rises)",
+        "rho_consistent_with_H1": true,
+        "n_distinct_pairs": 7,
+        "n_inversions": 3,
+        "inversions": [
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "phi3.5-moe"
+            ],
+            "delta": -0.0007364185871560069,
+            "abs_delta": 0.0007364185871560069,
+            "floor": 0.02206635242614896
+          },
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "gemma4-26b"
+            ],
+            "delta": -0.056545144818442084,
+            "abs_delta": 0.056545144818442084,
+            "floor": 0.02206635242614896
+          },
+          {
+            "pair": [
+              "phi3.5-moe",
+              "gemma4-26b"
+            ],
+            "delta": -0.05580872623128608,
+            "abs_delta": 0.05580872623128608,
+            "floor": 0.02206635242614896
+          }
+        ],
+        "n_beyond_drift": 2,
+        "beyond_drift_pairs": [
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "gemma4-26b"
+            ],
+            "delta": -0.056545144818442084,
+            "abs_delta": 0.056545144818442084,
+            "floor": 0.02206635242614896
+          },
+          {
+            "pair": [
+              "phi3.5-moe",
+              "gemma4-26b"
+            ],
+            "delta": -0.05580872623128608,
+            "abs_delta": 0.05580872623128608,
+            "floor": 0.02206635242614896
+          }
+        ],
+        "sparsity_ties": [
+          [
+            "gemma4-26b",
+            "dbrx"
+          ],
+          [
+            "gemma4-26b",
+            "mixtral-8x7b"
+          ],
+          [
+            "dbrx",
+            "mixtral-8x7b"
+          ]
+        ],
+        "drift_floor": 0.02206635242614896,
+        "verdict_point": "no pattern",
+        "verdict_drift": "no pattern"
+      },
+      "G": {
+        "rho": -0.3354101966249684,
+        "rho_p": 0.5810906728217107,
+        "expected_sign": "- (H1: G falls as N_A/N rises)",
+        "rho_consistent_with_H1": true,
+        "n_distinct_pairs": 7,
+        "n_inversions": 2,
+        "inversions": [
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "gemma4-26b"
+            ],
+            "delta": 0.17581270386707948,
+            "abs_delta": 0.17581270386707948,
+            "floor": 0.046979481088872954
+          },
+          {
+            "pair": [
+              "phi3.5-moe",
+              "gemma4-26b"
+            ],
+            "delta": 0.17797831681638976,
+            "abs_delta": 0.17797831681638976,
+            "floor": 0.046979481088872954
+          }
+        ],
+        "n_beyond_drift": 2,
+        "beyond_drift_pairs": [
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "gemma4-26b"
+            ],
+            "delta": 0.17581270386707948,
+            "abs_delta": 0.17581270386707948,
+            "floor": 0.046979481088872954
+          },
+          {
+            "pair": [
+              "phi3.5-moe",
+              "gemma4-26b"
+            ],
+            "delta": 0.17797831681638976,
+            "abs_delta": 0.17797831681638976,
+            "floor": 0.046979481088872954
+          }
+        ],
+        "sparsity_ties": [
+          [
+            "mixtral-8x7b",
+            "dbrx"
+          ],
+          [
+            "mixtral-8x7b",
+            "gemma4-26b"
+          ],
+          [
+            "dbrx",
+            "gemma4-26b"
+          ]
+        ],
+        "drift_floor": 0.046979481088872954,
+        "verdict_point": "no pattern",
+        "verdict_drift": "no pattern"
+      },
+      "note": "advisors' claim: drop GPT-OSS (broken v1) -> H1 purportedly supported",
+      "verdict_point": "NOT SUPPORTED",
+      "verdict_drift": "NOT SUPPORTED",
+      "interpretation": "minus-gpt-oss-5: H rho=+0.224 (point no pattern; drift no pattern), inversions 3/7 (2 beyond floor 0.0221); G rho=-0.335 (point no pattern; drift no pattern), inversions 2/7 (2 beyond floor 0.0470); H-inv: olmoe-1b-7b@phi3.5-moe, olmoe-1b-7b@gemma4-26b, phi3.5-moe@gemma4-26b, G-inv: olmoe-1b-7b@gemma4-26b, phi3.5-moe@gemma4-26b."
+    },
+    "paper-ladder-5": {
+      "set": "paper-ladder-5",
+      "models": [
+        "olmoe-1b-7b",
+        "phi3.5-moe",
+        "mixtral-8x7b",
+        "dbrx",
+        "gpt-oss-120b"
+      ],
+      "n": 5,
+      "H": {
+        "rho": 0.6668859288553503,
+        "rho_p": 0.21889398131323148,
+        "expected_sign": "+ (H1: H rises as N_A/N rises)",
+        "rho_consistent_with_H1": true,
+        "n_distinct_pairs": 9,
+        "n_inversions": 2,
+        "inversions": [
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "phi3.5-moe"
+            ],
+            "delta": -0.0007364185871560069,
+            "abs_delta": 0.0007364185871560069,
+            "floor": 0.02206635242614896
+          },
+          {
+            "pair": [
+              "gpt-oss-120b",
+              "phi3.5-moe"
+            ],
+            "delta": -0.001615514071090507,
+            "abs_delta": 0.001615514071090507,
+            "floor": 0.02206635242614896
+          }
+        ],
+        "n_beyond_drift": 0,
+        "beyond_drift_pairs": [],
+        "sparsity_ties": [
+          [
+            "dbrx",
+            "mixtral-8x7b"
+          ]
+        ],
+        "drift_floor": 0.02206635242614896,
+        "verdict_point": "consistent with monotone H1 direction",
+        "verdict_drift": "consistent with monotone H1 direction"
+      },
+      "G": {
+        "rho": -0.8720815992723809,
+        "rho_p": 0.05385421772754213,
+        "expected_sign": "- (H1: G falls as N_A/N rises)",
+        "rho_consistent_with_H1": true,
+        "n_distinct_pairs": 9,
+        "n_inversions": 1,
+        "inversions": [
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "gpt-oss-120b"
+            ],
+            "delta": 0.07796075121864199,
+            "abs_delta": 0.07796075121864199,
+            "floor": 0.046979481088872954
+          }
+        ],
+        "n_beyond_drift": 1,
+        "beyond_drift_pairs": [
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "gpt-oss-120b"
+            ],
+            "delta": 0.07796075121864199,
+            "abs_delta": 0.07796075121864199,
+            "floor": 0.046979481088872954
+          }
+        ],
+        "sparsity_ties": [
+          [
+            "mixtral-8x7b",
+            "dbrx"
+          ]
+        ],
+        "drift_floor": 0.046979481088872954,
+        "verdict_point": "consistent with monotone H1 direction",
+        "verdict_drift": "consistent with monotone H1 direction"
+      },
+      "note": "paper ladder: gemma excluded (bias gap ~ 0); gpt-oss kept at v0",
+      "verdict_point": "SUPPORTED",
+      "verdict_drift": "SUPPORTED",
+      "interpretation": "paper-ladder-5: H rho=+0.667 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 2/9 (0 beyond floor 0.0221); G rho=-0.872 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 1/9 (1 beyond floor 0.0470); H-inv: olmoe-1b-7b@phi3.5-moe, gpt-oss-120b@phi3.5-moe, G-inv: olmoe-1b-7b@gpt-oss-120b."
+    },
+    "paper-valid-4": {
+      "set": "paper-valid-4",
+      "models": [
+        "olmoe-1b-7b",
+        "phi3.5-moe",
+        "mixtral-8x7b",
+        "dbrx"
+      ],
+      "n": 4,
+      "H": {
+        "rho": 0.7378647873726218,
+        "rho_p": 0.26213521262737816,
+        "expected_sign": "+ (H1: H rises as N_A/N rises)",
+        "rho_consistent_with_H1": true,
+        "n_distinct_pairs": 5,
+        "n_inversions": 1,
+        "inversions": [
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "phi3.5-moe"
+            ],
+            "delta": -0.0007364185871560069,
+            "abs_delta": 0.0007364185871560069,
+            "floor": 0.02206635242614896
+          }
+        ],
+        "n_beyond_drift": 0,
+        "beyond_drift_pairs": [],
+        "sparsity_ties": [
+          [
+            "dbrx",
+            "mixtral-8x7b"
+          ]
+        ],
+        "drift_floor": 0.02206635242614896,
+        "verdict_point": "consistent with monotone H1 direction",
+        "verdict_drift": "consistent with monotone H1 direction"
+      },
+      "G": {
+        "rho": -0.9486832980505139,
+        "rho_p": 0.05131670194948613,
+        "expected_sign": "- (H1: G falls as N_A/N rises)",
+        "rho_consistent_with_H1": true,
+        "n_distinct_pairs": 5,
+        "n_inversions": 0,
+        "inversions": [],
+        "n_beyond_drift": 0,
+        "beyond_drift_pairs": [],
+        "sparsity_ties": [
+          [
+            "mixtral-8x7b",
+            "dbrx"
+          ]
+        ],
+        "drift_floor": 0.046979481088872954,
+        "verdict_point": "consistent with monotone H1 direction",
+        "verdict_drift": "consistent with monotone H1 direction"
+      },
+      "note": "paper ladder minus gpt-oss; dbrx shares N_A/N with mixtral",
+      "verdict_point": "SUPPORTED",
+      "verdict_drift": "SUPPORTED",
+      "interpretation": "paper-valid-4: H rho=+0.738 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 1/5 (0 beyond floor 0.0221); G rho=-0.949 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 0/5 (0 beyond floor 0.0470); H-inv: olmoe-1b-7b@phi3.5-moe, G-inv: none."
+    },
+    "unique-sparsity-3": {
+      "set": "unique-sparsity-3",
+      "models": [
+        "olmoe-1b-7b",
+        "phi3.5-moe",
+        "mixtral-8x7b"
+      ],
+      "n": 3,
+      "H": {
+        "rho": 0.5,
+        "rho_p": 0.6666666666666666,
+        "expected_sign": "+ (H1: H rises as N_A/N rises)",
+        "rho_consistent_with_H1": true,
+        "n_distinct_pairs": 3,
+        "n_inversions": 1,
+        "inversions": [
+          {
+            "pair": [
+              "olmoe-1b-7b",
+              "phi3.5-moe"
+            ],
+            "delta": -0.0007364185871560069,
+            "abs_delta": 0.0007364185871560069,
+            "floor": 0.02206635242614896
+          }
+        ],
+        "n_beyond_drift": 0,
+        "beyond_drift_pairs": [],
+        "sparsity_ties": [],
+        "drift_floor": 0.02206635242614896,
+        "verdict_point": "consistent with monotone H1 direction",
+        "verdict_drift": "consistent with monotone H1 direction"
+      },
+      "G": {
+        "rho": -1.0,
+        "rho_p": 0.0,
+        "expected_sign": "- (H1: G falls as N_A/N rises)",
+        "rho_consistent_with_H1": true,
+        "n_distinct_pairs": 3,
+        "n_inversions": 0,
+        "inversions": [],
+        "n_beyond_drift": 0,
+        "beyond_drift_pairs": [],
+        "sparsity_ties": [],
+        "drift_floor": 0.046979481088872954,
+        "verdict_point": "consistent with monotone H1 direction",
+        "verdict_drift": "consistent with monotone H1 direction"
+      },
+      "note": "cleanest ladder: three distinct N_A/N levels, no broken/dup runs",
+      "verdict_point": "SUPPORTED",
+      "verdict_drift": "SUPPORTED",
+      "interpretation": "unique-sparsity-3: H rho=+0.500 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 1/3 (0 beyond floor 0.0221); G rho=-1.000 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 0/3 (0 beyond floor 0.0470); H-inv: olmoe-1b-7b@phi3.5-moe, G-inv: none."
+    }
+  },
+  "comments": {
+    "all-6": "Both excluded runs sit off-trend: GPT-OSS at N_A/N=0.031 (2x LESS sparse than olmoe) has the HIGHEST Gini (0.724) of the ladder -- an inversion on the first rung, since the sparser olmoe (0.016) sits at only 0.646; and gemma at N_A/N=0.25 carries the maximum concentration (G=0.82) while mixtral/dbrx at the SAME sparsity sit at 0.52-0.60: a hard contradiction of any monotone sparsity->concentration law.",
+    "minus-gpt-oss-5": "Dropping GPT-OSS is not sufficient: gemma still inverts the direction at the top of the ladder (dG +0.18 vs olmoe, +0.18 vs phi3.5) and is beyond the resolvable floor; the remaining 4-model core is clean.",
+    "paper-ladder-5": "Gemma as a single exclusion (paper exclusion, bias gap ~ 0) is NOT enough either: gpt-oss's Gini (0.724) > olmoe's (0.646) at LOWER N_A/N remains a strict inversion on the first rung (beyond floor 0.047).",
+    "paper-valid-4": "The operative 4-model ladder: all three distinct-sparsity steps move H up and G down as N_A/N grows; the only face-value inversion (olmoe->phi, dH -0.0007) is ~30x below the H drift floor; the mixtral=dbrx same-sparsity pair is a tie, not a ladder rung.",
+    "unique-sparsity-3": "Three distinct N_A/N only (16/64/64 active of 1024/512/256): Gini arranges perfectly (Spearman -1.0, 0 inversions); the single H inversion at the first rung is inside the empirical drift floor, i.e. empirically unresolvable."
+  },
+  "final": {
+    "verdict_point": "NOT SUPPORTED / REJECTED (no monotone relation at full 6-model ladder); SUPPORTED for paper-valid-4 and unique-sparsity-3",
+    "verdict_drift": "NOT SUPPORTED / REJECTED (no resolvable monotone relation at full ladder); SUPPORTED for paper-valid-4 and unique-sparsity-3",
+    "rationale_point": "REJECTED (paper phrasing: 'no monotone relation') for the full 6-model ladder -- NOT SUPPORTED on point estimates; the monotone sparsity->concentration ranking recovers only after BOTH problem runs are removed (paper-valid-4 / unique-sparsity-3 -> SUPPORTED).",
+    "rationale_drift": "drift-aware: with the resolvable floor at H 0.0221 / G 0.0470, all wrong-direction deltas exceeding the floor involve gemma (H,G) and gpt-oss (G): still NOT SUPPORTED at ladder scale (paper's 'no monotone relation' stands); paper-valid-4 and unique-sparsity-3 remain SUPPORTED."
+  }
+}
