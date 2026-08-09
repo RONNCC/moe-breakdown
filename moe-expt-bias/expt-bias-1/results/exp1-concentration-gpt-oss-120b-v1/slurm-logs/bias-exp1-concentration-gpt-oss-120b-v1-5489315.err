@@ -1,0 +1,486 @@
+Using CPython 3.11.15
+Creating virtual environment at: /tmp/moe-bias-shapley-venv
+Activate with: source /tmp/moe-bias-shapley-venv/bin/activate
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 4 packages in 207ms
+Downloading pip (1.7MiB)
+ Downloaded pip
+Prepared 4 packages in 123ms
+Installed 4 packages in 26ms
+ + packaging==26.2
+ + pip==26.1.2
+ + setuptools==83.0.0
+ + wheel==0.47.0
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 4 packages in 215ms
+   Building moe-bias-shapley @ file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1
+Downloading numpy (16.1MiB)
+Downloading scipy (33.7MiB)
+ Downloaded numpy
+ Downloaded scipy
+      Built moe-bias-shapley @ file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1
+Prepared 4 packages in 759ms
+Installed 4 packages in 82ms
+ + moe-bias-shapley==0.1.0 (from file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1)
+ + numpy==2.4.6
+ + pyyaml==6.0.3
+ + scipy==1.17.1
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 23 packages in 685ms
+Downloading nvidia-cusparselt-cu12 (149.5MiB)
+Downloading nvidia-nvjitlink-cu12 (18.8MiB)
+Downloading nvidia-curand-cu12 (53.7MiB)
+Downloading nvidia-cudnn-cu12 (544.5MiB)
+Downloading nvidia-cufft-cu12 (190.9MiB)
+Downloading nvidia-nccl-cu12 (179.9MiB)
+Downloading nvidia-cuda-nvrtc-cu12 (22.6MiB)
+Downloading nvidia-cusparse-cu12 (206.5MiB)
+Downloading nvidia-cuda-cupti-cu12 (8.5MiB)
+Downloading nvidia-cublas-cu12 (374.9MiB)
+Downloading nvidia-cusolver-cu12 (150.9MiB)
+Downloading torch (729.2MiB)
+Downloading triton (159.0MiB)
+Downloading networkx (2.0MiB)
+Downloading sympy (5.9MiB)
+ Downloaded nvidia-nvjitlink-cu12
+ Downloaded nvidia-cuda-cupti-cu12
+ Downloaded nvidia-curand-cu12
+ Downloaded nvidia-cuda-nvrtc-cu12
+ Downloaded triton
+ Downloaded networkx
+ Downloaded nvidia-cufft-cu12
+ Downloaded nvidia-nccl-cu12
+ Downloaded nvidia-cusparse-cu12
+ Downloaded nvidia-cudnn-cu12
+ Downloaded nvidia-cusolver-cu12
+ Downloaded sympy
+ Downloaded nvidia-cublas-cu12
+ Downloaded torch
+Downloading nvidia-cusparselt-cu12 (149.5MiB)
+ Downloaded nvidia-cusparselt-cu12
+Prepared 23 packages in 29.59s
+Installed 23 packages in 966ms
+ + filelock==3.29.0
+ + fsspec==2026.4.0
+ + jinja2==3.1.6
+ + markupsafe==3.0.3
+ + mpmath==1.3.0
+ + networkx==3.6.1
+ + nvidia-cublas-cu12==12.6.4.1
+ + nvidia-cuda-cupti-cu12==12.6.80
+ + nvidia-cuda-nvrtc-cu12==12.6.77
+ + nvidia-cuda-runtime-cu12==12.6.77
+ + nvidia-cudnn-cu12==9.5.1.17
+ + nvidia-cufft-cu12==11.3.0.4
+ + nvidia-curand-cu12==10.3.7.77
+ + nvidia-cusolver-cu12==11.7.1.2
+ + nvidia-cusparse-cu12==12.5.4.2
+ + nvidia-cusparselt-cu12==0.6.3
+ + nvidia-nccl-cu12==2.21.5
+ + nvidia-nvjitlink-cu12==12.6.85
+ + nvidia-nvtx-cu12==12.6.77
+ + sympy==1.13.1
+ + torch==2.6.0+cu126
+ + triton==3.2.0
+ + typing-extensions==4.15.0
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 71 packages in 524ms
+Downloading tiktoken (1.1MiB)
+Downloading pandas (10.8MiB)
+Downloading aiohttp (1.7MiB)
+Downloading pygments (1.2MiB)
+Downloading hf-xet (4.3MiB)
+Downloading pyarrow (46.6MiB)
+Downloading transformers (11.0MiB)
+Downloading tokenizers (3.1MiB)
+Downloading sentencepiece (1.3MiB)
+ Downloaded sentencepiece
+ Downloaded tiktoken
+ Downloaded aiohttp
+ Downloaded tokenizers
+ Downloaded hf-xet
+ Downloaded pygments
+ Downloaded pandas
+ Downloaded pyarrow
+ Downloaded transformers
+Prepared 45 packages in 1.10s
+Installed 45 packages in 143ms
+ + accelerate==1.14.0
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.1
+ + aiosignal==1.4.0
+ + annotated-doc==0.0.4
+ + anyio==4.14.1
+ + attrs==26.1.0
+ + certifi==2026.6.17
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + datasets==5.0.0
+ + dill==0.4.1
+ + frozenlist==1.8.0
+ + h11==0.16.0
+ + hf-xet==1.5.1
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + huggingface-hub==1.22.0
+ + idna==3.18
+ + markdown-it-py==4.2.0
+ + mdurl==0.1.2
+ + multidict==6.7.1
+ + multiprocess==0.70.19
+ + pandas==3.0.3
+ + propcache==0.5.2
+ + protobuf==7.35.1
+ + psutil==7.2.2
+ + pyarrow==24.0.0
+ + pygments==2.20.0
+ + python-dateutil==2.9.0.post0
+ + regex==2026.6.28
+ + requests==2.34.2
+ + rich==15.0.0
+ + safetensors==0.8.0
+ + sentencepiece==0.2.1
+ + shellingham==1.5.4
+ + six==1.17.0
+ + tiktoken==0.13.0
+ + tokenizers==0.22.2
+ + tqdm==4.68.4
+ + transformers==5.13.0
+ + typer==0.26.8
+ + urllib3==2.7.0
+ + xxhash==3.8.1
+ + yarl==1.24.2
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 26 packages in 137ms
+Downloading bitsandbytes (57.8MiB)
+ Downloaded bitsandbytes
+Prepared 1 package in 784ms
+Installed 1 package in 32ms
+ + bitsandbytes==0.49.2
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 19 packages in 150ms
+Downloading kernels-data (1.2MiB)
+Downloading triton (188.5MiB)
+ Downloaded kernels-data
+ Downloaded triton
+Prepared 4 packages in 2.39s
+Uninstalled 1 package in 4ms
+Installed 4 packages in 117ms
+ + kernels==0.15.2
+ + kernels-data==0.16.0
+ + tomlkit==0.15.0
+ - triton==3.2.0
+ + triton==3.7.1
+[2026-07-08 03:19:21,342] INFO run_bias_study: === Study: exp1-concentration-gpt-oss-120b-v1 ===
+[2026-07-08 03:19:21,343] INFO run_bias_study: Model: openai/gpt-oss-120b | family: gpt-oss | shapley_method: routing_contrast
+[2026-07-08 03:19:21,343] INFO run_bias_study: Benchmarks: ['stereoset', 'bbq', 'winogender'] | max_prompts: 5000
+[2026-07-08 03:19:23,659] INFO moe_bias_shapley.benchmarks: Loading StereoSet (intrasentence / validation) …
+[2026-07-08 03:19:23,694] INFO httpx: HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+[2026-07-08 03:19:23,726] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:19:23,730] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/McGill-NLP/stereoset/bf6e7ce50491784d094fb7afe60a70ecccb89035/README.md "HTTP/1.1 200 OK"
+[2026-07-08 03:19:23,736] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/McGill-NLP/stereoset/bf6e7ce50491784d094fb7afe60a70ecccb89035/README.md "HTTP/1.1 200 OK"
+[2026-07-08 03:19:23,769] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/stereoset.py "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:23,854] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/McGill-NLP/stereoset/McGill-NLP/stereoset.py "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:23,895] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/revision/bf6e7ce50491784d094fb7afe60a70ecccb89035 "HTTP/1.1 200 OK"
+[2026-07-08 03:19:23,930] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:23,997] INFO httpx: HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=McGill-NLP/stereoset "HTTP/1.1 200 OK"
+[2026-07-08 03:19:24,033] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035/intersentence?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-08 03:19:24,068] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-08 03:19:24,103] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:24,141] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035/intrasentence?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-08 03:19:24,522] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/intrasentence/validation-00000-of-00001.parquet "HTTP/1.1 302 Found"
+Generating validation split:   0%|          | 0/2106 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 2106/2106 [00:00<00:00, 201051.65 examples/s]
+[2026-07-08 03:19:25,454] INFO moe_bias_shapley.benchmarks: Loaded 2106 StereoSet pairs from 2106 items
+[2026-07-08 03:19:25,454] INFO moe_bias_shapley.benchmarks: Loading BBQ category=Gender_identity split=test …
+[2026-07-08 03:19:25,489] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/refs%2Fconvert%2Fparquet/README.md "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:25,612] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/refs%2Fconvert%2Fparquet "HTTP/1.1 200 OK"
+[2026-07-08 03:19:25,645] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/bbq.py "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:25,669] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/heegyu/bbq/heegyu/bbq.py "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:25,702] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/README.md "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:25,734] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/da21e4bdbe74d6bed714ee80b4941c9c73958aea "HTTP/1.1 200 OK"
+[2026-07-08 03:19:25,770] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:25,804] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity%2Fdata?recursive=true&expand=false "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:25,853] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-08 03:19:25,894] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity%2Ftest?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-08 03:19:25,929] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-08 03:19:25,976] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:26,010] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity/test/0000.parquet "HTTP/1.1 302 Found"
+Generating test split: 0 examples [00:00, ? examples/s]Generating test split: 5672 examples [00:00, 567755.53 examples/s]
+[2026-07-08 03:19:26,997] INFO moe_bias_shapley.benchmarks: Loading BBQ category=Race_ethnicity split=test …
+[2026-07-08 03:19:27,030] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/refs%2Fconvert%2Fparquet/README.md "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:27,061] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/refs%2Fconvert%2Fparquet "HTTP/1.1 200 OK"
+[2026-07-08 03:19:27,091] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/bbq.py "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:27,119] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/heegyu/bbq/heegyu/bbq.py "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:27,148] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/README.md "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:27,180] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:27,218] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Race_ethnicity%2Fdata?recursive=true&expand=false "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:27,250] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Race_ethnicity?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-08 03:19:27,289] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Race_ethnicity%2Ftest?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-08 03:19:27,332] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:27,381] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Race_ethnicity/test/0000.parquet "HTTP/1.1 302 Found"
+Generating test split: 0 examples [00:00, ? examples/s]Generating test split: 6880 examples [00:00, 596572.56 examples/s]
+[2026-07-08 03:19:27,929] INFO moe_bias_shapley.benchmarks: Loaded 5000 BBQ pairs across 2 categories
+[2026-07-08 03:19:27,931] INFO moe_bias_shapley.benchmarks: Loaded 240 WinoGender pairs
+[2026-07-08 03:19:27,932] INFO moe_bias_shapley.benchmarks: Total prompt pairs: 5000
+[2026-07-08 03:19:33,216] INFO moe_bias_shapley.modeling: Loading tokenizer + model: openai/gpt-oss-120b (family=gpt-oss)
+[2026-07-08 03:19:33,255] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:19:33,260] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/config.json "HTTP/1.1 200 OK"
+[2026-07-08 03:19:33,265] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/config.json "HTTP/1.1 200 OK"
+[2026-07-08 03:19:33,305] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:19:33,309] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-07-08 03:19:33,314] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-07-08 03:19:33,349] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-120b/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:33,383] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-120b/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-08 03:19:33,419] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+[2026-07-08 03:19:33,874] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/tokenizer.model "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:33,910] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:33,943] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:19:33,947] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/special_tokens_map.json "HTTP/1.1 200 OK"
+[2026-07-08 03:19:33,952] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/special_tokens_map.json "HTTP/1.1 200 OK"
+[2026-07-08 03:19:33,984] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:19:33,988] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/chat_template.jinja "HTTP/1.1 200 OK"
+[2026-07-08 03:19:33,993] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/chat_template.jinja "HTTP/1.1 200 OK"
+[2026-07-08 03:19:35,574] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-120b "HTTP/1.1 200 OK"
+[2026-07-08 03:19:35,637] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:19:35,642] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/config.json "HTTP/1.1 200 OK"
+[2026-07-08 03:19:36,907] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+[2026-07-08 03:19:36,941] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:19:36,946] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/model.safetensors.index.json "HTTP/1.1 200 OK"
+[2026-07-08 03:19:36,951] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/model.safetensors.index.json "HTTP/1.1 200 OK"
+[2026-07-08 03:19:36,986] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-120b/revision/main "HTTP/1.1 200 OK"
+[2026-07-08 03:19:37,022] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-120b/tree/b5c939de8f754692c1647ca79fbf85e8c1e70f8a?recursive=true&expand=false "HTTP/1.1 200 OK"
+Fetching 15 files:   0%|          | 0/15 [00:00<?, ?it/s]Fetching 15 files:   7%|▋         | 1/15 [00:40<09:28, 40.61s/it]Fetching 15 files:  13%|█▎        | 2/15 [00:50<04:55, 22.71s/it]Fetching 15 files:  67%|██████▋   | 10/15 [00:52<00:15,  3.07s/it]Fetching 15 files:  93%|█████████▎| 14/15 [00:53<00:02,  2.08s/it]Fetching 15 files: 100%|██████████| 15/15 [00:55<00:00,  1.97s/it]Fetching 15 files: 100%|██████████| 15/15 [00:55<00:00,  3.67s/it]
+[2026-07-08 03:20:32,179] INFO httpx: HTTP Request: GET https://huggingface.co/api/organizations/kernels-community/overview "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,210] INFO httpx: HTTP Request: GET https://huggingface.co/api/kernels/kernels-community/gpt-oss-triton-kernels/refs "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,244] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/kernel-status.toml "HTTP/1.1 404 Not Found"
+[2026-07-08 03:20:32,278] INFO httpx: HTTP Request: GET https://huggingface.co/api/kernels/kernels-community/gpt-oss-triton-kernels/tree/11b3a6704b44c4806335bc52eea92b83cdd63d26/build?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,325] INFO httpx: HTTP Request: GET https://huggingface.co/api/kernels/kernels-community/gpt-oss-triton-kernels/revision/11b3a6704b44c4806335bc52eea92b83cdd63d26 "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,361] INFO httpx: HTTP Request: GET https://huggingface.co/api/kernels/kernels-community/gpt-oss-triton-kernels/tree/11b3a6704b44c4806335bc52eea92b83cdd63d26?recursive=true&expand=false "HTTP/1.1 200 OK"
+Fetching 43 files:   0%|          | 0/43 [00:00<?, ?it/s][2026-07-08 03:20:32,401] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/compaction.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,402] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/gpt_oss_triton_kernels/__init__.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,402] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/__init__.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,404] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/matmul_ogs_details/_common.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,405] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/compaction_details/_masked_compaction.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,406] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/matmul_ogs.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,406] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/_ops.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,408] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/matmul_ogs_details/_finalize_matmul.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,436] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fgpt_oss_triton_kernels%2F__init__.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,437] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fcompaction_details%2F_masked_compaction.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,438] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fcompaction.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,441] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2F_common.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,442] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2F_finalize_matmul.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,444] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2F_ops.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,444] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,462] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2F__init__.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,473] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2F_finalize_matmul.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,475] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fgpt_oss_triton_kernels%2F__init__.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,478] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2F_common.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,479] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fcompaction.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,480] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,483] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2F_ops.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,488] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fcompaction_details%2F_masked_compaction.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,499] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2F__init__.py "HTTP/1.1 200 OK"
+Fetching 43 files:   2%|▏         | 1/43 [00:00<00:05,  7.66it/s][2026-07-08 03:20:32,508] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/matmul_ogs_details/_matmul_ogs.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,509] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/matmul_ogs_details/_p_matmul_ogs.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,513] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/matmul_ogs_details/opt_flags_details/opt_flags_amd.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,515] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/matmul_ogs_details/opt_flags_details/opt_flags_nvidia.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,515] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/matmul_ogs_details/opt_flags_details/opt_flags_intel.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,517] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/matmul_ogs_details/opt_flags.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,520] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/metadata.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,534] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/metadata.json.sigstore "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,540] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2F_p_matmul_ogs.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,543] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2F_matmul_ogs.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,544] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2Fopt_flags_details%2Fopt_flags_nvidia.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,545] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2Fopt_flags_details%2Fopt_flags_amd.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,549] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2Fopt_flags_details%2Fopt_flags_intel.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,550] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2Fopt_flags.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,553] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmetadata.json "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,569] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmetadata.json.sigstore "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,584] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2Fopt_flags_details%2Fopt_flags_intel.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,586] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2Fopt_flags.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,587] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2Fopt_flags_details%2Fopt_flags_amd.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,589] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2Fopt_flags_details%2Fopt_flags_nvidia.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,594] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2F_p_matmul_ogs.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,613] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmetadata.json.sigstore "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,620] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/numerics_details/flexpoint.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,623] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmatmul_ogs_details%2F_matmul_ogs.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,624] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/numerics.py "HTTP/1.1 307 Temporary Redirect"
+Fetching 43 files:  21%|██        | 9/43 [00:00<00:00, 40.19it/s][2026-07-08 03:20:32,627] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/numerics_details/__init__.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,630] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/numerics_details/mxfp_details/_downcast_to_mxfp.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,637] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fmetadata.json "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,643] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/numerics_details/mxfp_details/_upcast_from_mxfp.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,649] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/numerics_details/mxfp.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,654] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fnumerics_details%2Fflexpoint.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,656] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/proton_opts.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,657] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/reduction_details/reduce_bitmatrix.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,658] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fnumerics.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,659] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fnumerics_details%2Fmxfp_details%2F_downcast_to_mxfp.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,671] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/routing.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,673] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fnumerics_details%2Fmxfp_details%2F_upcast_from_mxfp.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,685] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fnumerics_details%2Fmxfp.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,688] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fproton_opts.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,689] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Freduction_details%2Freduce_bitmatrix.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,690] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fnumerics_details%2Fmxfp_details%2F_downcast_to_mxfp.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,692] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fnumerics.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,702] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fnumerics_details%2Fflexpoint.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,703] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Frouting.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,711] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fnumerics_details%2Fmxfp_details%2F_upcast_from_mxfp.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,723] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fnumerics_details%2Fmxfp.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,730] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/routing_details/_routing_compute.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,738] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fproton_opts.py "HTTP/1.1 200 OK"
+Fetching 43 files:  53%|█████▎    | 23/43 [00:00<00:00, 75.77it/s][2026-07-08 03:20:32,745] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/routing_details/_expt_data.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,750] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Freduction_details%2Freduce_bitmatrix.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,755] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Frouting.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,761] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/swiglu.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,762] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/specialize.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,765] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/swiglu_details/_swiglu.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,784] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Frouting_details%2F_expt_data.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,789] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Frouting_details%2F_routing_compute.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,792] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/tensor.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,798] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/tensor_details/layout.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,802] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/target_info.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,805] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fspecialize.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,816] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fswiglu_details%2F_swiglu.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,832] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,834] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fswiglu.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,836] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Frouting_details%2F_routing_compute.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,839] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor_details%2Flayout.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,849] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftarget_info.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,858] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fspecialize.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,865] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,871] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/tensor_details/layout_details/base.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,887] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Frouting_details%2F_expt_data.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,888] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/tensor_details/layout_details/blackwell_scale.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,900] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor_details%2Flayout.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,900] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fswiglu_details%2F_swiglu.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,903] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/tensor_details/layout_details/hopper_scale.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,904] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftarget_info.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,919] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor_details%2Flayout_details%2Fblackwell_scale.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,931] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/testing.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,933] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor_details%2Flayout_details%2Fhopper_scale.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,938] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Fswiglu.py "HTTP/1.1 200 OK"
+Fetching 43 files:  72%|███████▏  | 31/43 [00:00<00:00, 57.07it/s][2026-07-08 03:20:32,950] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/tensor_details/layout_details/hopper_value.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,951] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/tensor_details/layout_details/strided.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,954] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/topk.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:32,957] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor_details%2Flayout_details%2Fbase.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,959] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor_details%2Flayout_details%2Fblackwell_scale.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,980] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor_details%2Flayout_details%2Fhopper_scale.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,981] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor_details%2Flayout_details%2Fstrided.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:32,997] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor_details%2Flayout_details%2Fbase.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:33,005] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/topk_details/__init__.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:33,008] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/topk_details/_topk_backward.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:33,014] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftopk.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:33,019] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor_details%2Flayout_details%2Fstrided.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:33,028] INFO httpx: HTTP Request: HEAD https://huggingface.co/kernels/kernels-community/gpt-oss-triton-kernels/resolve/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/topk_details/_topk_forward.py "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:33,044] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftopk_details%2F_topk_backward.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:33,059] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftopk_details%2F_topk_forward.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:33,063] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor_details%2Flayout_details%2Fhopper_value.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:33,072] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftesting.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:33,075] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftopk.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:33,095] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftopk_details%2F_topk_backward.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:33,100] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftensor_details%2Flayout_details%2Fhopper_value.py "HTTP/1.1 200 OK"
+Fetching 43 files:  88%|████████▊ | 38/43 [00:00<00:00, 51.91it/s][2026-07-08 03:20:33,107] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftesting.py "HTTP/1.1 200 OK"
+[2026-07-08 03:20:33,113] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/kernels/kernels-community/gpt-oss-triton-kernels/11b3a6704b44c4806335bc52eea92b83cdd63d26/build%2Ftorch-cuda%2Ftopk_details%2F_topk_forward.py "HTTP/1.1 200 OK"
+Fetching 43 files: 100%|██████████| 43/43 [00:00<00:00, 57.76it/s]
+Loading weights:   0%|          | 0/615 [00:00<?, ?it/s]Loading weights:   1%|          | 5/615 [00:02<04:56,  2.06it/s]Loading weights:   1%|          | 7/615 [00:03<04:53,  2.07it/s]Loading weights:   4%|▎         | 22/615 [00:04<01:19,  7.45it/s]Loading weights:  26%|██▌       | 158/615 [00:04<00:05, 78.33it/s]Loading weights:  33%|███▎      | 200/615 [00:04<00:04, 93.66it/s]Loading weights:  38%|███▊      | 233/615 [00:04<00:03, 106.20it/s]Loading weights:  42%|████▏     | 261/615 [00:04<00:02, 119.77it/s]Loading weights:  47%|████▋     | 287/615 [00:04<00:02, 130.58it/s]Loading weights:  51%|█████     | 311/615 [00:05<00:04, 75.01it/s] Loading weights:  53%|█████▎    | 329/615 [00:07<00:10, 27.58it/s]Loading weights:  56%|█████▌    | 342/615 [00:08<00:09, 30.10it/s]Loading weights:  75%|███████▌  | 464/615 [00:08<00:01, 93.99it/s]Loading weights:  83%|████████▎ | 508/615 [00:08<00:00, 108.56it/s]Loading weights:  89%|████████▊ | 545/615 [00:08<00:00, 122.33it/s]Loading weights:  94%|█████████▍| 577/615 [00:08<00:00, 131.61it/s]Loading weights:  98%|█████████▊| 605/615 [00:09<00:00, 136.12it/s]Loading weights: 100%|██████████| 615/615 [00:09<00:00, 67.96it/s] 
+[2026-07-08 03:20:43,882] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-08 03:20:43,887] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/generation_config.json "HTTP/1.1 200 OK"
+[2026-07-08 03:20:43,891] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/generation_config.json "HTTP/1.1 200 OK"
+[2026-07-08 03:20:43,977] INFO moe_bias_shapley.hooks: Discovered 36 MoE layers
+Traceback (most recent call last):
+  File "/home/hice1/sghose7/scratch/moe-breakdown/moe-expt-bias/expt-bias-1/scripts/run_bias_study.py", line 103, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/hice1/sghose7/scratch/moe-breakdown/moe-expt-bias/expt-bias-1/scripts/run_bias_study.py", line 98, in main
+    run_study(cfg, out_dir, dry_run=args.dry_run, shard_idx=args.shard_idx, num_shards=args.num_shards)
+  File "/home/hice1/sghose7/scratch/moe-breakdown/moe-expt-bias/expt-bias-1/scripts/run_bias_study.py", line 67, in run_study
+    result = compute_routing_contrast(model, tokenizer, pairs, device=str(device), demographic_key=demographic_key)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1/src/moe_bias_shapley/shapley.py", line 119, in compute_routing_contrast
+    logp_stereo = _sequence_logprob(model, tokenizer, pair.stereo, device)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1/src/moe_bias_shapley/shapley.py", line 75, in _sequence_logprob
+    out = model(**enc, labels=enc["input_ids"])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/accelerate/hooks.py", line 192, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/transformers/utils/generic.py", line 911, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/transformers/models/gpt_oss/modeling_gpt_oss.py", line 653, in forward
+    outputs: MoeModelOutputWithPast = self.model(
+                                      ^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/transformers/utils/generic.py", line 1040, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/transformers/utils/output_capturing.py", line 252, in wrapper
+    outputs = func(self, *args, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/transformers/models/gpt_oss/modeling_gpt_oss.py", line 494, in forward
+    hidden_states = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/transformers/modeling_layers.py", line 93, in __call__
+    return super().__call__(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/accelerate/hooks.py", line 192, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/transformers/models/gpt_oss/modeling_gpt_oss.py", line 390, in forward
+    hidden_states, _ = self.mlp(hidden_states)  # diff with llama: router scores
+                       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/accelerate/hooks.py", line 192, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/transformers/integrations/mxfp4.py", line 485, in mlp_forward
+    routed_out = self.experts(hidden_states, routing_data, gather_idx, scatter_idx=scatter_idx)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/accelerate/hooks.py", line 192, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/moe-bias-shapley-venv/lib/python3.11/site-packages/transformers/integrations/mxfp4.py", line 377, in forward
+    intermediate_cache1 = matmul_ogs(
+                          ^^^^^^^^^^^
+  File "/tmp/sghose7-tmp/hf_cache/kernels--kernels-community--gpt-oss-triton-kernels/snapshots/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/matmul_ogs.py", line 444, in matmul_ogs
+    opt_flags = make_opt_flags(out_dtype, x.dtype, w.dtype, precision_config,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/sghose7-tmp/hf_cache/kernels--kernels-community--gpt-oss-triton-kernels/snapshots/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/matmul_ogs_details/opt_flags.py", line 377, in make_opt_flags
+    return make_default_opt_flags_nvidia(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/sghose7-tmp/hf_cache/kernels--kernels-community--gpt-oss-triton-kernels/snapshots/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/matmul_ogs_details/opt_flags.py", line 288, in make_default_opt_flags_nvidia
+    ns = opt_flags_nvidia.compute_num_stages(*compute_num_stages_args, ep, epilogue_effective_itemsize)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/sghose7-tmp/hf_cache/kernels--kernels-community--gpt-oss-triton-kernels/snapshots/11b3a6704b44c4806335bc52eea92b83cdd63d26/build/torch-cuda/matmul_ogs_details/opt_flags_details/opt_flags_nvidia.py", line 81, in compute_num_stages
+    smem_capacity = device_props.shared_memory_per_block_optin
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'torch._C._CudaDeviceProperties' object has no attribute 'shared_memory_per_block_optin'

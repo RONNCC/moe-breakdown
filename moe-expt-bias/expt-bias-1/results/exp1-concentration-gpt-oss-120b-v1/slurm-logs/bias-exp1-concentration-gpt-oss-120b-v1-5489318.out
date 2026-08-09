@@ -1,0 +1,21 @@
+---------------------------------------
+Begin Slurm Prolog: Jul-08-2026 03:23:37
+Job ID:    5489318
+User ID:   sghose7
+Account:   coc
+Job name:  bias-exp1-concentration-gpt-oss-120b-v1
+Partition: ice-gpu
+QOS:       coc-ice
+---------------------------------------
+---------------------------------------
+Begin Slurm Epilog: Jul-08-2026 03:23:40
+Job ID:        5489318
+User ID:       sghose7
+Account:       coc
+Job name:      bias-exp1-concentration-gpt-oss-120b-v1
+Resources:     cpu=16,gres/gpu:h100=2,mem=200G,node=1
+Rsrc Used:     cput=00:01:20,vmem=0,walltime=00:00:05,mem=364940K,energy_used=0
+Partition:     ice-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-03-013-13-0
+---------------------------------------

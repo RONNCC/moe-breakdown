@@ -1,0 +1,111 @@
+{
+  "metadata": {
+    "study_name": "exp1-concentration-gpt-oss-120b-v1",
+    "model_id": "openai/gpt-oss-120b",
+    "model_family": "gpt-oss",
+    "benchmarks": [
+      "stereoset",
+      "bbq",
+      "winogender"
+    ],
+    "shapley_method": "routing_contrast",
+    "seed": 42
+  },
+  "method": "routing_contrast",
+  "n_pairs": 5000,
+  "n_players": 4608,
+  "bias_scores": {
+    "mean_bias_gap": 0.08685948696136475,
+    "std_bias_gap": 0.3592315782074521
+  },
+  "concentration_metrics": {
+    "entropy": 0.0,
+    "gini": 0.0,
+    "top_5_fraction": 0.0,
+    "top_10pct_fraction": 0.0,
+    "n_players": 4608,
+    "n_nonzero": 0
+  },
+  "top_players": [
+    {
+      "player_id": "layer0-expert0",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert1",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert2",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert3",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert4",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert5",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert6",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert7",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert8",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert9",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert10",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert11",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert12",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert13",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert14",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert15",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert16",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert17",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert18",
+      "phi": 0.0
+    },
+    {
+      "player_id": "layer0-expert19",
+      "phi": 0.0
+    }
+  ]
+}

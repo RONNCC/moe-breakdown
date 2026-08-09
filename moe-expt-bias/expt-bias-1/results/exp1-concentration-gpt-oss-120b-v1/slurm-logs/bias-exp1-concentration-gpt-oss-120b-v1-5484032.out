@@ -1,0 +1,26 @@
+---------------------------------------
+Begin Slurm Prolog: Jul-07-2026 17:08:53
+Job ID:    5484032
+User ID:   sghose7
+Account:   coc
+Job name:  bias-exp1-concentration-gpt-oss-120b-v1
+Partition: ice-gpu
+QOS:       coc-ice
+---------------------------------------
+[slurm] WORKDIR=/home/hice1/sghose7/scratch/moe-breakdown
+[slurm] ROOT_DIR=/home/hice1/sghose7/scratch/moe-breakdown/moe-expt-bias/expt-bias-1
+[slurm] STUDY_CONFIG=/storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1/configs/study.gpt-oss-120b.concentration.v1.yaml
+[slurm] OUT_DIR=/storage/ice1/0/2/sghose7/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-gpt-oss-120b-v1
+[slurm] GPUs visible: 1
+---------------------------------------
+Begin Slurm Epilog: Jul-07-2026 17:13:21
+Job ID:        5484032
+User ID:       sghose7
+Account:       coc
+Job name:      bias-exp1-concentration-gpt-oss-120b-v1
+Resources:     cpu=16,gres/gpu:h100=1,mem=200G,node=1
+Rsrc Used:     cput=01:11:44,vmem=0,walltime=00:04:29,mem=209693692K,energy_used=0
+Partition:     ice-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-03-012-23-0
+---------------------------------------

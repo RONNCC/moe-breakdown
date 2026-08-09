@@ -19,6 +19,7 @@ def save_results(
     result: AttributionResult,
     metadata: Dict[str, Any],
     shard_tag: Optional[str] = None,
+    save_per_pair: bool = False,
 ) -> Path:
     """Save an AttributionResult + its concentration metrics + run metadata.
 
@@ -26,6 +27,11 @@ def save_results(
     Multi-shard: writes result_<shard_tag>.json / phi_<shard_tag>.npy so that
     all shards for the same study land in the same directory and can be merged
     post-hoc by globbing result_shard*.json.
+
+    With `save_per_pair=True` (and per_pair_phi present on the result), also
+    writes per_pair_phi.npy [(n_pairs, n_players), un-normalized] plus
+    pair_meta.json [{index, benchmark, group}] for bootstrap resampling.
+    Sharded runs get per_pair_phi_<shard_tag>.npy / pair_meta_<shard_tag>.json.
     """
     out_dir = Path(out_dir).expanduser()
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -66,6 +72,12 @@ def save_results(
             safe_name = group.replace("/", "_").replace(" ", "_")
             suffix = f"_{shard_tag}" if shard_tag else ""
             np.save(out_dir / f"phi_group_{safe_name}{suffix}.npy", phi.flatten())
+
+    if save_per_pair and result.per_pair_phi is not None:
+        suffix = f"_{shard_tag}" if shard_tag else ""
+        np.save(out_dir / f"per_pair_phi{suffix}.npy", result.per_pair_phi)
+        if result.pair_meta is not None:
+            (out_dir / f"pair_meta{suffix}.json").write_text(json.dumps(result.pair_meta, indent=2))
 
     log.info("Saved bias-Shapley results to %s", out_dir)
     return out_dir / f"{result_stem}.json"

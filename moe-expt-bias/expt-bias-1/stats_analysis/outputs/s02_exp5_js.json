@@ -1,0 +1,88 @@
+{
+  "n_cohorts": 85,
+  "phi_dim": 1024,
+  "pairwise_js": {
+    "n_pairs": 3570,
+    "mean": 0.2213,
+    "sd_across_pairs": 0.0508,
+    "min": 0.0626,
+    "max": 0.4133,
+    "bootstrap95_ci_of_mean": [
+      0.206,
+      0.2311
+    ]
+  },
+  "expert_index_permutation_null": {
+    "mean": 0.3092,
+    "sd": 0.0336,
+    "p95": 0.3711,
+    "p99": 0.3967,
+    "pct_observed_pairs_gt_null_p95": 0.5
+  },
+  "reported_label_permutation_null": {
+    "mean": 0.05,
+    "sd": 0.01,
+    "NOTE": "paper-as-reported; needs per-prompt assignment, not on disk"
+  },
+  "cohort_vs_pool_js": {
+    "mean": 0.1484,
+    "sd": 0.0178
+  },
+  "per_cohort_concentration": {
+    "entropy_mean": 0.8852,
+    "entropy_sd": 0.0264,
+    "gini_mean": 0.6383
+  },
+  "top_divergent_pairs": [
+    [
+      "Vietnam",
+      "software_developer",
+      0.271
+    ],
+    [
+      "Spain",
+      "butcher",
+      0.235
+    ],
+    [
+      "Norway",
+      "Lebanon",
+      0.23
+    ],
+    [
+      "Norway",
+      "African",
+      0.229
+    ],
+    [
+      "Ethiopia",
+      "manager",
+      0.221
+    ],
+    [
+      "Iranian",
+      "Ecuador",
+      0.221
+    ],
+    [
+      "Italy",
+      "Eritrean",
+      0.212
+    ],
+    [
+      "Eritrean",
+      "tailor",
+      0.203
+    ],
+    [
+      "Iraq",
+      "prosecutor",
+      0.195
+    ],
+    [
+      "Vietnam",
+      "sister",
+      0.193
+    ]
+  ]
+}

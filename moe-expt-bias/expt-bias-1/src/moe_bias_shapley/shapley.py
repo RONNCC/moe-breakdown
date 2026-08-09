@@ -56,6 +56,8 @@ class AttributionResult:
     bias_scores: Dict[str, float]   # aggregate bias metrics for sanity-checking
     per_group_phi: Optional[Dict[str, np.ndarray]] = None  # for demographic split (RQ3)
     routing_freq: Optional[np.ndarray] = None  # [num_players] mean routing weight (no bias scaling)
+    per_pair_phi: Optional[np.ndarray] = None  # (n_pairs, n_players) un-normalized per-pair contributions (bootstrap)
+    pair_meta: Optional[List[dict]] = None     # per-pair {index, benchmark, group} alignment
 
 
 def _bias_gap_from_logits(logp_stereo: float, logp_anti: float) -> float:
@@ -77,6 +79,38 @@ def _sequence_logprob(model: Any, tokenizer: Any, text: str, device: str) -> flo
         return float(-out.loss.item())
 
 
+def _with_router_capture(model: Any, tokenizer: Any, text: str, device: str, state: "RouterCaptureState") -> float:
+    """Teacher-forced logprob + router capture for kernel-replaced MoE forwards.
+
+    On transformers versions that replace the gate forward with a hub kernel
+    (e.g. gpt-oss / MegaBlocks), the gate modules never execute so forward-hooks
+    stay empty. Those versions still expose native router-logit output: request
+    output_router_logits=True and back-fill `state.captured` (keyed by layer
+    index, same schema as the hook path).
+    """
+    import torch
+    import torch.nn.functional as F
+
+    enc = tokenizer(text, return_tensors="pt").to(device)
+    with torch.no_grad():
+        out = model(**enc, labels=enc["input_ids"], output_router_logits=True)
+        rls = getattr(out, "router_logits", None)
+        if rls is not None:
+            for li, lg in enumerate(rls):
+                if li >= len(state.moe_layers) or lg is None:
+                    break
+                routing_weights = torch.softmax(lg.float(), dim=-1)
+                k = max(getattr(state.moe_layers[li], "topk", 1), 1)
+                topk_weight, topk_idx = torch.topk(routing_weights, k=k, dim=-1)
+                state.captured[li] = {
+                    "router_logits": lg.detach(),
+                    "topk_idx": topk_idx.detach(),
+                    "topk_weight": topk_weight.detach(),
+                }
+        # out.loss is mean NLL over tokens; convert to mean logprob.
+        return float(-out.loss.item())
+
+
 # =========================================================================== #
 # Method 1: routing-contrast (fast, RGIS-style approximation)                  #
 # =========================================================================== #
@@ -87,6 +121,8 @@ def compute_routing_contrast(
     pairs: List[PromptPair],
     device: str = "cuda",
     demographic_key: Optional[str] = None,
+    save_per_pair: bool = False,
+    router_capture: str = "hooks",
 ) -> AttributionResult:
     """Fast expert-level bias attribution using router weights as the
     coalition-membership signal (no expert ablation needed — one forward
@@ -101,6 +137,10 @@ def compute_routing_contrast(
     which is the router-weighted version of the counterfactual bias-gap
     payoff (Sec 2.3), attributing more of the gap to experts that route more
     strongly on the stereotype side relative to the anti-stereotype side.
+
+    With `save_per_pair=True`, the un-normalized per-pair contribution rows
+    are retained on the result (per_pair_phi, pair_meta) for bootstrapping
+    H/Gini over prompt pairs and permuting cohort labels for a JS null.
     """
     state = attach_router_hooks(model)
     if not state.moe_layers:
@@ -115,14 +155,22 @@ def compute_routing_contrast(
 
     gaps: List[float] = []
 
+    def _logp(text: str) -> float:
+        if router_capture == "outputs":
+            return _with_router_capture(model, tokenizer, text, device, state)
+        return _sequence_logprob(model, tokenizer, text, device)
+
+    per_pair_phi = np.zeros((len(pairs), num_layers * max_experts), dtype=np.float64) if save_per_pair else None
+    pair_meta: List[dict] = []
+
     for i, pair in enumerate(pairs):
-        logp_stereo = _sequence_logprob(model, tokenizer, pair.stereo, device)
+        logp_stereo = _logp(pair.stereo)
         state_stereo = {li: {k: v.clone() for k, v in d.items()} for li, d in state.captured.items()}
         if i == 0:
             log.info("routing_contrast pair=0 stereo: state.captured layers=%s",
                      sorted(state_stereo.keys()) if state_stereo else "EMPTY — hooks not firing")
 
-        logp_anti = _sequence_logprob(model, tokenizer, pair.anti_stereo, device)
+        logp_anti = _logp(pair.anti_stereo)
         state_anti = {li: {k: v.clone() for k, v in d.items()} for li, d in state.captured.items()}
         if i == 0:
             log.info("routing_contrast pair=0 anti: state.captured layers=%s",
@@ -130,6 +178,16 @@ def compute_routing_contrast(
 
         bias_gap = _bias_gap_from_logits(logp_stereo, logp_anti)
         gaps.append(bias_gap)
+
+        pair_group = None
+        if demographic_key is not None:
+            if hasattr(pair, demographic_key):
+                pair_group = getattr(pair, demographic_key) or "unknown"
+            else:
+                pair_group = pair.extra.get(demographic_key, "unknown")
+
+        if save_per_pair:
+            phi_pair = np.zeros_like(phi)
 
         for li in range(num_layers):
             if li not in state_stereo or li not in state_anti:
@@ -173,14 +231,17 @@ def compute_routing_contrast(
             phi[li, :n_experts] += contribution
             routing_freq[li, :n_experts] += (mean_w_s + mean_w_a) / 2.0
 
+            if save_per_pair:
+                phi_pair[li, :n_experts] += contribution
+
             if demographic_key is not None:
-                if hasattr(pair, demographic_key):
-                    group = getattr(pair, demographic_key) or "unknown"
-                else:
-                    group = pair.extra.get(demographic_key, "unknown")
-                if group not in per_group_phi:
-                    per_group_phi[group] = np.zeros_like(phi)
-                per_group_phi[group][li, :n_experts] += contribution
+                if pair_group not in per_group_phi:
+                    per_group_phi[pair_group] = np.zeros_like(phi)
+                per_group_phi[pair_group][li, :n_experts] += contribution
+
+        if save_per_pair:
+            per_pair_phi[i] = phi_pair.flatten()
+            pair_meta.append({"index": i, "benchmark": pair.source, "group": pair_group})
 
         if (i + 1) % 25 == 0:
             log.info("routing_contrast: processed %d/%d pairs", i + 1, len(pairs))
@@ -210,6 +271,8 @@ def compute_routing_contrast(
         },
         per_group_phi=per_group_phi or None,
         routing_freq=routing_freq.flatten(),
+        per_pair_phi=per_pair_phi if save_per_pair else None,
+        pair_meta=pair_meta if save_per_pair else None,
     )
 
 
@@ -480,6 +543,7 @@ def compute_dense_layer_contrast(
     tokenizer: Any,
     pairs: List[PromptPair],
     device: str = "cuda",
+    save_per_pair: bool = False,
 ) -> AttributionResult:
     """Leave-one-out (LOO) approximation of per-layer bias contribution for
     dense models. Not exact Shapley (the full-layer coalition space is
@@ -488,6 +552,9 @@ def compute_dense_layer_contrast(
     over prompt pairs. This is explicitly flagged as an approximation in the
     returned AttributionResult.method field so downstream H/Gini comparisons
     (Experiment 2 / RQ2) are interpreted with that caveat (Sec 2.6).
+
+    With `save_per_pair=True`, the un-normalized per-pair per-layer
+    contributions are retained on the result for bootstrap resampling.
     """
     import torch
 
@@ -495,6 +562,9 @@ def compute_dense_layer_contrast(
     n_layers = len(layers)
     phi = np.zeros(n_layers, dtype=np.float64)
     gaps: List[float] = []
+
+    per_pair_phi = np.zeros((len(pairs), n_layers), dtype=np.float64) if save_per_pair else None
+    pair_meta: List[dict] = []
 
     for i, pair in enumerate(pairs):
         logp_s_full = _sequence_logprob(model, tokenizer, pair.stereo, device)
@@ -517,6 +587,11 @@ def compute_dense_layer_contrast(
                 layer.module.forward = original_forward
 
             phi[layer.layer_index] += (full_gap - ablated_gap)
+            if save_per_pair:
+                per_pair_phi[i, layer.layer_index] = full_gap - ablated_gap
+
+        if save_per_pair:
+            pair_meta.append({"index": i, "benchmark": pair.source, "group": None})
 
         if (i + 1) % 10 == 0:
             log.info("dense_loo: processed %d/%d pairs", i + 1, len(pairs))
@@ -535,6 +610,8 @@ def compute_dense_layer_contrast(
             "mean_bias_gap": float(np.mean(gaps)) if gaps else 0.0,
             "std_bias_gap": float(np.std(gaps)) if gaps else 0.0,
         },
+        per_pair_phi=per_pair_phi if save_per_pair else None,
+        pair_meta=pair_meta if save_per_pair else None,
     )
 
 

@@ -1,0 +1,447 @@
+{
+  "readme": {
+    "title": "Bias-attribution readings (Framing A vs Framing B)",
+    "framing_a": "Framing A -- 'sparsity concentrates bias'; outlier experts carry it; the paper's metrics are readings of real bias.",
+    "framing_b": "Framing B -- 'no separable bias substrate'; the metric is a routing-contrast, correlational quantity; the attachment belongs to the capability backbone.",
+    "method": "Verbatim quotes pulled by verified line anchors from the SAME file; each row asserts token ground-truth. Line numbers were verified live against the file before generation.",
+    "governance_rules": [
+      "Any claim whose verbatim text already contains 'no', 'rejected', 'not', or 'caveat' is governed by that clause and cannot be quoted out of it.",
+      "The E2 line (252) is the *flagged caveat*: metric measures routing structure, not causal bias magnitude. All rows citing concrete number statements inherit its scope."
+    ],
+    "methods_line_count": 423
+  },
+  "rows": [
+    {
+      "id": "A1",
+      "kind": "front-matter",
+      "section": "abstract question",
+      "claim": "RQ1 as posed: does bias attribution concentrate as routing sparsity increases?",
+      "lines": [
+        29
+      ],
+      "fa": "Neutral: the question belongs to Framing A; the answer (A3) rejects it.",
+      "fb": "Answerable under B as well; the paper's verdict is 'no'.",
+      "conflict": "None at question level; conflict unfolds elsewhere.",
+      "quote": "\\item Does bias attribution become more concentrated as routing sparsity increases?"
+    },
+    {
+      "id": "A2",
+      "kind": "method",
+      "section": "abstract method sentence",
+      "claim": "Instrument: gate-level 'routing-contrast proxy formulation' over a sparsity ladder of six open MoEs.",
+      "lines": [
+        35
+      ],
+      "fa": "Framing A stresses 'attribution'; this sentence already labels the instrument 'proxy'.",
+      "fb": "Framing B's reading: the metric is routing contrast, i.e. correlational.",
+      "conflict": "The word 'proxy' seeds the whole A-vs-B dispute.",
+      "quote": "Using a gate-level \\textbf{routing-contrast proxy formulation} across StereoSet, BBQ, and WinoGender (standard stereotype and demographic-bias benchmarks), we audit a diverse sparsity ladder of six open MoE models (spanning routing sparsity ratios $N_A/N \\in [0.016, 0.250]$, where $N_A$ is the number of active routed experts per token and $N$ is the total experts per layer). To evaluate our metric's reliability, we incorporate layer-level causal Leave-One-Out (LOO, a method that measures each component's contribution by removing it and measuring the output change) evaluations on dense models as a baseline reference, validating that our metric successfully discriminates different topological organizations. Evaluating the modular monosemanticity narrative, our findings reveal that:"
+    },
+    {
+      "id": "A3",
+      "kind": "result",
+      "section": "abstract bullet 1 — no sparsity scaling",
+      "claim": "Headline: no monotone scaling of bias concentration; H in [0.88,0.92] vs 0.982 noise floor.",
+      "lines": [
+        37
+      ],
+      "metric": "H, H_noise",
+      "fa": "Directly rejects the core monotone premise of Framing A.",
+      "fb": "Exactly the B-expected reading; both share the same numbers.",
+      "conflict": "Unilateral ground: the numbers are not disputed between framings, the interpretation is.",
+      "quote": "\\item \\textbf{No Sparsity Scaling ($H_1$ Rejected):} At the gate level, routing sparsity does not correlate monotonically with bias concentration, as all audited MoEs exhibit near-maximum normalized Shannon entropy ($H \\in [0,1]$, where $H=1$ is uniform diffusion) of bias attribution ($H \\approx 0.88$--$0.92$, relative to a counterfactual shuffled-label noise floor of $H_{\\text{noise}} \\approx 0.982$);"
+    },
+    {
+      "id": "A4",
+      "kind": "result",
+      "section": "abstract bullet 2 — no expert-level localization",
+      "claim": "rho ~ 0; selectivity low/negative; ITL ablation matches; curve = damage curve.",
+      "lines": [
+        38
+      ],
+      "metric": "rho, selectivity",
+      "fa": "Refutes any single-expert or concentrated-bias claim in A.",
+      "fb": "Core B statement, verbatim intact.",
+      "conflict": "Hard conflict with expert-localization claims.",
+      "quote": "\\item \\textbf{No Expert-Level Localization Signal (Selectivity Collapse):} Exact Spearman rank-correlation between routing-contrast proxy and causal rankings yields $\\rho \\approx 0$ ($\\rho \\in [-0.085, +0.058]$ across layers, Exp~7). Physical zero-ablation of the top $9.9\\%$ of proxy-ranked experts yields model-dependent results: OLMoE $+57\\%$ bias reduction at a $233\\%$ perplexity cost (selectivity $= 0.24$); Phi-3.5-MoE $+30\\%$ at $+22\\%$ perplexity (selectivity $= 1.35$); Mixtral $-12\\%$ (proxy \\emph{increases} bias). Frequency-ranked ablation matches or exceeds the proxy in $2/3$ models with no theoretical targeting. The ablation curve is the model-damage curve: bias and general capability are coupled with no separable localization signal (Exp~6);"
+    },
+    {
+      "id": "A5",
+      "kind": "result",
+      "section": "abstract bullet 3 — early-layer synergy",
+      "claim": "Early layers >70% dominated by nonlinear pairwise interaction.",
+      "lines": [
+        39
+      ],
+      "fa": "Interactive attribution contradicts the singleton-expert reading.",
+      "fb": "Supports B's collective-slot story.",
+      "conflict": "Partial.",
+      "quote": "\\item \\textbf{Early-Layer Synergy:} Early-layer routing is dominated by complex, non-additive pairwise expert interactions ($>70\\%$); and"
+    },
+    {
+      "id": "A6",
+      "kind": "result",
+      "section": "abstract bullet 4 — demographic specificity",
+      "claim": "Diffuse within each cohort but specific across cohorts.",
+      "lines": [
+        40
+      ],
+      "fa": "'Diffuse in each cohort' again contradicts the concentration narrative.",
+      "fb": "B-friendly conditional specificity.",
+      "conflict": "None severe; tension lurks in 'diffuse within cohort'.",
+      "quote": "\\item \\textbf{Demographic Specificity:} Although diffuse within each cohort, biases are demographically specific, triggering distinct, subgroup-specific subnetworks across demographic cohorts."
+    },
+    {
+      "id": "A7",
+      "kind": "result",
+      "section": "abstract concluding causal paragraph",
+      "claim": "'Social bias is systemic; single-expert debiasing is not viable'.",
+      "lines": [
+        42
+      ],
+      "fa": "Stand-in that Framing A would have to argue around.",
+      "fb": "Directly gives B's own sentence.",
+      "conflict": "Unambiguous sentence-level contradiction with concentratable-bias claims.",
+      "quote": "Our causal ablation and proxy-validation experiments demonstrate that social bias is a systemic property deeply coupled with core language capabilities in sparse MoEs. Bias has no separable expert-level substrate: the routing-contrast proxy does not map causal contributions ($\\rho \\approx 0$, Exp~7); proxy ablation selectivity is low or negative ($0.24$ for OLMoE, negative for Mixtral, $1.35$ for Phi-3.5-MoE); and frequency-ranked ablation provides comparable or superior debiasing in $2/3$ models with no targeting. Single-expert debiasing is therefore not a viable alignment strategy."
+    },
+    {
+      "id": "B1",
+      "kind": "question",
+      "section": "RQ1 definitional line",
+      "claim": "RQ1 restated in the introduction: does sparsity -> concentration?",
+      "lines": [
+        73
+      ],
+      "fa": "Same question (Framing A).",
+      "fb": "Framing B can answer it too.",
+      "quote": "\\item \\textbf{RQ1 (Sparsity Scaling \\& Concentration):} Across MoE models of increasing routing sparsity (lower active expert fraction $N_A/N$), does bias attribution become more concentrated in fewer experts? I.e., does sparsity $\\rightarrow$ concentration?"
+    },
+    {
+      "id": "B2",
+      "kind": "result",
+      "section": "RQ1 verdict",
+      "claim": "Verdict: REJECTED; GPT-OSS G=0.724 vs OLMoE G=0.646 despite 2x sparsity.",
+      "lines": [
+        75
+      ],
+      "metric": "H, G",
+      "fa": "Empirical 'Rejected' of the Sparsity-to-Concentration claim.",
+      "fb": "As expected.",
+      "quote": "\\item \\textit{Verdict:} \\textbf{Rejected (H1 Rejected).} We find no monotonic relation between routing sparsity and bias concentration. For instance, GPT-OSS-120B ($N_A/N = 0.031$, $H = 0.880$, Gini coefficient $G = 0.724$) is more concentrated than OLMoE-1B-7B-v1 ($N_A/N = 0.016$, $H = 0.879$, $G = 0.646$) despite OLMoE being twice as sparse. Scale, training objectives, and data alignment override the routing sparsity ratio."
+    },
+    {
+      "id": "B3",
+      "kind": "result",
+      "section": "RQ2 verdict",
+      "claim": "70.2-74.4% synergy; 'standing committees' statement.",
+      "lines": [
+        85
+      ],
+      "metric": "synergy%",
+      "fa": "Disproves the attributable-to-individual-experts reading.",
+      "fb": "Exactly the B statement; includes a near-quote to B's own framing.",
+      "quote": "\\item \\textit{Verdict:} \\textbf{Synergy Dominates.} In early layers, $70.2\\% - 74.4\\%$ of total attribution is driven by non-additive pairwise synergy. This demonstrates that experts act as ``standing committees'' rather than isolated biased agents, and individual expert-contrast metrics underestimate the true diffuseness of bias."
+    },
+    {
+      "id": "B4",
+      "kind": "result",
+      "section": "RQ3 verdict",
+      "claim": "Subgroup-specific subnetworks; D_JS 0.42 vs null 0.05.",
+      "lines": [
+        90
+      ],
+      "metric": "D_JS",
+      "fa": "'Diffuse' + subgroup-specific only partially aligns with A's hub story.",
+      "fb": "B-positive.",
+      "quote": "\\item \\textit{Verdict:} \\textbf{Subgroup-Specific Subnetworks.} Social bias is subgroup-specific at the expert level. We observe non-trivial Jensen-Shannon divergence ($D_{JS}$, a symmetric distance metric between probability distributions, where $D_{JS}=0.0$ indicates identical expert activation profiles and $D_{JS}=1.0$ indicates completely disjoint sets) between absolute attribution distributions across cohorts ($D_{\\text{JS}} \\approx 0.42$ vs.\\ null floor $\\approx 0.05$). While bias is diffuse within each cohort, experts activate substantially divergent routing profiles across specific demographic targets."
+    },
+    {
+      "id": "B5",
+      "kind": "verdict",
+      "section": "hypotheses H1 & H0",
+      "claim": "The pre-registered hypothesis pair: H1 sparsity-to-concentration (REJECTED), H0 selectivity collapse (STRONGLY SUPPORTED).",
+      "lines": [
+        97,
+        98
+      ],
+      "fa": "A maps directly onto H1, which this very block marks REJECTED.",
+      "fb": "H0 marked STRONGLY SUPPORTED; that IS Framing B.",
+      "conflict": "Block is self-verdict: H1=REJECTED, H0=STRONGLY SUPPORTED.",
+      "quote": "\\item \\textbf{$H_1$ (Sparsity-to-Concentration):} Bias concentration is monotonically increasing as routing sparsity ($N_A/N$) increases. Sparser models (lower $N_A/N$) will exhibit lower normalized Shannon entropy ($H$) and higher Gini ($G$) of bias attribution. \\textbf{[Verdict: REJECTED]}\n\\item \\textbf{$H_0$ (Capability Coupling / Selectivity Collapse):} Social bias has no separable expert-level substrate. The routing-contrast proxy will not predict causal expert rankings, proxy-ranked ablation will match frequency-ranked ablation, and causal ablation will collapse selectivity ($\\Delta\\text{bias} / \\Delta\\text{perplexity} \\approx 1.0$) because social bias rides on general-capability backbone experts rather than dedicated bias hubs. \\textbf{[Verdict: STRONGLY SUPPORTED]}"
+    },
+    {
+      "id": "C1",
+      "kind": "method",
+      "section": "ladder definition",
+      "claim": "Ten permissively licensed models designed to isolate sparsity effects.",
+      "lines": [
+        195
+      ],
+      "metric": "(ladder)",
+      "quote": "Our ladder consists of ten permissively licensed models designed to isolate the impact of routing sparsity ($N_A/N$) and architectural design on bias concentration:"
+    },
+    {
+      "id": "C2",
+      "kind": "method",
+      "section": "table 1 caption",
+      "claim": "Dataset split note: 5000-pair main runs vs 400-pair pilot (GPT-OSS, Gemma).",
+      "lines": [
+        199
+      ],
+      "fa": "Feed note only; both framings.",
+      "fb": "Feed note only; both framings.",
+      "quote": "\\caption{The Sparsity-to-Density Model Ladder evaluated across our counterfactual prompts. MoE models use v1 full-dataset runs (5000 pairs) except GPT-OSS-120B\\textsuperscript{$\\dagger\\dagger$} and Gemma 4 26B\\textsuperscript{$\\dagger$} (v0 pilot, 400 pairs). Dense baselines use v1 sharded runs.}"
+    },
+    {
+      "id": "C3",
+      "kind": "method",
+      "section": "table 1 footnote (Gemma)",
+      "claim": "Gemma excluded: H=0.822, G=0.821 read as routing noise; near-zero bias gap.",
+      "lines": [
+        219
+      ],
+      "metric": "H, G",
+      "fa": "Border claim (v0 dataset + confound); B reads as structural exclusion.",
+      "fb": "Consistent: the metrics are labelled noise, so this is not 'bias' evidence.",
+      "quote": "\\noindent{\\small \\textit{$\\dagger$~Gemma 4 26B's routing metrics ($H=0.822$, $G=0.821$) reflect routing noise rather than actual bias attribution; its near-zero bias gap ($\\approx 0$) means the model is excluded from the $H_1$ sparsity-scaling analysis. $\\dagger\\dagger$~GPT-OSS-120B uses the v0 pilot dataset (400 pairs) because a full v1 rerun was deferred; its MXFP4 quantization is a further confound for scaling comparisons (see §5.1). Llama-2-7B is included as a cross-generation dense baseline (Llama 2 vs.\\ Llama 3.1) confirming that diffuseness is stable across training generations ($H = 0.695$).}}"
+    },
+    {
+      "id": "D1",
+      "kind": "experiment",
+      "section": "Exp1 opener",
+      "claim": "States the Sparsity-to-Concentration Hypothesis being tested.",
+      "lines": [
+        224
+      ],
+      "fa": "Restates A; a hypothesis-test parent.",
+      "fb": "Restates the very hypothesis A has already lost.",
+      "quote": "We evaluate the Sparsity-to-Concentration Hypothesis ($H_1$), which predicts that scarcer active fractions (lower $N_A/N$) drive bias into fewer, more concentrated experts."
+    },
+    {
+      "id": "D2",
+      "kind": "result",
+      "section": "Fig1 caption",
+      "claim": "Entropy across sparsity; 'does not correlate monotonically'.",
+      "lines": [
+        229
+      ],
+      "metric": "H",
+      "fa": "Caption wording presupposes attribution though H is measured.",
+      "fb": "Same caption supports B's reading if H is accepted as noise-correlated.",
+      "quote": "\\caption{Entropy of bias attribution ($H$) plotted across routing sparsity ratios ($N_A/N$) for our experimental models, indicating that routing sparsity does not correlate monotonically with bias concentration.}"
+    },
+    {
+      "id": "D3",
+      "kind": "method",
+      "section": "noise floor",
+      "claim": "H_noise ~ 0.982 via shuffle; definition of perfect randomness.",
+      "lines": [
+        233
+      ],
+      "metric": "H_noise",
+      "fa": "Baseline healthy.",
+      "fb": "Baseline healthy.",
+      "quote": "To establish a rigorous baseline, we compute the \\textbf{noise floor} of our entropy metric by shuffling the counterfactual prompt labels (stereo/anti). Shuffling yields an entropy of $H_{\\text{noise}} \\approx 0.982$, representing perfect uniform randomness."
+    },
+    {
+      "id": "D4",
+      "kind": "result",
+      "section": "Exp1 gate-level result paragraphs",
+      "claim": "No monotone sparsity-concentration link (GPT-OSS G=0.724 vs OLMoE G=0.646 despite 2x sparsity); GPT-OSS MXFP4 quantization flagged as confound.",
+      "lines": [
+        245
+      ],
+      "metric": [
+        "H",
+        "G"
+      ],
+      "fa": "Against A: the ladder result is described in routing-correlation terms, and the one near-0.88 outlier carries an architectural confound.",
+      "fb": "Exactly B's result text.",
+      "quote": "Furthermore, we find no monotonic correlation between routing sparsity and concentration. Crucially, GPT-OSS-120B exhibits a much higher Gini coefficient ($\\text{Gini} = 0.724$) than OLMoE-1B-7B-v1 ($\\text{Gini} = 0.646$), despite OLMoE being twice as sparse. Similarly, Phi-3.5-MoE exhibits greater concentration ($\\text{Gini} = 0.644$) than the twice-as-sparse OLMoE, while Mixtral ($H=0.917$, $\\text{Gini}=0.519$) is the most diffuse. This direct violation of monotonicity demonstrates that routing sparsity alone does not drive concentration. We note that GPT-OSS is natively released with 4-bit block-scaled low-precision microscaling (MXFP4) applied directly to its MoE projection weights, while other tensors remain in bfloat16 (BF16). Its higher concentration therefore carries an architectural confound: a direct sparsity-scaling comparison between GPT-OSS and other ladder models is not strictly valid, and its Gini value should not be used to assert a scaling trend. The rejection of $H_1$ is robust even excluding GPT-OSS, since OLMoE (sparsest), Phi-3.5-MoE, and Mixtral already fail to follow a monotone H or Gini trend across their sparsity values."
+    },
+    {
+      "id": "E1",
+      "kind": "experiment",
+      "section": "Gemma section",
+      "claim": "Gemma 26B: bias gap ~0; metrics reflect raw routing noise; alignment can collapse bias to the noise floor.",
+      "lines": [
+        248,
+        250
+      ],
+      "metric": "bias gap, H",
+      "fa": "A-defeating phrasing: 'under our audit its H reflect noise, not attribution'.",
+      "fb": "Frames B: no bias instance; metrics are uninterpreted noise.",
+      "quote": "A major highlighted finding of our study is the behavior of \\textbf{Gemma 4 26B}. Evaluating Gemma 4 on our counterfactual prompts revealed a baseline Mean Bias Gap of approximately $0.0$, indicating that it is natively well-aligned on these specific benchmarks. Under our post-hoc audit, its concentration metrics ($H=0.822$, $G=0.821$) reflect raw routing noise rather than actual bias attribution.\nThis is one of our strongest practical findings: post-training alignment can successfully collapse the social bias signal to the noise floor entirely, proving that safety post-training is a robust defense against routing-level stereotyping bias."
+    },
+    {
+      "id": "E2",
+      "kind": "flagged",
+      "section": "Gate-metric caveat",
+      "claim": "THE flagged statement: metric measures routing structure, not causal bias magnitude.",
+      "lines": [
+        252
+      ],
+      "metric": "H",
+      "flagged": true,
+      "fa": "De-couples whatever A meant the metric to be; concentration becomes unmeasured.",
+      "fb": "The sentence to quote in every downstream claim that cites H.",
+      "quote": "A noteworthy corollary is that Gemma 4's gate-level $H = 0.822$ falls \\textit{below} the biased MoE range of $0.88$--$0.92$. This is consistent with Exp~7's finding ($\\rho \\approx 0$) that routing-contrast $H$ tracks routing statistics rather than bias signal strength: when bias gap $\\approx 0$, the $\\phi_e$ values reflect routing frequency patterns rather than stereotype-differential routing, and the resulting distribution can appear more concentrated than a full-noise draw. The metric is measuring routing structure, not causal bias magnitude—a caveat that applies across the ladder."
+    },
+    {
+      "id": "E3",
+      "kind": "result",
+      "section": "Exp2 fig2 caption",
+      "claim": "Fig2 caption: 'Absolute bias-Shapley' concentration bars.",
+      "lines": [
+        257
+      ],
+      "metric": "G, H",
+      "fa": "Under A the tag 'bias' borrows causal load the caveat detaches.",
+      "fb": "Caption keeps the label while the E2 caveat flags it.",
+      "quote": "\\caption{Absolute bias-Shapley concentration bars (Gini and Shannon entropy) across the model ladder, showing highly diffuse bias-proxy profiles ($H \\approx 0.88 - 0.92$) regardless of scaling or routing constraints.}"
+    },
+    {
+      "id": "R1",
+      "kind": "result",
+      "section": "DBRX architectural replication",
+      "claim": "DBRX H=0.897 vs Mixtral H=0.917 at N_A/N=0.25; robustly diffuse across architectures.",
+      "lines": [
+        261
+      ],
+      "metric": "H, G",
+      "fa": "Supports only 'metrics similar', not a bias claim.",
+      "fb": "Good B row: diffusion persists across architectures.",
+      "quote": "A major highlight of this experiment is our \\textbf{architectural replication at $N_A/N = 0.250$}. We evaluated \\textbf{DBRX-instruct-v1} (Databricks, top-4/16, 132B parameters) and found $H = 0.897$ and Gini = $0.600$, which closely aligns with \\textbf{Mixtral-8x7B-v1} ($H = 0.917$, Gini = $0.519$) at the exact same active expert fraction. Despite being trained by different organizations on entirely different corpora with different scales, both massive architectures at $N_A/N = 0.250$ yield highly diffuse, closely comparable bias signatures. This provides supporting evidence that routing-contrast bias-proxies are \\textbf{robustly diffuse} in current MoE architectures."
+    },
+    {
+      "id": "R2",
+      "kind": "method",
+      "section": "Exp2 dense baseline controls",
+      "claim": "Dense controls H ~ 0.66-0.76 vs MoE 0.88-0.92: metric discriminates topologies.",
+      "lines": [
+        273
+      ],
+      "metric": "H",
+      "fa": "Under A the sanity check is about metric resolution, not bias claim.",
+      "fb": "Clarifies the metric has finite resolution; B fine.",
+      "quote": "The concentration metric successfully discriminates: we observe relatively concentrated profiles ($H \\approx 0.66 - 0.76$) across the dense baseline controls, compared to the highly diffuse ($H \\approx 0.88 - 0.92$) profiles observed across MoEs. This significant and stable gap empirically confirms that near-maximum MoE diffuseness is a genuine, robust architectural property and not a floor compression artifact of our measurement setup."
+    },
+    {
+      "id": "R3",
+      "kind": "result",
+      "section": "early-layer synergy",
+      "claim": "Universal early-layer synergy cluster 70.2-74.4%; experts act as committees.",
+      "lines": [
+        307
+      ],
+      "metric": "synergy%",
+      "fa": "Directly anti-'single expert' reading; A must synthesize.",
+      "fb": "Closely word-based B row.",
+      "quote": "We discover a \\textbf{universal early-layer synergy cluster} of $70.2\\% - 74.4\\%$ across all architectures and routing sparsities. This means that in the early stages of network routing, bias is not a property of individual experts, but is instead dominated by non-linear, collaborative pairwise interactions."
+    },
+    {
+      "id": "R4",
+      "kind": "result",
+      "section": "routing-contrast underestimation",
+      "claim": "'Routing-contrast underestimates the true diffuseness of bias.'",
+      "lines": [
+        311
+      ],
+      "fa": "Anti-localization sentence.",
+      "fb": "Core B row.",
+      "quote": "This interaction dominance confirms that \\textbf{routing-contrast underestimates the true diffuseness of bias}. Because early-layer representations are fundamentally collaborative, attempting to isolate bias to single experts ignores the massive pairwise synergy driving the stereotypical representation."
+    },
+    {
+      "id": "R5",
+      "kind": "result",
+      "section": "Exp4 interpretation bullets",
+      "claim": "Flat-early/steep-late = damage curve of general capability; no bias map; not surgically separable.",
+      "lines": [
+        336,
+        337,
+        339
+      ],
+      "metric": "H_LOO",
+      "fa": "These bullets define a localized-bias-free reading of the ablation.",
+      "fb": "Stops the map-making in its tracks; A's hub story has no mechanism left.",
+      "quote": "\\item \\textbf{Flat-Early, Steep-Late as the Damage Curve:} Our ablation curve shows a ``flat-early, steep-late'' shape. However, since Experiment~7 ($\\rho \\approx 0$) establishes that the proxy ranking is uncorrelated with causal bias effects, this shape reflects how \\textit{general capability} is concentrated in high-traffic experts—not where bias is localized. The bottom $90\\%$ of proxy-ranked experts are low-traffic, low-impact capacity nodes; the top $10\\%$ are the general backbone. Removing the backbone removes a substantial fraction of the bias for the same reason it removes general language capability—both ride on the same high-traffic substrate.\n\\item \\textbf{No Expert-Level Localization Signal—Surgically Inseparable:} There are no dedicated bias experts. Social bias is \\textbf{not surgically separable} because it rides on the same high-traffic, general-capability hubs required for core language function. Selectivity is low across the board: the best case (Phi-3.5-MoE: 1.35) means every $1\\%$ of bias removed costs $0.74\\%$ of perplexity; for OLMoE selectivity is $0.24$ ($1\\%$ bias removal costs $4.2\\%$ perplexity); for Mixtral the proxy selectivity is negative. Critically, frequency-ranked ablation provides comparable or superior bias reduction in $2/3$ MoE models without targeting any theoretically-motivated localization signal.\nTogether with Experiment~7 ($\\rho \\approx 0$), these results converge on a single conclusion: social bias is a deeply integrated, capability-coupled property of sparse MoEs. There is no expert-level localization signal; the ablation curve is the model-damage curve, not a bias map."
+    },
+    {
+      "id": "R6",
+      "kind": "result",
+      "section": "Exp5 JS divergence",
+      "claim": "D_JS 0.42 vs 0.05 null; 'substantially divergent routing profiles'.",
+      "lines": [
+        344,
+        349
+      ],
+      "metric": "D_JS",
+      "fa": "Group-level diffuse-within hinders the designated-bias-hub schema.",
+      "fb": "Default B outcome on group-level evidence.",
+      "quote": "To quantify whether different subgroups activate non-overlapping sets of experts, we compute the \\textbf{Jensen-Shannon (JS) Divergence} between the absolute attribution vectors of different demographic cohorts (e.g., gender-focused vs.\\ race-focused prompts). For two demographic groups $A$ and $B$, let their normalized absolute attribution distributions be $P_A$ and $P_B$. The JS divergence is:\nOur experimental results reveal \\textbf{highly significant, quantitative divergence} between the absolute attribution vectors across different demographic cohorts. Across our 66 cohorts, we find a mean demographic JS divergence of \\textbf{$D_{\\text{JS}} \\approx 0.42$} (with values ranging from $0.35$ to $0.48$). To establish a baseline, we generate a counterfactual null distribution by randomly shuffling demographic cohort labels, which yields a permutation null floor of \\textbf{$D_{\\text{JS, null}} \\approx 0.05 \\pm 0.01$}. Note that $D_{\\text{JS}} = 0.42$ indicates \\textit{substantially divergent} routing profiles; substantial overlap remains across cohorts ($D_{\\text{JS}} = 1.0$ would indicate fully disjoint sets). The key result is the large signal-to-null gap ($0.42 \\gg 0.05$). This divergence confirms that while bias is universally diffuse within each individual cohort, \\textbf{experts activate substantially divergent routing profiles across specific demographic targets ($D_{\\text{JS}} \\gg D_{\\text{JS, null}}$)}."
+    },
+    {
+      "id": "R7",
+      "kind": "result",
+      "section": "Exp5 takeaway",
+      "claim": "No single 'global' bias pathway; subgroups differ in routing profiles.",
+      "lines": [
+        351
+      ],
+      "fa": "As the fig text gives capability-less nuance, an A-er may re-claim partial concentration per subgroup.",
+      "fb": "B consistent.",
+      "conflict": "None.",
+      "quote": "Thus, social bias in MoEs is not driven by a singular, overarching biased routing pathway; rather, it is represented by specialized, subgroup-specific sub-networks that are triggered dynamically by group-specific cues. The absence of a single ``global'' bias pathway further demonstrates that experts exhibit targeted demographic sensitivity, even while their individual stereotyping contributions remain heavily diffuse within each target cohort."
+    },
+    {
+      "id": "R8",
+      "kind": "result",
+      "section": "Exp6/7 robustness: rho ~ 0",
+      "claim": "rho first -0.085 / last 0.058; routing-contrast is correlational, not causal map.",
+      "lines": [
+        366
+      ],
+      "metric": "rho",
+      "fa": "The 'correlational framing' is explicitly labelled — the causal map is absent.",
+      "fb": "Exact B claim-statements, verbatim.",
+      "quote": "\\textbf{Experiment 7 (Proxy-vs-Causal Agreement).} To validate our fast \\texttt{routing\\_contrast} proxy, we computed the exact \\textbf{Spearman rank correlation $\\rho$} between absolute proxy attributions ($|\\hat{\\phi}_{\\text{routing-contrast}}|$) and absolute exact causal Leave-One-Out (LOO) rankings ($|\\hat{\\phi}_{\\text{exact}}|$) across the active expert set of Mixtral-8x7B ($K=2/8$, yielding $2^8 = 256$ exact coalitions evaluated per token). Across evaluated layers, we observed extremely low and noisy direct rank-correlation coefficients (first layer: $\\rho = -0.085 \\pm 0.37$; last layer: $\\rho = +0.058 \\pm 0.44$; both consistent with zero). This confirms that while routing gates serve as powerful correlational markers of high-frequency active pathways, they \\textbf{do not act as a direct causal map} of downstream stereotyping payoffs due to high representation redundancy (synergy) and attention mixing. This directly validates our rigorous, correlational framing of gate-level measurements as a ``routing-contrast proxy.''"
+    },
+    {
+      "id": "R9",
+      "kind": "result",
+      "section": "Exp8 layer-LOO stability",
+      "claim": "H_LOO 0.8830 vs H_routing 0.8779; diffuseness stable across method.",
+      "lines": [
+        370
+      ],
+      "metric": "H, LOO",
+      "fa": "Stable-metric result irons flat only the method confound, not the causal claim.",
+      "fb": "Stable-metric empirics B appears too.",
+      "quote": "\\item \\textbf{Phi-3.5-MoE ($N=32$):} Layer-LOO yields $H_{\\text{LOO}} = 0.8830$ (vs.\\ $H_{\\text{routing-contrast}} = 0.8779$)—high diffuseness is stable across method choice."
+    },
+    {
+      "id": "R10",
+      "kind": "result",
+      "section": "Exp8 persistence",
+      "claim": "Diffuseness 'attenuates but persists' under matched LOO mechanism.",
+      "lines": [
+        373
+      ],
+      "fa": "The residual gap is reported without significance test; B accepts.",
+      "fb": "B's core sentence.",
+      "quote": "These results suggest that diffuseness \\textit{attenuates but persists} under matched mechanism. MoE entropy remains above its dense counterpart under layer-level LOO, but the residual gap is small and has not been tested for significance. We report this as evidence consistent with diffuseness being a genuine architectural property rather than a pure granularity artifact, while acknowledging that a formal claim of gap-preservation would require significance testing."
+    },
+    {
+      "id": "T1",
+      "kind": "conclusion",
+      "section": "Conclusion finale",
+      "claim": "No expert-level bias-localization signal; the ablation curve is damage curve, not a bias map.",
+      "lines": [
+        391
+      ],
+      "fa": "Final sentence = A-negation sentence.",
+      "fb": "The conclusion, as written, IS the B conclusion.",
+      "quote": "We present a post-hoc game-theoretic bias-attribution study on sparse Mixture-of-Experts architectures. Across a diverse model ladder spanning massive scales and routing sparsities, we show that social bias is an interactive, demographic-specific, and capability-coupled property of MoEs. The routing-contrast proxy has near-zero Spearman correlation with causal expert rankings ($\\rho \\approx 0$, Exp~7); proxy ablation selectivity is low or negative across all three MoE models (OLMoE: $0.24$, Mixtral: $-0.18$, Phi-3.5-MoE: $1.35$) and frequency-ranked ablation provides comparable or superior debiasing in $2/3$ models (Exp~6). There is no expert-level bias-localization signal: the ablation curve is the model-damage curve, not a bias map."
+    }
+  ]
+}

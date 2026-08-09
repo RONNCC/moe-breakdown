@@ -60,6 +60,7 @@ def run_study(
     dry_run: bool = False,
     shard_idx: int = 0,
     num_shards: int = 1,
+    save_per_pair_phi: bool = False,
 ) -> None:
     log.info("=== Study: %s ===", cfg.study_name)
     log.info("Model: %s | family: %s | shapley_method: %s", cfg.model_id, cfg.model_family, cfg.shapley_method)
@@ -86,9 +87,18 @@ def run_study(
 
     use_dense_loo = cfg.shapley_method == "dense_loo" or cfg.model_family in DENSE_FAMILIES
     if use_dense_loo:
-        result = compute_dense_layer_contrast(model, tokenizer, pairs, device=str(device))
+        result = compute_dense_layer_contrast(model, tokenizer, pairs, device=str(device), save_per_pair=save_per_pair_phi)
     else:
-        result = compute_routing_contrast(model, tokenizer, pairs, device=str(device), demographic_key=demographic_key)
+        # gpt-oss (and friends) replace the gate forward with hub kernels, so
+        # forward-hooks never fire; capture router logits via model outputs.
+        router_capture = "outputs" if cfg.model_family == "gpt-oss" else "hooks"
+        result = compute_routing_contrast(
+            model, tokenizer, pairs,
+            device=str(device),
+            demographic_key=demographic_key,
+            save_per_pair=save_per_pair_phi,
+            router_capture=router_capture,
+        )
 
     metadata = {
         "study_name": cfg.study_name,
@@ -104,7 +114,7 @@ def run_study(
         metadata["num_shards"] = num_shards
         shard_tag = f"shard{shard_idx + 1}of{num_shards}"
 
-    save_results(out_dir, result, metadata, shard_tag=shard_tag)
+    save_results(out_dir, result, metadata, shard_tag=shard_tag, save_per_pair=save_per_pair_phi)
     log.info("Done. Results in %s", out_dir)
 
 
@@ -115,11 +125,14 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--shard-idx", type=int, default=0, help="0-based shard index")
     p.add_argument("--num-shards", type=int, default=1, help="Total number of shards (1 = no sharding)")
+    p.add_argument("--save-per-pair-phi", action="store_true",
+                   help="Save per-prompt-pair phi vectors (per_pair_phi.npy) + pair_meta.json for bootstrap resampling")
     args = p.parse_args(argv)
 
     cfg = load_bias_study_config(args.config)
     out_dir = Path(args.out_dir) if args.out_dir else (Path(cfg.output_root).expanduser() / cfg.study_name)
-    run_study(cfg, out_dir, dry_run=args.dry_run, shard_idx=args.shard_idx, num_shards=args.num_shards)
+    run_study(cfg, out_dir, dry_run=args.dry_run, shard_idx=args.shard_idx, num_shards=args.num_shards,
+              save_per_pair_phi=args.save_per_pair_phi)
     return 0
 
 
