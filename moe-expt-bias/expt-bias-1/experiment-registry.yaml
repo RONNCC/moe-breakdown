@@ -357,7 +357,7 @@ experiments:
   exp3-dbrx:
     id: "exp3-dbrx"
     config: "configs/study.dbrx.concentration.yaml"
-    job_id: 5575249
+    job_id: "UNKNOWN (garbled submission output; verify with squeue)"
     status: "SUBMITTED"
     gpu: "a100:2"
     time: "04:00:00"
@@ -367,7 +367,7 @@ experiments:
   exp3-gpt-oss:
     id: "exp3-gpt-oss"
     config: "configs/study.gpt-oss-120b.concentration.yaml"
-    job_id: 5575250
+    job_id: 5575249
     status: "SUBMITTED"
     gpu: "a100:2"
     time: "04:00:00"
@@ -377,7 +377,7 @@ experiments:
   exp3-gemma:
     id: "exp3-gemma"
     config: "configs/study.gemma4-26b.concentration.v1.yaml"
-    job_id: 5575251
+    job_id: 5575250
     status: "SUBMITTED"
     gpu: "a100:2"
     time: "04:00:00"
@@ -389,7 +389,6 @@ experiments:
   # ==========================================================================
   exp6-olmoe:
     id: "exp6-olmoe"
-    job_id: 5575242  # Wait, this is DBRX... let me check
     status: "DONE"
     n_pairs: 60
     result_path: "results/exp1-concentration-olmoe-1b-7b/experiment6/experiment6_ablation_curve.json"
@@ -513,9 +512,9 @@ gpu_jobs:
     Exp3_OLMoE: 1     # 5575246
     Exp3_Phi: 1       # 5575247
     Exp3_Mixtral: 1   # 5575248
-    Exp3_DBRX: 1      # 5575249
-    Exp3_GPT-OSS: 1   # 5575250
-    Exp3_Gemma: 1     # 5575251
+    Exp3_DBRX: 1      # UNKNOWN (garbled output; verify with squeue)
+    Exp3_GPT-OSS: 1   # 5575249
+    Exp3_Gemma: 1     # 5575250
     Exp7_OLMoE: 1     # 5575251
     Exp7_Phi: 1       # 5575252
     Exp8_OLMoE_per_pair: 1  # 5575255
