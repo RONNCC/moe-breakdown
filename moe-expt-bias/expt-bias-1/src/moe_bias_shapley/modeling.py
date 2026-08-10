@@ -8,7 +8,10 @@ duplicating it.
 from __future__ import annotations
 
 import logging
+import os
 from typing import Any, Tuple
+
+import torch
 
 from .config import BiasStudyConfig
 
@@ -80,6 +83,74 @@ def _patch_dbrx_config_cache(model_id: str) -> None:
         log.warning("Could not patch DBRX config cache: %s", exc)
 
 
+def force_eager_gpt_oss(model: Any) -> int:
+    """Rebind every GptOssMLP.forward back to the eager transformers class method.
+
+    transformers>=5.13 auto-attaches the fused MXFP4 hub-kernel forward
+    (transformers.integrations.mxfp4.mlp_forward) to each layer's GptOssMLP
+    when loading gpt-oss checkpoints (e.g. openai/gpt-oss-120b) with
+    torch_dtype=bfloat16. That fused path never runs the GptOssTopKRouter
+    module (it calls nn.functional.linear on the router weights directly), so
+    (a) forward-hooks on the router stay empty and (b) the model's native
+    output_router_logits capture (OutputRecorder on GptOssTopKRouter) also
+    stays empty. On PACE (torch 2.6) it additionally crashes with
+    AttributeError: _CudaDeviceProperties has no 'shared_memory_per_block_optin'.
+
+    Rebinding mlp.forward to the eager GptOssMLP.forward makes the router
+    module execute again, so output_router_logits=True capture works.
+
+    NOTE: only the forward is rebound here. If the MXFP4 auto-quantizer also
+    swapped the experts module for Mxfp4GptOssExperts (same replace step), a
+    pure forward rebind is NOT sufficient — the eager forward calls
+    experts(hidden, router_indices, router_scores) which mismatches the fused
+    signature; load bf16-dequantized instead so experts stay eager
+    GptOssExperts.
+
+    Returns the number of layers rebound (0 = no-op / nothing to do).
+    """
+    from types import MethodType
+
+    try:
+        from transformers.models.gpt_oss.modeling_gpt_oss import GptOssForCausalLM, GptOssMLP
+    except Exception as exc:  # noqa: BLE001
+        log.warning("force_eager_gpt_oss: cannot import transformers gpt_oss modeling: %s", exc)
+        return 0
+
+    if not isinstance(model, GptOssForCausalLM):
+        log.info("force_eager_gpt_oss: model is %s (not GptOssForCausalLM) — no-op", type(model).__name__)
+        return 0
+
+    layers = getattr(getattr(model, "model", None), "layers", None)
+    if layers is None:
+        log.warning("force_eager_gpt_oss: no model.model.layers found — no-op")
+        return 0
+
+    n_rebound = 0
+    for li, layer in enumerate(layers):
+        mlp = getattr(layer, "mlp", None)
+        if mlp is None:
+            continue
+        fwd_mod = getattr(mlp.forward, "__module__", "") or ""
+        if not fwd_mod.startswith("transformers.integrations.mxfp4"):
+            continue
+        experts_cls = type(getattr(mlp, "experts", None)).__name__
+        if experts_cls == "Mxfp4GptOssExperts":
+            log.warning(
+                "force_eager_gpt_oss: layer %d experts is %s — eager GptOssMLP.forward calls "
+                "experts(hidden, router_indices, router_scores) which mismatches the fused "
+                "signature; load bf16-dequantized so experts stay eager GptOssExperts",
+                li, experts_cls,
+            )
+        mlp.forward = MethodType(GptOssMLP.forward, mlp)
+        n_rebound += 1
+        log.info(
+            "force_eager_gpt_oss: rebound layer %d mlp.forward %s -> eager GptOssMLP.forward (experts=%s)",
+            li, fwd_mod, experts_cls,
+        )
+    log.info("force_eager_gpt_oss: rebound %d/%d gpt-oss MLP layers", n_rebound, len(layers))
+    return n_rebound
+
+
 def load_model_and_tokenizer(cfg: BiasStudyConfig) -> Tuple[Any, Any]:
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -100,7 +171,36 @@ def load_model_and_tokenizer(cfg: BiasStudyConfig) -> Tuple[Any, Any]:
         dtype=torch_dtype(cfg.torch_dtype),
         device_map=cfg.device_map,
     )
-    if cfg.load_in_8bit or cfg.load_in_4bit:
+    if cfg.model_family == "gpt-oss" and cfg.device_map == "auto":
+        # device_map="auto" sizes the map from the on-disk (uint8 MXFP4 packed)
+        # param sizes, but Mxfp4Config(dequantize=True) materializes bf16
+        # weights (2x memory) during load -> first GPU OOMs without explicit
+        # per-device caps. Cap each GPU at ~72% of its VRAM and let CPU take
+        # the rest (node mem: 512G for the dequantized-bf16 120B capture).
+        # PYTORCH_CUDA_ALLOC_CONF expandable_segments:True reduces the
+        # fragmentation that the load-hit-OOM crash showed.
+        os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
+        max_memory: dict = {}
+        if torch.cuda.is_available():
+            for i in range(torch.cuda.device_count()):
+                max_memory[i] = int(torch.cuda.get_device_properties(i).total_memory * 0.72)
+            max_memory["cpu"] = "500GiB"
+            kwargs["max_memory"] = max_memory
+    if cfg.model_family == "gpt-oss" and cfg.force_eager_moe:
+        # openai/gpt-oss-* are pre-quantized MXFP4 checkpoints
+        # (config.quantization_config.quant_method == "mxfp4"). Loading them
+        # without an explicit config makes transformers>=5.13 auto-attach the
+        # fused MXFP4 hub kernel: replace_with_mxfp4_linear swaps every
+        # GptOssExperts module for Mxfp4GptOssExperts (forward signature needs
+        # scatter_idx; crashes on torch 2.6) and bypasses the GptOssTopKRouter
+        # module, so router hooks/capture stay empty (all-zero phi).
+        # Passing Mxfp4Config(dequantize=True) dequantizes the checkpoint back
+        # to bf16 during load (get_weight_conversions -> Mxfp4Dequantize) and
+        # leaves the model fully eager: dimensions/params stay
+        # GptOssExperts, forward-hooks and output_router_logits capture work.
+        from transformers import Mxfp4Config
+        kwargs["quantization_config"] = Mxfp4Config(dequantize=True)
+    elif cfg.load_in_8bit or cfg.load_in_4bit:
         from transformers import BitsAndBytesConfig
         kwargs["quantization_config"] = BitsAndBytesConfig(
             load_in_8bit=cfg.load_in_8bit,
@@ -117,4 +217,6 @@ def load_model_and_tokenizer(cfg: BiasStudyConfig) -> Tuple[Any, Any]:
 
     model = AutoModelForCausalLM.from_pretrained(cfg.model_id, config=model_config, **kwargs)
     model.eval()
+    if cfg.model_family == "gpt-oss" and cfg.force_eager_moe:
+        force_eager_gpt_oss(model)
     return model, tokenizer

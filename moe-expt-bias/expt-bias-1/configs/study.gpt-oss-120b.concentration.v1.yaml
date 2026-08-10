@@ -1,32 +1,38 @@
-# Experiment 1 v1 — GPT-OSS-120B, full prompt set
-# routing_contrast: 2 fwd passes/pair. 120B MXFP4 on 2×H100 — 5000 pairs ≈ 4.2hr.
-# 2×H100×5hr = 600 GPU-min ✓. USE_HUB_KERNELS=NO injected by submit script (disables
-# Triton MegaBlocksMoeMLP kernel that would bypass router hooks → all-zero phi).
-
+# Experiment 1 v1 — GPT-OSS-120B capture (bf16-dequantized).
+# force_eager_moe: true REQUIRED. openai/gpt-oss-* are pre-quantized MXFP4
+# checkpoints; transformers>=5.13 otherwise auto-attaches the fused hub kernel
+# (replace_with_mxfp4_linear): swaps GptOssExperts -> Mxfp4GptOssExperts
+# (scatter_idx signature crash on torch 2.6) and bypasses GptOssTopKRouter
+# (empty router hooks -> all-zero phi). force_eager_moe makes the loader pass
+# Mxfp4Config(dequantize=True): dequantizes to bf16 at load, model stays eager.
+# bf16 ≈ 240GB -> 2xH100 + CPU offload; mem 512G, 2000 pairs ≈ 10-12h.
 study_name: exp1-concentration-gpt-oss-120b-v1
-
 model_id: openai/gpt-oss-120b
 model_family: gpt-oss
 trust_remote_code: false
 torch_dtype: bfloat16
 load_in_4bit: false
 device_map: auto
-
-benchmarks: [stereoset, bbq, winogender]
+force_eager_moe: true
+benchmarks:
+- stereoset
+- bbq
+- winogender
 shapley_method: routing_contrast
-max_prompts: 5000
+max_prompts: 2000
 seed: 42
-
 output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
-
 slurm:
   partition: ice-gpu
   qos: coc-ice
-  time: 05:00:00
+  time: '24:00:00'
   cpus_per_task: 16
   gpus_per_node: 2
   gpu_type: h100
   use_gres: true
-  mem: 200G
-  modules: [gcc/12.3.0, python/3.11, cuda/12.6.1]
+  mem: 512G
+  modules:
+  - gcc/12.3.0
+  - python/3.11
+  - cuda/12.6.1
   workdir: /home/hice1/sghose7/scratch/moe-breakdown

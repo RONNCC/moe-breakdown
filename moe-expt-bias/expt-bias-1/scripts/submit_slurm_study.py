@@ -29,6 +29,7 @@ def build_sbatch_command(
     config_path: Path,
     shard_idx: int = 0,
     num_shards: int = 1,
+    extra_export: dict[str, str] | None = None,
 ) -> list[str]:
     cfg = load_bias_study_config(config_path)
     slurm = cfg.slurm
@@ -73,6 +74,8 @@ def build_sbatch_command(
         "WORKDIR": workdir,
         "MODULES": " ".join(slurm.modules),
     }
+    if extra_export:
+        export_bits.update(extra_export)
     if num_shards > 1:
         export_bits["SHARD_IDX"] = str(shard_idx)
         export_bits["NUM_SHARDS"] = str(num_shards)
@@ -90,11 +93,19 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--num-shards", type=int, default=1,
                    help="Split pairs across N independent jobs (1 = no sharding)")
+    p.add_argument("--save-per-pair-phi", action="store_true",
+                   help="Also save the per-pair phi payload in this study run")
     args = p.parse_args(argv)
+
+    env_extra = {}
+    if args.save_per_pair_phi:
+        env_extra["SAVE_PER_PAIR_PHI"] = "1"
 
     config_path = Path(args.config)
     for shard_idx in range(args.num_shards):
-        cmd = build_sbatch_command(config_path, shard_idx=shard_idx, num_shards=args.num_shards)
+        cmd = build_sbatch_command(
+            config_path, shard_idx=shard_idx, num_shards=args.num_shards, extra_export=env_extra
+        )
         print("[submit]", " ".join(cmd))
         if not args.dry_run:
             subprocess.run(cmd, check=True)

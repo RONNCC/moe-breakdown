@@ -45,6 +45,11 @@ class BiasStudyConfig:
     load_in_8bit: bool = False
     load_in_4bit: bool = False
     device_map: str = "auto"
+    # gpt-oss only: rebind every GptOssMLP.forward from the auto-attached MXFP4
+    # hub kernel (transformers.integrations.mxfp4.mlp_forward) back to the eager
+    # class method so router-logits capture (output_router_logits) works. The
+    # fused forward bypasses the router module and crashes on torch 2.6.
+    force_eager_moe: bool = False
 
     # ── experiment ────────────────────────────────────────────────────────────
     benchmarks: List[str] = field(default_factory=lambda: ["stereoset"])

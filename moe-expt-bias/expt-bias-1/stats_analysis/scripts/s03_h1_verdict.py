@@ -136,6 +136,33 @@ def load_ladder() -> dict:
     return rows
 
 
+def exact_spearman_p(xs, ys):
+    """Exact two-sided permutation p for Spearman rho (n small, n! <= 720).
+
+    Enumerates every rearrangement of y aligned to x (equivalently every
+    permutation of the y ranks) and counts those whose absolute rho is at
+    least the observed one. Returns (rho_obs, p).
+    """
+    from itertools import permutations
+
+    n = len(xs)
+    rho_signed = spearman_rho(xs, ys)[0]  # observed signed rho
+    rho_abs = abs(rho_signed)
+    if n >= 8:  # 8! = 40320 is the practical cap; beyond that fall back to scipy
+        return rho_signed, None
+    cnt = 0
+    tot = 0
+    for perm in permutations(range(n)):
+        yp = [ys[i] for i in perm]
+        r = spearman_rho(xs, yp)[0]
+        if r != r:  # degenerate (constant) permutation
+            continue
+        tot += 1
+        if abs(r) >= rho_abs - 1e-12:
+            cnt += 1
+    return rho_signed, cnt / tot
+
+
 def spearman_rho(xs, ys):
     """Spearman rank correlation (average ranks for ties). Returns (rho, p)."""
     xs, ys = list(xs), list(ys)
@@ -239,7 +266,7 @@ def audit_set(name, models, rows, floor_H, floor_G):
     out = {"set": name, "models": list(models), "n": len(models)}
     for metric, vals, floor, expected in (("H", Hs, floor_H, +1.0),
                                            ("G", Gs, floor_G, -1.0)):
-        rho, rho_p = spearman_rho(xs, vals)
+        rho, rho_p = exact_spearman_p(xs, vals) if len(vals) <= 7 else spearman_rho(xs, vals)
         rho_consistent = bool(np.sign(rho) == np.sign(expected)) if rho == rho else None
         pc = pair_counts(metric, models, xs, vals, floor)
 

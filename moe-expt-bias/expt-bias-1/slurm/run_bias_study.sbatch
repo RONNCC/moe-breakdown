@@ -66,6 +66,9 @@ ARGS=(--config "$STUDY_CONFIG")
 if [[ -n "$OUT_DIR" ]]; then
   ARGS+=(--out-dir "$OUT_DIR")
 fi
+if [[ "${SAVE_PER_PAIR_PHI:-0}" == "1" ]]; then
+  ARGS+=(--save-per-pair-phi)
+fi
 if [[ "${NUM_SHARDS:-1}" -gt 1 ]]; then
   ARGS+=(--shard-idx "${SHARD_IDX:-0}" --num-shards "${NUM_SHARDS:-1}")
 fi

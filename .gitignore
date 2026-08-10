@@ -20,3 +20,6 @@ venv/
 
 # Claude Code internal state
 .claude/
+moe-expt-bias/expt-bias-1/results/**/per_pair_phi*.npy
+moe-expt-bias/expt-bias-1/results/**/phi*.npy
+moe-expt-bias/expt-bias-1/results/**/routing_freq*.npy

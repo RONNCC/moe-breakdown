@@ -179,7 +179,7 @@
       "n": 6,
       "H": {
         "rho": 0.753702346348183,
-        "rho_p": 0.08352328137325983,
+        "rho_p": 0.10555555555555556,
         "expected_sign": "+ (H1: H rises as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 14,
@@ -246,7 +246,7 @@
       },
       "G": {
         "rho": -0.753702346348183,
-        "rho_p": 0.08352328137325983,
+        "rho_p": 0.10555555555555556,
         "expected_sign": "- (H1: G falls as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 14,
@@ -337,7 +337,7 @@
       "n": 5,
       "H": {
         "rho": 0.8720815992723809,
-        "rho_p": 0.05385421772754213,
+        "rho_p": 0.1,
         "expected_sign": "+ (H1: H rises as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 9,
@@ -377,7 +377,7 @@
       },
       "G": {
         "rho": -0.8720815992723809,
-        "rho_p": 0.05385421772754213,
+        "rho_p": 0.1,
         "expected_sign": "- (H1: G falls as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 9,
@@ -432,7 +432,7 @@
       "n": 5,
       "H": {
         "rho": 0.8720815992723809,
-        "rho_p": 0.05385421772754213,
+        "rho_p": 0.1,
         "expected_sign": "+ (H1: H rises as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 9,
@@ -462,7 +462,7 @@
       },
       "G": {
         "rho": -0.8720815992723809,
-        "rho_p": 0.05385421772754213,
+        "rho_p": 0.1,
         "expected_sign": "- (H1: G falls as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 9,
@@ -516,7 +516,7 @@
       "n": 4,
       "H": {
         "rho": 0.9486832980505139,
-        "rho_p": 0.05131670194948613,
+        "rho_p": 0.16666666666666666,
         "expected_sign": "+ (H1: H rises as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 5,
@@ -536,7 +536,7 @@
       },
       "G": {
         "rho": -0.9486832980505139,
-        "rho_p": 0.05131670194948613,
+        "rho_p": 0.16666666666666666,
         "expected_sign": "- (H1: G falls as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 5,
@@ -569,7 +569,7 @@
       "n": 3,
       "H": {
         "rho": 1.0,
-        "rho_p": 0.0,
+        "rho_p": 0.3333333333333333,
         "expected_sign": "+ (H1: H rises as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 3,
@@ -584,7 +584,7 @@
       },
       "G": {
         "rho": -1.0,
-        "rho_p": 0.0,
+        "rho_p": 0.3333333333333333,
         "expected_sign": "- (H1: G falls as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 3,

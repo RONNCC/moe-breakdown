@@ -1,0 +1,30 @@
+study_name: exp1-concentration-gpt-oss-120b-v1-smoke
+model_id: openai/gpt-oss-120b
+model_family: gpt-oss
+trust_remote_code: false
+torch_dtype: bfloat16
+load_in_4bit: false
+device_map: auto
+force_eager_moe: true
+benchmarks:
+- stereoset
+- bbq
+- winogender
+shapley_method: routing_contrast
+max_prompts: 64
+seed: 42
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 03:00:00
+  cpus_per_task: 16
+  gpus_per_node: 2
+  gpu_type: h100
+  use_gres: true
+  mem: 512G
+  modules:
+  - gcc/12.3.0
+  - python/3.11
+  - cuda/12.6.1
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown
