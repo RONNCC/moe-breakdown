@@ -16,21 +16,23 @@
 - Cluster: `ssh login-ice.pace.gatech.edu` (PACE ICE, slurm). Run via submit_slurm_study.py.
   Pull artifacts with mcp-ssh downloadFile (remote root: /home/hice1/sghose7/scratch/moe-breakdown-bias-runs/...).
 
-## Status (Aug-09-2026)
-- H1: pre-correction ladder flat (rho=0.2, p=0.63); CORRECTED ladder (Gemma N_A=240, v1 capture)
-  now rho_H=0.81 (exact p=0.058) on all 6, rho_H=0.97 (p=0.017) minus un-certified GPT-OSS v0 row;
-  core-4 rho=0.95 (p=0.083); 3-rung rho=1.0 (knife-edge). All p's are exact permutation two-sided.
-- Gemma-4-26B v1 DONE (Aug-09): 5000 pairs + per-pair payload in
-  results/exp1-concentration-gemma4-26b-v1/ (H=0.7888, G=0.8551, CI in s04 json). Folded into
-  Tables 1-2 + figures (tuple flipped). Zero fraction 29% (1132/3840).
-- GPT-OSS full v1 run RUNNING as sbatch 5573613 (2000 pairs incl. --save-per-pair-phi, 4xH100
-  gpus_per_node:4, --time 4h, started Aug-09 ~08:30 UTC, ETA ~09:45 UTC; 2-GPU job 5573608 cancelled
-  at ~125 pairs: bf16 120B (240GB) CPU-offloads on 2xH100 -> 25s/pair -> 14h projected; 4xH100 fits,
-  ~2s/pair. 24h/12h requests rejected by slurm: partition ice-gpu cap 16:00:00, QOSMaxGRESMinutesPerJob).
-  On completion: pull exp1-concentration-gpt-oss-120b-v1/{result.json,per_pair_phi.npy,
-  pair_meta.json,...} into local results/, flip figure tuple gpt-oss-120b->gpt-oss-120b-v1, rerun
-  s01->s03->s04 + figures, patch tex Table 1 gpt-oss row / Table 2 CI row / footnotes (#871).
-- Bootstrap CIs landed for 5 models (DBRX, OLMoE, Mixtral, Phi, Gemma v1); s04_bootstrap_cis.json
-  regenerated; GPT-OSS CI row still "---" pending the rerun.
-- GPT-OSS capture: transformers 5.14.1 MXFP4 kernel path crashes on torch 2.6 (shared_memory_per_block_optin);
-  fix = load bf16-dequantized so eager GptOssMLP/router is used.
+## Status (Aug-10-2026)
+- H1 (post-correction): gemma N_A corrected 960->240 (N_A/N 0.0625) and GPT-OSS-120B v1
+  capture VALIDATED (2000 pairs, H=0.8764, G=0.7274 — old broken zero-phi run superseded).
+  EXACT two-sided permutation p-values now used for all ladder sets (s03_h1_verdict.py,
+  permutation cap n<=7): all-6 rho_H=0.754 p=0.106, minus-gpt-oss-5 rho_H=0.872 p=0.100,
+  paper-ladder-5 = 0.872/0.100, paper-valid-4 rho_H=0.949 p=0.167, unique-sparsity-3 rho_H=1.000
+  p=0.333. Verdicts: SUPPORTED (point+drift) in EVERY subset, but NO set significant at 0.05
+  (p>=0.100). Frame in paper: directionally consistent, under-powered.
+- Bootstrap CIs (s04) landed for all 12 models with per-pair payloads (n_boot=5000, seed=42;
+  GPT-OSS H [0.8750,0.8858] G [0.7069,0.7307]; covers v1 + v0 + exp5). Only gemma4-27b MISSING
+  (is a placeholder dir; no run).
+- Figures regenerated + VISION-VERIFIED with corrected ladder tuple
+  (stats_analysis/scripts/paper_figures_seaborn.py; MOE tuple now (dir,label,N_players,N_active)).
+- Per-pair payloads (~360MB, 8 captures) cannot live on GitHub (>100MB files); published as Kaggle
+  dataset `ronncc/moe-bias-routing-shapley-perpair-phi`. Cluster/GPU/experiment inventory:
+  moe-expt-bias/expt-bias-1/CLUSTER-STATUS.md.
+- Paper base draft: stats_analysis/paper/moe_bias_report_acm_v2.tex (supersedes aug8/ subdir draft;
+  aug8 carries a legacy acmart.cls watermark).
+- GPT-OSS capture gotcha (historical): transformers 5.14.1 MXFP4 fused kernel path crashes on torch 2.6;
+  fix = bf16-dequantized load so eager GptOssMLP/router is used (config force_eager_moe: true).
