@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.1)  10 AUG 2026 13:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.1)  10 AUG 2026 14:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -745,7 +745,7 @@ per
  []
 
 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig1_entropy_ladder.png, i
-d=171, 520.344pt x 317.988pt>
+d=175, 520.344pt x 317.988pt>
 File: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig1_entropy_ladder.p
 ng Graphic file (type png)
 <use ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig1_entropy_ladder.pn
@@ -757,7 +757,7 @@ g1_entropy_ladder.png  used on input line 288.
 Class acmart Warning: A possible image without description on input line 292.
 
 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig2_gini_ladder.png, id=1
-73, 520.344pt x 317.988pt>
+77, 520.344pt x 317.988pt>
 File: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig2_gini_ladder.png 
 Graphic file (type png)
 <use ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig2_gini_ladder.png>
@@ -768,7 +768,7 @@ g2_gini_ladder.png  used on input line 296.
 Class acmart Warning: A possible image without description on input line 299.
 
 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig3_h1_scatter.png, id=17
-4, 491.436pt x 332.442pt>
+8, 491.436pt x 332.442pt>
 File: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig3_h1_scatter.png G
 raphic file (type png)
 <use ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig3_h1_scatter.png>
@@ -787,7 +787,7 @@ Class acmart Warning: \vspace should only be used to provide space above/below
 surrounding objects on input line 313.
 
 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig4_top_fraction.png, id=
-176, 520.344pt x 303.534pt>
+180, 520.344pt x 303.534pt>
 File: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig4_top_fraction.png
  Graphic file (type png)
 <use ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig4_top_fraction.png>
@@ -801,7 +801,7 @@ Class acmart Warning: A possible image without description on input line 325.
 [2.2 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig1_entropy_ladder.p
 ng>]
 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig5_dense_vs_moe.png, id=
-197, 448.074pt x 303.534pt>
+201, 448.074pt x 303.534pt>
 File: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig5_dense_vs_moe.png
  Graphic file (type png)
 <use ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig5_dense_vs_moe.png>
@@ -861,10 +861,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 430--431
  []
 
 
-Underfull \vbox (badness 4156) has occurred while \output is active []
-
-
-
 Class acmart Warning: \vspace should only be used to provide space above/below 
 surrounding objects on input line 468.
 
@@ -873,7 +869,7 @@ Class acmart Warning: \vspace should only be used to provide space above/below
 surrounding objects on input line 468.
 
 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/s02_js_distribution.png, i
-d=221, 505.89pt x 325.215pt>
+d=224, 505.89pt x 325.215pt>
 File: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/s02_js_distribution.p
 ng Graphic file (type png)
 <use ../moe-expt-bias/expt-bias-1/stats_analysis/figures/s02_js_distribution.pn
@@ -883,9 +879,6 @@ Package pdftex.def Info: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/s0
 (pdftex.def)             Requested size: 241.14749pt x 155.02458pt.
 
 Class acmart Warning: A possible image without description on input line 477.
-
-
-LaTeX Warning: Reference `sec:causal' on page 5 undefined on input line 492.
 
 [5.5 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/s02_js_distribution.p
 ng>]
@@ -1009,9 +1002,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 703--709
  []
 
 
-LaTeX Warning: Reference `sec:causal' on page 8 undefined on input line 734.
-
-
 Underfull \hbox (badness 3108) in paragraph at lines 712--736
  []\OT1/cmr/m/it/9 (+20) Experiment 4/6 --- causal ex-pert ab-la-tion (DONE
  []
@@ -1045,9 +1035,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 712--736
  []
 
 
-LaTeX Warning: Reference `sec:causal' on page 8 undefined on input line 752.
-
-
 Underfull \hbox (badness 6641) in paragraph at lines 739--753
  []\OT1/cmr/m/it/9 (+20) Experiment 7 --- proxy-vs-exact-Shapley agree-ment
  []
@@ -1070,18 +1057,9 @@ Underfull \hbox (badness 10000) in paragraph at lines 756--774
 OT1/cmr/m/n/9 (+20) (Phi-3.5-
  []
 
-(/usr/local/texlive/2026basic/texmf-dist/tex/generic/stringenc/se-pdfdoc.def
-File: se-pdfdoc.def 2019/11/29 v1.12 stringenc: PDFDocEncoding
-)
-(/usr/local/texlive/2026basic/texmf-dist/tex/generic/stringenc/se-utf8.def
-File: se-utf8.def 2019/11/29 v1.12 stringenc: UTF-8
-)
 [8.8
 
 ]
-
-LaTeX Warning: Reference `sec:causal' on page 9 undefined on input line 778.
-
 
 Class acmart Warning: Some images may lack descriptions.
 (acmart)              ACM is committed to complying with the upcoming US ADA ht
@@ -1107,78 +1085,59 @@ Class acmart Warning: ACM reference format is mandatory
 Package balance Warning: You have called \balance in second column
 (balance)                Columns might not be balanced.
 
-[9.9]
-
-LaTeX Warning: Hook 'shipout/lastpage' executed on wrong page (8 not 9).
-               Rerun to correct this.
-
-(./moe_bias_report_acm_v2.aux)
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/stringenc/se-pdfdoc.def
+File: se-pdfdoc.def 2019/11/29 v1.12 stringenc: PDFDocEncoding
+)
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/stringenc/se-utf8.def
+File: se-utf8.def 2019/11/29 v1.12 stringenc: UTF-8
+)
+[9.9] (./moe_bias_report_acm_v2.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
+Package rerunfilecheck Info: File `moe_bias_report_acm_v2.out' has not changed.
 
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `moe_bias_report_acm_v2.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `moe_bias_report_acm_v2.out':
-(rerunfilecheck)             Before: 001CD836CE31BB0375440D93D3EBF1BC;3999
-(rerunfilecheck)             After:  D529D05F7A5690529E0CDD9B5A49B7C5;4254.
+(rerunfilecheck)             Checksum: D529D05F7A5690529E0CDD9B5A49B7C5;4254.
  ) 
 Here is how much of TeX's memory you used:
- 17499 strings out of 469006
- 284618 string characters out of 5454814
- 840837 words of memory out of 5000000
- 45453 multiletter control sequences out of 15000+600000
+ 17498 strings out of 469006
+ 284601 string characters out of 5454814
+ 837283 words of memory out of 5000000
+ 45454 multiletter control sequences out of 15000+600000
  644828 words of font info for 184 fonts, out of 8000000 for 9000
  480 hyphenation exceptions out of 8191
  90i,12n,131p,1407b,619s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-pdfTeX warning (dest): name{table.caption.16} has been referenced but does not 
-exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{figure.caption.13} has been referenced but does not
- exist, replaced by a fixed one
-
- </Users/ronnie.ghose/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknap
-pen/ec/tcrm0900.600pk></usr/local/texlive/2026basic/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/typ
-e1/public/amsfonts/cmextra/cmex9.pfb></usr/local/texlive/2026basic/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2026basic/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026basic/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2026basic/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2026basic/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026bas
-ic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026
-basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/20
-26basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/
-2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texliv
-e/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texl
-ive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/te
-xlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local
-/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr
-/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></
-usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb
-></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.
-pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
-i7.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmti9.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmtt8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmtt9.pfb>
-Output written on moe_bias_report_acm_v2.pdf (9 pages, 870633 bytes).
+ </Users/ronnie.ghose/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jkn
+appen/ec/tcrm0900.600pk></usr/local/texlive/2026basic/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/t
+ype1/public/amsfonts/cmextra/cmex9.pfb></usr/local/texlive/2026basic/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2026basic/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026basic/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2026basic/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2026basi
+c/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026b
+asic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/20
+26basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/
+2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texliv
+e/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texl
+ive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/te
+xlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/
+texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/loc
+al/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></u
+sr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb>
+</usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.p
+fb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
+9.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mti7.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmti9.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmtt8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmtt9.pfb>
+Output written on moe_bias_report_acm_v2.pdf (9 pages, 870631 bytes).
 PDF statistics:
- 378 PDF objects out of 1000 (max. 8388607)
- 311 compressed objects within 4 object streams
- 84 named destinations out of 1000 (max. 500000)
- 36071 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 383 PDF objects out of 1000 (max. 8388607)
+ 316 compressed objects within 4 object streams
+ 82 named destinations out of 1000 (max. 500000)
+ 36079 words of extra memory for PDF output out of 42996 (max. 10000000)
 

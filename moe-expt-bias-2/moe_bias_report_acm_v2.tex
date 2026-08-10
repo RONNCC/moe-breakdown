@@ -445,7 +445,7 @@ significant at $0.05$; power is the limit, not the data.
 All confidence intervals are $95\%$ percentile intervals from a
 per-pair block bootstrap: resample the contrastive pairs with replacement,
 5000 draws, seed 42, stratified by prompt group for the v1 runs
-(\texttt{s04\_bootstrap\_cis.json}). Twelve of thirteen models have per-pair
+(\texttt{s04\_bootstrap\_cis.json}). Eleven models have per-pair: six MoE v1 captures, the Exp~5 OLMoE capture, and four dense v0 captures (no per-pair payloads for dense v0; dense v1 reruns are in progress).
 $\phi$ payloads on disk and are reported in Table~\ref{tab:cis}; only
 Gemma-4-27B (not part of the ladder) is MISSING. The cohort JS mean carries
 the same bootstrap treatment, $95\%$ CI $[0.206, 0.231]$.

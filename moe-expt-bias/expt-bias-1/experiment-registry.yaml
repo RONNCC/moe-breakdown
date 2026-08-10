@@ -1,0 +1,617 @@
+# Experiment Registry — MoE-Bias Study (expt-bias-1)
+# Single source of truth for all experiments, configs, dependencies, and artifacts
+# Update this file when adding/submitting/updating experiments
+
+meta:
+  study_root: "moe-expt-bias/expt-bias-1"
+  cluster: "ice-gpu (PACE ICE, Slurm)"
+  qos: "coc-ice (MaxTRESMinsPerJob = gres/gpu=960)"
+  remote_root: "/storage/ice1/0/2/sghose7/moe-breakdown-bias-runs/expt-bias-1"
+  local_results: "results/"
+  kaggle_dataset: "sghose0/moe-bias-routing-shapley-perpair-phi"
+  last_updated: "2026-08-10"
+
+# ---------------------------------------------------------------------------
+# Experiment Definitions
+# ---------------------------------------------------------------------------
+experiments:
+  # ==========================================================================
+  # EXP1: Sparsity Ladder (RQ1 / C1)
+  # ==========================================================================
+  exp1-olmoe:
+    id: "exp1-olmoe"
+    name: "OLMoE-1B-7B concentration"
+    rq: "RQ1"
+    claim: "C1"
+    config: "configs/study.olmoe.concentration.v1.yaml"
+    model: "olmo/OLMoE-1B-7B"
+    model_family: "olmoe"
+    n_players: 1024
+    n_active: 16
+    sparsity: 0.015625
+    pairs_v0: 400
+    pairs_v1: 5000
+    shards: 1
+    gpu: "l40s:1"
+    time: "03:00:00"
+    status: "DONE"
+    result_dir_local: "results/exp1-concentration-olmoe-1b-7b-v1"
+    result_dir_remote: "exp1-concentration-olmoe-1b-7b-v1"
+    payloads:
+      - per_pair_phi.npy
+      - phi.npy
+      - routing_freq.npy
+      - player_ids.json
+      - pair_meta.json
+      - result.json
+    per_pair_phi: true
+    experiments_done: ["exp1", "exp3", "exp4", "exp6", "exp8"]
+
+  exp1-phi35moe:
+    id: "exp1-phi35moe"
+    name: "Phi-3.5-MoE concentration"
+    rq: "RQ1"
+    claim: "C1"
+    config: "configs/study.phi3.5-moe.concentration.v1.yaml"
+    model: "microsoft/Phi-3.5-MoE-instruct"
+    model_family: "phi3.5moe"
+    n_players: 512
+    n_active: 64
+    sparsity: 0.125
+    pairs_v0: 400
+    pairs_v1: 5000
+    shards: 1
+    gpu: "l40s:1"
+    time: "03:00:00"
+    status: "DONE"
+    result_dir_local: "results/exp1-concentration-phi3.5-moe-v1"
+    result_dir_remote: "exp1-concentration-phi3.5-moe-v1"
+    payloads:
+      - per_pair_phi.npy
+      - phi.npy
+      - routing_freq.npy
+      - player_ids.json
+      - pair_meta.json
+      - result.json
+    per_pair_phi: true
+    experiments_done: ["exp1", "exp3", "exp4", "exp6", "exp8"]
+
+  exp1-mixtral:
+    id: "exp1-mixtral"
+    name: "Mixtral-8x7B concentration"
+    rq: "RQ1"
+    claim: "C1"
+    config: "configs/study.mixtral-8x7b.concentration.v1.yaml"
+    model: "mistralai/Mixtral-8x7B-Instruct-v0.1"
+    model_family: "mixtral"
+    n_players: 256
+    n_active: 64
+    sparsity: 0.25
+    pairs_v0: 400
+    pairs_v1: 5000
+    shards: 2
+    gpu: "h100:2"
+    time: "05:00:00"
+    status: "DONE"
+    result_dir_local: "results/exp1-concentration-mixtral-8x7b-v1"
+    result_dir_remote: "exp1-concentration-mixtral-8x7b-v1"
+    payloads:
+      - per_pair_phi.npy
+      - phi.npy
+      - routing_freq.npy
+      - player_ids.json
+      - pair_meta.json
+      - result.json
+      - result_shard0of2.json
+      - result_shard1of2.json
+    per_pair_phi: true
+    experiments_done: ["exp1", "exp3", "exp4", "exp6", "exp7", "exp8"]
+
+  exp1-dbrx:
+    id: "exp1-dbrx"
+    name: "DBRX-132B concentration"
+    rq: "RQ1"
+    claim: "C1"
+    config: "configs/study.dbrx.concentration.yaml"
+    model: "alpindale/dbrx-instruct"
+    model_family: "dbrx"
+    n_players: 640
+    n_active: 160
+    sparsity: 0.25
+    pairs_v0: 400
+    pairs_v1: 5000
+    shards: 2
+    gpu: "h200:2"
+    time: "04:00:00"
+    status: "DONE"
+    result_dir_local: "results/exp1-concentration-dbrx-v1"
+    result_dir_remote: "exp1-concentration-dbrx-v1"
+    payloads:
+      - per_pair_phi.npy
+      - phi.npy
+      - routing_freq.npy
+      - player_ids.json
+      - pair_meta.json
+      - result.json
+      - result_shard0of2.json
+      - result_shard1of2.json
+    per_pair_phi: true
+    experiments_done: ["exp1", "exp3", "exp4", "exp6"]
+    experiments_pending: ["exp7", "exp8"]
+
+  exp1-gpt-oss:
+    id: "exp1-gpt-oss"
+    name: "GPT-OSS-120B concentration"
+    rq: "RQ1"
+    claim: "C1"
+    config: "configs/study.gpt-oss-120b.concentration.v2.yaml"
+    model: "openai/gpt-oss-120b"
+    model_family: "gpt-oss"
+    n_players: 4608
+    n_active: 144
+    sparsity: 0.03125
+    pairs_v0: 400
+    pairs_v1: 2000  # v1 at 2000, v2 running at 5000
+    shards: 1
+    gpu: "h100:4"
+    time: "04:00:00"
+    status: "RUNNING_5000"  # 5000-pair job 5575070 running
+    result_dir_local: "results/exp1-concentration-gpt-oss-120b-v1"
+    result_dir_remote: "exp1-concentration-gpt-oss-120b-v1"
+    result_dir_remote_v2: "exp1-concentration-gpt-oss-120b-5000"
+    payloads:
+      - per_pair_phi.npy
+      - phi.npy
+      - routing_freq.npy
+      - player_ids.json
+      - pair_meta.json
+      - result.json
+    per_pair_phi: true
+    experiments_done: ["exp1", "exp3", "exp4", "exp6"]
+    experiments_pending: ["exp7", "exp8"]
+    notes: "v1 at 2000 pairs (valid); 5000-pair job 5575070 running; MXFP4 requires force_eager_moe"
+
+  exp1-gemma:
+    id: "exp1-gemma"
+    name: "Gemma-4-26B concentration"
+    rq: "RQ1"
+    claim: "C1"
+    config: "configs/study.gemma4-26b.concentration.v1.yaml"
+    model: "google/gemma-4-26B-A4B-it"
+    model_family: "gemma4moe"
+    n_players: 3840
+    n_active: 240
+    sparsity: 0.0625
+    pairs_v0: 400
+    pairs_v1: 5000
+    shards: 1
+    gpu: "a100:1"
+    time: "06:00:00"
+    status: "DONE"
+    result_dir_local: "results/exp1-concentration-gemma4-26b-v1"
+    result_dir_remote: "exp1-concentration-gemma4-26b-v1"
+    payloads:
+      - per_pair_phi.npy
+      - phi.npy
+      - routing_freq.npy
+      - player_ids.json
+      - pair_meta.json
+      - result.json
+    per_pair_phi: true
+    experiments_done: ["exp1", "exp3", "exp4", "exp6"]
+    experiments_pending: ["exp7", "exp8"]
+    notes: "Null-bias model (mean bias gap ~0, 47% phi exactly zero); NA corrected 960->240"
+
+  # Phantom - does not exist on HF
+  exp1-gemma27b:
+    id: "exp1-gemma27b"
+    name: "Gemma-4-27B (phantom)"
+    model: "google/gemma-4-27b-it"
+    status: "PHANTOM"
+    notes: "HF 404 - model does not exist; 26B is the real rung"
+
+  # ==========================================================================
+  # EXP2: Dense Baselines (RQ2 / C4)
+  # ==========================================================================
+  exp2-olmo:
+    id: "exp2-olmo"
+    name: "OLMo-7B dense baseline"
+    rq: "RQ2"
+    claim: "C4"
+    config: "configs/study.olmo-7b.dense-baseline.v1.yaml"
+    model: "allenai/OLMo-7B-hf"
+    model_family: "olmo"
+    n_players: 32
+    n_active: "N/A (LOO)"
+    sparsity: 1.0
+    pairs_v0: 400
+    pairs_v1: 1800
+    shards: 2
+    gpu: "l40s:1"
+    time: "05:00:00"
+    status: "RUNNING_PER_PAIR"  # 8 shards 5575082-89 running
+    result_dir_local: "results/exp2-dense-baseline-olmo-7b-v1"
+    result_dir_remote: "exp2-dense-baseline-olmo-7b-v1"
+    payloads:
+      - result.json
+      - result_shard0of2.json
+      - result_shard1of2.json
+      - player_ids.json
+    per_pair_phi: false  # v0 no, v1 submitted with --save-per-pair-phi
+    experiments_done: ["exp2", "exp4", "exp6"]
+
+  exp2-phi35mini:
+    id: "exp2-phi35mini"
+    name: "Phi-3.5-Mini dense baseline"
+    rq: "RQ2"
+    claim: "C4"
+    config: "configs/study.phi3.5-mini-dense.dense-baseline.v1.yaml"
+    model: "microsoft/Phi-3.5-mini-instruct"
+    model_family: "phi3.5"
+    n_players: 32
+    n_active: "N/A (LOO)"
+    sparsity: 1.0
+    pairs_v0: 400
+    pairs_v1: 4000
+    shards: 2
+    gpu: "l40s:1"
+    time: "05:00:00"
+    status: "RUNNING_PER_PAIR"
+    result_dir_local: "results/exp2-dense-baseline-phi3.5-mini-v1"
+    result_dir_remote: "exp2-dense-baseline-phi3.5-mini-v1"
+    payloads:
+      - result.json
+      - result_shard0of2.json
+      - result_shard1of2.json
+      - player_ids.json
+    per_pair_phi: false
+    experiments_done: ["exp2", "exp4", "exp6"]
+
+  exp2-llama2:
+    id: "exp2-llama2"
+    name: "Llama-2-7B dense cross-check"
+    rq: "RQ2"
+    claim: "C4"
+    config: "configs/study.llama-2-7b.dense-crosscheck-2.v1.yaml"
+    model: "NousResearch/Llama-2-7b-hf"
+    model_family: "llama"
+    n_players: 32
+    n_active: "N/A (LOO)"
+    sparsity: 1.0
+    pairs_v0: 400
+    pairs_v1: 1800
+    shards: 2
+    gpu: "l40s:1"
+    time: "05:00:00"
+    status: "RUNNING_PER_PAIR"
+    result_dir_local: "results/exp2-dense-crosscheck-llama-2-7b-v1"
+    result_dir_remote: "exp2-dense-crosscheck-llama-2-7b-v1"
+    payloads:
+      - result.json
+      - result_shard0of2.json
+      - result_shard1of2.json
+      - player_ids.json
+    per_pair_phi: false
+    experiments_done: ["exp2", "exp4", "exp6"]
+
+  exp2-llama31:
+    id: "exp2-llama31"
+    name: "Llama-3.1-8B dense cross-check"
+    rq: "RQ2"
+    claim: "C4"
+    config: "configs/study.llama-3.1-8b.dense-crosscheck.v1.yaml"
+    model: "NousResearch/Meta-Llama-3.1-8B"
+    model_family: "llama"
+    n_players: 32
+    n_active: "N/A (LOO)"
+    sparsity: 1.0
+    pairs_v0: 400
+    pairs_v1: 1800
+    shards: 2
+    gpu: "l40s:1"
+    time: "05:00:00"
+    status: "RUNNING_PER_PAIR"
+    result_dir_local: "results/exp2-dense-crosscheck-llama-3.1-8b-v1"
+    result_dir_remote: "exp2-dense-crosscheck-llama-3.1-8b-v1"
+    payloads:
+      - result.json
+      - result_shard0of2.json
+      - result_shard1of2.json
+      - player_ids.json
+    per_pair_phi: false
+    experiments_done: ["exp2", "exp4", "exp6"]
+
+  # ==========================================================================
+  # EXP3: Collectivity (Shapley Interactions) — C2-lite
+  # ==========================================================================
+  exp3-olmoe:
+    id: "exp3-olmoe"
+    config: "configs/study.olmoe.concentration.yaml"
+    job_id: 5575246
+    status: "SUBMITTED"
+    gpu: "a100:2"
+    time: "04:00:00"
+    max_pairs: 20
+    max_layers: 2
+
+  exp3-phi35moe:
+    id: "exp3-phi35moe"
+    config: "configs/study.phi3.5-moe.concentration.yaml"
+    job_id: 5575247
+    status: "SUBMITTED"
+    gpu: "a100:2"
+    time: "04:00:00"
+    max_pairs: 20
+    max_layers: 2
+
+  exp3-mixtral:
+    id: "exp3-mixtral"
+    config: "configs/study.mixtral-8x7b.concentration.yaml"
+    job_id: 5575248
+    status: "SUBMITTED"
+    gpu: "a100:2"
+    time: "04:00:00"
+    max_pairs: 20
+    max_layers: 2
+
+  exp3-dbrx:
+    id: "exp3-dbrx"
+    config: "configs/study.dbrx.concentration.yaml"
+    job_id: 5575249
+    status: "SUBMITTED"
+    gpu: "a100:2"
+    time: "04:00:00"
+    max_pairs: 20
+    max_layers: 2
+
+  exp3-gpt-oss:
+    id: "exp3-gpt-oss"
+    config: "configs/study.gpt-oss-120b.concentration.yaml"
+    job_id: 5575250
+    status: "SUBMITTED"
+    gpu: "a100:2"
+    time: "04:00:00"
+    max_pairs: 20
+    max_layers: 2
+
+  exp3-gemma:
+    id: "exp3-gemma"
+    config: "configs/study.gemma4-26b.concentration.v1.yaml"
+    job_id: 5575251
+    status: "SUBMITTED"
+    gpu: "a100:2"
+    time: "04:00:00"
+    max_pairs: 20
+    max_layers: 2
+
+  # ==========================================================================
+  # EXP4/6: Causal Ablation (Independent Cross-check + Ladder-wide)
+  # ==========================================================================
+  exp6-olmoe:
+    id: "exp6-olmoe"
+    job_id: 5575242  # Wait, this is DBRX... let me check
+    status: "DONE"
+    n_pairs: 60
+    result_path: "results/exp1-concentration-olmoe-1b-7b/experiment6/experiment6_ablation_curve.json"
+
+  exp6-mixtral:
+    id: "exp6-mixtral"
+    status: "DONE"
+    n_pairs: 30
+    result_path: "results/exp1-concentration-mixtral-8x7b/experiment6/experiment6_ablation_curve.json"
+
+  exp6-phi35moe:
+    id: "exp6-phi35moe"
+    status: "DONE"
+    n_pairs: 30
+    result_path: "results/exp1-concentration-phi3.5-moe/experiment6/experiment6_ablation_curve.json"
+
+  exp6-olmo-dense:
+    id: "exp6-olmo-dense"
+    status: "DONE"
+    n_pairs: 60
+    result_path: "results/exp2-dense-baseline-olmo-7b/experiment6/experiment6_ablation_curve.json"
+
+  exp6-dbrx:
+    id: "exp6-dbrx"
+    job_id: 5575242
+    status: "RUNNING"
+    max_pairs: 60
+
+  exp6-gpt-oss:
+    id: "exp6-gpt-oss"
+    job_id: 5575243
+    status: "RUNNING"
+    max_pairs: 60
+
+  exp6-gemma:
+    id: "exp6-gemma"
+    job_id: 5575244
+    status: "RUNNING"
+    max_pairs: 60
+
+  # ==========================================================================
+  # EXP7: Proxy-vs-Exact Shapley Agreement
+  # ==========================================================================
+  exp7-mixtral:
+    id: "exp7-mixtral"
+    status: "DONE"
+    n_pairs: 20
+    layers: [0, 31]
+    result_path: "results/exp1-concentration-mixtral-8x7b/experiment7/experiment7_proxy_agreement.json"
+    result: "mean_spearman_rho: -0.085 (layer 0), +0.058 (layer 31); null"
+
+  exp7-olmoe:
+    id: "exp7-olmoe"
+    job_id: 5575251
+    status: "RUNNING"
+    gpu: "a100:2"
+    time: "04:00:00"
+
+  exp7-phi35moe:
+    id: "exp7-phi35moe"
+    job_id: 5575252
+    status: "RUNNING"
+    gpu: "a100:2"
+    time: "04:00:00"
+
+  # ==========================================================================
+  # EXP8: Same-Mechanism Comparison (dense_loo on MoE)
+  # ==========================================================================
+  exp8-olmoe:
+    id: "exp8-olmoe"
+    status: "DONE_SUMMARY"
+    n_pairs: 100
+    n_players: 16
+    H: 0.7513329831783248
+    Gini: 0.614543153196013
+    result_path: "results/exp8-lloo-olmoe-1b-7b/result.json"
+    per_pair: false
+    per_pair_job_id: 5575255  # RUNNING
+
+  exp8-phi35moe:
+    id: "exp8-phi35moe"
+    status: "DONE_SUMMARY"
+    n_pairs: 50
+    n_players: 32
+    H: 0.8829717705954556
+    Gini: 0.4792328068088605
+    result_path: "results/exp8-lloo-phi3.5-moe/result.json"
+    per_pair: false
+    per_pair_job_id: 5575256  # RUNNING
+
+  # ==========================================================================
+  # EXP5: Demographic Specificity
+  # ==========================================================================
+  exp5-olmoe:
+    id: "exp5-olmoe"
+    status: "DONE"
+    model: "exp1-olmoe"
+    cohorts: 85
+    n_pairs: 5000
+    benchmarks: ["stereoset", "bbq"]  # NO winogender - flag in paper
+    js_mean: 0.2213
+    js_ci: [0.206, 0.231]
+    expert_index_null_mean: 0.3092
+    expert_index_null_p95: 0.3711
+    exceeds_p95: 0.005
+    result_path: "results/exp5-demographic-specificity-olmoe-1b-7b-v1/result.json"
+    per_pair_phi: true
+
+# ---------------------------------------------------------------------------
+# GPU Job Summary
+# ---------------------------------------------------------------------------
+gpu_jobs:
+  total_running: 26
+  by_type:
+    GPT-OSS_5000: 1  # 5575070 (4xH100)
+    Dense_per_pair: 8  # 5575082-89 (4 models x 2 shards, 1xL40S each)
+    Exp6_causal: 3    # 5575242-5244 (DBRX, GPT-OSS, Gemma)
+    Exp3_collectivity: 6  # 5575246-5251 (all 6 ladder models)
+    Exp7_proxy: 2     # 5575251-5252 (OLMoE, Phi)
+    Exp8_per_pair: 2  # 5575255-5256 (OLMoE, Phi)
+    Exp3_OLMoE: 1     # 5575246
+    Exp3_Phi: 1       # 5575247
+    Exp3_Mixtral: 1   # 5575248
+    Exp3_DBRX: 1      # 5575249
+    Exp3_GPT-OSS: 1   # 5575250
+    Exp3_Gemma: 1     # 5575251
+    Exp7_OLMoE: 1     # 5575251
+    Exp7_Phi: 1       # 5575252
+    Exp8_OLMoE_per_pair: 1  # 5575255
+    Exp8_Phi_per_pair: 1    # 5575256
+
+# ---------------------------------------------------------------------------
+# Dependencies
+# ---------------------------------------------------------------------------
+dependencies:
+  exp1-olmoe: []
+  exp1-phi35moe: []
+  exp1-mixtral: []
+  exp1-dbrx: []
+  exp1-gpt-oss: []
+  exp1-gemma: []
+  exp2-olmo: [exp1-olmoe]
+  exp2-phi35mini: [exp1-phi35moe]
+  exp2-llama2: []
+  exp2-llama31: []
+  exp3-olmoe: [exp1-olmoe]
+  exp3-phi35moe: [exp1-phi35moe]
+  exp3-mixtral: [exp1-mixtral]
+  exp3-dbrx: [exp1-dbrx]
+  exp3-gpt-oss: [exp1-gpt-oss]
+  exp3-gemma: [exp1-gemma]
+  exp6-olmoe: [exp1-olmoe]
+  exp6-mixtral: [exp1-mixtral]
+  exp6-phi35moe: [exp1-phi35moe]
+  exp6-olmo-dense: [exp2-olmo]
+  exp6-dbrx: [exp1-dbrx]
+  exp6-gpt-oss: [exp1-gpt-oss]
+  exp6-gemma: [exp1-gemma]
+  exp7-mixtral: [exp1-mixtral]
+  exp7-olmoe: [exp1-olmoe]
+  exp7-phi35moe: [exp1-phi35moe]
+  exp8-olmoe: [exp1-olmoe]
+  exp8-phi35moe: [exp1-phi35moe]
+  exp5-olmoe: [exp1-olmoe]
+
+# ---------------------------------------------------------------------------
+# Artifacts to Archive (Kaggle + Git)
+# ---------------------------------------------------------------------------
+artifacts:
+  kaggle_per_pair_phi:
+    - exp1-olmoe
+    - exp1-phi35moe
+    - exp1-mixtral
+    - exp1-dbrx
+    - exp1-gpt-oss
+    - exp1-gemma
+    - exp5-olmoe
+  git_tracked:
+    - all result.json
+    - all pair_meta.json
+    - all player_ids.json
+    - all phi.npy (aggregated)
+    - all routing_freq.npy
+  git_ignored:
+    - all per_pair_phi.npy
+    - all result_shard*of2.json
+    - all .log/.out/.err
+    - LaTeX build artifacts
+
+# ---------------------------------------------------------------------------
+# Paper Integration Status
+# ---------------------------------------------------------------------------
+paper_integration:
+  exp1: "COMPLETE (Tables 1, 2, Figs 1-2)"
+  exp2: "COMPLETE v0 (Table 3); v1 CIs PENDING"
+  exp3: "MISSING from main text; jobs SUBMITTED"
+  exp4: "MERGED with Exp6 in Appendix B"
+  exp5: "COMPLETE (Sec 1.5, Fig 6, take-away)"
+  exp6: "PARTIAL (4/7 models in Sec 1.3 + Appendix B; 3 PENDING)"
+  exp7: "PARTIAL (Mixtral done in Appendix B; 2 PENDING)"
+  exp8: "PARTIAL (Summary in Appendix B; per-pair PENDING)"
+
+# ---------------------------------------------------------------------------
+# Kaggle Dataset Contents
+# ---------------------------------------------------------------------------
+kaggle:
+  dataset: "sghose0/moe-bias-routing-shapley-perpair-phi"
+  files:
+    - exp1-concentration-olmoe-1b-7b-v1_per_pair_phi.npy
+    - exp1-concentration-phi3.5-moe-v1_per_pair_phi.npy
+    - exp1-concentration-mixtral-8x7b-v1_per_pair_phi.npy
+    - exp1-concentration-dbrx-v1_per_pair_phi.npy
+    - exp1-concentration-gemma4-26b-v1_per_pair_phi.npy
+    - exp1-concentration-gpt-oss-120b-v1_per_pair_phi.npy
+    - exp1-concentration-gemma4-26b_per_pair_phi.npy
+    - exp5-demographic-specificity-olmoe-1b-7b-v1_per_pair_phi.npy
+  missing_metadata_per_experiment:
+    - result.json
+    - pair_meta.json
+    - player_ids.json
+    - phi.npy (aggregated)
+    - routing_freq.npy
+
+---
+*Generated 2026-08-10. Update this registry on every experiment submission/completion.*
