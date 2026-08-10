@@ -21,7 +21,14 @@ QOS `coc-ice` GPU-minute cap: MaxTRESMinsPerJob = gres/gpu=960 (i.e. 2 GPUs x 8h
 
 ## Queue (2026-08-10, `squeue -u sghose7`)
 
-Empty — all prior study jobs finished. Any new GPU experiment must be submitted fresh.
+- **RUNNING — sbatch 5575070**: GPT-OSS-120B exp1 re-run at 5000 pairs (ladder uniformity: this rung was previously the only one at 2000). 4xH100 (--gres=gpu:h100:4), walltime 04:00:00, per-pair phi saved,
+  ETA ~2.7h (~1.9 s/pair). Config: `configs/study.gpt-oss-120b.concentration.v2.yaml`
+  (study_name exp1-concentration-gpt-oss-120b-5000). New result dir on cluster:
+  exp1-concentration-gpt-oss-120b-5000 (v1 capture untouched).
+- On completion: pull result.json + per_pair_phi.npy into local `results/exp1-concentration-gpt-oss-120b-5000/`,
+  rerun s03/s04 + figures (n_pairs 5000 now uniform across rungs), and extend the H1 CI/power story
+  (2000->5000 pairs narrows the bootstrap CI but does not change n<=6 permutation-power limits).
+- All prior study jobs aside from 5575070 are finished; queue otherwise empty.
 
 ## Experimental status
 

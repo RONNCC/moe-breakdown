@@ -1,0 +1,39 @@
+# Experiment 1 v2 — GPT-OSS-120B capture (bf16-dequantized), 5000 pairs.
+# force_eager_moe: true REQUIRED. openai/gpt-oss-* are pre-quantized MXFP4
+# checkpoints; transformers>=5.13 otherwise auto-attaches the fused hub kernel
+# (replace_with_mxfp4_linear): swaps GptOssExperts -> Mxfp4GptOssExperts
+# (scatter_idx signature crash on torch 2.6) and bypasses GptOssTopKRouter
+# (empty router hooks -> all-zero phi). force_eager_moe makes the loader pass
+# Mxfp4Config(dequantize=True): dequantizes to bf16 at load, model stays eager.
+# bf16 ≈ 240GB -> 4xH100 (no CPU offload); mem 512G, 5000 pairs ≈ 2.7h @ ~1.9s/pair.
+# QOS coc-ice caps gres/gpu=960 GPU-min/job: 4 GPUs x 4h = 960 is the accepted limit.
+study_name: exp1-concentration-gpt-oss-120b-5000
+model_id: openai/gpt-oss-120b
+model_family: gpt-oss
+trust_remote_code: false
+torch_dtype: bfloat16
+load_in_4bit: false
+device_map: auto
+force_eager_moe: true
+benchmarks:
+- stereoset
+- bbq
+- winogender
+shapley_method: routing_contrast
+max_prompts: 5000
+seed: 42
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: '04:00:00'
+  cpus_per_task: 16
+  gpus_per_node: 4
+  gpu_type: h100
+  use_gres: true
+  mem: 512G
+  modules:
+  - gcc/12.3.0
+  - python/3.11
+  - cuda/12.6.1
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown
