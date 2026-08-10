@@ -520,13 +520,101 @@
         "result_json": "ok",
         "mismatches": {}
       }
+    },
+    "exp2-dense-baseline-olmo-7b": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "exp2-dense-baseline-olmo-7b-v1": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "exp2-dense-baseline-phi3.5-mini": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "exp2-dense-baseline-phi3.5-mini-v1": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "exp2-dense-crosscheck-llama-2-7b": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "exp2-dense-crosscheck-llama-2-7b-v1": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "exp2-dense-crosscheck-llama-3.1-8b": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "exp2-dense-crosscheck-llama-3.1-8b-v1": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
     }
   },
   "summary": {
     "n_with_data": 12,
-    "n_missing": 1,
+    "n_missing": 9,
     "missing_models": [
-      "gemma4-27b"
+      "gemma4-27b",
+      "exp2-dense-baseline-olmo-7b",
+      "exp2-dense-baseline-olmo-7b-v1",
+      "exp2-dense-baseline-phi3.5-mini",
+      "exp2-dense-baseline-phi3.5-mini-v1",
+      "exp2-dense-crosscheck-llama-2-7b",
+      "exp2-dense-crosscheck-llama-2-7b-v1",
+      "exp2-dense-crosscheck-llama-3.1-8b",
+      "exp2-dense-crosscheck-llama-3.1-8b-v1"
     ]
   }
 }

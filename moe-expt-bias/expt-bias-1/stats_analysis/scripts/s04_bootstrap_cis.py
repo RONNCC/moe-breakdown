@@ -240,8 +240,21 @@ def process_model(exp_dir: Path) -> dict:
     }
 
 
+def _dense_model_name(exp_dir: Path) -> str:
+    """Strip exp2- prefix + dense-baseline/crosscheck qualifiers for a clean model key."""
+    name = exp_dir.name.removeprefix("exp2-")
+    for h in ("-dense-baseline", "-dense-crosscheck"):
+        name = name.replace(h, "")
+    return name
+
+
 def main() -> None:
-    exp_dirs = sorted(RESULTS.glob("exp1-concentration-*"))
+    exp_dirs = sorted(RESULTS.glob("exp1-concentration-*")) + sorted(RESULTS.glob("exp2-dense-*"))
+
+    def _model_key(d: Path) -> str:
+        return d.name.removeprefix("exp1-concentration-") if d.name.startswith("exp1-concentration-") else _dense_model_name(d)
+
+    results = {_model_key(d): process_model(d) for d in exp_dirs}
     out = {"_note": "entropy is normalized H/log(n_players); CIs are 95% percentile over n_boot block-bootstrap draws (resample pairs with replacement, seed=42); MISSING = no per_pair_phi data on disk"}
     results = {d.name.removeprefix("exp1-concentration-"): process_model(d) for d in exp_dirs}
     out["models"] = results
