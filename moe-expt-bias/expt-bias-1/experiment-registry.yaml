@@ -612,5 +612,4 @@ kaggle:
     - phi.npy (aggregated)
     - routing_freq.npy
 
----
-*Generated 2026-08-10. Update this registry on every experiment submission/completion.*
+# Generated 2026-08-10. Update this registry on every experiment submission/completion.
