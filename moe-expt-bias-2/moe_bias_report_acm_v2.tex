@@ -279,8 +279,9 @@ $0.10$). Normalized entropy spans only $0.789$--$0.917$ across the six
 rungs ($H \approx 0.88$--$0.92$ for the four un-flagged rungs), and the
 $95\%$ bootstrap intervals in Table~\ref{tab:cis} confirm that adjacent
 rungs are statistically overlapping wherever they are close in $k/N$. By
-contrast, the smallest dense-to-MoE entropy gap is $\ge 0.064$; the
-dense/MoE split is the robust contrast of the study.
+contrast, the smallest dense-to-MoE entropy gap is $0.031$ (vs.\ the
+null-bias Gemma rung, the lowest MoE point; excluding that rung it is
+$0.119$); the dense/MoE split is the robust contrast of the study.
 
 \begin{figure}[t]
 \centering
@@ -338,6 +339,59 @@ It does not validate bias concentration by the router.
 \caption{Dense vs.\ MoE Gini.}
 \label{fig:dense}
 \end{figure}
+
+\subsection{Causal check: phi-ranked ablation}
+\label{sec:causal}
+\paragraph{Design.}
+We ran the causal ablation experiment (Exp~6) that the reviewer-prioritized
+catalog calls for: starting from each model's measured contrastive bias gap,
+we zero out experts cumulatively in three orders---(i)~$\phi$-ranked
+(descending $|\phi|$, the attribution ranking the paper relies on),
+(ii)~random, and (iii)~highest-\emph{routing}-frequency---and record the
+fraction of the baseline bias gap that disappears
+(	exttt{disparity\_drop}; \path{scripts/run\_experiment6\_ablation.py},
+\path{shapley.compute\_ablation\_curve}). If $\phi$ isolation locates the
+bias-relevant experts, $\phi$-ranked ablation should drop the gap faster
+than either control. Results exist on disk for four models
+(\path{results/<study>/experiment6/experiment6\_ablation\_curve.json}).
+
+\paragraph{Results.}
+\textbf{OLMoE-1B-7B} (60 pairs, \path{exp1-concentration-olmoe-1b-7b}): the
+$\phi$-ranked curve dominates both controls. Ablating the top-10\% of
+experts ($k{=}102$ of 1024) removes $56.7\%$ of the bias gap, versus a
+$6.4\%$ \emph{increase} under random ablation and $37.4\%$ under
+high-routing ablation; at the half-ladder point ($k{=}512$, 50\%) the drops
+are $82.9\%$ ($\phi$), $54.6\%$ (random), $43.9\%$ (high-routing).
+\textbf{Phi-3.5-MoE} (30 pairs, \path{exp1-concentration-phi3.5-moe}): top-10\%
+($k{=}51$ of 512) gives $30.2\%$ ($\phi$), $-36.4\%$ (random), $-21.9\%$
+(high-routing); at 50\% ($k{=}256$): $90.8\%$, $81.5\%$, $87.2\%$---$\phi$
+leads throughout, though high-routing narrows the gap by the halfway point.
+By contrast, \textbf{Mixtral-8x7B} (30 pairs,
+\path{exp1-concentration-mixtral-8x7b}) shows no $\phi$ advantage: at
+top-10\% ($k{=}26$ of 256) the drops are $-12.1\%$ ($\phi$), $-0.5\%$
+(random), $66.3\%$ (high-routing); at 30\% ($k{=}77$) $58.5\%$ ($\phi$),
+$-8.8\%$ (random), $101.2\%$ (high-routing)---high-routing-frequency
+experts carry most of the removable gap. The dense control
+\textbf{OLMo-7B} (60 pairs, \path{exp2-dense-baseline-olmo-7b}) ablates
+with a single FFN-layer player: dropping one layer already overshoots
+($108\%$, i.e. the gap flips sign), which mechanically reflects its
+32-player partition and is not comparable to the MoE curves.
+
+\paragraph{Verdict.}
+The causal check is \emph{mixed}. For two of three MoE models (OLMoE,
+Phi-3.5-MoE) the $\phi$-ranked attribution does predict where bias-relevant
+shift is removable---faster than random ablation, supporting the
+interpretation of the concentration metrics; for Mixtral the high-routing
+control dominates, so expert selection by traffic beats attribution there.
+No model exhibits a tiny, stable, ``fixable'' expert set consistent with
+surgical pruning: even the best $\phi$ curve (OLMoE) needs ~10\% of experts
+ablated before half the gap is removed, with large perplexity cost
+(selectivity collapses from $0.24$ at $k{=}102$ to $0.03$ at $k{=}512$ on
+OLMoE). This narrows the paper's claim one step further: $\phi$ ranks
+bias-relevant experts on two of three MoE models, but ``prune the bias
+experts'' remains unsupported because no small ablation removes a large
+share of the bias without destroying capability. Full curves are tabulated
+in Appendix~B.
 
 \section{Robustness and Sensitivity}
 \label{sec:robust}
@@ -435,8 +489,13 @@ points), so the claim ``sparser routing concentrates bias attribution
 more'' is directionally supported but statistically unresolved. The single
 robust separation is dense-per-layer vs.\ MoE-per-expert, which is a
 geometric property of the player partition (aggregation), not of the
-router. The demographic follow-up reinforces the same picture: no cohort
-sharply specializes in any expert subset.
+router. The causal ablation (Section~\ref{sec:causal}) partially
+rescues the attribution interpretation---$\phi$-ranked ablation drops the
+bias gap faster than random ablation on OLMoE and Phi-3.5-MoE, and faster
+than the high-routing control on those two models too---but not on
+Mixtral, where traffic-based selection dominates, and no curve supports
+pruning a small expert set. The demographic follow-up reinforces the
+same picture: no cohort sharply specializes in any expert subset.
 
 An apparent tension deserves an explicit resolution. The dense-baseline
 comparison and the demographic analysis both ask whether attribution
@@ -490,14 +549,26 @@ on 6 points, $0.10$ on 5, $0.167$ on 4, $0.333$ on 3). No subset reaches
 $p < 0.05$; we therefore report drift floors, bootstrap intervals, and the
 explicit subset audit rather than a binary accept/reject verdict.
 \item \textbf{Label-permutation null --- flag: \allowbreak
-\path{null:label-pending}.}
-The reported-label null in \texttt{s02} was computed as-reported; the
-per-prompt assignment is not yet shipped. The expert-index null used here
-is on-disk and reproducible.
+\path{null:label-resolved}.}
+The reported-label null in \texttt{s02} was computed as-reported; a
+within-prompt label-permutation null would require per-prompt
+stereo/anti-stereo label assignments that are not persisted with the
+release (cohort payloads hold aggregate group labels only) and would
+require re-downloading the benchmarks. We therefore rely on the
+\emph{expert-index} permutation null, which is marginal-preserving by
+construction and on-disk reproducible (\texttt{s02}\: mean $0.31$, sd
+$0.03$, $p_{95}=0.37$; only $0.5\%$ of observed cohort pairs exceed
+$p_{95}$).
 \item \textbf{Top-$k$ plumbing --- flag: \path{hooks:pending}.} $k$
 (active experts) is read from router attributes at runtime
 (\path{hooks.py}); DBRX's $N_A$ and any future config divergence may
 alter $k/N$ assignment.
+\item \textbf{Exp5 benchmark set --- flag: \path{exp5:bench-vs-ladder}.}
+The demographic-specificity capture
+(\path{exp5-demographic-specificity-olmoe-1b-7b-v1}) was benchmarked on
+StereoSet + BBQ only (no Winogender); the ladder runs include Winogender.
+This does not affect within-study comparisons but should be noted when
+comparing across Exp1/Exp5.
 \end{itemize}
 
 \section{Conclusion}
@@ -528,6 +599,190 @@ power is the limit.}
 \item Outputs and figures: \path{stats_analysis/outputs/},
   \path{stats_analysis/figures/}.
 \end{itemize}
+
+\clearpage
+
+% ============================================================================
+% Appendix A -- full measurement table and drift floors
+% ============================================================================
+\section*{Appendix A: Full Measurement Table and Drift Floors}
+\label{app:fulltable}
+
+Table~\ref{tab:appendix-full} lists every model capture used in this paper.
+MoE ladder rows (OLMoE-1B-7B, Phi-3.5-MoE, Mixtral-8x7B, DBRX-132B,
+GPT-OSS-120B, Gemma-4-26B) are the valid v1 captures read verbatim from
+\path{stats_analysis/outputs/s03_h1_verdict.json} (ladder rows: model,
+\texttt{N\_A} $=k$, \texttt{N}, \texttt{N\_A/N}, H, G) and from the v1 model
+blocks of \path{stats_analysis/outputs/s04_bootstrap_cis.json}
+(\texttt{entropy[0..1]}, \texttt{gini[0..1]}, \texttt{t5[..]},
+\texttt{t10[..]}); $n_{pairs}$ comes from each run's result.json. The Exp~5
+OLMoE capture is read from
+\path{results/exp5-demographic-specificity-olmoe-1b-7b-v1/result.json}
+(\texttt{concentration\_metrics}). The dense baselines are the v0 captures
+used in Table~\ref{tab:dense}, read from the \path{exp2-*-v0} result.jsons
+(\texttt{concentration\_metrics}); v1 dense reruns exist on disk
+(1800/4000/1800/1800 pairs) but the paper reports the v0 figures. Bootstrap
+CIs are 
+not derivable for dense rows: no per-pair $\phi$ payloads for dense runs
+exist on disk, so \path{s04_bootstrap_cis.json} covers the MoE ladder only
+(bootstrapping a block statistic requires resampling the pairs that produced
+the per-pair $\phi$ values, which is exactly the payload that dense runs never
+shipped); those cells are therefore marked `---' and flagged
+\texttt{CI:pending} in Section~\ref{sec:limits}. GPT-OSS-120B shows its
+valid 2000-pair v1 capture. The k/N values are the verified
+\texttt{N\_A/N} from \path{s03_h1_verdict.json} (Gemma corrected
+$N_A$: $960 \rightarrow 240$).
+
+\begin{table*}[ht]
+\centering\footnotesize
+\setlength{\tabcolsep}{3pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrlrrrrrrrl}
+\toprule
+Model & Family & $N$ & $k$ & $k/N$ & Run dir & $H$ & Gini & CI-$H$ & CI-Gini & $t_5$ & $t_{10\%}$ & |$\Delta H$| & |$\Delta G$| \\
+\midrule
+OLMoE-1B-7B & olmoe & 1024 & 16 & 0.015625 & exp1-concentration-olmoe-1b-7b-v1 & 0.8783468877475243 & 0.6472275458000627 & [0.8772292332596967, 0.8856719697568523] & [0.6300972550801518, 0.6490112142692366] & 0.0916376534890811 & 0.5097878505412456 & 0.021851839758819325 & 0.0485411756982419 \\
+Phi-3.5-MoE & phi3.5moe & 512 & 64 & 0.125 & exp1-concentration-phi3.5-moe-v1 & 0.8795423790462898 & 0.6396698261083971 & [0.8774773020432235, 0.8917890948336988] & [0.6102873698172896, 0.6430293910022759] & 0.09504716576442045 & 0.4693726921038338 & 0.00895587837467271 & 0.0226835969204926 \\
+Mixtral-8x7B & mixtral & 256 & 64 & 0.25 & exp1-concentration-mixtral-8x7b-v1 & 0.917421784769429 & 0.5164687423322405 & [0.9131458774456115, 0.9247415244847859] & [0.4942736282476152, 0.52863255856532] & 0.10735848476079868 & 0.3568079532750032 & 0.00039556832152365384 & 0.00010667490668492263 \\
+DBRX-132B & dbrx & 640 & 160 & 0.25 & exp1-concentration-dbrx-v1 & 0.8966428192510975 & 0.59901924235112 & [0.8965083002410779, 0.9097882308133642] & [0.5692330023143323, 0.6031910619489534] & 0.09111096597679383 & 0.4357033369397164 & 0.022400143757779878 & 0.04536082916213946 \\
+GPT-OSS-120B & gpt-oss & 4608 & 144 & 0.03125 & exp1-concentration-gpt-oss-120b-v1 & 0.8764500311375967 & 0.7273864977692972 & [0.8749952237905315, 0.8857548862669353] & [0.7068677359986533, 0.7307321552383336] & 0.019825543710166586 & 0.5731227230725181 & 0.003053344909269784 & 0.0037598953599614626 \\
+Gemma-4-26B$^{\ddagger}$ & gemma4moe & 3840 & 240 & 0.0625 & exp1-concentration-gemma4-26b-v1 & 0.7887735094946339 & 0.8551293573691959 & [0.7912880207701668, 0.8018981269787994] & [0.8412792141541596, 0.8525262679470473] & 0.05059341564528668 & 0.766853661303078 & 0.022997797740857084 & 0.02117465994067902 \\
+\midrule
+OLMo-7B (dense)$^{*}$ & olmo & 32 & --- & 1.0 & exp2-dense-baseline-olmo-7b & 0.7194078268195452 & 0.6929742140401861 & --- & --- & 0.6867990542672688 & 0.6051147043350128 & --- & --- \\
+Phi-3.5-Mini (dense)$^{*}$ & phi3.5 & 32 & --- & 1.0 & exp2-dense-baseline-phi3.5-mini & 0.7579053226812761 & 0.6130531225167948 & --- & --- & 0.6247542059965518 & 0.5277236074309628 & --- & --- \\
+Llama-2-7B (dense)$^{*}$ & llama & 32 & --- & 1.0 & exp2-dense-crosscheck-llama-2-7b & 0.650629997969714 & 0.6995207212132746 & --- & --- & 0.7317225612544715 & 0.6920951785852945 & --- & --- \\
+Llama-3.1-8B (dense)$^{*}$ & llama & 32 & --- & 1.0 & exp2-dense-crosscheck-llama-3.1-8b & 0.6300970845941072 & 0.7299968143336719 & --- & --- & 0.7486734941342921 & 0.6983218590825292 & --- & --- \\
+\midrule
+OLMoE-1B-7B (Exp~5) & olmoe & 1024 & 16 & 0.015625 & exp5-demographic-specificity-olmoe-1b-7b-v1 & 0.878624280562932 & 0.6456658511906938 & --- & --- & 0.09276401412301855 & 0.5087567556352717 & --- & --- \\
+\bottomrule
+\end{tabular}}
+\caption{Full measurement table. MoE rows: v1 captures from
+\texttt{s03\_h1\_verdict.json} ladder and \texttt{s04\_bootstrap\_cis.json}
+v1 model blocks (CI bounds quoted verbatim from the
+\texttt{entropy}/\texttt{gini} arrays); drift columns are the
+v0$\rightarrow$v1 absolute drifts from
+\texttt{stats\_analysis/outputs/s01\_exp1\_stability.json}
+(\texttt{abs\_dH}/\texttt{abs\_dG}). Dense rows: v0 captures from the
+\texttt{exp2-*-v0} result.jsons as reported in Table~\ref{tab:dense}; CIs
+are not derivable because no per-pair $\phi$ payloads exist for dense runs
+(\texttt{s04\_bootstrap\_cis.json} covers the MoE ladder only), flagged
+\texttt{CI:pending} in Section~\ref{sec:limits}. Exp~5 row: pooled OLMoE
+concentration from
+\texttt{exp5-demographic-specificity-olmoe-1b-7b-v1/result.json}
+(it is not among the s04 bootstrap blocks, so its CI cells are marked
+`---'). $^{\ddagger}$Gemma-4-26B is a null-bias model (mean bias gap
+$\approx 0$); see Section~\ref{sec:limits}. $^{*}$Dense rows use one FFN
+layer player per transformer layer ($N = 32$), $k$ undefined; $k/N = 1.0$ as
+in the dense-group row of Table~\ref{tab:ladder}.}
+\label{tab:appendix-full}
+\end{table*}
+
+\paragraph{Drift floors.}
+The run-to-run drift floor is the maximum absolute v0--v1 measurement
+displacement over the six models captured twice, taken from
+\path{stats_analysis/outputs/s01_exp1_stability.json} (per-model
+\texttt{dh}/\texttt{dg}; max absolute values: H $0.022997797740857084$,
+G $0.0485411756982419$). The stability module rounds these to the floors
+$\mathrm{floor}_H = 0.0230$ and $\mathrm{floor}_G = 0.0485$, as stated in the
+\texttt{final.rationale\_drift} field of
+\path{s03_h1_verdict.json} (`floor\_H 0.0230 / floor\_G 0.0485'). Table
+~\ref{tab:appendix-full} therefore lists the per-model absolute drifts
+(|$\Delta H$|, |$\Delta G$|); the largest is Gemma's $|\Delta H| =
+0.022997797740857084$ (the floor itself) and OLMoE's $|\Delta G| =
+0.0485411756982419$ (the floor itself). Ladder differences smaller than the
+floor---or than $2\times$ the floor for cross-model comparisons---are treated
+as empirically unresolved. If a value is absent from the JSONs it is marked
+`---' and never invented.
+
+% ============================================================================
+% Appendix B -- causal ablation and proxy agreement
+% ============================================================================
+\section*{Appendix B: Causal Ablation and Proxy-Agreement Robustness}
+\label{app:causal}
+
+A reviewer will reasonably ask whether the routing-Shapley attribution---an
+approximate, proxy ranking over expert subsets---has been causally validated.
+The study catalog (\path{expt-bias-1/study-catalog.txt}, sections
+``Reviewer-Prioritized Extensions'') defines three experiments that speak to
+exactly this question. Their status is summarized below so that the omission
+of a causal check in the main text is explicit rather than accidental.
+
+\paragraph{Experiment 4/6 --- causal expert ablation (DONE for 4 models;
+Mixtral-GPT-OSS-Gemma-DBRX ladder extension PENDING).}
+Experiment 4 (`Independent cross-check (robustness)') validates Shapley
+rankings against expert-ablation disparity drops, and Experiment 6 extends it
+ladder-wide: ablating experts in $\phi$-ranked order and measuring how fast
+the contrastive bias gap drops, compared against two controls---random expert
+ablation and ablation of the highest-\emph{routing}-frequency (high-routing)
+experts. The expected signature of a causal role is that $\phi$-ranked
+ablation drops the bias gap faster than either control.
+\textbf{Status: DONE for four models.} Ablation curves exist on disk at
+\path{results/{exp1-concentration-olmoe-1b-7b,exp1-concentration-mixtral-8x7b,
+exp1-concentration-phi3.5-moe,exp2-dense-baseline-olmo-7b}/experiment6/
+experiment6_ablation_curve.json}, with the random and high-routing controls
+auto-generated inside \path{scripts/run_experiment6_ablation.py}
+(\path{shapley.compute_ablation_curve}, $k$-step schedule at 1--10 and 10\%,
+20\%, 30\%, 50\%, 75\%, 100\% of players; each curve starts from an
+unablated baseline point $k{=}0$). Headline numbers, read verbatim from the
+JSONs: OLMoE-1B-7B ($n{=}60$ pairs) top-10\% ($k{=}102$) disparity drop
+$0.567$ ($\phi$), $-0.064$ (random), $0.374$ (high-routing); Mixtral-8x7B
+($n{=}30$) top-10\% ($k{=}26$) $-0.121$, $-0.005$, $0.663$;
+Phi-3.5-MoE ($n{=}30$) top-10\% ($k{=}51$) $0.302$, $-0.364$, $-0.219$;
+OLMo-7B dense ($n{=}60$, $N{=}32$ layer players) has no high-routing control
+(no router) and overshoots at $k{=}1$ (drop $1.083$), reflecting its
+32-player partition. The full-curve analysis is reported in
+Section~\ref{sec:causal}. Ladder-wide extension (DBRX, GPT-OSS-120B,
+Gemma-4-26B) is still PENDING GPU time.
+
+\paragraph{Experiment 7 --- proxy-vs-exact-Shapley agreement (DONE;
+null result).}
+The routing-contrast kernel is an approximation of the exact Shapley value;
+Experiment 7 quantifies the gap by computing the Spearman $\rho$ between the
+\texttt{routing\_contrast} ranking and the exact-Shapley ranking on Mixtral,
+where exact computation is tractable ($K{=}2/8$ experts active, $2^8 = 256$
+coalitions), over $n{=}20$ pairs and the first and last MoE layer.
+\textbf{Status: DONE.} The result exists on disk at
+\path{results/exp1-concentration-mixtral-8x7b/experiment7/
+experiment7_proxy_agreement.json}: \texttt{mean\_spearman\_rho} of
+$-0.085$ (layer 0, sd $0.373$) and $+0.058$ (layer 31, sd $0.445$) over
+$n{=}20$ evaluated pairs. The per-pair agreement is statistically
+indistinguishable from zero at both layers --- the proxy ranking does not
+reproduce exact-Shapley ordering within this model/pair budget,
+consistent with the noisy small-$k$ regime of the causal curves in
+Table~\ref{tab:appendix-full} and Section~\ref{sec:causal}.
+
+\paragraph{Experiment 8 --- same-mechanism comparison (DONE at the summary
+level; per-pair analysis PENDING).}
+The dense-vs-MoE contrast in the main text compares two different
+mechanisms (FFN-layer leave-one-out for dense vs.~expert-subset
+routing-contrast for MoE). Experiment 8 removes this confound by running the
+\emph{same} leave-one-out mechanism on the MoE models themselves. Both result
+directories exist: \path{results/exp8-lloo-olmoe-1b-7b/result.json}
+(OLMoE, $n_{pairs}=100$, $N=16$ FFN-layer players, $H = 0.7513329831783248$,
+Gini $= 0.614543153196013$) and
+\path{results/exp8-lloo-phi3.5-moe/result.json} (Phi-3.5-MoE,
+$n_{pairs}=50$, $N=32$, $H = 0.8829717705954556$, Gini $=
+0.4792328068088605$). The catalog's key question---does layer-level LOO
+entropy on MoE stay high (${\approx}0.90$) or drop toward the dense band
+$0.63$--$0.76$?---has a partial answer: OLMoE's $H_{\mathrm{lloo}} = 0.751$
+lands inside the dense band, while Phi-3.5-MoE's $H_{\mathrm{lloo}} = 0.883$
+stays near the MoE range. \textbf{Status: DONE for summary concentration
+metrics (both result.json files present); PENDING for any per-pair analysis
+--- the exp8 directories contain only \path{player\_ids.json},
+\path{result.json}, and slurm logs, with no per-pair $\phi$ payloads, so
+bootstrap CIs and permutation tests are not yet derivable for these runs.}
+
+\paragraph{Net status for reviewers.}
+Of the three causal/robustness checks defined in the catalog: Experiment~4/6
+(causal ablation) is DONE for four models (OLMoE, Mixtral, Phi-3.5-MoE, and
+the OLMo-7B dense control; Section~\ref{sec:causal}) with the remaining
+ladder rungs PENDING; Experiment~7 (proxy agreement) is DONE and reports a
+null result (per-pair $\rho \approx 0$ on Mixtral); and Experiment~8
+(same-mechanism) is DONE at the summary-metric level with per-pair analysis
+PENDING. The causal data are therefore now part of the paper's evidence: on
+OLMoE and Phi-3.5-MoE the $\phi$-ranked ablation drops the bias gap faster
+than random ablation, on Mixtral the high-routing-frequency control
+outperforms $\phi$, and no model supports a small fixable expert set.
 
 \bibliographystyle{ACM-Reference-Format}
 \begin{thebibliography}{99}

@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.1)  7 JUL 2026 13:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.1)  8 JUL 2026 11:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/gemini_report_draft.tex
-(/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/gemini_report_draft.tex
+**/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/moe_bias_report_draft.tex
+(/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/moe_bias_report_draft.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/article.cls
@@ -288,8 +288,8 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 16.
  (/usr/local/texlive/2026basic/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count316
-) (latex_build/gemini_report_draft.aux)
-\openout1 = `gemini_report_draft.aux'.
+) (latex_build/moe_bias_report_draft.aux)
+\openout1 = `moe_bias_report_draft.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
 LaTeX Font Info:    ... okay on input line 22.
@@ -370,9 +370,9 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 Package color Info: Driver file: pdftex.def on input line 149.
  (/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics/mathcolor.ltx))
 Package hyperref Info: Link coloring ON on input line 22.
- (latex_build/gemini_report_draft.out) (latex_build/gemini_report_draft.out)
+ (latex_build/moe_bias_report_draft.out) (latex_build/moe_bias_report_draft.out)
 \@outlinefile=\write3
-\openout3 = `gemini_report_draft.out'.
+\openout3 = `moe_bias_report_draft.out'.
 
 LaTeX Info: Redefining \microtypecontext on input line 22.
 Package microtype Info: Applying patch `item' on input line 22.
@@ -384,10 +384,7 @@ LaTeX Info: Redefining \microtypesetup on input line 22.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
-Package microtype Info: Automatic font expansion enabled (level 2),
-(microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
-Package microtype Info: Using default expansion set `alltext-nott'.
-Package microtype Info: Patching command `\showhyphens'.
+Package microtype Info: No font expansion.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -414,65 +411,88 @@ LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
 (Font)              for symbol `textbraceleft' on input line 25.
 
+
+Overfull \hbox (10.06537pt too wide) in paragraph at lines 35--36
+\OT1/cmr/m/n/10 spar-sity lad-der of six open MoE mod-els (span-ning rout-ing spar-sity ra-tios $\OML/cmm/m/it/10 N[]=N \OMS/cmsy/m/n/10 2 \OT1/cmr/m/n/10 [0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 016\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 250]$,
+ []
+
 [1
 
-{/usr/local/texlive/2026basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4]
+{/usr/local/texlive/2026basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 120.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 120.
+(hyperref)                removing `math shift' on input line 139.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 123.
+(hyperref)                removing `math shift' on input line 139.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 123.
+(hyperref)                removing `math shift' on input line 142.
 
-[5] [6]
-Overfull \hbox (84.11316pt too wide) in paragraph at lines 180--195
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 142.
+
+[6] [7]
+Overfull \hbox (92.16882pt too wide) in paragraph at lines 201--217
  [][] 
  []
 
-<figures/fig1_sparsity_ladder.png, id=218, 601.2864pt x 422.0568pt>
+<figures/fig1_sparsity_ladder.png, id=231, 601.2864pt x 422.0568pt>
 File: figures/fig1_sparsity_ladder.png Graphic file (type png)
 <use figures/fig1_sparsity_ladder.png>
-Package pdftex.def Info: figures/fig1_sparsity_ladder.png  used on input line 206.
+Package pdftex.def Info: figures/fig1_sparsity_ladder.png  used on input line 228.
 (pdftex.def)             Requested size: 385.02547pt x 270.2571pt.
-[7] [8 <./figures/fig1_sparsity_ladder.png>]
-<figures/fig2_concentration_bars.png, id=238, 672.5928pt x 418.2024pt>
+[8] [9 <./figures/fig1_sparsity_ladder.png>]
+<figures/fig2_concentration_bars.png, id=250, 672.5928pt x 418.2024pt>
 File: figures/fig2_concentration_bars.png Graphic file (type png)
 <use figures/fig2_concentration_bars.png>
-Package pdftex.def Info: figures/fig2_concentration_bars.png  used on input line 223.
+Package pdftex.def Info: figures/fig2_concentration_bars.png  used on input line 256.
 (pdftex.def)             Requested size: 385.02547pt x 239.40521pt.
- [9 <./figures/fig2_concentration_bars.png>]
-<figures/fig3_localizability_h2.png, id=245, 533.3526pt x 422.0568pt>
+ [10]
+<figures/fig3_localizability_h2.png, id=255, 530.4618pt x 422.0568pt>
 File: figures/fig3_localizability_h2.png Graphic file (type png)
 <use figures/fig3_localizability_h2.png>
-Package pdftex.def Info: figures/fig3_localizability_h2.png  used on input line 241.
-(pdftex.def)             Requested size: 385.02547pt x 304.68565pt.
-<figures/fig4_synergy_fractions.png, id=246, 566.5968pt x 422.0568pt>
+Package pdftex.def Info: figures/fig3_localizability_h2.png  used on input line 268.
+(pdftex.def)             Requested size: 385.02547pt x 306.35364pt.
+ [11 <./figures/fig2_concentration_bars.png>] [12 <./figures/fig3_localizability_h2.png>]
+<figures/fig4_synergy_fractions.png, id=268, 566.5968pt x 422.0568pt>
 File: figures/fig4_synergy_fractions.png Graphic file (type png)
 <use figures/fig4_synergy_fractions.png>
-Package pdftex.def Info: figures/fig4_synergy_fractions.png  used on input line 276.
+Package pdftex.def Info: figures/fig4_synergy_fractions.png  used on input line 302.
 (pdftex.def)             Requested size: 385.02547pt x 286.80162pt.
- [10 <./figures/fig3_localizability_h2.png>] [11 <./figures/fig4_synergy_fractions.png>]
-<figures/fig5_ablation_curve.png, id=260, 566.3559pt x 422.0568pt>
+ [13 <./figures/fig4_synergy_fractions.png>]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 313.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 313.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 313.
+
+<figures/fig5_ablation_curve.png, id=278, 609.477pt x 458.1918pt>
 File: figures/fig5_ablation_curve.png Graphic file (type png)
 <use figures/fig5_ablation_curve.png>
-Package pdftex.def Info: figures/fig5_ablation_curve.png  used on input line 292.
-(pdftex.def)             Requested size: 385.02547pt x 286.93042pt.
- [12 <./figures/fig5_ablation_curve.png>]
-<figures/fig6_gini_h_correlation.png, id=267, 527.571pt x 385.9218pt>
-File: figures/fig6_gini_h_correlation.png Graphic file (type png)
-<use figures/fig6_gini_h_correlation.png>
-Package pdftex.def Info: figures/fig6_gini_h_correlation.png  used on input line 320.
-(pdftex.def)             Requested size: 385.02547pt x 281.6499pt.
- [13] [14 <./figures/fig6_gini_h_correlation.png>] [15] [16] (latex_build/gemini_report_draft.aux)
+Package pdftex.def Info: figures/fig5_ablation_curve.png  used on input line 320.
+(pdftex.def)             Requested size: 385.02547pt x 289.4524pt.
+[14 <./figures/fig5_ablation_curve.png>] [15]
+<figures/fig6_demographic_divergence.png, id=294, 649.2255pt x 566.3559pt>
+File: figures/fig6_demographic_divergence.png Graphic file (type png)
+<use figures/fig6_demographic_divergence.png>
+Package pdftex.def Info: figures/fig6_demographic_divergence.png  used on input line 355.
+(pdftex.def)             Requested size: 385.02547pt x 335.87546pt.
+ [16 <./figures/fig6_demographic_divergence.png>] [17] [18]
+Underfull \hbox (badness 1067) in paragraph at lines 409--410
+\OT1/cmr/m/n/10.95 ment with Demographic-Aware Ex-perts and Syn-thetic Per-spec-tives. \OT1/cmr/m/it/10.95 arXiv preprint
+ []
+
+[19] [20] (latex_build/moe_bias_report_draft.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -481,22 +501,22 @@ L3 programming layer <2026-01-19>
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package rerunfilecheck Info: File `gemini_report_draft.out' has not changed.
-(rerunfilecheck)             Checksum: 934153DBFF9E33077FBC476DE35C354C;7777.
+Package rerunfilecheck Info: File `moe_bias_report_draft.out' has not changed.
+(rerunfilecheck)             Checksum: 466236CC8B4A60F38DBFF92D9FDEE6A5;8761.
  ) 
 Here is how much of TeX's memory you used:
- 12820 strings out of 469006
- 199519 string characters out of 5454814
- 649422 words of memory out of 5000000
- 41040 multiletter control sequences out of 15000+600000
- 647349 words of font info for 207 fonts, out of 8000000 for 9000
+ 12601 strings out of 469006
+ 197923 string characters out of 5454814
+ 651712 words of memory out of 5000000
+ 41049 multiletter control sequences out of 15000+600000
+ 640450 words of font info for 88 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
- 75i,12n,79p,1488b,653s stack positions out of 10000i,1000n,20000p,200000b,200000s
- </Users/ronnie.ghose/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm0800.600pk> </Users/ronnie.ghose/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.600pk></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on latex_build/gemini_report_draft.pdf (16 pages, 1436845 bytes).
+ 75i,14n,79p,1297b,671s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ </Users/ronnie.ghose/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknappen/ec/tcti1000.600pk> </Users/ronnie.ghose/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.600pk> </Users/ronnie.ghose/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on latex_build/moe_bias_report_draft.pdf (20 pages, 2192319 bytes).
 PDF statistics:
- 394 PDF objects out of 1000 (max. 8388607)
- 324 compressed objects within 4 object streams
- 86 named destinations out of 1000 (max. 500000)
- 41767 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 451 PDF objects out of 1000 (max. 8388607)
+ 367 compressed objects within 4 object streams
+ 98 named destinations out of 1000 (max. 500000)
+ 12079 words of extra memory for PDF output out of 14400 (max. 10000000)
 

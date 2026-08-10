@@ -15,97 +15,97 @@
   "n_pairs": 5000,
   "n_players": 640,
   "bias_scores": {
-    "mean_bias_gap": 0.168578125,
-    "std_bias_gap": 0.3651332426828724
+    "mean_bias_gap": 0.169515625,
+    "std_bias_gap": 0.36547666562344905
   },
   "concentration_metrics": {
-    "entropy": 0.8969766105827284,
-    "gini": 0.5995210048310162,
-    "top_5_fraction": 0.08961373345957038,
-    "top_10pct_fraction": 0.43290577776404604,
+    "entropy": 0.8966428192510975,
+    "gini": 0.59901924235112,
+    "top_5_fraction": 0.09111096597679383,
+    "top_10pct_fraction": 0.4357033369397164,
     "n_players": 640,
     "n_nonzero": 640
   },
   "top_players": [
     {
       "player_id": "layer9-expert1",
-      "phi": 0.0016558317112182783
-    },
-    {
-      "player_id": "layer7-expert14",
-      "phi": -0.001526475286655995
-    },
-    {
-      "player_id": "layer8-expert8",
-      "phi": -0.0015172191189649453
+      "phi": 0.0016270711762580224
     },
     {
       "player_id": "layer32-expert3",
-      "phi": -0.0014752780769423206
+      "phi": -0.0015565134987029178
+    },
+    {
+      "player_id": "layer8-expert8",
+      "phi": -0.0015135114637732964
+    },
+    {
+      "player_id": "layer7-expert14",
+      "phi": -0.0014604501156685764
     },
     {
       "player_id": "layer11-expert12",
-      "phi": 0.0011848086813236922
+      "phi": 0.0012703139041836781
     },
     {
       "player_id": "layer19-expert5",
-      "phi": -0.0011245203818550683
+      "phi": -0.001105063097690652
     },
     {
       "player_id": "layer16-expert7",
-      "phi": 0.0010888527723187243
+      "phi": 0.001065342865819657
     },
     {
       "player_id": "layer11-expert8",
-      "phi": -0.0010137212763294558
+      "phi": -0.0009790442326776242
     },
     {
       "player_id": "layer10-expert7",
-      "phi": 0.0009421805955031589
+      "phi": 0.0009376028235128956
     },
     {
       "player_id": "layer14-expert0",
-      "phi": -0.0008280723367517836
+      "phi": -0.0007888837678203684
     },
     {
       "player_id": "layer17-expert12",
-      "phi": 0.0007462258237081455
-    },
-    {
-      "player_id": "layer31-expert10",
-      "phi": 0.0006563880881749467
+      "phi": 0.0007862685612782869
     },
     {
       "player_id": "layer12-expert8",
-      "phi": 0.0006552431756791311
-    },
-    {
-      "player_id": "layer15-expert15",
-      "phi": -0.0006156750763646883
+      "phi": 0.0007275155267586176
     },
     {
       "player_id": "layer26-expert9",
-      "phi": -0.0005850509257411774
+      "phi": -0.0006062466238126626
     },
     {
-      "player_id": "layer21-expert7",
-      "phi": -0.0005717341084135869
-    },
-    {
-      "player_id": "layer6-expert4",
-      "phi": -0.0005657978878823763
+      "player_id": "layer31-expert10",
+      "phi": 0.0005999041667714512
     },
     {
       "player_id": "layer31-expert5",
-      "phi": -0.0005656611020877831
+      "phi": -0.0005938571855676019
     },
     {
-      "player_id": "layer14-expert1",
-      "phi": 0.0005445288188226312
+      "player_id": "layer6-expert4",
+      "phi": -0.0005813854221374848
     },
     {
-      "player_id": "layer13-expert5",
-      "phi": -0.00048321066629834254
+      "player_id": "layer30-expert0",
+      "phi": 0.0005416085323957287
+    },
+    {
+      "player_id": "layer14-expert5",
+      "phi": 0.0005351919795729915
+    },
+    {
+      "player_id": "layer15-expert15",
+      "phi": -0.0005184665333231666
+    },
+    {
+      "player_id": "layer23-expert6",
+      "phi": -0.0005074352719067095
     }
   ]
 }
