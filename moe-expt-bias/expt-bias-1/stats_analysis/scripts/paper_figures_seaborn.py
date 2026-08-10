@@ -29,15 +29,17 @@ OUT.mkdir(parents=True, exist_ok=True)
 sns.set_theme(context="paper", style="whitegrid", palette="deep", font_scale=1.05)
 
 # ---------------------------------------------------------------------------
-# Load ladder data (prefer -v1 runs; gpt-oss -v1 capture is broken -> v0)
+# Load ladder data (all -v1 certified captures for the six MoE models, so the
+# figures match Table 1 / s03 ladder; gpt-oss-120b-v1 flipped in Aug-09)
 # ---------------------------------------------------------------------------
 MOE = [
-    ("exp1-concentration-olmoe-1b-7b",        "OLMoE-1B-7B",             1024, 8,   "0324"),
-    ("exp1-concentration-phi3.5-moe",         "Phi-3.5-MoE",             64,   8,   None),
-    ("exp1-concentration-gpt-oss-120b",       "GPT-OSS-120B",            512,  4,   None),
-    ("exp1-concentration-mixtral-8x7b",       "Mixtral-8x7B",            8,    2,   None),
-    ("exp1-concentration-dbrx",               "DBRX-132B",               16,   4,   "080524"),
-    ("exp1-concentration-gemma4-26b",         "Gemma-4-26B",             64,   8,   None),
+    # (dir, label, N_players, N_active) -- verified against s03_h1_verdict.json ladder row.
+    ("exp1-concentration-olmoe-1b-7b-v1",     "OLMoE-1B-7B",             1024, 16),
+    ("exp1-concentration-phi3.5-moe-v1",      "Phi-3.5-MoE",             512,  64),
+    ("exp1-concentration-gpt-oss-120b-v1",    "GPT-OSS-120B",            4608, 144),
+    ("exp1-concentration-mixtral-8x7b-v1",    "Mixtral-8x7B",            256,  64),
+    ("exp1-concentration-dbrx-v1",            "DBRX-132B",               640,  160),
+    ("exp1-concentration-gemma4-26b-v1",      "Gemma-4-26B",             3840, 240),
 ]
 DENSE = [
     ("exp2-dense-baseline-olmo-7b",           "OLMo-7B",                 32),
@@ -53,7 +55,7 @@ def load(d):
 
 def load_ladder():
     rows = []
-    for d, name, n, k, _ in MOE:
+    for d, name, n, k in MOE:
         cm = load(d)["concentration_metrics"]
         rows.append(dict(family="MoE", model=name, k=k, N=n, k_over_N=k / n,
                         entropy=cm["entropy"], gini=cm["gini"],

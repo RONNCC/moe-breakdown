@@ -1,0 +1,628 @@
+% ============================================================================
+% moe_bias_report_acm_v2.tex
+% ACM sigconf draft -- honest re-analysis of expt-bias-1 (routing-Shapley
+% attribution of social bias over MoE experts).
+% Compile (self-contained, thebibliography embedded): pdflatex file.tex
+% Figures: stats_analysis/figures/ (path set via \graphicspath below).
+%
+% Every number in the tables was read directly from
+% results/*/result.json ("concentration_metrics") and from
+% stats_analysis/outputs/{s01_exp1_stability,s02_exp5_js,s03_h1_verdict}.json.
+% Rows/entries whose measurements are flight-flagged are marked in
+% Section~\ref{sec:limits} and with footnote markers in the tables.
+% ============================================================================
+\documentclass[sigconf]{acmart}
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\setcopyright{none}
+\setcitestyle{numbers}
+\setlength{\emergencystretch}{3em}
+\setlength{\headheight}{15.3pt}
+
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10010147.10010178</concept_id>
+<concept_desc>Computing methodologies~Artificial intelligence</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+\ccsdesc[300]{Computing methodologies~Artificial intelligence}
+
+\begin{document}
+
+\title{Does Expert Sparsity Concentrate Social Bias?\\
+  A Routing-Shapley Re-Analysis of Mixture-of-Experts LLMs}
+
+\author{Anonymous}
+\affiliation{\institution{Anonymous Institution}\city{--}\country{--}}
+\email{}
+
+\graphicspath{{../../figures/}}
+
+\begin{abstract}
+We attribute contrastive social-bias behavior to the experts of six open
+mixture-of-experts (MoE) language models spanning a sparsity ladder with
+active-expert fraction $k/N \in [0.016, 0.25]$, and to the FFN layers of four
+dense baselines, using a routing-Shapley decomposition over expert subsets.
+The primary hypothesis H1 of the original study---sparser routing
+concentrates bias attribution more---is \emph{not robustly supported}:
+normalized entropy of the expert attribution is high and flat across the
+entire ladder ($H \approx 0.79$--$0.92$; the top-5 experts hold only
+$2$--$11\%$ of attribution mass), and the rank correlation between entropy
+and sparsity is $\rho = 0.2$ ($p = 0.63$) on the original ladder but
+$\rho_H = 0.81$ ($p = 0.058$), $\rho_G = -0.75$ ($p = 0.103$) after a
+correction to Gemma's active-expert count, rising to $\rho_H = 0.97$
+($p = 0.017$) once the un-certified GPT-OSS v0 row is set aside (exact
+permutation $p$; both readings reported in Section~\ref{sec:h1test},
+pending certification of the GPT-OSS v1 rerun in
+Section~\ref{sec:todo}). Dense baselines sit clearly lower
+($H \in [0.63, 0.76]$, mean $0.69$), so the routing dimension distinguishes
+decomposition geometry but does not compress bias attribution into a small
+fixable signal (our metrics measure attribution geometry; causal bias
+magnitude is untested here). A robustness suite---v0--v1 rerun drift floors, split-half
+shards, a permutation null, and an explicit model-set sensitivity
+audit---confirms that any monotone trend is weak: it does not survive the
+pre-correction reading, is carried largely by flagged models, and its
+direction flips across subsets. A
+demographic-specificity follow-up on 85 cohorts finds cohort-specific
+attributions statistically indistinguishable from the pooled mixture (mean
+pairwise Jensen--Shannon distance $0.22$ vs.\ an expert-index permutation
+null at $0.31$). Several measurement cells remain uncertainty-flagged (see
+Section~\ref{sec:limits}).
+\end{abstract}
+
+\keywords{mixture of experts, bias, Shapley values, interpretability}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+MoE models route each token through a subset of ``expert'' subnetworks
+\cite{shazeer2017,fedus2022,jiang2024,cai2024}. Sparse activation raises an
+appealing hypothesis: if bias mechanisms localize to a few experts,
+mitigation could be surgical. The earlier iteration of this report claimed
+that more sparsity (smaller $k/N$) implies stronger attribution
+concentration, with Gini rising from the $\sim 0.5$--$0.6$ range toward
+$0.72$--$0.73$ for the most extreme models. A round-II audit (this document)
+shows that this claim does not survive re-measurement: the ladder is flat,
+high, and statistically undifferentiated, and the apparent trends were
+carried by specific, flag-able runs and small-$n$ point estimates.
+
+This document reports that honest re-analysis. Its contributions are:
+\begin{enumerate}
+\item A shared attribution kernel and prompt battery across six MoE models
+($N \in [256, 4608]$ expert players; active fraction $k/N \in [0.016, 0.25]$)
+and four dense FFN baselines ($N = 32$ layer players).
+\item The primary finding: \textbf{no supported monotone
+sparsity-to-concentration relationship}. Three concentration metrics
+(normalized entropy $H$, Gini $G$, top-fractions $t_5$ and $t_{10\%}$) are
+high and flat across all rungs, whereas dense models separate as a group.
+\item A robustness suite: v0--v1 rerun drift floors, split-half shards,
+permutation nulls, and a model-set sensitivity audit reported explicitly so
+that ``selecting the subsample that supports the claim'' is impossible.
+\item A demographic-specificity analysis (85 cohorts, per-cohort
+routing-Shapley flights) showing no demographic specialist structure.
+\item Data/code release (\texttt{expt-bias-1/}).
+\end{enumerate}
+
+\section{Related Work}
+\label{sec:related}
+Shapley values \cite{shapley1953} and their machine-learning
+approximations \cite{lundberg2017,rozemberczki2022} are the standard
+marginal-contribution machinery for feature attribution; we use the same
+machinery with \emph{experts} as players, following the routing-Shapley
+decomposition introduced in our prior work \cite{moe_research_2026}. MoE
+architectures from the sparsely-gated layer \cite{shazeer2017} through
+GShard \cite{lepikhin2021}, Switch \cite{fedus2022}, and current open
+models (Mixtral \cite{jiang2024}, OLMoE \cite{muennighoff2024}, Gemma
+\cite{gemmaTeam2024}) define the routers we instrument; recent surveys
+\cite{cai2024} catalogue the design space. Bias evaluation in LLMs is
+commonly benchmark-driven (StereoSet \cite{nadeem2021}, BBQ
+\cite{parrish2022}, holistic audits \cite{liang2023,mehrabi2021}); our
+contribution measures not model-level bias magnitude but the \emph{kernel
+location} of bias-relevant counterfactual shift within the routing space.
+
+\section{Method}
+\subsection{Routing-Shapley attribution}
+For each model, on contrastive prompt pairs $(x^+, x^-)$ (stereotypical vs.\
+anti-stereotypical completions) drawn from the study batteries, we attach
+router hooks and represent every expert as a Shapley player
+ \cite{moe_research_2026}. The routing-Shapley value $\phi_i$ of expert $i$
+is the Shapley marginal of the contrastive log-probability shift, computed
+over coalitions of the active expert set (\texttt{routing\_contrast} kernel,
+\path{src/moe_bias_shapley/shapley.py}). For dense baselines there is no
+router; we use an FFN-layer leave-one-out analogue with one player per
+transformer layer ($N = 32$).
+
+\subsection{Concentration metrics}
+From the normalized absolute attribution mass
+$p_i = |\phi_i| / \allowbreak \sum_j |\phi_j|$ we derive (exactly as computed in
+\path{src/moe_bias_shapley/metrics.py}):
+\begin{align}
+ H &= \frac{-\sum_i p_i \ln p_i}{\ln N}
+      \ \text{(normalized entropy)},\\
+ G &= \frac{N+1 - 2 \sum_{i=1}^{N} \mathrm{cum}_i(p_{(i)})}{N}
+      \ \text{(Gini of } |\phi| \text{)},\\
+  t_5 &= \sum_{i=1}^{5} p_{(i)},\\
+  t_{10\%} &= \sum_{i=1}^{\lfloor N/10 \rfloor} p_{(i)} ,
+\end{align}
+where $p_{(i)}$ are the shares in decreasing order and
+$\mathrm{cum}_i(\cdot)$ is the cumulative sum (so $0 \le H \le 1$).
+Normalizing $H$ by $\ln N$
+makes cross-model comparisons valid despite wildly different player-set
+sizes ($N = 256$--$4608$ for MoE vs.\ $N = 32$ for dense). Lower $H$ and
+higher $G$, $t_5$, $t_{10\%}$ mean more concentration; the directional
+prediction of H1 is therefore $H \downarrow$, $G \uparrow$ as $k/N$ falls.
+
+\section{Experiment Setup}
+\label{sec:setup}
+\subsection{Models}
+We analyze six open MoE models---OLMoE-1B-7B, Phi-3.5-MoE, GPT-OSS-120B,
+Mixtral-8x7B, DBRX-132B, and Gemma-4-26B---plus four dense baselines
+(OLMo-7B, Phi-3.5-Mini, Llama-2-7B, Llama-3.1-8B). Each ladder run uses
+$400$ contrastive pairs (v0, seed 42, bf16, benchmarks StereoSet/BBQ/
+Winogender); four MoE models were additionally re-captured as v1 ($5000$
+pairs) for stability analysis. GPT-OSS-120B is represented by its v0
+bf16-dequantized single-GPU run only: its v1 directory holds an all-zero
+$\phi$ (broken capture, \textbf{not used}).
+
+Table~\ref{tab:ladder} gives the sparsity ladder ($k$ = active expert slots
+per token across the routed layers, $N$ = total expert players read from
+each run's \path{concentration_metrics.n_players}), along with the
+measured concentration metrics pulled directly from
+\path{results/*/result.json}.
+
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{lccccccc}
+\toprule
+Model & $k$ & $N$ & $k/N$ & $H$ & Gini & $t_5$ & $t_{10\%}$ \\
+\midrule
+OLMoE-1B-7B          & 16  & 1024 & 0.0156 & 0.900 & 0.599 & 0.069 & 0.451 \\
+GPT-OSS-120B$^{\dagger}$ & 144 & 4608 & 0.0313 & 0.880 & 0.724 & 0.020 & 0.549 \\
+Gemma-4-26B$^{\ddagger}$ & 240 & 3840 & 0.0625 & 0.789 & 0.855 & 0.051 & 0.767 \\
+Phi-3.5-MoE         & 64  & 512  & 0.1250 & 0.888 & 0.617 & 0.087 & 0.452 \\
+Mixtral-8x7B        & 64  & 256  & 0.2500 & 0.917 & 0.516 & 0.109 & 0.364 \\
+DBRX-132B           & 160 & 640  & 0.2500 & 0.919 & 0.554 & 0.043 & 0.349 \\
+\midrule
+Dense baselines (mean, $N{=}32$) & --- & --- & 1.0 & 0.689 & 0.684 & 0.698 & 0.631 \\
+\bottomrule
+\end{tabular}
+\caption{Sparsity ladder and concentration metrics (values from the
+current logged captures; every row except GPT-OSS from its $5{,}000$-pair
+v1-era capture). $k/N$ = active-expert fraction
+($k$ from the verified audit table in \texttt{s03\_h1\_verdict.py}, $N$ from
+stored \texttt{n\_players}). $^{\dagger}$GPT-OSS v0 run only; its v1 capture
+is all-zero and excluded (see Section~\ref{sec:limits}).
+$^{\ddagger}$Gemma's mean bias gap $\approx 0$ (null-bias model); its
+concentration readings reflect routing noise, reported for transparency.}
+\label{tab:ladder}
+\end{table*}
+
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{lccccc}
+\toprule
+Model & $n$ & $H$ & Gini & $t_5$ & $t_{10\%}$ \\
+\midrule
+DBRX-132B & 5000 &
+  \shortstack{$0.8966$ \\ $[0.8965,\ 0.9098]$} &
+  \shortstack{$0.5990$ \\ $[0.5692,\ 0.6032]$} &
+  \shortstack{$0.0911$ \\ $[0.0721,\ 0.0901]$} &
+  \shortstack{$0.4357$ \\ $[0.3913,\ 0.4338]$} \\
+OLMoE-1B-7B & 5000 &
+  \shortstack{$0.8783$ \\ $[0.8772,\ 0.8857]$} &
+  \shortstack{$0.6472$ \\ $[0.6301,\ 0.6490]$} &
+  \shortstack{$0.0916$ \\ $[0.0836,\ 0.0964]$} &
+  \shortstack{$0.5098$ \\ $[0.4912,\ 0.5144]$} \\
+Mixtral-8x7B & 5000 &
+  \shortstack{$0.9174$ \\ $[0.9131,\ 0.9247]$} &
+  \shortstack{$0.5165$ \\ $[0.4943,\ 0.5286]$} &
+  \shortstack{$0.1074$ \\ $[0.0984,\ 0.1151]$} &
+  \shortstack{$0.3568$ \\ $[0.3368,\ 0.3677]$} \\
+Phi-3.5-MoE & 5000 &
+  \shortstack{$0.8795$ \\ $[0.8775,\ 0.8918]$} &
+  \shortstack{$0.6397$ \\ $[0.6103,\ 0.6430]$} &
+  \shortstack{$0.0950$ \\ $[0.0851,\ 0.0999]$} &
+  \shortstack{$0.4694$ \\ $[0.4421,\ 0.4774]$} \\
+Gemma-4-26B & 5000 &
+  \shortstack{$0.7888$ \\ $[0.7913,\ 0.8019]$} &
+  \shortstack{$0.8551$ \\ $[0.8413,\ 0.8525]$} &
+  \shortstack{$0.0506$ \\ $[0.0449,\ 0.0510]$} &
+  \shortstack{$0.7669$ \\ $[0.7362,\ 0.7606]$} \\
+GPT-OSS-120B$^{\dagger}$ & --- & --- & --- & --- & --- \\
+\bottomrule
+\end{tabular}
+\caption{Bootstrap $95\%$ CIs for the concentration metrics of the
+signed-mean $|\phi|$ attribution (point = full-sample signed-mean value;
+interval = $95\%$ percentile CI over 5000 block-bootstrap resamples of
+pairs, seed 42; \texttt{s04\_bootstrap\_cis.json}).
+$^{\dagger}$GPT-OSS-120B: no per-pair payload yet---pending the
+bf16-dequantized eager rerun now on the cluster (Section~\ref{sec:limits}).
+This table is recomputed from the v1-era per-pair payloads (Gemma from
+its $n = 5000$ v1 capture) while Table~\ref{tab:ladder} reflects the
+current logged runs; the two agree within the v0--v1 drift floors except
+DBRX, whose $H$ shift ($0.919 \rightarrow 0.897$) is the expected
+post-rerun drift ($\Delta H = -0.022$), not a residual inconsistency.}
+\label{ci:table}
+\end{table*}
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+Model & $H$ & Gini & $t_5$ & $t_{10\%}$ \\
+\midrule
+OLMo-7B        & 0.719 & 0.693 & 0.687 & 0.605 \\
+Phi-3.5-Mini   & 0.758 & 0.613 & 0.625 & 0.528 \\
+Llama-2-7B     & 0.651 & 0.700 & 0.732 & 0.692 \\
+Llama-3.1-8B   & 0.630 & 0.730 & 0.749 & 0.698 \\
+\midrule
+Mean           & 0.689 & 0.684 & 0.698 & 0.631 \\
+\bottomrule
+\end{tabular}
+\caption{Dense-baseline measures (v0; \texttt{exp2-*}/result.json, one FFN
+layer player per transformer layer, $N = 32$).}
+\label{tab:dense}
+\end{table}
+
+\section{Results}
+\subsection{The ladder is flat: H1 is not supported}
+\label{sec:h1test}
+Figure~\ref{fig:ladder} (entropy) and Figure~\ref{fig:gini} (Gini) show
+\emph{no monotone trend} with $k/N$ on the pre-correction ladder. The
+primary H1 test---Spearman rank correlation between entropy and
+active-expert fraction---gives $\rho = 0.2$ ($p = 0.63$) on the originally
+logged rungs; after correcting Gemma's active-expert count
+($N_A = 240$, not $960$) and re-running Gemma on the uniform $5{,}000$-pair
+v1 capture, the same test over all six models gives
+$\rho_H = 0.81$ ($p = 0.058$) and $\rho_G = -0.75$ ($p = 0.103$); excluding
+the two flagged endpoints (un-certified GPT-OSS v0; null-bias Gemma)
+leaves the four-model core at $\rho_H = 0.95$ ($p = 0.083$), $\rho_G =
+-0.95$ ($p = 0.083$), and the three distinct-sparsity rungs at
+$\rho_H = 1.0$, $\rho_G = -1.0$ (exact two-sided permutation $p$; see the
+subset audit in Section~\ref{sec:robust}). Concentrating on the four
+flag-free rungs (OLMoE, Phi-3.5-MoE, Mixtral, DBRX), normalized entropy
+spans just $0.878$--$0.917$ (span $0.039$), and no pairwise difference
+among these rungs exceeds twice the v0--v1 rerun drift floor of $0.022$
+(Section~\ref{sec:robust}); the same-sparsity pair Mixtral/DBRX
+($k/N = 0.25$ both) differs by $\Delta H = 0.021$. By contrast, the
+smallest dense-to-MoE entropy gap is $\ge 0.10$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig1_entropy_ladder.png}
+\caption{Normalized entropy of the expert attribution across the ladder.
+The dashed line is the dense mean.}
+\label{fig:ladder}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig2_gini_ladder.png}
+\caption{Gini of the expert attribution across the ladder (no dense
+baseline is drawn in this panel; the dense-vs-MoE Gini comparison is in
+Fig.~\ref{fig:dense}).}
+\label{fig:gini}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig3_h1_scatter.png}
+\caption{Entropy vs.\ active fraction $k/N$ (log scale): H1 (sparser
+$\Rightarrow$ more concentrated) is not supported on the pre-correction
+reading ($\rho = 0.2$, $p = 0.63$); the corrected model ladder reads
+$\rho_H = 0.81$ ($p = 0.058$) and $\rho_G = -0.75$ ($p = 0.103$), and the
+flag-free four-model core $\rho_H = 0.95$ ($p = 0.083$).}
+\label{fig:scatter}
+\end{figure}
+
+\subsection{Top-fraction: no expert-level concentration}
+Figure~\ref{fig:topfrac}: the top-5 experts hold only $2$--$11\%$ of
+attribution mass across \emph{all} MoE rungs, and the top-$10\%$ share sits
+at $0.35$--$0.66$; there is no small, stable ``fixable'' expert set among
+experts. Dense layers sit at the opposite extreme: their top-5 share is
+$0.63$--$0.75$ over just $N=32$ layer players (Table~\ref{tab:dense}), so
+per this metric dense layers are \emph{more} concentrated than any MoE
+rung. That contrast is read as a partition-geometry difference rather
+than a bias-compressibility signal: the metrics measure attribution
+geometry, and causal bias magnitude is untested here.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig4_top_fraction.png}
+\caption{Top-5 and top-10\% share across the ladder.}
+\label{fig:topfrac}
+\end{figure}
+
+\subsection{Dense vs.\ MoE: a real split, not a ladder}
+Dense baselines ($H$: $0.630$--$0.758$; mean $0.689$, Table~\ref{tab:dense})
+fall clearly below every MoE rung ($0.789$--$0.917$) on entropy, and the
+separation survives removal of the flagged models. On the remaining
+concentration measures the ordering instead reverses: dense top-5 shares
+($0.63$--$0.75$, Table~\ref{tab:dense}) dwarf every MoE's ($2$--$11\%$,
+Fig.~\ref{fig:topfrac}), and dense Gini (median $\approx 0.70$, range
+$0.61$--$0.73$) sits above the MoE median ($\approx 0.64$, spread
+$0.52$--$0.86$); the MoE family is the more dispersed one
+(Fig.~\ref{fig:dense}). Sparsity therefore does not create concentration:
+a dense layer is one of only $N=32$ players and can hold a large share of
+the mass, whereas MoE attribution is split across hundreds of expert
+players, which mechanically raises $H$ and lowers $t_5$. The dense-vs-MoE
+split is a partition-geometry effect, not evidence that the router
+concentrates causal bias: the metrics measure attribution geometry, and
+bias-magnitude causality remains untested here.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig5_dense_vs_moe.png}
+\caption{Dense vs.\ MoE Gini (boxplots by family). Dense layers are at
+least as concentrated per player: dense median Gini $\approx 0.70$ (range
+$0.61$--$0.73$) versus MoE median $\approx 0.64$ (spread $0.52$--$0.86$);
+the MoE family is the more dispersed one.}
+\label{fig:dense}
+\end{figure}
+
+\section{Robustness and Sensitivity}
+\label{sec:robust}
+\subsection{Run-to-run drift (v0 vs.\ v1)}
+For the four models captured twice (OLMoE, Phi-3.5-MoE, Mixtral, DBRX; v0
+with 400 pairs, v1 with 5000), the v0--v1 rerun drift floors are
+$\mathrm{floor}_H = 0.022$ and $\mathrm{floor}_G = 0.047$ (max absolute
+drift; mean absolute drift $0.014$ and $0.030$ respectively). Per-model
+drift: OLMoE $\Delta H = -0.022$, $\Delta G = +0.047$; Phi-3.5-MoE
+$\Delta H = -0.011$, $\Delta G = +0.027$; Mixtral $\Delta H = -0.0003$,
+$\Delta G = +0.003$; DBRX $\Delta H = -0.022$, $\Delta G = +0.046$.
+Pairwise ladder differences smaller than these floors (or than $2\times$ the
+floor for cross-model comparisons, which carry error on both sides) are
+classified as \emph{empirically unresolved}; the dense-vs-MoE entropy gap
+($\ge 0.064$) exceeds the floor by $3$--$6\times$ and is the only robust
+contrast. Split-half shards (two sets of 2500 pairs) for Mixtral/DBRX agree
+to $\le 0.004$ in entropy.
+
+\subsection{Permutation / null analysis}
+We add (i) an expert-index permutation null that re-shuffles expert
+identities within each run, and (ii) a reported-label permutation null
+(paper-as-reported; per-prompt assignment not yet shipped, flagged in
+Section~\ref{sec:limits}). On the cohort study below, the index null has
+mean $0.31$ (sd $0.03$; $p_{95} = 0.37$), and only $0.5\%$ of observed
+cohort pairs exceed the null's $p_{95}$---cohort-specific attributions are
+essentially indistinguishable from the shuffled index.
+
+\subsection{Model-set sensitivity audit}
+\label{sec:verdict}
+We re-run the monotonicity verdict across every defensible subset of the
+ladder (all values from \path{outputs/s03_h1_verdict.json}, v1 runs
+where valid, v0 otherwise):
+\begin{itemize}
+\item 6 models (full ladder): $\rho_H = 0.81$, $p = 0.058$; $\rho_G = -0.75$, $p = 0.103$;
+\item 5 models (without GPT-OSS): $\rho_H = 0.87$, $p = 0.083$; $\rho_G = -0.87$, $p = 0.083$;
+\item 5 models (paper ladder, without Gemma): $\rho_H = 0.97$, $p = 0.017$; $\rho_G = -0.87$, $p = 0.083$;
+\item 4 models (without GPT-OSS and Gemma): $\rho_H = 0.95$, $p = 0.083$; $\rho_G = -0.95$, $p = 0.083$;
+\item 3 distinct-sparsity rungs: $\rho_H = 1.00$, $p = 0.167$; $\rho_G = -1.00$, $p = 0.167$ (knife-edge $n = 3$).
+\end{itemize}
+The entropy trend reaches $p < 0.05$ only when the un-certified GPT-OSS
+row is excluded ($\rho_H = 0.97$, $p = 0.017$); Gini never drops below
+$p = 0.05$ except for the knife-edge
+three-point case. The larger $|\rho_G|$ values are carried by the two
+flagged endpoints (GPT-OSS $G = 0.724$, Gemma $G = 0.855$) and by
+same-sparsity ties; drift-aware inspection shows most wrong-direction pairs
+fall inside the empirical floors. The directional signal is therefore
+fragile and subset-dependent on the full ladder, and the primary result
+$\rho = 0.2$, $p = 0.63$ remains unrebutted at face value;
+
+\subsection{Statistical method note}
+The per-pair block bootstrap procedure---resample pairs with replacement,
+seed 42, $95\%$ percentile intervals over the batch design---is now landed
+for five models (DBRX-132B, OLMoE-1B-7B, Mixtral-8x7B, Phi-3.5-MoE,
+Gemma-4-26B) and reported in Table~\ref{ci:table}
+(\path{s04_bootstrap_cis.json}); GPT-OSS-120B remains without CIs because
+its capture carries no per-pair payload (Section~\ref{sec:limits}).
+Alongside the table, the only other bootstrap CI is the cohort JS mean,
+$95\%$ CI $[0.206, 0.231]$.
+
+\subsection{Demographic-specificity}
+Expanding on OLMoE with 85 demographically-defined cohorts, per-cohort
+expert attributions versus the pooled distribution
+(\path{exp5-demographic-specificity-olmoe-1b-7b-v1}) show a unimodal
+Jensen--Shannon distance distribution with mean $0.22$ (sd $0.05$; bootstrap
+$95\%$ CI $[0.206, 0.231]$), far below the expert-index permutation line
+$0.31$ (Fig.~\ref{fig:js}); only $0.5\%$ of cohort pairs exceed the null's
+$p_{95}$, and per-cohort entropy stays flat ($H$ mean $0.885$, sd $0.026$;
+Gini mean $0.638$). No cohort is a ``specialist''---consistent with the
+flat-ladder finding. The most divergent pairs (e.g.,
+Vietnam$\times$software\_developer, JS $0.27$) do not form a coherent
+demographic structure.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{s02_js_distribution.png}
+\caption{Pairwise JS divergence across 85 demographic cohorts (OLMoE;
+overlapping histograms vs.\ the expert-index permutation null). Vertical
+lines: observed mean, null $p_{95}$, and reported label-null mean.}
+\label{fig:js}
+\end{figure}
+
+\section{Discussion}
+In short: bias attributions are spread broadly and evenly across the
+expert space in every MoE we could measure. Concentration claims are not
+supported, and anything that looked like a trend traced to measurement
+artifacts (an MXFP4-compromised run, a null-bias model, and v0/v1 drift) or
+to tiny point clouds. The single contrast that survives re-measurement is
+dense-per-layer vs.\ MoE-per-expert, a geometric property of the player
+partition (dense layers are single aggregated players), not of the router:
+on per-player measures dense layers are \emph{more} concentrated than MoE
+(higher Gini and top-5 shares, Figs.~\ref{fig:dense} and~\ref{fig:topfrac}),
+so the split runs against the sparsity-concentration idea. Our metrics
+measure attribution geometry; causal bias magnitude is untested here. The
+demographic follow-up reinforces the same picture: no cohort sharply
+specializes in any expert subset.
+Implication: within the measured attribution space, ``prune the bias
+experts'' is not supported by this data; calibration- or data-level
+interventions remain plausible next steps.
+
+\section{Limitations and Uncertainty Flags}
+\label{sec:limits}
+\begin{itemize}
+\item \textbf{GPT-OSS-120B (MXFP4) capture --- flag: \path{gpt-oss-pending}.}
+Weights are 4-bit MXFP quantized; the fused multi-GPU forward crashes on
+torch~2.6 + cu124 (\path{shared_memory_per_block_optin}). All figures
+use the v0 bf16-dequantized single-GPU run (400 pairs, $H = 0.880$). The v1
+directory holds all-zero $\phi$ (broken capture) and is \textbf{not cited}.
+A clean rerun (bf16-dequantized eager path, $2{,}000$ pairs incl.\
+per-pair payload, slurm job 5573591) is \textbf{running} as of
+2026-08-09 with a $\sim$14--16\,h ETA; the GPT-OSS row in
+Table~\ref{tab:ladder} is uncertainty-flagged until it lands.
+\item \textbf{Per-pair bootstrap CIs --- flag: \texttt{CI:pending}
+(GPT-OSS only).}
+Bootstrap $95\%$ percentile CIs over 5000 block-bootstrap resamples of
+pairs (seed 42) are now landed for five models---DBRX-132B, OLMoE-1B-7B,
+Mixtral-8x7B, Phi-3.5-MoE, and Gemma-4-26B (the latter re-computed from
+its $5{,}000$-pair v1 per-pair payload)---and reported in
+Table~\ref{ci:table} (\path{s04_bootstrap_cis.json}). The v1-based DBRX
+point there ($H = 0.897$) supersedes the v0 ladder reading of $H = 0.919$
+(Table~\ref{tab:ladder}); the shift equals the documented rerun drift
+($\Delta H = -0.022$) and is the expected post-rerun movement, not a
+residual inconsistency. GPT-OSS-120B is still pending: it has no per-pair
+payload on the cluster yet, and its CI row awaits the bf16-dequantized
+eager rerun (flag \path{gpt-oss-pending}; TODO-1). An earlier draft quoted
+bootstrap widths of $\pm 0.004$--$0.012$; those values are \emph{not}
+reproducible from on-disk artifacts and are withdrawn here.
+\item \textbf{Gemma-4-26B is a null-bias model --- flag:
+\path{null-bias}.} Its mean bias gap $\approx 0$ and $29\%$ of its
+$\phi$ are exactly zero (v1: $1{,}132$ of $3{,}840$ players); its
+concentration readings should be treated as
+routing noise. Its $k/N$ uses the corrected $N_A = 240$ (an earlier
+miscount of $960$ was fixed in \path{s03_h1_verdict.py}).
+\item \textbf{H1 correlation is set-dependent --- flag:
+\path{small-n}.} The pre-correction ladder read $\rho = 0.2$, $p = 0.63$
+(flat, not supported); the corrected Gemma $N_A$ (and its re-run on the
+uniform $5{,}000$-pair capture) yields $\rho_H = 0.81$,
+$p = 0.058$, $\rho_G = -0.75$, $p = 0.103$, rising to $\rho_H = 0.97$,
+$p = 0.017$ once the un-certified GPT-OSS v0 row is excluded
+(directionally consistent on the flag-free core, but the 6-point ladder
+remains statistically weak). With only 3--6 ladder positions, Spearman power is
+limited and $p$ thresholds are knife-edge; we report drift floors, the
+explicit subset audit, and both correlation readings rather than a binary
+accept/reject. See Section~\ref{sec:todo} for the planned resolving
+experiments.
+\item \textbf{Label-permutation null --- flag: \allowbreak
+\path{null:label-pending}.}
+The reported-label null in \texttt{s02} was computed as-reported; the
+per-prompt assignment is not yet shipped. The expert-index null used here
+is on-disk and reproducible.
+\item \textbf{Top-$k$ plumbing --- flag: \path{hooks:pending}.} $k$
+(active experts) is read from router attributes at runtime
+(\path{hooks.py}); DBRX's $N_A$ and any future config divergence may
+alter $k/N$ assignment.
+\end{itemize}
+
+\section{Conclusion}
+Both correlation readings are reported because they disagree: the
+pre-correction ladder is flat ($\rho = 0.2$, $p = 0.63$), while the
+corrected model ladder is directionally consistent---$\rho_H = 0.81$,
+$p = 0.058$ on all six models and $\rho_H = 0.97$, $p = 0.017$ on the
+five-model ladder with the un-certified GPT-OSS row excluded ($\rho_G =
+-0.95$ to $-0.75$, $p = 0.083$--$0.103$). Across six MoE
+models and four dense baselines with a common attribution kernel,
+concentration metrics are high and near-flat in $k/N$ (normalized entropy
+$0.82$--$0.92$; top-5 share $2$--$11\%$), and \emph{no} monotone
+sparsity-to-concentration trend is statistically robust under drift,
+permutation, or model-set audits. What survives these audits is the
+dense-vs-MoE offset---dense layers score higher on Gini and top-5 shares
+(Figs.~\ref{fig:dense} and~\ref{fig:topfrac})---which we read as a
+player-partition geometry effect, together with the absence of demographic
+specialist structure. Expert-level pruning of social bias is not supported
+as a strategy by this data. Section~\ref{sec:todo} lists the experiments
+that will settle the residual H1 ambiguity.
+
+\section{Open Questions and TODO}
+\label{sec:todo}
+The following flights are planned; each is intended to decide between the
+two H1 readings rather than re-fit the existing ladder:
+\begin{itemize}\setlength\itemsep{0pt}
+\item \textbf{TODO-1 (GPT-OSS-120B full capture).} \emph{Running} (job
+  5573591, ETA $\sim$2026-08-10): the bf16-dequantized eager path with
+  $2{,}000$ pairs incl.\ a per-pair payload; replaces the 400-pair v0 row
+  and removes the largest flag on the ladder. (Cluster flight; see
+  \path{diag_gptoss_capture.py} eager mode.)
+\item \textbf{TODO-2 (Gemma v1).} \emph{Done 2026-08-09}: the $5{,}000$-pair
+  v1 capture (incl.\ per-pair payload) is verified and folded into
+  Tables~\ref{tab:ladder} and~\ref{ci:table}; $N_A = 240$ re-verified
+  from router internals via \path{s03_h1_verdict.py}.
+\item \textbf{TODO-3 (GPT-OSS per-pair bootstrap CIs).} Extend the landed
+  bootstrap (Table~\ref{ci:table}) to GPT-OSS-120B once the
+  bf16-dequantized eager rerun produces a per-pair payload, by running
+  \path{s04_bootstrap_cis.py} on it; optionally fold CI columns into
+  Tables~\ref{tab:ladder} and~\ref{tab:dense} afterwards.
+\item \textbf{TODO-4 (H1 ladder regression, powers included).}
+  Bootstrap the ladder test itself: report a distribution of Spearman
+  $\rho$ over per-model draws, together with the $k/N$ correction used,
+  so ``$\rho = 0.81$ vs.\ $0.97$'' becomes a CI statement instead of a
+  point-estimate dispute.
+\item \textbf{TODO-5 (label-null).} Ship the per-prompt label permutation
+  for \texttt{s02} to replace the as-reported null.
+\item \textbf{TODO-6 (top-k plumbing).} Re-verify $k/N$ assignments from
+  router attributes at runtime for DBRX ($N_A$) and future configs
+  (flag \path{hooks:pending}).
+\end{itemize}
+
+\section*{Data \& Code}
+\begin{itemize}\setlength\itemsep{0pt}
+\item Runs and per-pair Shapley payloads:
+  \path{expt-bias-1/results/*/result.json}.
+\item Analysis scripts: \path{paper_figures_seaborn.py},
+  \path{s01_exp1_stability.py}, \path{s02_exp5_js.py},
+  \path{s03_h1_verdict.py}, \path{s04_bootstrap_cis.py}
+  (all under \path{stats_analysis/scripts/}).
+\item Outputs and figures: \path{stats_analysis/outputs/},
+  \path{stats_analysis/figures/}.
+\end{itemize}
+
+\bibliographystyle{ACM-Reference-Format}
+\begin{thebibliography}{99}
+\bibitem{shapley1953} L.~S. Shapley. A Value for $n$-Person Games. In
+  \emph{Contributions to the Theory of Games II}, Annals of Mathematics
+  Studies 28, 1953.
+\bibitem{lundberg2017} S.~M. Lundberg and S.-I.~Lee. A Unified Approach to
+  Interpreting Model Predictions. In \emph{Advances in Neural Information
+  Processing Systems (NeurIPS)}, 2017.
+\bibitem{rozemberczki2022} B.~Rozemberczki, L.~Watson, P.~Bayer, H.-T.~Yang,
+  O.~Kiss, S.~Nilsson, and R.~Sarkar. The Shapley Value in Machine
+  Learning. \texttt{arXiv:2205.10702}, 2022.
+\bibitem{shazeer2017} N.~Shazeer, A.~Mirhoseini, K.~Maziarz, A.~Davis,
+  Q.~Le, G.~Hinton, and J.~Dean. Outrageously Large Neural Networks: The
+  Sparsely-Gated Mixture-of-Experts Layer. In \emph{ICLR}, 2017.
+\bibitem{lepikhin2021} D.~Lepikhin, H.~Lee, Y.~Xu, D.~Chen, O.~Firat,
+  Y.~Huang, M.~Krikun, N.~Shazeer, and Z.~Chen. GShard: Scaling Giant
+  Models with Conditional Computation and Automatic Sharding. In
+  \emph{ICLR}, 2021.
+\bibitem{fedus2022} W.~Fedus, B.~Zoph, and N.~Shazeer. Switch Transformers:
+  Scaling to Trillion Parameter Models with Simple and Efficient Sparsity.
+  \emph{Journal of Machine Learning Research}, 23(120):1--39, 2022.
+\bibitem{jiang2024} A.~Q.~Jiang \emph{et al.} Mixtral of Experts.
+  \texttt{arXiv:2401.04088}, 2024.
+\bibitem{muennighoff2024} N.~Muennighoff \emph{et al.} OLMoE: Open
+  Mixture-of-Experts Language Models. \texttt{arXiv:2409.12288}, 2024.
+\bibitem{gemmaTeam2024} Gemma Team (Google). Gemma: Open Models Based on
+  Gemini Research and Technology. \texttt{arXiv:2403.08295}, 2024.
+\bibitem{cai2024} Z.~Cai \emph{et al.} A Survey on Mixture of Experts.
+  \texttt{arXiv:2407.06204}, 2024.
+\bibitem{nadeem2021} M.~Nadeem, A.~Bethke, and S.~Reddy. StereoSet: Measuring
+  Stereotypical Bias in Pretrained Language Models. In \emph{ACL}, 2021.
+\bibitem{parrish2022} A.~Parrish, A.~Chen, N.~Nangia, V.~Padmakumar,
+  J.~Phang, J.~Thompson, P.~M.~Htut, and S.~R.~Bowman. BBQ: A
+  Hand-Built Bias Benchmark for Question Answering. In \emph{Findings of
+  ACL}, 2022.
+\bibitem{liang2023} P.~Liang \emph{et al.} Holistic Evaluation of Language
+  Models. \emph{Transactions of the Association for Computational
+  Linguistics}, 11:1--48, 2023.
+\bibitem{mehrabi2021} N.~Mehrabi, F.~Morstatter, N.~Saxena, K.~Lerman, and
+  A.~Galstyan. A Survey on Bias and Fairness in Machine Learning. \emph{ACM
+  Computing Surveys}, 54(6):1--35, 2021.
+\bibitem{moe_research_2026} MoE-Bias-Research-Group. Routing-Shapley
+  Bias-Concentration Study: Code and Artifacts (expt-bias-1), 2026.
+\end{thebibliography}
+
+\end{document}

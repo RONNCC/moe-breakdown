@@ -3,16 +3,18 @@
     "script": "s03_h1_verdict.py",
     "h1": "sparser (smaller N_A/N) => higher concentration (higher Gini, lower H)",
     "floors": {
-      "H": 0.02206635242614896,
-      "G": 0.046979481088872954,
-      "mean_abs_dH": 0.013649326705631515,
-      "mean_abs_dG": 0.030472888510949953
+      "H": 0.022997797740857084,
+      "G": 0.0485411756982419,
+      "mean_abs_dH": 0.013275762143820405,
+      "mean_abs_dG": 0.023604471998033227
     },
     "drift_models": [
       "olmoe-1b-7b",
       "phi3.5-moe",
       "mixtral-8x7b",
-      "dbrx"
+      "dbrx",
+      "gpt-oss-120b",
+      "gemma4-26b"
     ],
     "sets": {
       "all-6": {
@@ -71,88 +73,96 @@
       "N_A": 16,
       "N": 1024,
       "N_A/N": 0.015625,
-      "H": 0.878624280562932,
-      "G": 0.6456658511906938,
+      "H": 0.8783468877475243,
+      "G": 0.6472275458000627,
       "source": "v1",
       "n_pairs": 5000,
       "v1_broken": false,
       "v1_missing": false,
-      "dH": -0.021574446943411707,
-      "dG": 0.046979481088872954,
-      "abs_dH": 0.021574446943411707,
-      "abs_dG": 0.046979481088872954
+      "dH": -0.021851839758819325,
+      "dG": 0.0485411756982419,
+      "abs_dH": 0.021851839758819325,
+      "abs_dG": 0.0485411756982419
     },
     "phi3.5-moe": {
       "model": "phi3.5-moe",
       "N_A": 64,
       "N": 512,
       "N_A/N": 0.125,
-      "H": 0.877887861975776,
-      "G": 0.6435002382413835,
+      "H": 0.8795423790462898,
+      "G": 0.6396698261083971,
       "source": "v1",
       "n_pairs": 5000,
       "v1_broken": false,
       "v1_missing": false,
-      "dH": -0.010610395445186604,
-      "dG": 0.026514009053479004,
-      "abs_dH": 0.010610395445186604,
-      "abs_dG": 0.026514009053479004
+      "dH": -0.00895587837467271,
+      "dG": 0.0226835969204926,
+      "abs_dH": 0.00895587837467271,
+      "abs_dG": 0.0226835969204926
     },
     "mixtral-8x7b": {
       "model": "mixtral-8x7b",
       "N_A": 64,
       "N": 256,
       "N_A/N": 0.25,
-      "H": 0.9166801044401266,
-      "G": 0.5188975396849678,
+      "H": 0.917421784769429,
+      "G": 0.5164687423322405,
       "source": "v1",
       "n_pairs": 5000,
       "v1_broken": false,
       "v1_missing": false,
-      "dH": -0.00034611200777878715,
-      "dG": 0.002535472259412197,
-      "abs_dH": 0.00034611200777878715,
-      "abs_dG": 0.002535472259412197
+      "dH": 0.00039556832152365384,
+      "dG": 0.00010667490668492263,
+      "abs_dH": 0.00039556832152365384,
+      "abs_dG": 0.00010667490668492263
     },
     "dbrx": {
       "model": "dbrx",
       "N_A": 160,
       "N": 640,
       "N_A/N": 0.25,
-      "H": 0.8969766105827284,
-      "G": 0.5995210048310162,
+      "H": 0.8966428192510975,
+      "G": 0.59901924235112,
       "source": "v1",
       "n_pairs": 5000,
       "v1_broken": false,
       "v1_missing": false,
-      "dH": -0.02206635242614896,
-      "dG": 0.045862591642035655,
-      "abs_dH": 0.02206635242614896,
-      "abs_dG": 0.045862591642035655
+      "dH": -0.022400143757779878,
+      "dG": 0.04536082916213946,
+      "abs_dH": 0.022400143757779878,
+      "abs_dG": 0.04536082916213946
     },
     "gpt-oss-120b": {
       "model": "gpt-oss-120b",
       "N_A": 144,
       "N": 4608,
       "N_A/N": 0.03125,
-      "H": 0.8795033760468665,
-      "G": 0.7236266024093357,
-      "source": "v0",
-      "n_pairs": 400,
-      "v1_broken": true,
-      "v1_missing": false
+      "H": 0.8764500311375967,
+      "G": 0.7273864977692972,
+      "source": "v1",
+      "n_pairs": 2000,
+      "v1_broken": false,
+      "v1_missing": false,
+      "dH": -0.003053344909269784,
+      "dG": 0.0037598953599614626,
+      "abs_dH": 0.003053344909269784,
+      "abs_dG": 0.0037598953599614626
     },
     "gemma4-26b": {
       "model": "gemma4-26b",
       "N_A": 240,
       "N": 3840,
       "N_A/N": 0.0625,
-      "H": 0.8220791357444899,
-      "G": 0.8214785550577732,
-      "source": "v0",
-      "n_pairs": 400,
+      "H": 0.7887735094946339,
+      "G": 0.8551293573691959,
+      "source": "v1",
+      "n_pairs": 5000,
       "v1_broken": false,
-      "v1_missing": true
+      "v1_missing": false,
+      "dH": -0.022997797740857084,
+      "dG": 0.02117465994067902,
+      "abs_dH": 0.022997797740857084,
+      "abs_dG": 0.02117465994067902
     }
   },
   "sets": {
@@ -168,48 +178,39 @@
       ],
       "n": 6,
       "H": {
-        "rho": 0.5217939320872036,
-        "rho_p": 0.2883432338003935,
+        "rho": 0.753702346348183,
+        "rho_p": 0.08352328137325983,
         "expected_sign": "+ (H1: H rises as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 14,
-        "n_inversions": 4,
+        "n_inversions": 3,
         "inversions": [
           {
             "pair": [
               "olmoe-1b-7b",
-              "gemma4-26b"
+              "gpt-oss-120b"
             ],
-            "delta": -0.056545144818442084,
-            "abs_delta": 0.056545144818442084,
-            "floor": 0.02206635242614896
+            "delta": -0.0018968566099276662,
+            "abs_delta": 0.0018968566099276662,
+            "floor": 0.022997797740857084
           },
           {
             "pair": [
               "olmoe-1b-7b",
-              "phi3.5-moe"
+              "gemma4-26b"
             ],
-            "delta": -0.0007364185871560069,
-            "abs_delta": 0.0007364185871560069,
-            "floor": 0.02206635242614896
+            "delta": -0.08957337825289047,
+            "abs_delta": 0.08957337825289047,
+            "floor": 0.022997797740857084
           },
           {
             "pair": [
               "gpt-oss-120b",
               "gemma4-26b"
             ],
-            "delta": -0.057424240302376584,
-            "abs_delta": 0.057424240302376584,
-            "floor": 0.02206635242614896
-          },
-          {
-            "pair": [
-              "gpt-oss-120b",
-              "phi3.5-moe"
-            ],
-            "delta": -0.001615514071090507,
-            "abs_delta": 0.001615514071090507,
-            "floor": 0.02206635242614896
+            "delta": -0.0876765216429628,
+            "abs_delta": 0.0876765216429628,
+            "floor": 0.022997797740857084
           }
         ],
         "n_beyond_drift": 2,
@@ -219,18 +220,18 @@
               "olmoe-1b-7b",
               "gemma4-26b"
             ],
-            "delta": -0.056545144818442084,
-            "abs_delta": 0.056545144818442084,
-            "floor": 0.02206635242614896
+            "delta": -0.08957337825289047,
+            "abs_delta": 0.08957337825289047,
+            "floor": 0.022997797740857084
           },
           {
             "pair": [
               "gpt-oss-120b",
               "gemma4-26b"
             ],
-            "delta": -0.057424240302376584,
-            "abs_delta": 0.057424240302376584,
-            "floor": 0.02206635242614896
+            "delta": -0.0876765216429628,
+            "abs_delta": 0.0876765216429628,
+            "floor": 0.022997797740857084
           }
         ],
         "sparsity_ties": [
@@ -239,7 +240,7 @@
             "mixtral-8x7b"
           ]
         ],
-        "drift_floor": 0.02206635242614896,
+        "drift_floor": 0.022997797740857084,
         "verdict_point": "consistent with monotone H1 direction",
         "verdict_drift": "consistent with monotone H1 direction"
       },
@@ -256,27 +257,27 @@
               "olmoe-1b-7b",
               "gpt-oss-120b"
             ],
-            "delta": 0.07796075121864199,
-            "abs_delta": 0.07796075121864199,
-            "floor": 0.046979481088872954
+            "delta": 0.0801589519692345,
+            "abs_delta": 0.0801589519692345,
+            "floor": 0.0485411756982419
           },
           {
             "pair": [
               "olmoe-1b-7b",
               "gemma4-26b"
             ],
-            "delta": 0.17581270386707948,
-            "abs_delta": 0.17581270386707948,
-            "floor": 0.046979481088872954
+            "delta": 0.20790181156913323,
+            "abs_delta": 0.20790181156913323,
+            "floor": 0.0485411756982419
           },
           {
             "pair": [
               "gpt-oss-120b",
               "gemma4-26b"
             ],
-            "delta": 0.09785195264843749,
-            "abs_delta": 0.09785195264843749,
-            "floor": 0.046979481088872954
+            "delta": 0.12774285959989873,
+            "abs_delta": 0.12774285959989873,
+            "floor": 0.0485411756982419
           }
         ],
         "n_beyond_drift": 3,
@@ -286,27 +287,27 @@
               "olmoe-1b-7b",
               "gpt-oss-120b"
             ],
-            "delta": 0.07796075121864199,
-            "abs_delta": 0.07796075121864199,
-            "floor": 0.046979481088872954
+            "delta": 0.0801589519692345,
+            "abs_delta": 0.0801589519692345,
+            "floor": 0.0485411756982419
           },
           {
             "pair": [
               "olmoe-1b-7b",
               "gemma4-26b"
             ],
-            "delta": 0.17581270386707948,
-            "abs_delta": 0.17581270386707948,
-            "floor": 0.046979481088872954
+            "delta": 0.20790181156913323,
+            "abs_delta": 0.20790181156913323,
+            "floor": 0.0485411756982419
           },
           {
             "pair": [
               "gpt-oss-120b",
               "gemma4-26b"
             ],
-            "delta": 0.09785195264843749,
-            "abs_delta": 0.09785195264843749,
-            "floor": 0.046979481088872954
+            "delta": 0.12774285959989873,
+            "abs_delta": 0.12774285959989873,
+            "floor": 0.0485411756982419
           }
         ],
         "sparsity_ties": [
@@ -315,14 +316,14 @@
             "dbrx"
           ]
         ],
-        "drift_floor": 0.046979481088872954,
+        "drift_floor": 0.0485411756982419,
         "verdict_point": "consistent with monotone H1 direction",
         "verdict_drift": "consistent with monotone H1 direction"
       },
       "note": "all stored runs (paper ladder + gpt-oss + gemma)",
       "verdict_point": "SUPPORTED",
       "verdict_drift": "SUPPORTED",
-      "interpretation": "all-6: H rho=+0.522 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 4/14 (2 beyond floor 0.0221); G rho=-0.754 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 3/14 (3 beyond floor 0.0470); H-inv: olmoe-1b-7b@gemma4-26b, olmoe-1b-7b@phi3.5-moe, gpt-oss-120b@gemma4-26b, gpt-oss-120b@phi3.5-moe, G-inv: olmoe-1b-7b@gpt-oss-120b, olmoe-1b-7b@gemma4-26b, gpt-oss-120b@gemma4-26b."
+      "interpretation": "all-6: H rho=+0.754 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 3/14 (2 beyond floor 0.0230); G rho=-0.754 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 3/14 (3 beyond floor 0.0485); H-inv: olmoe-1b-7b@gpt-oss-120b, olmoe-1b-7b@gemma4-26b, gpt-oss-120b@gemma4-26b, G-inv: olmoe-1b-7b@gpt-oss-120b, olmoe-1b-7b@gemma4-26b, gpt-oss-120b@gemma4-26b."
     },
     "minus-gpt-oss-5": {
       "set": "minus-gpt-oss-5",
@@ -335,30 +336,21 @@
       ],
       "n": 5,
       "H": {
-        "rho": 0.6668859288553503,
-        "rho_p": 0.21889398131323148,
+        "rho": 0.8720815992723809,
+        "rho_p": 0.05385421772754213,
         "expected_sign": "+ (H1: H rises as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 9,
-        "n_inversions": 2,
+        "n_inversions": 1,
         "inversions": [
           {
             "pair": [
               "olmoe-1b-7b",
               "gemma4-26b"
             ],
-            "delta": -0.056545144818442084,
-            "abs_delta": 0.056545144818442084,
-            "floor": 0.02206635242614896
-          },
-          {
-            "pair": [
-              "olmoe-1b-7b",
-              "phi3.5-moe"
-            ],
-            "delta": -0.0007364185871560069,
-            "abs_delta": 0.0007364185871560069,
-            "floor": 0.02206635242614896
+            "delta": -0.08957337825289047,
+            "abs_delta": 0.08957337825289047,
+            "floor": 0.022997797740857084
           }
         ],
         "n_beyond_drift": 1,
@@ -368,9 +360,9 @@
               "olmoe-1b-7b",
               "gemma4-26b"
             ],
-            "delta": -0.056545144818442084,
-            "abs_delta": 0.056545144818442084,
-            "floor": 0.02206635242614896
+            "delta": -0.08957337825289047,
+            "abs_delta": 0.08957337825289047,
+            "floor": 0.022997797740857084
           }
         ],
         "sparsity_ties": [
@@ -379,7 +371,7 @@
             "mixtral-8x7b"
           ]
         ],
-        "drift_floor": 0.02206635242614896,
+        "drift_floor": 0.022997797740857084,
         "verdict_point": "consistent with monotone H1 direction",
         "verdict_drift": "consistent with monotone H1 direction"
       },
@@ -396,9 +388,9 @@
               "olmoe-1b-7b",
               "gemma4-26b"
             ],
-            "delta": 0.17581270386707948,
-            "abs_delta": 0.17581270386707948,
-            "floor": 0.046979481088872954
+            "delta": 0.20790181156913323,
+            "abs_delta": 0.20790181156913323,
+            "floor": 0.0485411756982419
           }
         ],
         "n_beyond_drift": 1,
@@ -408,9 +400,9 @@
               "olmoe-1b-7b",
               "gemma4-26b"
             ],
-            "delta": 0.17581270386707948,
-            "abs_delta": 0.17581270386707948,
-            "floor": 0.046979481088872954
+            "delta": 0.20790181156913323,
+            "abs_delta": 0.20790181156913323,
+            "floor": 0.0485411756982419
           }
         ],
         "sparsity_ties": [
@@ -419,14 +411,14 @@
             "dbrx"
           ]
         ],
-        "drift_floor": 0.046979481088872954,
+        "drift_floor": 0.0485411756982419,
         "verdict_point": "consistent with monotone H1 direction",
         "verdict_drift": "consistent with monotone H1 direction"
       },
       "note": "advisors' claim: drop GPT-OSS (broken v1) -> H1 purportedly supported",
       "verdict_point": "SUPPORTED",
       "verdict_drift": "SUPPORTED",
-      "interpretation": "minus-gpt-oss-5: H rho=+0.667 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 2/9 (1 beyond floor 0.0221); G rho=-0.872 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 1/9 (1 beyond floor 0.0470); H-inv: olmoe-1b-7b@gemma4-26b, olmoe-1b-7b@phi3.5-moe, G-inv: olmoe-1b-7b@gemma4-26b."
+      "interpretation": "minus-gpt-oss-5: H rho=+0.872 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 1/9 (1 beyond floor 0.0230); G rho=-0.872 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 1/9 (1 beyond floor 0.0485); H-inv: olmoe-1b-7b@gemma4-26b, G-inv: olmoe-1b-7b@gemma4-26b."
     },
     "paper-ladder-5": {
       "set": "paper-ladder-5",
@@ -439,30 +431,21 @@
       ],
       "n": 5,
       "H": {
-        "rho": 0.6668859288553503,
-        "rho_p": 0.21889398131323148,
+        "rho": 0.8720815992723809,
+        "rho_p": 0.05385421772754213,
         "expected_sign": "+ (H1: H rises as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 9,
-        "n_inversions": 2,
+        "n_inversions": 1,
         "inversions": [
           {
             "pair": [
               "olmoe-1b-7b",
-              "phi3.5-moe"
+              "gpt-oss-120b"
             ],
-            "delta": -0.0007364185871560069,
-            "abs_delta": 0.0007364185871560069,
-            "floor": 0.02206635242614896
-          },
-          {
-            "pair": [
-              "gpt-oss-120b",
-              "phi3.5-moe"
-            ],
-            "delta": -0.001615514071090507,
-            "abs_delta": 0.001615514071090507,
-            "floor": 0.02206635242614896
+            "delta": -0.0018968566099276662,
+            "abs_delta": 0.0018968566099276662,
+            "floor": 0.022997797740857084
           }
         ],
         "n_beyond_drift": 0,
@@ -473,7 +456,7 @@
             "mixtral-8x7b"
           ]
         ],
-        "drift_floor": 0.02206635242614896,
+        "drift_floor": 0.022997797740857084,
         "verdict_point": "consistent with monotone H1 direction",
         "verdict_drift": "consistent with monotone H1 direction"
       },
@@ -490,9 +473,9 @@
               "olmoe-1b-7b",
               "gpt-oss-120b"
             ],
-            "delta": 0.07796075121864199,
-            "abs_delta": 0.07796075121864199,
-            "floor": 0.046979481088872954
+            "delta": 0.0801589519692345,
+            "abs_delta": 0.0801589519692345,
+            "floor": 0.0485411756982419
           }
         ],
         "n_beyond_drift": 1,
@@ -502,9 +485,9 @@
               "olmoe-1b-7b",
               "gpt-oss-120b"
             ],
-            "delta": 0.07796075121864199,
-            "abs_delta": 0.07796075121864199,
-            "floor": 0.046979481088872954
+            "delta": 0.0801589519692345,
+            "abs_delta": 0.0801589519692345,
+            "floor": 0.0485411756982419
           }
         ],
         "sparsity_ties": [
@@ -513,14 +496,14 @@
             "dbrx"
           ]
         ],
-        "drift_floor": 0.046979481088872954,
+        "drift_floor": 0.0485411756982419,
         "verdict_point": "consistent with monotone H1 direction",
         "verdict_drift": "consistent with monotone H1 direction"
       },
       "note": "paper ladder: gemma excluded (bias gap ~ 0); gpt-oss kept at v0",
       "verdict_point": "SUPPORTED",
       "verdict_drift": "SUPPORTED",
-      "interpretation": "paper-ladder-5: H rho=+0.667 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 2/9 (0 beyond floor 0.0221); G rho=-0.872 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 1/9 (1 beyond floor 0.0470); H-inv: olmoe-1b-7b@phi3.5-moe, gpt-oss-120b@phi3.5-moe, G-inv: olmoe-1b-7b@gpt-oss-120b."
+      "interpretation": "paper-ladder-5: H rho=+0.872 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 1/9 (0 beyond floor 0.0230); G rho=-0.872 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 1/9 (1 beyond floor 0.0485); H-inv: olmoe-1b-7b@gpt-oss-120b, G-inv: olmoe-1b-7b@gpt-oss-120b."
     },
     "paper-valid-4": {
       "set": "paper-valid-4",
@@ -532,23 +515,13 @@
       ],
       "n": 4,
       "H": {
-        "rho": 0.7378647873726218,
-        "rho_p": 0.26213521262737816,
+        "rho": 0.9486832980505139,
+        "rho_p": 0.05131670194948613,
         "expected_sign": "+ (H1: H rises as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 5,
-        "n_inversions": 1,
-        "inversions": [
-          {
-            "pair": [
-              "olmoe-1b-7b",
-              "phi3.5-moe"
-            ],
-            "delta": -0.0007364185871560069,
-            "abs_delta": 0.0007364185871560069,
-            "floor": 0.02206635242614896
-          }
-        ],
+        "n_inversions": 0,
+        "inversions": [],
         "n_beyond_drift": 0,
         "beyond_drift_pairs": [],
         "sparsity_ties": [
@@ -557,7 +530,7 @@
             "mixtral-8x7b"
           ]
         ],
-        "drift_floor": 0.02206635242614896,
+        "drift_floor": 0.022997797740857084,
         "verdict_point": "consistent with monotone H1 direction",
         "verdict_drift": "consistent with monotone H1 direction"
       },
@@ -577,14 +550,14 @@
             "dbrx"
           ]
         ],
-        "drift_floor": 0.046979481088872954,
+        "drift_floor": 0.0485411756982419,
         "verdict_point": "consistent with monotone H1 direction",
         "verdict_drift": "consistent with monotone H1 direction"
       },
       "note": "paper ladder minus gpt-oss; dbrx shares N_A/N with mixtral",
       "verdict_point": "SUPPORTED",
       "verdict_drift": "SUPPORTED",
-      "interpretation": "paper-valid-4: H rho=+0.738 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 1/5 (0 beyond floor 0.0221); G rho=-0.949 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 0/5 (0 beyond floor 0.0470); H-inv: olmoe-1b-7b@phi3.5-moe, G-inv: none."
+      "interpretation": "paper-valid-4: H rho=+0.949 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 0/5 (0 beyond floor 0.0230); G rho=-0.949 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 0/5 (0 beyond floor 0.0485); H-inv: none, G-inv: none."
     },
     "unique-sparsity-3": {
       "set": "unique-sparsity-3",
@@ -595,27 +568,17 @@
       ],
       "n": 3,
       "H": {
-        "rho": 0.5,
-        "rho_p": 0.6666666666666666,
+        "rho": 1.0,
+        "rho_p": 0.0,
         "expected_sign": "+ (H1: H rises as N_A/N rises)",
         "rho_consistent_with_H1": true,
         "n_distinct_pairs": 3,
-        "n_inversions": 1,
-        "inversions": [
-          {
-            "pair": [
-              "olmoe-1b-7b",
-              "phi3.5-moe"
-            ],
-            "delta": -0.0007364185871560069,
-            "abs_delta": 0.0007364185871560069,
-            "floor": 0.02206635242614896
-          }
-        ],
+        "n_inversions": 0,
+        "inversions": [],
         "n_beyond_drift": 0,
         "beyond_drift_pairs": [],
         "sparsity_ties": [],
-        "drift_floor": 0.02206635242614896,
+        "drift_floor": 0.022997797740857084,
         "verdict_point": "consistent with monotone H1 direction",
         "verdict_drift": "consistent with monotone H1 direction"
       },
@@ -630,14 +593,14 @@
         "n_beyond_drift": 0,
         "beyond_drift_pairs": [],
         "sparsity_ties": [],
-        "drift_floor": 0.046979481088872954,
+        "drift_floor": 0.0485411756982419,
         "verdict_point": "consistent with monotone H1 direction",
         "verdict_drift": "consistent with monotone H1 direction"
       },
       "note": "cleanest ladder: three distinct N_A/N levels, no broken/dup runs",
       "verdict_point": "SUPPORTED",
       "verdict_drift": "SUPPORTED",
-      "interpretation": "unique-sparsity-3: H rho=+0.500 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 1/3 (0 beyond floor 0.0221); G rho=-1.000 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 0/3 (0 beyond floor 0.0470); H-inv: olmoe-1b-7b@phi3.5-moe, G-inv: none."
+      "interpretation": "unique-sparsity-3: H rho=+1.000 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 0/3 (0 beyond floor 0.0230); G rho=-1.000 (point consistent with monotone H1 direction; drift consistent with monotone H1 direction), inversions 0/3 (0 beyond floor 0.0485); H-inv: none, G-inv: none."
     }
   },
   "comments": {
@@ -651,6 +614,6 @@
     "verdict_point": "SUPPORTED for all candidate sets (all-6, minus-gpt-oss-5, paper-ladder-5, paper-valid-4, unique-sparsity-3) after the gemma N_A correction 960->240 (N_A/N 0.25->0.0625)",
     "verdict_drift": "SUPPORTED drift-aware for all candidate sets; remaining beyond-floor inversions attributed to gemma (null bias) and the gpt-oss first rung (see rerun).",
     "rationale_point": "SUPPORTED (monotone sparsity->concentration) for ALL candidate sets, including the full 6-model ladder -- SUPPORTED on point estimates -- once gemma's N_A is corrected to 240 (N_A/N = 0.0625, was wrongly 960 / 0.25).",
-    "rationale_drift": "drift-aware: floor_H 0.0221 / floor_G 0.0470; the 2/14 H- and 3/14 G-pairs that remain beyond the floor all involve either gemma (null-bias model, 47% zero-mass phi) or the gpt-oss first rung (v1 fused-kernel-compromised, v0-400-pair estimate still under rerun certification): SUPPORTED at every ladder scale."
+    "rationale_drift": "drift-aware: floor_H 0.0230 / floor_G 0.0485; the 2/14 H- and 3/14 G-pairs that remain beyond the floor all involve either gemma (null-bias model, 47% zero-mass phi) or the gpt-oss first rung (v1 fused-kernel-compromised, v0-400-pair estimate still under rerun certification): SUPPORTED at every ladder scale."
   }
 }

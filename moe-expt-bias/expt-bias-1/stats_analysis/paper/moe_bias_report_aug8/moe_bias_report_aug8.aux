@@ -1,0 +1,95 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{shazeer2017,fedus2022,jiang2024,cai2024}
+\citation{shapley1953}
+\citation{lundberg2017,rozemberczki2022}
+\citation{moe_research_2026}
+\citation{shazeer2017}
+\citation{lepikhin2021}
+\citation{fedus2022}
+\citation{jiang2024}
+\citation{muennighoff2024}
+\citation{gemmaTeam2024}
+\citation{cai2024}
+\citation{nadeem2021}
+\citation{parrish2022}
+\citation{liang2023,mehrabi2021}
+\citation{moe_research_2026}
+\@writefile{toc}{\contentsline {section}{Abstract}{1}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{1}{section.2}\protected@file@percent }
+\newlabel{sec:related}{{2}{1}{Related Work}{section.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Method}{1}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Routing-Shapley attribution}{1}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Concentration metrics}{2}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experiment Setup}{2}{section.4}\protected@file@percent }
+\newlabel{sec:setup}{{4}{2}{Experiment Setup}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Models}{2}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Results}{2}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}The ladder is flat: H1 is not supported}{2}{subsection.5.1}\protected@file@percent }
+\newlabel{sec:h1test}{{5.1}{2}{The ladder is flat: H1 is not supported}{subsection.5.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Normalized entropy of the expert attribution across the ladder. The dashed line is the dense mean.}}{2}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:ladder}{{1}{2}{Normalized entropy of the expert attribution across the ladder. The dashed line is the dense mean}{figure.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Gini of the expert attribution across the ladder (no dense baseline is drawn in this panel; the dense-vs-MoE Gini comparison is in Fig.\nonbreakingspace \ref {fig:dense}).}}{2}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:gini}{{2}{2}{Gini of the expert attribution across the ladder (no dense baseline is drawn in this panel; the dense-vs-MoE Gini comparison is in Fig.~\ref {fig:dense})}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Top-fraction: no expert-level concentration}{2}{subsection.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Sparsity ladder and concentration metrics (values from the current logged captures; every row except GPT-OSS from its $5{,}000$-pair v1-era capture). $k/N$ = active-expert fraction ($k$ from the verified audit table in \texttt  {s03\_h1\_verdict.py}, $N$ from stored \texttt  {n\_players}). $^{\dagger }$GPT-OSS v0 run only; its v1 capture is all-zero and excluded (see Section\nonbreakingspace \ref {sec:limits}). $^{\ddagger }$Gemma's mean bias gap $\approx 0$ (null-bias model); its concentration readings reflect routing noise, reported for transparency.}}{3}{table.caption.5}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:ladder}{{1}{3}{Sparsity ladder and concentration metrics (values from the current logged captures; every row except GPT-OSS from its $5{,}000$-pair v1-era capture). $k/N$ = active-expert fraction ($k$ from the verified audit table in \texttt {s03\_h1\_verdict.py}, $N$ from stored \texttt {n\_players}). $^{\dagger }$GPT-OSS v0 run only; its v1 capture is all-zero and excluded (see Section~\ref {sec:limits}). $^{\ddagger }$Gemma's mean bias gap $\approx 0$ (null-bias model); its concentration readings reflect routing noise, reported for transparency}{table.caption.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Bootstrap $95\%$ CIs for the concentration metrics of the signed-mean $|\phi |$ attribution (point = full-sample signed-mean value; interval = $95\%$ percentile CI over 5000 block-bootstrap resamples of pairs, seed 42; \texttt  {s04\_bootstrap\_cis.json}). $^{\dagger }$GPT-OSS-120B: no per-pair payload yet---pending the bf16-dequantized eager rerun now on the cluster (Section\nonbreakingspace \ref {sec:limits}). This table is recomputed from the v1-era per-pair payloads (Gemma from its $n = 5000$ v1 capture) while Table\nonbreakingspace \ref {tab:ladder} reflects the current logged runs; the two agree within the v0--v1 drift floors except DBRX, whose $H$ shift ($0.919 \rightarrow 0.897$) is the expected post-rerun drift ($\Delta H = -0.022$), not a residual inconsistency.}}{3}{table.caption.6}\protected@file@percent }
+\newlabel{ci:table}{{2}{3}{Bootstrap $95\%$ CIs for the concentration metrics of the signed-mean $|\phi |$ attribution (point = full-sample signed-mean value; interval = $95\%$ percentile CI over 5000 block-bootstrap resamples of pairs, seed 42; \texttt {s04\_bootstrap\_cis.json}). $^{\dagger }$GPT-OSS-120B: no per-pair payload yet---pending the bf16-dequantized eager rerun now on the cluster (Section~\ref {sec:limits}). This table is recomputed from the v1-era per-pair payloads (Gemma from its $n = 5000$ v1 capture) while Table~\ref {tab:ladder} reflects the current logged runs; the two agree within the v0--v1 drift floors except DBRX, whose $H$ shift ($0.919 \rightarrow 0.897$) is the expected post-rerun drift ($\Delta H = -0.022$), not a residual inconsistency}{table.caption.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Dense-baseline measures (v0; \texttt  {exp2-*}/result.json, one FFN layer player per transformer layer, $N = 32$).}}{3}{table.caption.7}\protected@file@percent }
+\newlabel{tab:dense}{{3}{3}{Dense-baseline measures (v0; \texttt {exp2-*}/result.json, one FFN layer player per transformer layer, $N = 32$)}{table.caption.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Dense vs.\ MoE: a real split, not a ladder}{3}{subsection.5.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Entropy vs.\ active fraction $k/N$ (log scale): H1 (sparser $\Rightarrow $ more concentrated) is not supported on the pre-correction reading ($\rho = 0.2$, $p = 0.63$); the corrected model ladder reads $\rho _H = 0.81$ ($p = 0.058$) and $\rho _G = -0.75$ ($p = 0.103$), and the flag-free four-model core $\rho _H = 0.95$ ($p = 0.083$).}}{4}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:scatter}{{3}{4}{Entropy vs.\ active fraction $k/N$ (log scale): H1 (sparser $\Rightarrow $ more concentrated) is not supported on the pre-correction reading ($\rho = 0.2$, $p = 0.63$); the corrected model ladder reads $\rho _H = 0.81$ ($p = 0.058$) and $\rho _G = -0.75$ ($p = 0.103$), and the flag-free four-model core $\rho _H = 0.95$ ($p = 0.083$)}{figure.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Top-5 and top-10\% share across the ladder.}}{4}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:topfrac}{{4}{4}{Top-5 and top-10\% share across the ladder}{figure.caption.11}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Robustness and Sensitivity}{4}{section.6}\protected@file@percent }
+\newlabel{sec:robust}{{6}{4}{Robustness and Sensitivity}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Run-to-run drift (v0 vs.\ v1)}{4}{subsection.6.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Dense vs.\ MoE Gini (boxplots by family). Dense layers are at least as concentrated per player: dense median Gini $\approx 0.70$ (range $0.61$--$0.73$) versus MoE median $\approx 0.64$ (spread $0.52$--$0.86$); the MoE family is the more dispersed one.}}{4}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:dense}{{5}{4}{Dense vs.\ MoE Gini (boxplots by family). Dense layers are at least as concentrated per player: dense median Gini $\approx 0.70$ (range $0.61$--$0.73$) versus MoE median $\approx 0.64$ (spread $0.52$--$0.86$); the MoE family is the more dispersed one}{figure.caption.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Permutation / null analysis}{4}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Model-set sensitivity audit}{4}{subsection.6.3}\protected@file@percent }
+\newlabel{sec:verdict}{{6.3}{4}{Model-set sensitivity audit}{subsection.6.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Pairwise JS divergence across 85 demographic cohorts (OLMoE; overlapping histograms vs.\ the expert-index permutation null). Vertical lines: observed mean, null $p_{95}$, and reported label-null mean.}}{5}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:js}{{6}{5}{Pairwise JS divergence across 85 demographic cohorts (OLMoE; overlapping histograms vs.\ the expert-index permutation null). Vertical lines: observed mean, null $p_{95}$, and reported label-null mean}{figure.caption.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Statistical method note}{5}{subsection.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Demographic-specificity}{5}{subsection.6.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Discussion}{5}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Limitations and Uncertainty Flags}{5}{section.8}\protected@file@percent }
+\newlabel{sec:limits}{{8}{5}{Limitations and Uncertainty Flags}{section.8}{}}
+\bibstyle{ACM-Reference-Format}
+\bibcite{shapley1953}{{1}{}{{}}{{}}}
+\bibcite{lundberg2017}{{2}{}{{}}{{}}}
+\bibcite{rozemberczki2022}{{3}{}{{}}{{}}}
+\bibcite{shazeer2017}{{4}{}{{}}{{}}}
+\bibcite{lepikhin2021}{{5}{}{{}}{{}}}
+\bibcite{fedus2022}{{6}{}{{}}{{}}}
+\bibcite{jiang2024}{{7}{}{{}}{{}}}
+\bibcite{muennighoff2024}{{8}{}{{}}{{}}}
+\bibcite{gemmaTeam2024}{{9}{}{{}}{{}}}
+\bibcite{cai2024}{{10}{}{{}}{{}}}
+\bibcite{nadeem2021}{{11}{}{{}}{{}}}
+\bibcite{parrish2022}{{12}{}{{}}{{}}}
+\bibcite{liang2023}{{13}{}{{}}{{}}}
+\bibcite{mehrabi2021}{{14}{}{{}}{{}}}
+\bibcite{moe_research_2026}{{15}{}{{}}{{}}}
+\newlabel{tocindent-1}{0pt}
+\newlabel{tocindent0}{0pt}
+\newlabel{tocindent1}{4.62497pt}
+\newlabel{tocindent2}{11.81937pt}
+\newlabel{tocindent3}{0pt}
+\newlabel{tocindent4}{0pt}
+\newlabel{tocindent5}{0pt}
+\providecommand\NAT@force@numbers{}\NAT@force@numbers
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{6}{section.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10}Open Questions and TODO}{6}{section.10}\protected@file@percent }
+\newlabel{sec:todo}{{10}{6}{Open Questions and TODO}{section.10}{}}
+\@writefile{toc}{\contentsline {section}{References}{6}{section*.16}\protected@file@percent }
+\newlabel{TotPages}{{6}{6}{}{page.6}{}}
+\gdef \@abspage@last{6}
