@@ -134,10 +134,13 @@ decomposition introduced in our prior work \cite{moe_research_2026}. MoE
 architectures from the sparsely-gated layer \cite{shazeer2017} through
 GShard \cite{lepikhin2021}, Switch \cite{fedus2022}, and current open
 models (Mixtral \cite{jiang2024}, OLMoE \cite{muennighoff2024}, Gemma
-\cite{gemmaTeam2024}) define the routers we instrument; recent surveys
-\cite{cai2024} catalog the design space. Bias evaluation in LLMs is
-commonly benchmark-driven (StereoSet \cite{nadeem2021}, BBQ
-\cite{parrish2022}, holistic audits \cite{liang2023,mehrabi2021}); our
+\cite{gemmaTeam2024}, DBRX \cite{databricks2024dbrx}, Phi-3.5-MoE
+\cite{abdin2024phi3}, GPT-OSS \cite{openai2025gptoss}) define the routers
+we instrument; recent surveys \cite{cai2024} catalog the design space.
+Bias evaluation in LLMs is commonly benchmark-driven (StereoSet
+\cite{nadeem2021}, BBQ \cite{parrish2022}, Winogender
+\cite{rudinger2018winogender}, holistic audits
+\cite{liang2023,mehrabi2021}); our
 contribution measures not model-level bias magnitude but \emph{where}
 bias-relevant counterfactual shift localizes within the routing space.
 
@@ -755,8 +758,12 @@ experts'' to be a workable fix.}
 
 \section*{Data \& Code}
 \begin{itemize}\setlength\itemsep{0pt}
-\item Runs and per-pair Shapley payloads:
+\item Runs, \texttt{result.json} summaries, and pair/player metadata:
   \path{expt-bias-1/results/*/result.json}.
+\item Per-pair Shapley payloads (\path{per_pair_phi*.npy}, $\approx 360$MB
+  across 8 captures) exceed the code repository's file-size limits and are
+  hosted on an external, anonymized data-sharing platform; a
+  de-anonymized dataset link will be provided upon acceptance.
 \item Analysis scripts: \path{paper_figures_seaborn.py},
   \path{s01_exp1_stability.py}, \path{s02_exp5_js.py},
   \path{s03_h1_verdict.py}, \path{s04_bootstrap_cis.py}
@@ -764,6 +771,23 @@ experts'' to be a workable fix.}
 \item Outputs and figures: \path{stats_analysis/outputs/},
   \path{stats_analysis/figures/}.
 \end{itemize}
+
+\section*{Ethical Considerations}
+All benchmark prompts (StereoSet, BBQ, Winogender) are pre-existing,
+publicly released bias-evaluation datasets used only to measure, not to
+elicit or amplify, stereotyped completions; no new human-subjects data was
+collected. The routing-Shapley attribution measures where a
+contrastive log-probability shift localizes among experts, \emph{not}
+whether a model is safe to deploy or how biased its outputs are in
+absolute terms; readers should not interpret a low top-$k$ attribution
+share as evidence that pruning those experts would meaningfully reduce
+deployed bias; Section~\ref{sec:causal} shows ablation of the
+highest-attribution experts is a marginal, not exact, proxy for the
+causal effect, and is sometimes beaten by ablating high-routing-frequency
+experts instead. We do not release any model weights, fine-tunes, or
+jailbreak artifacts; all captures use publicly available, unmodified
+checkpoints.
+
 
 \clearpage
 
@@ -1076,12 +1100,22 @@ every model we tested to varying degrees.
   Gemini Research and Technology. \texttt{arXiv:2403.08295}, 2024.
 \bibitem{cai2024} Z.~Cai \emph{et al.} A Survey on Mixture of Experts.
   \texttt{arXiv:2407.06204}, 2024.
+\bibitem{databricks2024dbrx} Databricks Mosaic Research. Introducing DBRX:
+  A New State-of-the-Art Open LLM. Databricks Blog, March 2024.
+\bibitem{abdin2024phi3} M.~Abdin \emph{et al.} Phi-3 Technical Report: A
+  Highly Capable Language Model Locally on Your Phone.
+  \texttt{arXiv:2404.14219}, 2024.
+\bibitem{openai2025gptoss} OpenAI. gpt-oss-120b \& gpt-oss-20b Model Card.
+  \texttt{arXiv:2508.10925}, 2025.
 \bibitem{nadeem2021} M.~Nadeem, A.~Bethke, and S.~Reddy. StereoSet: Measuring
   Stereotypical Bias in Pretrained Language Models. In \emph{ACL}, 2021.
 \bibitem{parrish2022} A.~Parrish, A.~Chen, N.~Nangia, V.~Padmakumar,
   J.~Phang, J.~Thompson, P.~M.~Htut, and S.~R.~Bowman. BBQ: A
   Hand-Built Bias Benchmark for Question Answering. In \emph{Findings of
   ACL}, 2022.
+\bibitem{rudinger2018winogender} R.~Rudinger, J.~Naradowsky, B.~Leonard, and
+  B.~Van Durme. Gender Bias in Coreference Resolution. In \emph{NAACL-HLT}
+  (Short Papers), 2018.
 \bibitem{liang2023} P.~Liang \emph{et al.} Holistic Evaluation of Language
   Models. \emph{Transactions on Machine Learning Research}, 2023.
 \bibitem{mehrabi2021} N.~Mehrabi, F.~Morstatter, N.~Saxena, K.~Lerman, and

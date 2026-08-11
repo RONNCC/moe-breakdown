@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.1)  11 AUG 2026 10:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.1)  11 AUG 2026 10:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -718,62 +718,62 @@ surrounding objects on input line 125.
 
 ]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <9> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 223.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 226.
 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig1_entropy_ladder.png, i
-d=187, 520.344pt x 317.988pt>
+d=197, 520.344pt x 317.988pt>
 File: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig1_entropy_ladder.p
 ng Graphic file (type png)
 <use ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig1_entropy_ladder.pn
 g>
 Package pdftex.def Info: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fi
-g1_entropy_ladder.png  used on input line 305.
+g1_entropy_ladder.png  used on input line 308.
 (pdftex.def)             Requested size: 241.14749pt x 147.36797pt.
 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig2_gini_ladder.png, id=1
-89, 520.344pt x 317.988pt>
+99, 520.344pt x 317.988pt>
 File: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig2_gini_ladder.png 
 Graphic file (type png)
 <use ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig2_gini_ladder.png>
 Package pdftex.def Info: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fi
-g2_gini_ladder.png  used on input line 319.
+g2_gini_ladder.png  used on input line 322.
 (pdftex.def)             Requested size: 241.14749pt x 147.36797pt.
-<../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig3_h1_scatter.png, id=19
+<../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig3_h1_scatter.png, id=20
 0, 491.436pt x 332.442pt>
 File: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig3_h1_scatter.png G
 raphic file (type png)
 <use ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig3_h1_scatter.png>
 Package pdftex.def Info: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fi
-g3_h1_scatter.png  used on input line 330.
+g3_h1_scatter.png  used on input line 333.
 (pdftex.def)             Requested size: 241.14749pt x 163.13133pt.
 
 
 Class acmart Warning: \vspace should only be used to provide space above/below 
-surrounding objects on input line 344.
+surrounding objects on input line 347.
 
 
 Class acmart Warning: \vspace should only be used to provide space above/below 
-surrounding objects on input line 344.
+surrounding objects on input line 347.
 
 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig4_top_fraction.png, id=
-192, 520.344pt x 303.534pt>
+202, 520.344pt x 303.534pt>
 File: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig4_top_fraction.png
  Graphic file (type png)
 <use ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig4_top_fraction.png>
 
 Package pdftex.def Info: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fi
-g4_top_fraction.png  used on input line 353.
+g4_top_fraction.png  used on input line 356.
 (pdftex.def)             Requested size: 241.14749pt x 140.66942pt.
 [2.2 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig1_entropy_ladder.p
 ng>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig5_dense_vs_moe.png, id=
-214, 448.074pt x 303.534pt>
+222, 448.074pt x 303.534pt>
 File: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig5_dense_vs_moe.png
  Graphic file (type png)
 <use ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig5_dense_vs_moe.png>
 
 Package pdftex.def Info: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/fi
-g5_dense_vs_moe.png  used on input line 373.
+g5_dense_vs_moe.png  used on input line 376.
 (pdftex.def)             Requested size: 241.14749pt x 163.35939pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -783,38 +783,38 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  <../moe-expt-bias/expt-bias-1/stats_analysis/figures/fig3_h1_scatter.png> <../
 moe-expt-bias/expt-bias-1/stats_analysis/figures/fig4_top_fraction.png> <../moe
 -expt-bias/expt-bias-1/stats_analysis/figures/fig5_dense_vs_moe.png>]
-Underfull \hbox (badness 5741) in paragraph at lines 441--452
+Underfull \hbox (badness 5741) in paragraph at lines 444--455
 \OT1/cmr/m/n/9 (+20) (\OT1/cmtt/m/n/9 disparity[]drop\OT1/cmr/m/n/9 (+20) ; $\O
 T1/cmtt/m/n/9 scripts / run \ _experiment6 \ _ablation .
  []
 
 
-Underfull \hbox (badness 3302) in paragraph at lines 441--452
+Underfull \hbox (badness 3302) in paragraph at lines 444--455
 \OT1/cmr/m/n/9 (+20) disk for four mod-els ($\OT1/cmtt/m/n/9 results / <[]study
  >[] /experiment6 /
  []
 
 
-Underfull \hbox (badness 2057) in paragraph at lines 454--474
+Underfull \hbox (badness 2057) in paragraph at lines 457--477
 \OT1/cmr/m/n/9 (+20) 54\OML/cmm/m/it/9 :\OT1/cmr/m/n/9 (+20) 6%$ (ran-dom), $43
 \OML/cmm/m/it/9 :\OT1/cmr/m/n/9 (+20) 9%$ (high-routing). \OT1/cmr/bx/n/9 (+20)
  Phi-3.5-MoE
  []
 
 
-Underfull \hbox (badness 6641) in paragraph at lines 454--474
+Underfull \hbox (badness 6641) in paragraph at lines 457--477
 \OT1/cmr/m/n/9 (+20) (30 pairs, $\OT1/cmtt/m/n/9 exp1 -[] concentration -[] phi
 3 . 5 -[] moe$\OT1/cmr/m/n/9 (+20) ): top-10%
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 454--474
+Underfull \hbox (badness 10000) in paragraph at lines 457--477
 \OT1/cmr/m/n/9 (+20) pairs, $\OT1/cmtt/m/n/9 exp1 -[] concentration -[] mixtral
  -[] 8x7b$\OT1/cmr/m/n/9 (+20) ) shows no
  []
 
 
-Underfull \hbox (badness 1024) in paragraph at lines 454--474
+Underfull \hbox (badness 1024) in paragraph at lines 457--477
 \OT1/cmr/m/n/9 (+20) routing)---high-routing-frequency ex-perts carry most of
  []
 
@@ -822,53 +822,53 @@ Underfull \hbox (badness 1024) in paragraph at lines 454--474
 Underfull \vbox (badness 1442) has occurred while \output is active []
 
  [5.5]
-Underfull \hbox (badness 10000) in paragraph at lines 550--551
+Underfull \hbox (badness 10000) in paragraph at lines 553--554
 []\OT1/cmr/m/n/9 (+20) 5 mod-els (pa-per lad-der, with-out Gemma):
  []
 
 
 Class acmart Warning: \vspace should only be used to provide space above/below 
-surrounding objects on input line 614.
+surrounding objects on input line 617.
 
 
 Class acmart Warning: \vspace should only be used to provide space above/below 
-surrounding objects on input line 614.
+surrounding objects on input line 617.
 
 <../moe-expt-bias/expt-bias-1/stats_analysis/figures/s02_js_distribution.png, i
-d=248, 505.89pt x 325.215pt>
+d=256, 505.89pt x 325.215pt>
 File: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/s02_js_distribution.p
 ng Graphic file (type png)
 <use ../moe-expt-bias/expt-bias-1/stats_analysis/figures/s02_js_distribution.pn
 g>
 Package pdftex.def Info: ../moe-expt-bias/expt-bias-1/stats_analysis/figures/s0
-2_js_distribution.png  used on input line 618.
+2_js_distribution.png  used on input line 621.
 (pdftex.def)             Requested size: 241.14749pt x 155.02458pt.
 [6.6]
-Underfull \hbox (badness 1024) in paragraph at lines 686--694
+Underfull \hbox (badness 1024) in paragraph at lines 689--697
 \OT1/cmr/m/n/9 (+20) ($\OT1/cmtt/m/n/9 shared _ memory _ per _ block _ optin$\O
 T1/cmr/m/n/9 (+20) ), and a first v1
  []
 
 
-Underfull \hbox (badness 1005) in paragraph at lines 715--725
+Underfull \hbox (badness 1005) in paragraph at lines 718--728
 []\OT1/cmr/bx/n/9 (+20) Label-permutation null --- flag: $\OT1/cmtt/m/n/9 null 
 : label -[]
  []
 
 
-Underfull \hbox (badness 3088) in paragraph at lines 729--735
+Underfull \hbox (badness 3088) in paragraph at lines 732--738
 []\OT1/cmr/bx/n/9 (+20) Exp5 bench-mark set --- flag: $\OT1/cmtt/m/n/9 exp5 : b
 ench -[]
  []
 
 
-Underfull \hbox (badness 5970) in paragraph at lines 729--735
+Underfull \hbox (badness 5970) in paragraph at lines 732--738
 \OT1/cmtt/m/n/9 vs -[] ladder$\OT1/cmr/bx/n/9 (+20) . \OT1/cmr/m/n/9 (+20) The 
 demographic-specificity cap-ture
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 729--735
+Underfull \hbox (badness 10000) in paragraph at lines 732--738
 \OT1/cmr/m/n/9 (+20) ($\OT1/cmtt/m/n/9 exp5 -[] demographic -[] specificity -[]
  olmoe -[] 1b -[] 7b -[] v1$\OT1/cmr/m/n/9 (+20) )
  []
@@ -880,116 +880,120 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 png>]
 
 Class acmart Warning: \vspace should only be used to provide space above/below 
-surrounding objects on input line 754.
+surrounding objects on input line 757.
 
 
 Class acmart Warning: \vspace should only be used to provide space above/below 
-surrounding objects on input line 754.
+surrounding objects on input line 757.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 760--764
+Underfull \hbox (badness 10000) in paragraph at lines 763--767
+[]\OT1/cmr/m/n/9 (+20) Per-pair Shap-ley pay-loads ($\OT1/cmtt/m/n/9 per _ pair
+ _ phi* . npy$\OT1/cmr/m/n/9 (+20) ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 767--771
 []\OT1/cmr/m/n/9 (+20) Analysis scripts: $\OT1/cmtt/m/n/9 paper _ figures _ sea
 born . py$\OT1/cmr/m/n/9 (+20) ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 760--764
+Underfull \hbox (badness 10000) in paragraph at lines 767--771
 \OT1/cmtt/m/n/9 s01 _ exp1 _ stability . py$\OT1/cmr/m/n/9 (+20) , $\OT1/cmtt/m
 /n/9 s02 _ exp5 _ js . py$\OT1/cmr/m/n/9 (+20) , $\OT1/cmtt/m/n/9 s03 _
  []
 
 
-Underfull \hbox (badness 1655) in paragraph at lines 760--764
+Underfull \hbox (badness 1655) in paragraph at lines 767--771
 \OT1/cmtt/m/n/9 h1 _ verdict . py$\OT1/cmr/m/n/9 (+20) , $\OT1/cmtt/m/n/9 s04 _
  bootstrap _ cis . py$ \OT1/cmr/m/n/9 (+20) (all un-der
  []
 
 
-Underfull \hbox (badness 6510) in paragraph at lines 764--766
+Underfull \hbox (badness 6510) in paragraph at lines 771--773
 []\OT1/cmr/m/n/9 (+20) Outputs and fig-ures: $\OT1/cmtt/m/n/9 stats _ analysis 
 / outputs/$\OT1/cmr/m/n/9 (+20) ,
  []
 
-[8.8
-
-]
-Underfull \hbox (badness 2302) in paragraph at lines 776--799
+[8.8]
+Underfull \hbox (badness 2302) in paragraph at lines 800--823
 \OT1/cmr/m/n/9 (+20) DBRX-132B, GPT-OSS-120B, Gemma-4-26B) are the
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 776--799
+Underfull \hbox (badness 10000) in paragraph at lines 800--823
 \OT1/cmr/m/n/9 (+20) of $\OT1/cmtt/m/n/9 stats _ analysis / outputs / s04 _ boo
 tstrap _ cis . json$
  []
 
 
-Underfull \hbox (badness 2529) in paragraph at lines 776--799
+Underfull \hbox (badness 2529) in paragraph at lines 800--823
 \OT1/cmr/m/n/9 (+20) (\OT1/cmtt/m/n/9 entropy[0..1]\OT1/cmr/m/n/9 (+20) , \OT1/
 cmtt/m/n/9 gini[0..1]\OT1/cmr/m/n/9 (+20) , \OT1/cmtt/m/n/9 t5[..]\OT1/cmr/m/n/
 9 (+20) , \OT1/cmtt/m/n/9 t10[..]\OT1/cmr/m/n/9 (+20) ); $\OML/cmm/m/it/9 n[]$
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 776--799
+Underfull \hbox (badness 10000) in paragraph at lines 800--823
 \OT1/cmtt/m/n/9 olmoe -[] 1b -[] 7b -[] v1 / result . json$ \OT1/cmr/m/n/9 (+20
 ) (\OT1/cmtt/m/n/9 concentration[]metrics\OT1/cmr/m/n/9 (+20) ).
  []
 
 
-Underfull \hbox (badness 3019) in paragraph at lines 840--840
+Underfull \hbox (badness 3019) in paragraph at lines 864--864
 []\OT1/cmr/bx/n/9 (+20) Table 4: |Full mea-sure-ment ta-ble. MoE rows: v1 cap-t
 ures from \OT1/cmtt/m/n/9 s03[]h1[]verdict.json \OT1/cmr/bx/n/9 (+20) lad-der a
 nd
  []
 
 
-Underfull \hbox (badness 1412) in paragraph at lines 845--860
+Underfull \hbox (badness 1412) in paragraph at lines 869--884
  []\OT1/cmr/m/it/9 (+20) Drift floors.[] \OT1/cmr/m/n/9 (+20) The run-to-run dr
 ift floor is the max-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 845--860
+Underfull \hbox (badness 10000) in paragraph at lines 869--884
 \OT1/cmr/m/n/9 (+20) i-mum ab-so-lute v0--v1 mea-sure-ment dis-place-ment
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 845--860
+Underfull \hbox (badness 10000) in paragraph at lines 869--884
 \OT1/cmr/m/n/9 (+20) over the six mod-els cap-tured twice, taken from
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 884--896
+Underfull \hbox (badness 10000) in paragraph at lines 908--920
  []\OT1/cmr/m/it/9 (+20) Split-half shard agree-ment.[] \OT1/cmr/m/n/9 (+20) Fo
 r Mixtral-8x7B and
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 903--909
+Underfull \hbox (badness 10000) in paragraph at lines 927--933
 \OT1/cmr/m/n/9 (+20) ($\OT1/cmtt/m/n/9 expt -[] bias -[] 1 / study -[] catalog 
 . txt$\OT1/cmr/m/n/9 (+20) , sec-tions ``Reviewer-
  []
 
 
-Underfull \hbox (badness 2253) in paragraph at lines 912--947
+Underfull \hbox (badness 2253) in paragraph at lines 936--971
 \OT1/cmr/m/n/9 (+20) rank-ings against expert-ablation dis-par-ity drops, and
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 912--947
+Underfull \hbox (badness 10000) in paragraph at lines 936--971
 \OT1/cmtt/m/n/9 olmoe -[] 1b -[] 7b ,[] exp1 -[] concentration -[] mixtral -[] 
 8x7b ,[] exp1 -[]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 912--947
+Underfull \hbox (badness 10000) in paragraph at lines 936--971
 \OT1/cmtt/m/n/9 concentration -[] phi3 . 5 -[] moe ,[] exp1 -[] concentration -
 [] dbrx -[]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 912--947
+Underfull \hbox (badness 10000) in paragraph at lines 936--971
 \OT1/cmtt/m/n/9 v1 ,[] exp1 -[] concentration -[] gemma4 -[] 26b ,[] exp2 -[] d
 ense -[]
  []
@@ -997,53 +1001,53 @@ ense -[]
 [9.9
 
 ]
-Underfull \hbox (badness 6641) in paragraph at lines 950--971
+Underfull \hbox (badness 6641) in paragraph at lines 974--995
  []\OT1/cmr/m/it/9 (+20) Experiment 7 --- proxy-vs-exact-Shapley agree-ment
  []
 
 
-Underfull \hbox (badness 2698) in paragraph at lines 950--971
+Underfull \hbox (badness 2698) in paragraph at lines 974--995
 \OT1/cmr/m/it/9 (+20) (DONE; null re-sult on all three tested mod-els).[] \OT1/
 cmr/m/n/9 (+20) The
  []
 
 
-Underfull \hbox (badness 4569) in paragraph at lines 950--971
+Underfull \hbox (badness 4569) in paragraph at lines 974--995
 \OT1/cmr/m/n/9 (+20) rank-ing and the exact-Shapley rank-ing, over $\OML/cmm/m/
 it/9 n[]\OT1/cmr/m/n/9 (+20) 20$
  []
 
 
-Underfull \hbox (badness 2027) in paragraph at lines 950--971
+Underfull \hbox (badness 2027) in paragraph at lines 974--995
 \OT1/cmr/m/n/9 (+20) pairs and the first/last MoE layer, on ev-ery model
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 950--971
+Underfull \hbox (badness 10000) in paragraph at lines 974--995
 \OT1/cmr/m/n/9 (+20) els: Mix-tral ($\OT1/cmtt/m/n/9 results / exp1 -[] concent
 ration -[] mixtral -[]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 950--971
+Underfull \hbox (badness 10000) in paragraph at lines 974--995
 \OT1/cmtt/m/n/9 8x7b / experiment7 / experiment7 _ proxy _ agreement . json$\OT
 1/cmr/m/n/9 (+20) ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 950--971
+Underfull \hbox (badness 10000) in paragraph at lines 974--995
 \OT1/cmtt/m/n/9 1b -[] 7b / experiment7 / experiment7 _ proxy _ agreement . jso
 n$\OT1/cmr/m/n/9 (+20) ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 950--971
+Underfull \hbox (badness 10000) in paragraph at lines 974--995
 \OT1/cmr/m/n/9 (+20) Phi-3.5-MoE ($\OT1/cmtt/m/n/9 results / exp1 -[] concentra
 tion -[] phi3 . 5 -[]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 950--971
+Underfull \hbox (badness 10000) in paragraph at lines 974--995
 \OT1/cmtt/m/n/9 moe / experiment7 / experiment7 _ proxy _ agreement . json$\OT1
 /cmr/m/n/9 (+20) ,
  []
@@ -1052,54 +1056,54 @@ Underfull \hbox (badness 10000) in paragraph at lines 950--971
 Underfull \vbox (badness 1205) has occurred while \output is active []
 
 
-Underfull \hbox (badness 1087) in paragraph at lines 974--1001
+Underfull \hbox (badness 1087) in paragraph at lines 998--1025
 \OT1/cmr/m/it/9 (+20) with per-pair CIs for both mod-els).[] \OT1/cmr/m/n/9 (+2
 0) The dense-vs-MoE
  []
 
 
-Underfull \hbox (badness 2189) in paragraph at lines 974--1001
+Underfull \hbox (badness 2189) in paragraph at lines 998--1025
 \OT1/cmtt/m/n/9 results / exp8 -[] lloo -[] olmoe -[] 1b -[] 7b / result . json
 $ \OT1/cmr/m/n/9 (+20) (OL-MoE,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 974--1001
+Underfull \hbox (badness 10000) in paragraph at lines 998--1025
 \OT1/cmr/m/n/9 (+20) queued ($\OT1/cmtt/m/n/9 configs / study . {mixtral -[] 8x
 7b ,[] dbrx ,[] gpt -[] oss -[]
  []
 
 
-Underfull \hbox (badness 3471) in paragraph at lines 1004--1026
+Underfull \hbox (badness 3471) in paragraph at lines 1028--1050
  []\OT1/cmr/m/it/9 (+20) Experiment 3 --- expert-pair syn-ergy / col-lec-tiv-it
 y
  []
 
 
-Underfull \hbox (badness 3375) in paragraph at lines 1004--1026
+Underfull \hbox (badness 3375) in paragraph at lines 1028--1050
 \OT1/cmr/m/it/9 (+20) check (DONE for 4 mod-els; DBRX and GPT-OSS-
  []
 
 
-Underfull \hbox (badness 7576) in paragraph at lines 1004--1026
+Underfull \hbox (badness 7576) in paragraph at lines 1028--1050
 \OT1/cmr/m/it/9 (+20) 120B not yet landed).[] \OT1/cmr/m/n/9 (+20) Mar-ginal Sh
 ap-ley val-ues $\OML/cmm/m/it/9 ^^^[]$
  []
 
 
-Underfull \hbox (badness 2799) in paragraph at lines 1004--1026
+Underfull \hbox (badness 2799) in paragraph at lines 1028--1050
 \OT1/cmr/m/n/9 (+20) as-sume ex-perts con-tribute in-de-pen-dently; Ex-per-i-me
 nt
  []
 
 
-Underfull \hbox (badness 2326) in paragraph at lines 1004--1026
+Underfull \hbox (badness 2326) in paragraph at lines 1028--1050
 \OT1/cmr/m/n/9 (+20) 3 tests this by com-put-ing pair-wise Shap-ley \OT1/cmr/m/
 it/9 (+20) in-ter-ac-
  []
 
 
-Underfull \hbox (badness 7740) in paragraph at lines 1004--1026
+Underfull \hbox (badness 7740) in paragraph at lines 1028--1050
 \OT1/cmtt/m/n/9 shapley . compute _ shapley _ interactions _ for _ pair$\OT1/cm
 r/m/n/9 (+20) ) and
  []
@@ -1110,6 +1114,10 @@ Underfull \vbox (badness 1205) has occurred while \output is active []
  [10.10]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 1108--1110
+[]\OT1/cmr/m/n/7 (+20) OpenAI. gpt-oss-120b & gpt-oss-20b Model Card.
+ []
 
 
 Class acmart Warning: ACM reference format is mandatory 
@@ -1134,14 +1142,14 @@ L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `moe_bias_report_acm_v2.out' has not changed.
 
-(rerunfilecheck)             Checksum: 9B45511E1A545D5467CE48DF0A257167;4917.
+(rerunfilecheck)             Checksum: C5DCC3C4416FF6F7534FA8807224FA09;4917.
  ) 
 Here is how much of TeX's memory you used:
- 17528 strings out of 469006
- 284871 string characters out of 5454814
- 836395 words of memory out of 5000000
- 45459 multiletter control sequences out of 15000+600000
- 645504 words of font info for 192 fonts, out of 8000000 for 9000
+ 17549 strings out of 469006
+ 285300 string characters out of 5454814
+ 837989 words of memory out of 5000000
+ 45471 multiletter control sequences out of 15000+600000
+ 645669 words of font info for 194 fonts, out of 8000000 for 9000
  480 hyphenation exceptions out of 8191
  90i,12n,131p,1477b,619s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </Users/ronnie.ghose/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jkn
@@ -1170,10 +1178,10 @@ mti7.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/c
 m/cmti9.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfont
 s/cm/cmtt8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsf
 onts/cm/cmtt9.pfb>
-Output written on moe_bias_report_acm_v2.pdf (11 pages, 895379 bytes).
+Output written on moe_bias_report_acm_v2.pdf (11 pages, 898389 bytes).
 PDF statistics:
- 417 PDF objects out of 1000 (max. 8388607)
- 349 compressed objects within 4 object streams
- 91 named destinations out of 1000 (max. 500000)
+ 427 PDF objects out of 1000 (max. 8388607)
+ 359 compressed objects within 4 object streams
+ 96 named destinations out of 1000 (max. 500000)
  36103 words of extra memory for PDF output out of 42996 (max. 10000000)
 
