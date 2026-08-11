@@ -396,8 +396,11 @@ does \emph{not} separate the two groups the way entropy does). The
 second question has a sharp answer: the mean \emph{absolute contrastive
 bias-gap magnitude} (\texttt{bias\_scores.mean\_bias\_gap}, not a
 concentration metric) is $0.183$ for the four dense baselines and
-$0.183$ for the five non-null-bias MoE rungs ($0.176$ including Gemma),
-Cohen's $d = 0.011$ (excl.\ Gemma)---statistically indistinguishable.
+$0.183$ for the five non-null-bias MoE rungs ($0.176$ taking Gemma's
+magnitude), Cohen's $d = 0.011$ (excl.\ Gemma). An exact model-level
+permutation test over all $C(9,4) = 126$ labelings of the nine run-level
+means gives two-sided $p = 0.992$ (Welch $t$-test: $p = 0.986$)---dense
+and MoE bias magnitudes are statistically indistinguishable.
 Concentration geometry and bias magnitude are therefore
 \emph{orthogonal}: dense and MoE models carry the same-sized contrastive
 bias, but express it through entirely different attribution shapes. This
@@ -407,9 +410,12 @@ characterizes \emph{where} bias-relevant shift localizes, never
 \emph{how much} bias exists. We also compute a per-model
 \emph{localizability ratio} $LR = \bar H_{\text{dense}}/H_{\text{MoE}}$
 (Appendix~A): $LR \in [0.77, 0.89]$ for every MoE rung, including on
-matched families (OLMoE vs.\ OLMo-7B, $LR=0.800$; Phi-3.5-MoE vs.\
-Phi-3.5-Mini, $LR=0.863$), ruling out unmatched architecture as an
-explanation for the dense/MoE split.
+matched families (OLMoE vs.\ OLMo-7B, $LR=0.800$ [$0.763,0.844$];
+Phi-3.5-MoE vs.\ Phi-3.5-Mini, $LR=0.863$ [$0.832,0.884$]). Every
+bootstrap CI excludes $1$, and at the model level the dense/MoE entropy
+split is complete under an exact permutation test ($p=0.0048$,
+Appendix~A), ruling out unmatched architecture as an explanation for the
+dense/MoE split.
 
 \subsection{Expert-pair synergy (Exp.\ 3)}
 \label{sec:synergy}
@@ -771,7 +777,9 @@ experts'' to be a workable fix.}
   de-anonymized dataset link will be provided upon acceptance.
 \item Analysis scripts: \path{paper_figures_seaborn.py},
   \path{s01_exp1_stability.py}, \path{s02_exp5_js.py},
-  \path{s03_h1_verdict.py}, \path{s04_bootstrap_cis.py}
+  \path{s03_h1_verdict.py}, \path{s04_bootstrap_cis.py},
+  \path{s05_exp5_bootstrap_js.py}, \path{s06_splithalf_extension.py},
+  \path{s07_lr_bootstrap.py}, and \path{audit_appendix.py}
   (all under \path{stats_analysis/scripts/}).
 \item Outputs and figures: \path{stats_analysis/outputs/},
   \path{stats_analysis/figures/}.
@@ -894,18 +902,41 @@ rung's $H$): OLMoE $0.802$, Phi-3.5-MoE $0.801$, Mixtral $0.768$, DBRX
 $0.786$, GPT-OSS-120B $0.804$, Gemma-4-26B $0.893$---every value is
 $<1$, i.e.\ dense is uniformly more concentrated, including on matched
 model families (OLMoE vs.\ its OLMo-7B dense sibling, $LR=0.800$;
-Phi-3.5-MoE vs.\ Phi-3.5-Mini, $LR=0.863$), which rules out unmatched
-architecture as an explanation for the dense/MoE split. Separately, the
+Phi-3.5-MoE vs.\ Phi-3.5-Mini, $LR=0.863$). With the same block bootstrap
+as Table~\ref{tab:appendix-full} ($n_{\mathrm{boot}}=5000$, seed 42; the
+four dense-$H$ draws are shared across rungs, so the six CIs are
+correlated and are reported for their per-rung coverage, not as
+independent evidence), the rung CIs are: OLMoE $[0.782, 0.823]$,
+Phi-3.5-MoE $[0.779, 0.821]$, Mixtral $[0.750, 0.790]$, DBRX
+$[0.763, 0.804]$, GPT-OSS-120B $[0.783, 0.824]$, Gemma-4-26B
+$[0.865, 0.911]$---every interval lies below $1$---and the matched-family
+CIs are $[0.763, 0.844]$ and $[0.832, 0.884]$.
+At the model level the split is complete: all four dense
+$H$ values (max.\ $0.759$) lie below all six MoE $H$ values (min.\
+$0.789$); enumerating all $C(10,4) = 210$ labelings of the ten model-level
+entropies under the permutation null, the observed configuration is the
+most extreme possible (two-sided $p = 0.0048$), and a six-of-six sign
+test on the rung LRs gives $p = 0.016$ (rungs treated as iid units; an
+upper bound given the shared dense mean). The dense/MoE split is
+therefore not a sampling artifact; we still report the drift floors above
+because $LR$ inherits the same run-level variance as any single capture.
+Separately, the
 mean \emph{absolute} contrastive bias-gap magnitude (from
 \texttt{bias\_scores.mean\_bias\_gap} in each \texttt{result.json}, not a
 concentration metric) is $0.183$ for the four dense baselines and
-$0.183$ for the five non-null-bias MoE rungs ($0.176$ including
-Gemma-4-26B), Cohen's $d = 0.011$ (excl.\ Gemma)---statistically
+$0.183$ for the five non-null-bias MoE rungs, Cohen's $d = 0.011$
+(excl.\ Gemma). An exact model-level permutation test over all
+$C(9,4) = 126$ labelings of the nine run-level means gives two-sided
+$p = 0.992$ (Welch $t$-test: $p = 0.986$)---statistically
 indistinguishable. Per-model values: OLMoE $0.244$, Mixtral $0.200$, DBRX
-$0.170$, Phi-3.5-MoE $0.161$, GPT-OSS-120B $0.141$, Gemma-4-26B $0.142$
-(null-bias) vs.\ dense OLMo-7B $0.156$, Llama-2-7B $0.173$, Llama-3.1-8B
-$0.188$, Phi-3.5-Mini $0.215$. Concentration geometry ($d_H = 3.91$,
-Section~\ref{sec:effect-sizes}) and bias magnitude ($d_{\text{gap}} =
+$0.170$, Phi-3.5-MoE $0.161$, GPT-OSS-120B $0.141$, Gemma-4-26B $-0.142$
+(signed; null-bias routing noise, magnitude $0.142$) vs.\ dense OLMo-7B
+$0.156$, Llama-2-7B $0.173$, Llama-3.1-8B
+$0.188$, Phi-3.5-Mini $0.215$. Including Gemma-4-26B's signed value
+lowers the MoE-group mean to $0.129$ (permutation $p = 0.66$ over
+$C(10,4) = 210$ labelings; conclusion unchanged). Concentration geometry
+($d_H = 3.91$, Section~\ref{sec:effect-sizes}) and bias magnitude
+($d_{\text{gap}} =
 0.011$) are therefore orthogonal quantities, reinforcing the
 routing-structure-not-magnitude framing used throughout this paper.
 
@@ -1041,9 +1072,18 @@ the low end of the MoE range, so OLMoE's same-mechanism entropy is
 directionally dense-like but not statistically distinguishable from the
 MoE range at this pair count. This 2-model comparison is itself only
 directional; configs extending the same-mechanism check to Mixtral, DBRX,
-and GPT-OSS-120B are written and queued (\path{configs/study.{mixtral-8x7b,dbrx,gpt-oss-120b}.lloo.yaml})
-but not yet run. \textbf{Status: DONE with bootstrap CIs for
-both OLMoE and Phi-3.5-MoE; ladder extension to 3 more models queued.}
+GPT-OSS-120B, and Gemma-4-26B are written and queued
+(\path{configs/study.\{mixtral-8x7b,dbrx,gpt-oss-120b,gemma4-26b\}.lloo.yaml})
+but not yet run. Extending the LOO mechanism to Gemma-4-26B required a
+code change first---its decoder layer sums two parallel FFN branches
+(an always-on dense branch plus the routed experts) that a naive
+single-module ablation would only partially zero; the compound
+branch-ablation path is implemented in
+\path{shapley.compute_dense_layer_contrast} and the four extension
+configs are ready to submit once the cluster maintenance window
+closes. \textbf{Status: DONE
+with bootstrap CIs for both OLMoE and Phi-3.5-MoE; ladder extension to
+4 more models queued.}
 
 \paragraph{Experiment 3 --- expert-pair synergy / collectivity check
 (DONE for 4 models; DBRX and GPT-OSS-120B not yet landed).}

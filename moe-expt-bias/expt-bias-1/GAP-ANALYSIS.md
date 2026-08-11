@@ -195,7 +195,22 @@ the moment the cluster reopens; none are excluded any more.
    `Section 6.4 Power analysis` (Monte Carlo).
 6. ~~Effect sizes~~ --- **DONE**: new `Section 5.4` reports Cohen's $d$
    for entropy/Gini/$t_5$ and the bias-gap-magnitude-parity finding
-   ($d=0.011$), plus per-model localizability ratio ($LR$).
+   ($d=0.011$), plus per-model localizability ratio ($LR$). LR now also
+   has full uncertainty quantification and tests (offline `s07`): per-rung
+   and matched-family bootstrap CIs (all exclude $1$; OLMoE-vs-OLMo-7B
+   $0.800$ [$0.763,0.844$], Phi-MoE-vs-Phi-Mini $0.863$ [$0.832,0.884$]),
+   an exact model-level permutation test over all C(10,4)=210 labelings
+   ($p=0.0048$, complete separation: max dense H $0.7592$ < min MoE H
+   $0.7888$), and a 6-of-6 sign test ($p=0.0156$) --- integrated into
+   the main-text `Section 5.4` sentence and Appendix A. The bias-gap-
+   magnitude-parity claim ("statistically indistinguishable", previously
+   test-free) now has model-level tests too (offline `s07`, from
+   `result.json` run-level `mean_bias_gap`): exact permutation
+   $p=0.992$ over C(9,4)=126 labelings, Welch $p=0.986$, Cohen's
+   $d=-0.011$ (4 dense vs 5 non-null MoE); incl.\ Gemma's signed value
+   $p=0.66$ over C(10,4)=210 --- still indistinguishable. The only
+   parity-level artifact still GPU-bound is the per-pair bias-gap
+   bootstrap (gap values aren't recoverable from `per_pair_phi.npy`).
 7. ~~Exp3 Collectivity (partial)~~ --- **DONE for 4 models**, integrated
    as new `Section 5.5`; mechanistically explains the causal-ablation
    reversals (DBRX, Mixtral).

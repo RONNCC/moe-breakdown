@@ -131,6 +131,8 @@ $PY stats_analysis/scripts/s01_exp1_stability.py      # -> outputs/s01_exp1_stab
 $PY stats_analysis/scripts/s02_exp5_js.py             # -> outputs/s02_exp5_js.json + figures/s02_js_distribution.png
 $PY stats_analysis/scripts/s03_h1_verdict.py          # -> outputs/s03_h1_verdict.json
 $PY stats_analysis/scripts/s04_bootstrap_cis.py       # -> outputs/s04_bootstrap_cis.json
+$PY stats_analysis/scripts/s06_splithalf_extension.py # -> outputs/s06_splithalf_extension.json
+$PY stats_analysis/scripts/s07_lr_bootstrap.py        # -> outputs/s07_lr_bootstrap.json
 $PY stats_analysis/scripts/paper_figures_seaborn.py   # -> stats_analysis/figures/fig{1..5}_*.png
 ```
 
@@ -156,6 +158,27 @@ What each does (verified against `main()`):
   model (see glob-pattern note in Sec 2b); cross-checks point estimates
   against `result.json` (`MISMATCH` reported loudly); emits `MISSING` for
   dirs without payloads.
+- **s06** — post-hoc split-half (shard) agreement for the four ladder models
+  captured as single GPU jobs (OLMoE, Phi-3.5-MoE, Gemma-4-26B, and the
+  GPT-OSS-120B 5000-pair replication): partitions each stored
+  `per_pair_phi.npy` by row parity (even/odd pair index — the same
+  interleaved split `pairs[shard_idx::num_shards]` that produced Mixtral's
+  and DBRX's two GPU shards) and recomputes H/Gini on each half; validated
+  against Mixtral's true GPU-shard numbers. (Mixtral/DBRX shard rows come
+  from `s01_exp1_stability.json`'s `shards` field.)
+- **s07** — bootstrap CIs for the localizability ratio
+  `LR = H̄_dense/H_MoE` per ladder rung and for the two matched-family
+  ratios (OLMoE-vs-OLMo-7B, Phi-3.5-MoE-vs-Phi-3.5-Mini), plus model-level
+  tests that need no per-pair gap data: an exact permutation test over all
+  C(10,4)=210 labelings of the ten model-level entropies (4 dense vs 6 MoE)
+  and a six-of-six sign test on `LR < 1`. Also computes the bias-gap-
+  magnitude-parity tests (Cohen's d, exact permutation over C(9,4)=126 /
+  C(10,4)=210 labelings, Welch t) from the run-level
+  `bias_scores.mean_bias_gap` values in `result.json` — per-pair gap values
+  are not recoverable from `per_pair_phi.npy`, so the parity claim is
+  tested at the model level, exactly like the H-permutation. Reuses s04's
+  draw sequence (n_boot=5000, seed 42) so per-rung H CIs reproduce s04
+  exactly; notes that the shared dense mean correlates the six rung LRs.
 - **paper_figures_seaborn.py** — regenerates all paper figures from the
   hardcoded `MOE` ladder tuple at the top (`(dir, label, N_players, N_active)`,
   currently all `-v1` dirs incl. `exp1-concentration-gpt-oss-120b-v1`), the
@@ -172,6 +195,8 @@ Expected outputs (all present in a fully-synced checkout):
 | s03 | `outputs/s03_h1_verdict.json` |
 | s04 | `outputs/s04_bootstrap_cis.json` |
 | s05 (optional) | `outputs/s05_exp5_bootstrap_js.json` |
+| s06 | `outputs/s06_splithalf_extension.json` |
+| s07 | `outputs/s07_lr_bootstrap.json` |
 | paper_figures_seaborn | `figures/fig1_entropy_ladder.png`, `fig2_gini_ladder.png`, `fig3_h1_scatter.png`, `fig4_top_fraction.png`, `fig5_dense_vs_moe.png` |
 
 
@@ -309,8 +334,10 @@ repo_root/  (moe-breakdown)
     │   ├── stats_analysis/
     │   │   ├── scripts/                    # s01_exp1_stability.py, s02_exp5_js.py, s03_h1_verdict.py,
     │   │   │                               #   s04_bootstrap_cis.py, s05_exp5_bootstrap_js.py,
-    │   │   │                               #   paper_figures_seaborn.py, run_bootstrap_all.sh
-    │   │   ├── outputs/                    # s01..s05 *.json (paper-number sources)
+    │   │   │                               #   s06_splithalf_extension.py, s07_lr_bootstrap.py,
+    │   │   │                               #   audit_appendix.py, paper_figures_seaborn.py,
+    │   │   │                               #   run_bootstrap_all.sh
+    │   │   ├── outputs/                    # s01..s07 *.json (paper-number sources)
     │   │   ├── figures/                    # fig{1..5}_*.png + s02_js_distribution.png (paper figures,
     │   │   │                               #   referenced by \graphicspath)
     │   │   └── paper/                      # aug8 legacy draft + refs.bib (superseded by moe-expt-bias-2)

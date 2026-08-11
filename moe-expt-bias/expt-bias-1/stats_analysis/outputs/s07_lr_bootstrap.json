@@ -1,0 +1,130 @@
+{
+  "_note": "LR = mean(dense H) / MoE H; 95% percentile CIs, n_boot=5000, seed=42, block resample as s04. Dense H draws are shared across the six rungs -> LRs are correlated; matched-family rows resample each capture independently.",
+  "dense": {
+    "point_hrs": {
+      "exp2-dense-baseline-olmo-7b-v1": 0.7026,
+      "exp2-dense-baseline-phi3.5-mini-v1": 0.7592,
+      "exp2-dense-crosscheck-llama-2-7b-v1": 0.6969,
+      "exp2-dense-crosscheck-llama-3.1-8b-v1": 0.6587
+    },
+    "mean_point": 0.7043,
+    "shared_draw_matrix_shape": [
+      4,
+      5000
+    ]
+  },
+  "lr_per_rung": {
+    "exp1-concentration-olmoe-1b-7b-v1": {
+      "H_point": 0.878347,
+      "H_ci": [
+        0.877229,
+        0.885672
+      ],
+      "LR_point": 0.8019,
+      "LR_ci": [
+        0.7823,
+        0.8232
+      ],
+      "n_pairs": 5000
+    },
+    "exp1-concentration-phi3.5-moe-v1": {
+      "H_point": 0.879542,
+      "H_ci": [
+        0.877477,
+        0.891789
+      ],
+      "LR_point": 0.8008,
+      "LR_ci": [
+        0.7787,
+        0.8208
+      ],
+      "n_pairs": 5000
+    },
+    "exp1-concentration-mixtral-8x7b-v1": {
+      "H_point": 0.917422,
+      "H_ci": [
+        0.913146,
+        0.924742
+      ],
+      "LR_point": 0.7677,
+      "LR_ci": [
+        0.7499,
+        0.79
+      ],
+      "n_pairs": 5000
+    },
+    "exp1-concentration-dbrx-v1": {
+      "H_point": 0.896643,
+      "H_ci": [
+        0.896508,
+        0.909788
+      ],
+      "LR_point": 0.7855,
+      "LR_ci": [
+        0.7628,
+        0.804
+      ],
+      "n_pairs": 5000
+    },
+    "exp1-concentration-gpt-oss-120b-v1": {
+      "H_point": 0.87645,
+      "H_ci": [
+        0.874995,
+        0.885755
+      ],
+      "LR_point": 0.8036,
+      "LR_ci": [
+        0.7831,
+        0.8239
+      ],
+      "n_pairs": 2000
+    },
+    "exp1-concentration-gemma4-26b-v1": {
+      "H_point": 0.788774,
+      "H_ci": [
+        0.791288,
+        0.801898
+      ],
+      "LR_point": 0.893,
+      "LR_ci": [
+        0.8647,
+        0.9111
+      ],
+      "n_pairs": 5000
+    }
+  },
+  "matched_family": {
+    "OLMoE vs OLMo-7B": {
+      "LR_point": 0.7999,
+      "LR_ci": [
+        0.7632,
+        0.8441
+      ]
+    },
+    "Phi-3.5-MoE vs Phi-3.5-Mini": {
+      "LR_point": 0.8632,
+      "LR_ci": [
+        0.8324,
+        0.8837
+      ]
+    }
+  },
+  "model_level_permutation": {
+    "n_labelings": 210,
+    "obs_mean_dense_minus_moe": -0.1685,
+    "two_sided_p": 0.004761904761904762,
+    "one_sided_p_dense_gt_moe": 1.0,
+    "complete_separation_labelings": 1,
+    "complete_separation_p_exact": 0.004761904761904762,
+    "max_dense_H": 0.7592,
+    "min_moe_H": 0.7888,
+    "n_dense": 4,
+    "n_moe": 6
+  },
+  "sign_test": {
+    "n_rungs": 6,
+    "n_lr_lt_1": 6,
+    "one_sided_p_all_lt_1": 0.015625,
+    "note": "treats rungs as iid units (upper bound; LRs share the dense mean)."
+  }
+}
