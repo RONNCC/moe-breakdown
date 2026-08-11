@@ -1,0 +1,90 @@
+[
+  {
+    "model": "olmoe-1b-7b",
+    "status": "ok",
+    "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp1-concentration-olmoe-1b-7b-v1/per_pair_phi.npy",
+    "full": {
+      "entropy": 0.8783468877475243,
+      "gini": 0.6472275458000625,
+      "n_pairs": 5000
+    },
+    "shard_even": {
+      "entropy": 0.8818319757766239,
+      "gini": 0.6410683912063457,
+      "n_pairs": 2500
+    },
+    "shard_odd": {
+      "entropy": 0.8807361362109734,
+      "gini": 0.6383855939466792,
+      "n_pairs": 2500
+    },
+    "abs_delta_entropy": 0.0010958395656505138,
+    "abs_delta_gini": 0.0026827972596665806
+  },
+  {
+    "model": "phi3.5-moe",
+    "status": "ok",
+    "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp1-concentration-phi3.5-moe-v1/per_pair_phi.npy",
+    "full": {
+      "entropy": 0.8795423790462898,
+      "gini": 0.6396698261083973,
+      "n_pairs": 5000
+    },
+    "shard_even": {
+      "entropy": 0.8884197383119903,
+      "gini": 0.6179596908360689,
+      "n_pairs": 2500
+    },
+    "shard_odd": {
+      "entropy": 0.8805524044221048,
+      "gini": 0.6359700451610053,
+      "n_pairs": 2500
+    },
+    "abs_delta_entropy": 0.007867333889885475,
+    "abs_delta_gini": 0.018010354324936362
+  },
+  {
+    "model": "gemma4-26b",
+    "status": "ok",
+    "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp1-concentration-gemma4-26b-v1/per_pair_phi.npy",
+    "full": {
+      "entropy": 0.7887735094946339,
+      "gini": 0.8551293573691959,
+      "n_pairs": 5000
+    },
+    "shard_even": {
+      "entropy": 0.7969089107524369,
+      "gini": 0.8483333564654546,
+      "n_pairs": 2500
+    },
+    "shard_odd": {
+      "entropy": 0.7952709295389679,
+      "gini": 0.8468524924166085,
+      "n_pairs": 2500
+    },
+    "abs_delta_entropy": 0.0016379812134689198,
+    "abs_delta_gini": 0.0014808640488460645
+  },
+  {
+    "model": "gpt-oss-120b-5000",
+    "status": "ok",
+    "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp1-concentration-gpt-oss-120b-5000/per_pair_phi.npy",
+    "full": {
+      "entropy": 0.8788852378957891,
+      "gini": 0.7227840554763758,
+      "n_pairs": 5000
+    },
+    "shard_even": {
+      "entropy": 0.8847921804385741,
+      "gini": 0.7084133079375985,
+      "n_pairs": 2500
+    },
+    "shard_odd": {
+      "entropy": 0.8825496181318356,
+      "gini": 0.7142366953523775,
+      "n_pairs": 2500
+    },
+    "abs_delta_entropy": 0.0022425623067384715,
+    "abs_delta_gini": 0.005823387414779058
+  }
+]

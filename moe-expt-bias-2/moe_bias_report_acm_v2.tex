@@ -527,8 +527,11 @@ these floors (or than $2\times$ the floor for cross-model comparisons, which
 carry error on both sides) are classified as \emph{empirically unresolved};
 under that classification the remaining beyond-floor inversions all involve
 the null-bias Gemma rung or the GPT-OSS first rung, and no subset's verdict
-changes. Split-half shards (two contiguous halves of 2500 pairs each)
-for Mixtral/DBRX agree to $\le 0.006$ on entropy and Gini alike
+changes. Split-half checks (interleaved even/odd pair-index halves, 2500
+each) now cover all six ladder models---two via independent GPU shard
+jobs (Mixtral/DBRX) and four post hoc from the stored per-pair $\phi$
+arrays (OLMoE, Phi-3.5-MoE, Gemma-4-26B, GPT-OSS-120B)---and agree to
+$|\Delta H| \le 0.008$, $|\Delta G| \le 0.018$ on every model
 (Appendix~A).
 
 \subsection{Permutation / null analysis}
@@ -904,19 +907,36 @@ Section~\ref{sec:effect-sizes}) and bias magnitude ($d_{\text{gap}} =
 0.011$) are therefore orthogonal quantities, reinforcing the
 routing-structure-not-magnitude framing used throughout this paper.
 
-\paragraph{Split-half shard agreement.}
-For Mixtral-8x7B and DBRX-132B (the two v1 captures with $\ge 5000$
-pairs), we split the pair set into two contiguous halves (2500 pairs
-each, \path{stats_analysis/outputs/s01_exp1_stability.json}
-\texttt{shards} field) and recompute concentration metrics independently
-on each half: Mixtral shard 0 $H{=}0.9148$, $G{=}0.5236$; shard 1
-$H{=}0.9173$, $G{=}0.5177$ ($|\Delta H|{=}0.0024$, $|\Delta G|{=}0.0058$);
-DBRX shard 0 $H{=}0.9040$, $G{=}0.5867$; shard 1 $H{=}0.9045$,
-$G{=}0.5831$ ($|\Delta H|{=}0.0005$, $|\Delta G|{=}0.0036$). Both models
-agree to $\le 0.006$ on every metric across independently-sampled
-prompt-pair halves---an internal-consistency check distinct from the
-v0$\rightarrow$v1 rerun-drift floor above (which compares different pair
-\emph{counts}, not disjoint samples at the same count).
+\paragraph{Split-half shard agreement (all six ladder models).}
+For Mixtral-8x7B and DBRX-132B, the two v1 captures originally submitted
+as two independent GPU shard jobs, each shard captured the pairs it was
+assigned by \path{pairs[shard_idx::num_shards]}
+(\path{scripts/run_bias_study.py})---an \emph{interleaved} even/odd split
+of the pair list, not a contiguous one. Recomputing concentration metrics
+independently on each shard (\path{stats_analysis/outputs/
+s01_exp1_stability.json} \texttt{shards} field): Mixtral shard 0
+$H{=}0.9148$, $G{=}0.5236$; shard 1 $H{=}0.9173$, $G{=}0.5177$
+($|\Delta H|{=}0.0024$, $|\Delta G|{=}0.0058$); DBRX shard 0 $H{=}0.9040$,
+$G{=}0.5867$; shard 1 $H{=}0.9045$, $G{=}0.5831$ ($|\Delta H|{=}0.0005$,
+$|\Delta G|{=}0.0036$).
+The remaining four v1/replication captures (OLMoE, Phi-3.5-MoE,
+Gemma-4-26B, and the GPT-OSS-120B 5000-pair replication) were single GPU
+jobs with no shard split at capture time; we extend the same check
+\emph{post hoc} by partitioning each stored \texttt{per\_pair\_phi.npy}
+array by row parity (even/odd pair index) and recomputing metrics on each
+half with the identical aggregation used throughout this paper
+(\path{stats_analysis/scripts/s06_splithalf_extension.py}, validated
+against Mixtral's true shard numbers above to within $0.0004$):
+OLMoE $|\Delta H|{=}0.0011$, $|\Delta G|{=}0.0027$; Phi-3.5-MoE
+$|\Delta H|{=}0.0079$, $|\Delta G|{=}0.0180$; Gemma-4-26B
+$|\Delta H|{=}0.0016$, $|\Delta G|{=}0.0015$; GPT-OSS-120B (5000-pair)
+$|\Delta H|{=}0.0022$, $|\Delta G|{=}0.0058$. All six ladder models now
+have a split-half check (two by independent GPU capture, four post hoc)
+and agree to $|\Delta H| \le 0.008$ and $|\Delta G| \le 0.018$ on
+independently-sampled prompt-pair halves---an internal-consistency check
+distinct from the v0$\rightarrow$v1 rerun-drift floor above (which
+compares different pair \emph{counts}, not disjoint samples at the same
+count).
 
 % ============================================================================
 % Appendix B -- causal ablation and proxy agreement
