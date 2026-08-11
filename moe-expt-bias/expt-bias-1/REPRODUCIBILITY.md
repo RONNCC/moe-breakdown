@@ -133,6 +133,7 @@ $PY stats_analysis/scripts/s03_h1_verdict.py          # -> outputs/s03_h1_verdic
 $PY stats_analysis/scripts/s04_bootstrap_cis.py       # -> outputs/s04_bootstrap_cis.json
 $PY stats_analysis/scripts/s06_splithalf_extension.py # -> outputs/s06_splithalf_extension.json
 $PY stats_analysis/scripts/s07_lr_bootstrap.py        # -> outputs/s07_lr_bootstrap.json
+$PY stats_analysis/scripts/s08_power_analysis.py      # -> outputs/s08_power_analysis.json
 $PY stats_analysis/scripts/paper_figures_seaborn.py   # -> stats_analysis/figures/fig{1..5}_*.png
 ```
 
@@ -179,6 +180,15 @@ What each does (verified against `main()`):
   tested at the model level, exactly like the H-permutation. Reuses s04's
   draw sequence (n_boot=5000, seed 42) so per-rung H CIs reproduce s04
   exactly; notes that the shared dense mean correlates the six rung LRs.
+- **s08** — Monte Carlo power of the two-sided Spearman permutation test
+  at the observed ladder effect sizes (rho_H = 0.754 all-6, 0.872
+  5-rung): 20000 correlated-normal trials per n in 3..16, alpha 0.05,
+  seed 42. Reports two p-conventions: exact permutation null at n<=10 +
+  Student-t beyond (`exact_hybrid_two_sided`, Section 6.4's stated
+  method) and Student-t at all n (`t_approx_two_sided`, the convention
+  the originally-published table used). Grounds Section 6.4's 80%-power
+  crossings (n≈12–13 at 0.754, n≈8–9 at 0.872), which are
+  convention-robust.
 - **paper_figures_seaborn.py** — regenerates all paper figures from the
   hardcoded `MOE` ladder tuple at the top (`(dir, label, N_players, N_active)`,
   currently all `-v1` dirs incl. `exp1-concentration-gpt-oss-120b-v1`), the
@@ -197,6 +207,7 @@ Expected outputs (all present in a fully-synced checkout):
 | s05 (optional) | `outputs/s05_exp5_bootstrap_js.json` |
 | s06 | `outputs/s06_splithalf_extension.json` |
 | s07 | `outputs/s07_lr_bootstrap.json` |
+| s08 | `outputs/s08_power_analysis.json` |
 | paper_figures_seaborn | `figures/fig1_entropy_ladder.png`, `fig2_gini_ladder.png`, `fig3_h1_scatter.png`, `fig4_top_fraction.png`, `fig5_dense_vs_moe.png` |
 
 
@@ -335,9 +346,9 @@ repo_root/  (moe-breakdown)
     │   │   ├── scripts/                    # s01_exp1_stability.py, s02_exp5_js.py, s03_h1_verdict.py,
     │   │   │                               #   s04_bootstrap_cis.py, s05_exp5_bootstrap_js.py,
     │   │   │                               #   s06_splithalf_extension.py, s07_lr_bootstrap.py,
-    │   │   │                               #   audit_appendix.py, paper_figures_seaborn.py,
-    │   │   │                               #   run_bootstrap_all.sh
-    │   │   ├── outputs/                    # s01..s07 *.json (paper-number sources)
+    │   │   │                               #   s08_power_analysis.py, audit_appendix.py,
+    │   │   │                               #   paper_figures_seaborn.py, run_bootstrap_all.sh
+    │   │   ├── outputs/                    # s01..s08 *.json (paper-number sources)
     │   │   ├── figures/                    # fig{1..5}_*.png + s02_js_distribution.png (paper figures,
     │   │   │                               #   referenced by \graphicspath)
     │   │   └── paper/                      # aug8 legacy draft + refs.bib (superseded by moe-expt-bias-2)

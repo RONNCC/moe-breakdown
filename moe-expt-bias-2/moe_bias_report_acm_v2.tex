@@ -578,13 +578,19 @@ dedicated power analysis follows.
 \label{sec:power}
 To separate ``underpowered'' from ``floor-bound'' precisely, we simulate
 the exact permutation test's power at the observed effect sizes
-(correlated-normal Monte Carlo, $8000$--$20000$ trials per $n$, exact
-permutation $p$ at small $n$). At the full ladder's $\rho_H = 0.754$:
-power is $0.37$ at $n=6$, $0.55$ at $n=8$, $0.79$ at $n=12$, crossing
+(correlated-normal Monte Carlo, $20000$ trials per $n$; two-sided $p$
+from the exact permutation null at $n \le 10$ and the Student-$t$
+approximation beyond; repro \path{s08_power_analysis.py}). At the full
+ladder's $\rho_H = 0.754$:
+power is $0.26$ at $n=6$, $0.50$ at $n=8$, $0.78$ at $n=12$, crossing
 $80\%$ power at $n \approx 12$--$13$. At the higher $\rho_H = 0.872$
-observed on the 5-rung (no-GPT-OSS) subset: power is $0.58$ at $n=6$,
-$0.79$ at $n=8$, $0.87$ at $n=9$, crossing $80\%$ power at $n \approx
-8$--$9$. In short: at the full ladder's effect size, roughly $12$--$13$
+observed on the 5-rung (no-GPT-OSS) subset: power is $0.44$ at $n=6$,
+$0.75$ at $n=8$, $0.82$ at $n=9$, crossing $80\%$ power at $n \approx
+8$--$9$. The crossings are convention-robust: the Student-$t$
+approximation at every $n$ (standard software default) gives
+$0.37$/$0.55$/$0.79$ at $n=6/8/12$ and $0.58$/$0.79$/$0.87$ at
+$n=6/8/9$---the same $80\%$ crossings. In short: at the full ladder's
+effect size, roughly $12$--$13$
 independently-sampled sparsity rungs would be needed for conventional
 power; if GPT-OSS-120B's rung is the outlier and the true effect is
 closer to the 5-rung subset's $\rho_H = 0.872$, $8$--$9$ rungs would

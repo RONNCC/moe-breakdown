@@ -156,6 +156,7 @@ def fig_top_fraction(df):
 def fig_dense_vs_moe(df):
     plt.figure(figsize=(6.2, 4.2))
     sns.boxplot(data=df, x="family", y="gini", palette=["#cccccc", "#4C72B0"])
+    np.random.seed(42)  # seaborn<0.14 strip jitter draws from np.random: seed for byte-reproducible figures
     sns.stripplot(data=df, x="family", y="gini", color=".3", size=6)
     plt.ylim(0.35, 0.95)
     plt.ylabel("Gini")
