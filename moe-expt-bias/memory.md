@@ -223,3 +223,32 @@ reports `ReqNodeNotAvail, Reserved for maintenance` for our jobs even though
 `scontrol show reservation` shows no active reservation. Nothing actionable
 from our side beyond waiting/re-polling (`squeue -u sghose7`, VPN off). Full
 detail in `expt-bias-1/CLUSTER-STATUS.md`.
+
+## Status as of 2026-08-11 — offline audit complete; cluster in quarterly maintenance
+
+**PACE ICE maintenance window: 2026-08-11 06:00 -- 2026-08-13 23:59 (login refused
+cluster-wide). All work this session is offline, from local artifacts only.**
+Three jobs have UNKNOWN final state (need `sacct -j 5575799,5575791,5575800
+--format=JobID,State,ExitCode,Elapsed -X -n` on reopen): Exp3-DBRX (5575799),
+Exp3-GPT-OSS (5575791), Exp6-GPT-OSS (5575800). Everything else is COMPLETE and
+integrated. Four Exp8 lloo configs (mixtral-8x7b, dbrx, gpt-oss-120b,
+gemma4-26b) are authored + code-complete and just need submission
+(`submit_slurm_study.py --config configs/study.{...}.lloo.yaml --save-per-pair-phi`).
+
+**Offline audit deliverables (commit 552c03c):**
+- Full paper re-verification against local JSONs: Table 2 / Appendix A numbers,
+  s01 shards, s03 permutation verdicts, s04 CIs, s06 split-half, Exp4/6/7 readouts,
+  Exp3 `-v1` sources, Exp5 row — all PASS. `scripts/audit_appendix.py` PASS 12/12.
+- **s07_lr_bootstrap.py** (new, reproducible): per-rung + matched-family LR
+  bootstrap CIs (all < 1; OLMoE-vs-OLMo-7B 0.800 [0.763,0.844], Phi 0.863
+  [0.832,0.884]); model-level H permutation over all C(10,4)=210 labelings
+  (p=0.0048, complete separation); 6/6 LR sign test (p=0.016); and gap-magnitude
+  parity tests from result.json `mean_bias_gap` (exact perm p=0.992 over
+  C(9,4)=126, Welch p=0.986, Cohen's d=0.011; Gemma signed −0.142 → incl. mean
+  0.129, perm p=0.66). Paper §5.4 + Appendix A updated with all of these.
+- Docs: REPRODUCIBILITY.md now covers s01–s07 + audit_appendix (pipeline table,
+  directory map); GAP-ANALYSIS item 6 updated; experiment-registry: 34
+  experiments, Exp3×2/Exp6-GPT-OSS marked UNKNOWN, exp8-gemma4-26b added as 4th
+  PENDING rung (compound branch-ablation landed in `compute_dense_layer_contrast`).
+- Paper recompiled 2× pdflatex: 12 pages, zero Overfull, all fonts embedded.
+- Kaggle v2: 15 files (~565 MB), float32. Next v3 only if post-window runs land.
