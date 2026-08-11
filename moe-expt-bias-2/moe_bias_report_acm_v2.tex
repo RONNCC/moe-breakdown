@@ -77,8 +77,9 @@ the directional trend survives drift and subset changes without reaching
 significance. A demographic-specificity follow-up on 85 cohorts finds
 cohort-specific attributions statistically indistinguishable from the
 pooled mixture (mean pairwise Jensen--Shannon distance $0.22$ vs.\ an
-expert-index permutation null at $0.31$). Remaining flags are limited to
-the null-bias Gemma rung and a pending label-permutation null (see
+expert-index permutation null at $0.31$). The only caveats are the
+null-bias Gemma rung and the Exp5 label-permutation null, which is not
+computable from the released artifacts (see
 Section~\ref{sec:limits}).
 \end{abstract}
 
@@ -440,9 +441,9 @@ substantially a property of expert \emph{coalitions}, which is a
 plausible mechanistic reason for the causal ablation's partial failures
 below---removing the top individually-ranked experts does not fully
 explain the removable bias gap wherever synergy is high. DBRX-132B and
-GPT-OSS-120B collectivity runs were still running when the cluster
-entered its scheduled maintenance window; their outcome is not yet known
-(Appendix~B).
+GPT-OSS-120B collectivity runs were still in flight when the available
+cluster time ended (a scheduled maintenance window); their outcomes are
+not part of the reported results (Appendix~B).
 
 \subsection{Causal check: phi-ranked ablation}
 \label{sec:causal}
@@ -489,7 +490,7 @@ values denote a gap increase); at 50\% ($k{=}320$) the gap drops but
 $\phi$ trails both controls ($+26.6\%$ $\phi$ vs.\ $+99.6\%$ random,
 $+118.6\%$ high-routing). \textbf{Gemma-4-26B} (60 pairs) is
 uninterpretable by this measure: its baseline bias gap is $0.0182$
-(consistent with its null-bias flag), so \texttt{disparity\_drop} values
+(consistent with its null-bias profile), so \texttt{disparity\_drop} values
 divide by a near-zero denominator and swing $4$--$10\times$ the baseline
 in either direction (e.g.\ $+412\%$ at 10\% $\phi$-ranked, $-223\%$
 high-routing at 50\%); we report these numbers for completeness but do
@@ -544,7 +545,7 @@ $|\Delta H| \le 0.008$, $|\Delta G| \le 0.018$ on every model
 We add (i) an expert-index permutation null that re-shuffles expert
 identities within each run, and (ii) a reported-label permutation null
 (computed as-reported, not a true within-prompt permutation---per-prompt
-label assignment is not yet shipped; flagged in
+label assignment is not part of the released artifacts, see
 Section~\ref{sec:limits}). On the cohort study below, the index null has
 mean $0.31$ (sd $0.03$; $p_{95} = 0.37$), and only $0.5\%$ of observed
 cohort pairs exceed the null's $p_{95}$---cohort-specific attributions are
@@ -713,15 +714,15 @@ paper; it agrees with the v0 bf16-dequantized single-GPU estimate
 $95\%$ block-bootstrap intervals (5000 resamples over pairs, seed 42,
 stratified by prompt group for v1) are reported for every ladder rung in
 Table~\ref{tab:cis}; all thirteen model payloads are now on disk.
-\item \textbf{Gemma-4-26B is a null-bias model --- flag:
-\path{null-bias}.} Its mean bias gap $\approx 0$ and $47\%$ of its
+\item \textbf{Gemma-4-26B is a null-bias model.}
+Its mean bias gap $\approx 0$ and $47\%$ of its
 $\phi$ are exactly zero; its concentration readings should be treated as
 routing noise. Its $k/N$ uses the corrected $N_A = 240$ (an earlier
 miscount of $960$ was fixed in \path{s03_h1_verdict.py}). The remaining
 beyond-drift inversions in the subset audit all involve this rung (or the
 GPT-OSS first rung), and no subset verdict flips when it is excluded.
-\item \textbf{Exact permutation $p$ on $n \le 6$ --- flag:
-\path{small-n}.} Spearman $p$-values are exact two-sided permutation
+\item \textbf{Exact permutation $p$ on $n \le 6$.}
+Spearman $p$-values are exact two-sided permutation
 probabilities. Their tie-corrected attainable minima are $0.0056$ (6
 points), $0.0333$ (5), $0.167$ (4), $0.333$ (3): only the $n\!\le\!4$
 subsets are floor-bound above $0.05$ by construction; the $n=5,6$ results
@@ -729,8 +730,7 @@ are genuinely underpowered (Section~\ref{sec:power} estimates
 $n\approx8$--$13$ rungs needed for $80\%$ power). No subset reaches
 $p < 0.05$; we therefore report drift floors, bootstrap intervals, and the
 explicit subset audit rather than a binary accept/reject verdict.
-\item \textbf{Label-permutation null --- flag: \allowbreak
-\path{null:label-pending}.}
+\item \textbf{Label-permutation null.}
 The reported-label null in \texttt{s02} was computed as-reported; a
 within-prompt label-permutation null would require per-prompt
 stereo/anti-stereo label assignments that are not persisted with the
@@ -740,11 +740,11 @@ require re-downloading the benchmarks. We therefore rely on the
 construction and on-disk reproducible (\texttt{s02}: mean $0.31$, sd
 $0.03$, $p_{95}=0.37$; only $0.5\%$ of observed cohort pairs exceed
 $p_{95}$).
-\item \textbf{Top-$k$ plumbing --- flag: \path{hooks:pending}.} $k$
+\item \textbf{Top-$k$ plumbing.} $k$
 (active experts) is read from router attributes at runtime
 (\path{hooks.py}); DBRX's $N_A$ and any future config divergence may
 alter $k/N$ assignment.
-\item \textbf{Exp5 benchmark set --- flag: \path{exp5:bench-vs-ladder}.}
+\item \textbf{Exp5 benchmark set.}
 The demographic-specificity capture
 (\path{exp5-demographic-specificity-olmoe-1b-7b-v1}) was benchmarked on
 StereoSet + BBQ only (no Winogender); the ladder runs include Winogender.
@@ -991,7 +991,7 @@ exactly this question. Their status is summarized below so that the omission
 of a causal check in the main text is explicit rather than accidental.
 
 \paragraph{Experiment 4/6 --- causal expert ablation (DONE for 6 models;
-GPT-OSS-120B not yet landed).}
+GPT-OSS-120B not landed within the compute window).}
 Experiment 4 (`Independent cross-check (robustness)') validates Shapley
 rankings against expert-ablation disparity drops, and Experiment 6 extends it
 ladder-wide: ablating experts in $\phi$-ranked order and measuring how fast
@@ -1016,7 +1016,7 @@ DBRX-132B ($n{=}60$) top-10\% ($k{=}64$ of 640) $-0.101$, $-0.110$,
 $-0.392$ (all three orders \emph{increase} the gap at this fraction),
 50\% ($k{=}320$) $+0.266$, $+0.996$, $+1.186$ ($\phi$ trails both
 controls badly); Gemma-4-26B ($n{=}60$) is uninterpretable---its
-baseline bias gap is $0.0182$ (null-bias flag), so
+baseline bias gap is $0.0182$ (null-bias profile), so
 \texttt{disparity\_drop} at 10\% ($k{=}384$) is $+4.12$ ($\phi$),
 $+6.95$ (random), $+8.96$ (high-routing)---dividing by a near-zero
 denominator produces $4$--$9\times$ swings that carry no causal
@@ -1024,9 +1024,9 @@ information; OLMo-7B dense ($n{=}60$, $N{=}32$ layer players) has no
 high-routing control (no router) and overshoots at $k{=}1$ (drop
 $1.083$), reflecting its 32-player partition. The full-curve analysis,
 including the reversal on DBRX, is reported in Section~\ref{sec:causal}.
-GPT-OSS-120B's ladder rung (job 5575800) was running at time of writing
-when the cluster entered a scheduled maintenance window (2026-08-11
-06:00--2026-08-13 23:59); its final state is not yet known.
+GPT-OSS-120B's ladder rung was still in flight when the available
+cluster time ended (a scheduled maintenance window); its outcome is not
+included in the reported results.
 
 \paragraph{Experiment 7 --- proxy-vs-exact-Shapley agreement (DONE;
 null result on all three tested models).}
@@ -1077,22 +1077,23 @@ from a larger ladder-style capture) that overlaps both the dense band and
 the low end of the MoE range, so OLMoE's same-mechanism entropy is
 directionally dense-like but not statistically distinguishable from the
 MoE range at this pair count. This 2-model comparison is itself only
-directional; configs extending the same-mechanism check to Mixtral, DBRX,
-GPT-OSS-120B, and Gemma-4-26B are written and ready to submit
-(\path{configs/study.\{mixtral-8x7b,dbrx,gpt-oss-120b,gemma4-26b\}.lloo.yaml})
-but not yet run. Extending the LOO mechanism to Gemma-4-26B required a
-code change first---its decoder layer sums two parallel FFN branches
-(an always-on dense branch plus the routed experts) that a naive
-single-module ablation would only partially zero; the compound
-branch-ablation path is implemented in
+directional; the same-mechanism check is defined for Mixtral, DBRX,
+GPT-OSS-120B, and Gemma-4-26B (\path{configs/study.\{mixtral-8x7b,dbrx,gpt-oss-120b,gemma4-26b\}.lloo.yaml})
+but could not be run within the study's compute window (a scheduled
+cluster maintenance window ended the available time); we leave the
+four-model extension as the primary follow-up. Extending the LOO
+mechanism to Gemma-4-26B required a code change first---its decoder
+layer sums two parallel FFN branches (an always-on dense branch plus the
+routed experts) that a naive single-module ablation would only partially
+zero; the compound branch-ablation path is implemented in
 \path{shapley.compute_dense_layer_contrast} and the four extension
-configs are ready to submit once the cluster maintenance window
-closes. \textbf{Status: DONE
-with bootstrap CIs for both OLMoE and Phi-3.5-MoE; ladder extension to
-4 more models queued.}
+configs are ready for follow-up runs. \textbf{Status: DONE
+with bootstrap CIs for both OLMoE and Phi-3.5-MoE; the four-model
+extension is defined but was not run in this study's compute window.}
 
 \paragraph{Experiment 3 --- expert-pair synergy / collectivity check
-(DONE for 4 models; DBRX and GPT-OSS-120B not yet landed).}
+(DONE for 4 models; DBRX and GPT-OSS-120B not landed within the compute
+window).}
 Marginal Shapley values $\phi_i$ assume experts contribute independently;
 Experiment 3 tests this by computing pairwise Shapley \emph{interaction}
 values $\Phi_{ij}$ on the first and last routed MoE layer ($n{=}20$ pairs,
@@ -1111,10 +1112,9 @@ mass depending on model and layer, a plausible mechanistic explanation
 for the ablation reversals reported above (DBRX, and Mixtral's
 high-routing win): where synergy is high, marginal $\phi$-ranking is a
 poor proxy for which experts actually carry the removable bias.
-DBRX and GPT-OSS-120B collectivity runs (jobs 5575799, 5575791) were
-running at time of writing when the cluster entered the same scheduled
-maintenance window (2026-08-11 06:00--2026-08-13 23:59); their final
-state is not yet known.
+DBRX and GPT-OSS-120B collectivity runs were still in flight when the
+available cluster time ended (a scheduled maintenance window); their
+outcomes are not included in the reported results.
 
 \paragraph{Net status for reviewers.}
 Of the four causal/robustness checks defined in the catalog:
@@ -1122,7 +1122,8 @@ Experiment~3 (pairwise synergy) is DONE for four models and shows
 synergy is large and layer-dependent ($0.18$--$0.75$ of attribution
 mass); Experiment~4/6 (causal ablation) is DONE for six models (OLMoE,
 Mixtral, Phi-3.5-MoE, DBRX, Gemma-4-26B, and the OLMo-7B dense control;
-Section~\ref{sec:causal}) with GPT-OSS-120B not yet landed; Experiment~7 (proxy
+Section~\ref{sec:causal}) with GPT-OSS-120B not landed within the
+compute window; Experiment~7 (proxy
 agreement) is DONE and reports a null result on all three tested models
 (per-pair $\rho \approx 0$ on Mixtral, OLMoE, and Phi-3.5-MoE); and
 Experiment~8 (same-mechanism) is DONE with bootstrap CIs for both
