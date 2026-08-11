@@ -174,6 +174,27 @@ Expected outputs (all present in a fully-synced checkout):
 | s05 (optional) | `outputs/s05_exp5_bootstrap_js.json` |
 | paper_figures_seaborn | `figures/fig1_entropy_ladder.png`, `fig2_gini_ladder.png`, `fig3_h1_scatter.png`, `fig4_top_fraction.png`, `fig5_dense_vs_moe.png` |
 
+
+**Independent appendix-table verification.** `scripts/audit_appendix.py`
+(run from `moe-expt-bias/expt-bias-1`, no CLI args) parses every numeric row
+of Appendix A's full-measurement table directly out of
+`moe-expt-bias-2/moe_bias_report_acm_v2.tex` and cross-checks each value
+(H, Gini, top-5/top-10% fractions, CIs, `|dH|`/`|dG|` drift) against its
+cited JSON source (`s01_exp1_stability.json`, `s03_h1_verdict.json`,
+`s04_bootstrap_cis.json`, per-model `result.json`), failing loudly on any
+mismatch:
+
+```bash
+cd moe-expt-bias/expt-bias-1
+.venv/bin/python scripts/audit_appendix.py
+# -> "Parsed N data rows from appendix table"
+# -> "[PASS] ALL APPENDIX ROWS MATCH AUTHORITATIVE SOURCES EXACTLY" or a
+#    per-row [FAIL] diff naming the exact source field and discrepancy
+```
+
+Run this after any edit that touches Appendix A's numbers, and after
+re-running s01-s04, to catch transcription drift before it ships.
+
 ## 4. Cluster (PACE ICE, Slurm)
 
 Access + queue:
