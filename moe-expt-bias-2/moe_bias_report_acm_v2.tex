@@ -993,8 +993,11 @@ interval (only $n=100$ dense-FFN-layer pairs, no stratification benefit
 from a larger ladder-style capture) that overlaps both the dense band and
 the low end of the MoE range, so OLMoE's same-mechanism entropy is
 directionally dense-like but not statistically distinguishable from the
-MoE range at this pair count. \textbf{Status: DONE with bootstrap CIs for
-both OLMoE and Phi-3.5-MoE.}
+MoE range at this pair count. This 2-model comparison is itself only
+directional; configs extending the same-mechanism check to Mixtral, DBRX,
+and GPT-OSS-120B are written and queued (\path{configs/study.{mixtral-8x7b,dbrx,gpt-oss-120b}.lloo.yaml})
+but not yet run. \textbf{Status: DONE with bootstrap CIs for
+both OLMoE and Phi-3.5-MoE; ladder extension to 3 more models queued.}
 
 \paragraph{Experiment 3 --- expert-pair synergy / collectivity check
 (DONE for 4 models; DBRX and GPT-OSS-120B not yet landed).}
