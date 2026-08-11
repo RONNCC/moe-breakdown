@@ -303,6 +303,12 @@ $0.117$); the dense/MoE split is the robust contrast of the study.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{fig1_entropy_ladder.png}
+\Description{Line-and-marker plot of normalized Shannon entropy of expert
+attribution for six MoE ladder rungs (OLMoE, Mixtral, Phi-3.5-MoE, DBRX,
+Gemma-4-26B, GPT-OSS-120B) ordered by active-expert fraction, with a
+horizontal dashed line marking the mean entropy of four dense baselines.
+All MoE points sit at or above the dense line except the null-bias
+Gemma-4-26B rung.}
 \caption{Normalized entropy of the expert attribution across the ladder.
 The dashed line is the dense mean.}
 \label{fig:ladder}
@@ -311,6 +317,10 @@ The dashed line is the dense mean.}
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{fig2_gini_ladder.png}
+\Description{Line-and-marker plot of the Gini coefficient of expert
+attribution for the same six MoE ladder rungs as Figure 1, ordered by
+active-expert fraction, showing the same qualitative pattern as the
+entropy ladder.}
 \caption{Gini of the expert attribution across the ladder.}
 \label{fig:gini}
 \end{figure}
@@ -318,6 +328,10 @@ The dashed line is the dense mean.}
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{fig3_h1_scatter.png}
+\Description{Scatter plot of normalized entropy against active-expert
+fraction k over N on a log-scaled x-axis for the six MoE ladder rungs,
+with a fitted trend line showing a positive but noisy relationship
+(Spearman rho approximately 0.75, not significant at n=6).}
 \caption{Entropy vs.\ active fraction $k/N$ (log scale). H1 (sparser
 $\Rightarrow$ more concentrated) is directionally consistent
 ($\rho_H = +0.754$, exact two-sided permutation $p = 0.106$), but not
@@ -337,6 +351,10 @@ $0.35$--$0.77$. There is no small, stable ``fixable'' expert set.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{fig4_top_fraction.png}
+\Description{Bar or line chart showing the share of total attribution
+held by the top-5 experts and the top-10 percent of experts for each of
+the six MoE ladder rungs; shares range from about 2 to 11 percent,
+indicating no strong expert-level concentration.}
 \caption{Top-5 and top-10\% share across the ladder.}
 \label{fig:topfrac}
 \end{figure}
@@ -353,6 +371,10 @@ It does not validate bias concentration by the router.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{fig5_dense_vs_moe.png}
+\Description{Grouped box or scatter plot comparing the Gini coefficient
+of dense transformer FFN-layer attribution against MoE expert-routing
+attribution, showing a clear separation between the two groups with
+dense models clustered lower and MoE models clustered higher.}
 \caption{Dense vs.\ MoE Gini.}
 \label{fig:dense}
 \end{figure}
@@ -591,6 +613,11 @@ MoE concentrates bias into a few fixable experts.}
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{s02_js_distribution.png}
+\Description{Histogram of pairwise Jensen-Shannon distances between
+per-demographic-cohort and pooled expert attribution distributions for
+OLMoE across 85 cohorts, with a vertical line marking the 95th percentile
+of an expert-index permutation null; the observed distribution largely
+overlaps the null, with only a small tail exceeding it.}
 \caption{JS distance between per-cohort and pooled expert attribution
 distributions (OLMoE, 85 cohorts). The vertical line marks the
 expert-index permutation null.}
