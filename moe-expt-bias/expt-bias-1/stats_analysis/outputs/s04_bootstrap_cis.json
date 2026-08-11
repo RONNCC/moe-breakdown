@@ -686,7 +686,7 @@
       "n_pairs": null,
       "source": null
     },
-    "exp2-dense-baseline-olmo-7b": {
+    "dense-baseline-olmo-7b": {
       "status": "ok",
       "n_pairs": 1800,
       "n_players": 32,
@@ -742,7 +742,7 @@
         }
       }
     },
-    "exp2-dense-baseline-olmo-7b-v1": {
+    "dense-baseline-olmo-7b-v1": {
       "status": "ok",
       "n_pairs": 1800,
       "n_players": 32,
@@ -777,7 +777,7 @@
         "mismatches": {}
       }
     },
-    "exp2-dense-baseline-phi3.5-mini": {
+    "dense-baseline-phi3.5-mini": {
       "status": "ok",
       "n_pairs": 4000,
       "n_players": 32,
@@ -833,7 +833,7 @@
         }
       }
     },
-    "exp2-dense-baseline-phi3.5-mini-v1": {
+    "dense-baseline-phi3.5-mini-v1": {
       "status": "ok",
       "n_pairs": 4000,
       "n_players": 32,
@@ -868,7 +868,7 @@
         "mismatches": {}
       }
     },
-    "exp2-dense-crosscheck-llama-2-7b": {
+    "dense-crosscheck-llama-2-7b": {
       "status": "ok",
       "n_pairs": 1800,
       "n_players": 32,
@@ -924,7 +924,7 @@
         }
       }
     },
-    "exp2-dense-crosscheck-llama-2-7b-v1": {
+    "dense-crosscheck-llama-2-7b-v1": {
       "status": "ok",
       "n_pairs": 1800,
       "n_players": 32,
@@ -959,7 +959,7 @@
         "mismatches": {}
       }
     },
-    "exp2-dense-crosscheck-llama-3.1-8b": {
+    "dense-crosscheck-llama-3.1-8b": {
       "status": "ok",
       "n_pairs": 1800,
       "n_players": 32,
@@ -1015,7 +1015,7 @@
         }
       }
     },
-    "exp2-dense-crosscheck-llama-3.1-8b-v1": {
+    "dense-crosscheck-llama-3.1-8b-v1": {
       "status": "ok",
       "n_pairs": 1800,
       "n_players": 32,
@@ -1049,11 +1049,56 @@
         "result_json": "ok",
         "mismatches": {}
       }
+    },
+    "lloo-olmoe-1b-7b": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "lloo-phi3.5-moe": {
+      "status": "ok",
+      "n_pairs": 50,
+      "n_players": 32,
+      "n_boot": 5000,
+      "seed": 42,
+      "block_method": "stratified-by-group",
+      "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp8-lloo-phi3.5-moe/per_pair_phi.npy",
+      "entropy": [
+        0.8417763519645988,
+        0.9408360484934485
+      ],
+      "gini": [
+        0.34812003131374325,
+        0.5436867245807919
+      ],
+      "t5": [
+        0.3198824199380778,
+        0.5075105660681039
+      ],
+      "t10": [
+        0.2073423945241584,
+        0.3932565194906939
+      ],
+      "point_estimates": {
+        "entropy": 0.899287,
+        "gini": 0.451376,
+        "t5": 0.384743,
+        "t10": 0.264912
+      },
+      "consistency_check": {
+        "result_json": "ok",
+        "mismatches": {}
+      }
     }
   },
   "summary": {
-    "n_with_data": 21,
-    "n_missing": 14,
+    "n_with_data": 22,
+    "n_missing": 15,
     "missing_models": [
       "dbrx-v1-perpair",
       "dbrx-v1-perpair-b",
@@ -1068,7 +1113,8 @@
       "olmoe-1b-7b-v1-perpair",
       "olmoe-1b-7b-v1-perpair-b",
       "phi3.5-moe-v1-perpair",
-      "phi3.5-moe-v1-perpair-b"
+      "phi3.5-moe-v1-perpair-b",
+      "lloo-olmoe-1b-7b"
     ]
   }
 }

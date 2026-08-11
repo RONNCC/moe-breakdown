@@ -42,10 +42,11 @@ MOE = [
     ("exp1-concentration-gemma4-26b-v1",      "Gemma-4-26B",             3840, 240),
 ]
 DENSE = [
-    ("exp2-dense-baseline-olmo-7b",           "OLMo-7B",                 32),
-    ("exp2-dense-baseline-phi3.5-mini",       "Phi-3.5-mini",            32),
-    ("exp2-dense-crosscheck-llama-2-7b",      "Llama-2-7B",              32),
-    ("exp2-dense-crosscheck-llama-3.1-8b",    "Llama-3.1-8B",            32),
+    # v1 per-pair captures (1800-4000 pairs) -- matches tab:dense / Appendix A.
+    ("exp2-dense-baseline-olmo-7b-v1",        "OLMo-7B",                 32),
+    ("exp2-dense-baseline-phi3.5-mini-v1",    "Phi-3.5-mini",            32),
+    ("exp2-dense-crosscheck-llama-2-7b-v1",   "Llama-2-7B",              32),
+    ("exp2-dense-crosscheck-llama-3.1-8b-v1", "Llama-3.1-8B",            32),
 ]
 
 

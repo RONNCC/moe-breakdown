@@ -186,3 +186,40 @@ Full results and analysis in `RESEARCH-JOURNAL.md`.
 
 Report draft: `moe_bias_report_draft.tex` / `report_draft.pdf`. Figures: `figures/`.
 Figure generation code: `expt-bias-1/scripts/build_figures.py`.
+
+## Status as of 2026-08-10 (end of session) — s04 bug fixed; Phi-3.5-MoE Exp8 per-pair CI landed
+
+**Bug found + fixed in `stats_analysis/scripts/s04_bootstrap_cis.py`**: a prior
+edit this session had (1) dropped the `out["models"] = results` assignment in
+`main()` (so the script computed everything but silently never wrote the
+`models` key to the output JSON), and (2) introduced a dict-key collision —
+`exp8-lloo-*` directories' model keys (e.g. `phi3.5-moe`) collided with and
+silently overwrote the `exp1-concentration-*` ladder entries for the same
+model name, corrupting CI numbers for OLMoE and Phi-3.5-MoE until caught by
+manual inspection. Fixed by restoring the assignment and namespacing exp8 keys
+with a `lloo-` prefix (`_model_key()`; see `REPRODUCIBILITY.md` Sec 2b for the
+glob/key-derivation detail). Lesson: after any edit to a script that builds a
+dict keyed by directory-name-derived strings across multiple experiment
+families sharing base model names, re-verify no keys collide and no
+`out[...]=` assignments got dropped — don't trust a clean run to mean a
+correct run.
+
+**Phi-3.5-MoE Exp8 (same-mechanism dense-LOO) per-pair CI landed**: job
+5575536 completed, `per_pair_phi.npy` (50 pairs x 32 players) now on disk at
+`results/exp8-lloo-phi3.5-moe/`. Bootstrap CI (`s04_bootstrap_cis.json`,
+key `lloo-phi3.5-moe`): entropy H=0.899 [0.842, 0.941], Gini=0.451
+[0.348, 0.544], n_pairs=50.
+
+**OLMoE Exp8 per-pair still pending**: the original per-pair job (5575255)
+only ever produced a summary `result.json` (no `per_pair_phi.npy`).
+Resubmitted with `--save-per-pair-phi` as job **5575748** — queued (PENDING)
+at time of writing.
+
+**Four other cluster jobs also queued**: 5575538 (Exp3 Mixtral refresh),
+5575743 (Exp3 DBRX), 5575744 (Exp3 GPT-OSS-120B), 5575745 (Exp6 GPT-OSS-120B
+ladder extension) — all PENDING. Cause is a cluster-scheduling quirk, not a
+submission error on our end: `sinfo` shows idle H100 nodes, but the scheduler
+reports `ReqNodeNotAvail, Reserved for maintenance` for our jobs even though
+`scontrol show reservation` shows no active reservation. Nothing actionable
+from our side beyond waiting/re-polling (`squeue -u sghose7`, VPN off). Full
+detail in `expt-bias-1/CLUSTER-STATUS.md`.

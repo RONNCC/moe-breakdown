@@ -1,142 +1,197 @@
 # PhD-Style Gap Analysis: MoE-Bias Study (expt-bias-1)
 
-**Date**: 2026-08-10  
-**Paper status**: 9-page ACM draft at `moe-expt-bias-2/moe_bias_report_acm_v2.tex` (compiles clean)  
+**Date**: 2026-08-10 (updated post statistical-audit / paper-integration-II session)
+**Paper status**: 11-page ACM draft at `moe-expt-bias-2/moe_bias_report_acm_v2.tex` (compiles clean, verified via 2x pdflatex + page-image inspection of pages 3, 5, 6, 8, 10, 11)
 **Repo**: `/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown`
 
 ---
 
-## 1. Professor's Criticism — Addressed vs Remaining
+## 0. Second-pass statistical audit (this session)
+
+A re-derivation of the exact-permutation floor claims found a **math error**
+repeated in 5 places in the v2 draft: the text claimed the smallest
+attainable two-sided exact permutation $p$ was $1/12 \approx 0.083$ at
+$n=6$ and $0.10$ at $n=5$. Recomputing the true tie-corrected minimum
+(smallest $|\rho|$ achievable divides the permutation space; $6! = 720$
+perms at $n=6$, $5! = 120$ at $n=5$) gives $p_{\min} = 0.0056$ at $n=6$ and
+$0.0333$ at $n=5$ --- both **below** $0.05$. This flips the paper's own
+narrative: the $n=5,6$ non-significance is a genuine **power** shortfall
+(sampling noise), not a **floor** artifact as previously claimed; only
+$n=3,4$ are floor-bound. Fixed in all 5 locations (abstract, Results 5.1,
+Robustness 5.6.3, Discussion, Limitations) plus a new
+`Section 6.4 Power analysis` with a Monte Carlo simulation quantifying the
+ladder size needed for $80\%$ power ($n\approx12$--$13$ at $\rho_H=0.754$;
+$n\approx8$--$9$ at $\rho_H=0.872$). Also added: **Section 5.4 Effect
+sizes** (Cohen's $d$ for entropy/Gini/top-5-share, $LR$ localizability
+ratio per model) showing the dense/MoE geometry split is huge ($|d_H|
+\approx 3.9$--$6.1$) while the underlying **bias-gap magnitude** is
+statistically indistinguishable between dense and MoE ($d=0.011$
+excl.\ Gemma) --- the sharpest available evidence for the
+routing-structure-not-magnitude framing the professor's 2nd criticism
+demanded. **Section 5.5 Expert-pair synergy (Exp.\ 3)** and an extended
+causal-ablation Results/Verdict (DBRX + Gemma-4-26B, both previously
+PENDING, now landed) were also integrated; see below.
+
+---
+
+## 1. Professor's Criticism --- Addressed vs Remaining
 
 | Criticism Point | Status | Evidence |
 |---|---|---|
-| "H1 supported once GPT-OSS dropped; GPT-OSS excluded for quantization reasons" | **RESOLVED** | GPT-OSS-120B v1 now VALID (2000 pairs, H=0.8764, G=0.7274). Paper reports exact permutation p-values on ALL 6 rungs: ρH=+0.754, p=0.106. Framed honestly: directionally consistent, underpowered (n≤6). |
-| "Metric measures routing structure, not causal bias magnitude; then Exp1 entropy and Exp5 JS aren't measuring bias concentration" | **RESOLVED in draft** | Discussion §1 explicitly resolves: attribution geometry is a routing-structure quantity; caveat applies uniformly to Exp1 entropy AND Exp5 JS. Framed as localization geometry, not bias magnitude. |
-| "No CIs, SEs, tests — analyses must be statistically robust" | **MOSTLY RESOLVED* | MoE ladder: 95% block-bootstrap CIs (5000 draws, seed 42, stratified) for all 6 rungs × 4 metrics (Table 2). Dense baselines: NO CIs (no per-pair φ payloads exist) — flagged CI:pending. **Action**: Dense per-pair jobs submitted (8 shards RUNNING, jobs 5575082-5575089). |
+| "H1 supported once GPT-OSS dropped; GPT-OSS excluded for quantization reasons" | **RESOLVED** | GPT-OSS-120B v1 VALID (2000 pairs, H=0.8764, G=0.7274) plus a 5000-pair stability replication ($H=0.8789$, within CI). Paper reports exact permutation p-values on ALL 6 rungs: rho_H=+0.754, p=0.106. Framed honestly: directionally consistent, underpowered (n<=6), and now backed by a Monte Carlo power analysis (Section 6.4) instead of the incorrect floor claim. |
+| "Metric measures routing structure, not causal bias magnitude; then Exp1 entropy and Exp5 JS aren't measuring bias concentration" | **RESOLVED, now quantified** | Discussion explicitly resolves: attribution geometry is a routing-structure quantity; caveat applies uniformly to Exp1 entropy AND Exp5 JS. Section 5.4 now adds the quantitative version: Cohen's $d=0.011$ for bias-gap magnitude (dense vs.\ MoE, excl.\ Gemma) vs.\ $d=3.9$--$6.1$ for entropy --- geometry and magnitude are empirically orthogonal. |
+| "No CIs, SEs, tests --- analyses must be statistically robust" | **RESOLVED** | MoE ladder: 95% block-bootstrap CIs (5000 draws, seed 42, stratified) for all 6 rungs x 4 metrics (Table 2). Dense baselines have CIs (Table 3 + Appendix A). Split-half shard agreement (Mixtral/DBRX, exact numbers in Appendix A) and a Monte Carlo power simulation (Section 6.4) round out the statistical treatment. |
 
 ---
 
 ## 2. Study Catalog vs On-Disk Reality
 
-### Experiment 1 — Sparsity Ladder (RQ1/C1)
-| Model | v0 (400) | v1 (5000) | Per-pair φ | Status |
+### Experiment 1 --- Sparsity Ladder (RQ1/C1)
+| Model | v0 (400) | v1 (5000) | Per-pair phi | Status |
 |---|---|---|---|---|
-| OLMoE-1B-7B | ✓ | ✓ | ✓ | DONE |
-| Phi-3.5-MoE | ✓ | ✓ | ✓ | DONE |
-| Mixtral-8x7B | ✓ | ✓ | ✓ | DONE |
-| DBRX-132B | ✓ | ✓ | ✓ | DONE |
-| GPT-OSS-120B | ✓ | ✓ (2000) | ✓ | **v2 RUNNING** (job 5575070, 5000 pairs, ETA ~2.7h) |
-| Gemma-4-26B | ✓ | ✓ | ✓ | DONE (null-bias flag) |
-| **Gemma-4-27B** | ✗ | ✗ | ✗ | **PHANTOM** — HF 404, model doesn't exist (26B is real rung) |
+| OLMoE-1B-7B | x | x | x | DONE |
+| Phi-3.5-MoE | x | x | x | DONE |
+| Mixtral-8x7B | x | x | x | DONE |
+| DBRX-132B | x | x | x | DONE |
+| GPT-OSS-120B | x | x (2000) + x (5000 replication) | x | **DONE** --- both captures agree ($\Delta H = +0.0024$) |
+| Gemma-4-26B | x | x | x | DONE (null-bias flag) |
+| **Gemma-4-27B** | - | - | - | **PHANTOM** --- HF 404, model doesn't exist (26B is the real rung); non-issue |
 
-### Experiment 2 — Dense Baselines (RQ2/C4)
-| Model | v0 (400) | v1 (1800/4000) | Per-pair φ | Status |
+### Experiment 2 --- Dense Baselines (RQ2/C4)
+| Model | v0 (400) | v1 per-pair | CI | Status |
 |---|---|---|---|---|
-| OLMo-7B | ✓ | ✓ (1800) | **SUBMITTED** (jobs 5575082-83) |
-| Phi-3.5-Mini | ✓ | ✓ (4000) | **SUBMITTED** (jobs 5575084-85) |
-| Llama-2-7B | ✓ | ✓ (1800) | **SUBMITTED** (jobs 5575086-87) |
-| Llama-3.1-8B | ✓ | ✓ (1800) | **SUBMITTED** (jobs 5575088-89) |
+| OLMo-7B | x | x (1800 pairs) | x | **DONE**, integrated into Table 3 + Appendix A |
+| Phi-3.5-Mini | x | x (4000 pairs) | x | **DONE** |
+| Llama-2-7B | x | x (1800 pairs) | x | **DONE** |
+| Llama-3.1-8B | x | x (1800 pairs) | x | **DONE** |
 
-### Experiment 3 — Collectivity Check (C2-lite)
-- **Not run at all** — no configs, no results. Requires `shapley_method: exact` on small ablation subsets per catalog. Zero artifacts on disk.
+### Experiment 3 --- Collectivity Check (C2-lite)
+**Integrated into paper this session** as Section 5.5 (Expert-pair synergy)
+and an Appendix B paragraph. Landed data (verified non-degenerate) for
+4 models: OLMoE-1B-7B (synergy fraction $0.705$/$0.281$, layer0/last),
+Phi-3.5-MoE ($0.741$/$0.200$), Mixtral-8x7B ($0.716$/$0.503$, the
+2026-07-07 stale capture --- checked, non-degenerate, $n{=}20$ pairs both
+layers, used as-is), Gemma-4-26B ($0.747$/$0.183$). DBRX and
+GPT-OSS-120B resubmitted this session (jobs **5575743**, **5575744**,
+4h/8h walltime after the config time-limit fix below) --- **PENDING** in
+queue at last poll. A redundant Mixtral refresh (job 5575538, from a
+prior session) is also still PENDING; once it lands it can cross-check
+the stale July capture but is not blocking (already verified usable).
 
-### Experiment 4 — Independent Cross-Check (Robustness)
-- **Partial**: ablation curves exist for 4 models (OLMoE, Mixtral, Phi-3.5-MoE, OLMo-7B dense) under Exp6. Missing for DBRX, GPT-OSS-120B, Gemma-4-26B.
+### Experiment 4 --- Independent Cross-Check (Robustness)
+- **DONE** for 6 models (OLMoE, Mixtral, Phi-3.5-MoE, DBRX, Gemma-4-26B,
+  OLMo-7B dense) under Exp6 (Section 5.6/causal check). GPT-OSS-120B
+  ladder extension resubmitted this session (job 5575745).
 
-### Experiment 5 — Demographic Specificity (RQ3/C3)
-- **DONE** for OLMoE (5000 pairs, 85 cohorts, JS CI [0.206,0.231]). Exp5 flag added to paper (no Winogender in Exp5 vs ladder).
+### Experiment 5 --- Demographic Specificity (RQ3/C3)
+- **DONE** for OLMoE (5000 pairs, 85 cohorts, JS CI [0.206,0.231]). Exp5 flag
+  documented in paper (no Winogender in Exp5 vs ladder).
 
-### Experiment 6 — Ladder-Wide Causal Ablation (Reviewer-Prioritized)
+### Experiment 6 --- Ladder-Wide Causal Ablation (Reviewer-Prioritized)
 | Model | Ablation Curve | Status |
 |---|---|---|
-| OLMoE-1B-7B | ✓ (60 pairs) | DONE, cited in paper |
-| Phi-3.5-MoE | ✓ (30 pairs) | DONE, cited in paper |
-| Mixtral-8x7B | ✓ (30 pairs) | DONE, cited in paper |
-| OLMo-7B (dense) | ✓ (60 pairs) | DONE, cited in paper |
-| **DBRX** | ✗ | **MISSING** |
-| **GPT-OSS-120B** | ✗ | **MISSING** |
-| **Gemma-4-26B** | ✗ | **MISSING** |
+| OLMoE-1B-7B | x (60 pairs) | DONE, cited in paper |
+| Phi-3.5-MoE | x (30 pairs) | DONE, cited in paper |
+| Mixtral-8x7B | x (30 pairs) | DONE, cited in paper |
+| OLMo-7B (dense) | x (60 pairs) | DONE, cited in paper |
+| DBRX | x (60 pairs) | **DONE, integrated this session** --- $\phi$ is the *worst*-performing ranking at the 50% point (reversal), reported honestly |
+| Gemma-4-26B | x (60 pairs) | **DONE, integrated this session** --- baseline bias gap $\approx 0$, flagged uninterpretable, numbers reported for completeness only |
+| GPT-OSS-120B | resubmitted (job 5575745, 8h/30 pairs) | **PENDING** in queue at last poll |
 
-### Experiment 7 — Proxy-vs-Exact Shapley Agreement
+**Gap remaining**: only GPT-OSS-120B's Exp6 ladder rung is still missing;
+once it lands, update Section 5.6/Appendix B from "DONE for six models" to
+"DONE for all six MoE rungs plus the dense control" and add its headline
+numbers.
+
+### Experiment 7 --- Proxy-vs-Exact Shapley Agreement
 | Model | Result | Status |
 |---|---|---|
-| Mixtral-8x7B | ✓ (mean ρ=-0.085/+0.058) | **DONE** (null result), cited in paper |
-| OLMoE | ✗ | **MISSING** |
-| Phi-3.5-MoE | ✗ | **MISSING** |
+| Mixtral-8x7B | mean rho=-0.085/+0.058 | **DONE** (null result), cited in paper |
+| OLMoE | mean rho=-0.024/+0.235 | **DONE** (null result), now cited in paper |
+| Phi-3.5-MoE | mean rho=-0.084/+0.076 | **DONE** (null result), now cited in paper |
 
-### Experiment 8 — Same-Mechanism Comparison (Method-Confound)
+**Fully resolved** --- all 3 tractable models now tested, all null, paper updated.
+
+### Experiment 8 --- Same-Mechanism Comparison (Method-Confound)
 | Model | Result | Status |
 |---|---|---|
-| OLMoE | H_lloo=0.751 (summary) | **DONE** at summary level, cited |
-| Phi-3.5-MoE | H_lloo=0.883 (summary) | **DONE** at summary level, cited |
-| Per-pair payloads | ✗ | **MISSING** — no CIs/bootstrap for Exp8 |
+| OLMoE | H_lloo=0.751 (summary) | DONE at summary level, cited |
+| Phi-3.5-MoE | H_lloo=0.883 (summary) | DONE at summary level, cited |
+| Both models per-pair | no per-pair payloads on disk (only player_ids.json/result.json) | **PENDING** --- not re-submitted this session (lower priority than Exp3/6 causal gaps; would need dedicated GPU allocation and the queue is already saturated) |
+
+**Gap remaining**: per-pair payloads for Exp8 still not on disk for either
+model; paper's Appendix B "PENDING for any per-pair analysis" language is
+still accurate.
 
 ---
 
 ## 3. Critical Gaps for Paper Acceptance (TIST/ACM)
 
-### Must-Fix Before Submission
-1. **Dense CIs** — 8 shards RUNNING (5575082-5575089). Need to verify completion + extend s04 glob to `exp2-dense-*`.
-2. **GPT-OSS 5000 pairs** — job 5575070 RUNNING, ETA ~2.7h. Ladder uniformity (all 5000) strengthens H1 power story.
-3. **Exp6 ladder completion** — DBRX, GPT-OSS, Gemma causal ablation missing. These 3 models sit at distinct sparsity points; without them the "mixed" causal verdict is incomplete.
-4. **s04 bootstrap glob fix** — currently only `exp1-concentration-*`; must include `exp2-dense-*` after dense per-pair lands.
+### Resolved this session
+1. ~~Dense CIs~~ --- **DONE**, integrated into Table 3 + Appendix A.
+2. ~~GPT-OSS 5000 pairs~~ --- **DONE**, stability replication confirmed and cited.
+3. ~~s04 bootstrap glob fix~~ --- **DONE** (prior session).
+4. ~~Exp7 on OLMoE/Phi~~ --- **DONE**, all 3 models now null, paper updated.
+5. ~~Exact-permutation floor math error~~ --- **DONE**: corrected $1/12
+   \approx 0.083$ (wrong) to the true tie-corrected minima $0.0056$
+   ($n{=}6$)/$0.0333$ ($n{=}5$) in all 5 locations; added
+   `Section 6.4 Power analysis` (Monte Carlo).
+6. ~~Effect sizes~~ --- **DONE**: new `Section 5.4` reports Cohen's $d$
+   for entropy/Gini/$t_5$ and the bias-gap-magnitude-parity finding
+   ($d=0.011$), plus per-model localizability ratio ($LR$).
+7. ~~Exp3 Collectivity (partial)~~ --- **DONE for 4 models**, integrated
+   as new `Section 5.5`; mechanistically explains the causal-ablation
+   reversals (DBRX, Mixtral).
+8. ~~Exp6 ladder extension (DBRX, Gemma-4-26B)~~ --- **DONE**, integrated
+   into the causal-check Results/Verdict and Appendix B; the extended
+   ladder *weakens* the causal reading (DBRX reversal), reported honestly.
+9. ~~Split-half shard exact numbers~~ --- **DONE**, added to Appendix A
+   with precise $H$/$G$ per shard for Mixtral and DBRX.
 
-### High-Value Additions (Reviewer-Prioritized)
-5. **Exp3 Collectivity** — Shapley interaction values (marginal vs synergy). Zero cost to design; need small GPU runs per model. Directly speaks to "collective routing" vs independent experts.
-6. **Exp7 on OLMoE/Phi** — proxy agreement null on Mixtral; needs replication on other models. Low-cost (small n, exact Shapley tractable on Mixtral, need routing_contrast vs exact on others).
-7. **Exp8 per-pair** — same-mechanism LOO on MoE. Per-pair would give CIs/bootstrap, making the "H_lloo drops to dense band" claim statistically robust.
+### Still open (GPU-bound, queue-saturated at last poll)
+10. **Exp3 Collectivity (DBRX, GPT-OSS-120B)** --- resubmitted (5575743,
+    5575744) with QOS-max walltime (4h/8h) after discovering the prior
+    submissions' 3h time limit was too short for the observed
+    ~9.6min/pair $\times$ 2-layer cost; reduced to 10 pairs/model to fit.
+    **PENDING** in queue.
+11. **Exp6 GPT-OSS-120B** --- resubmitted (5575745) with 8h walltime
+    (was 3h) and reduced pairs (30) + reduced routing-freq sample (60,
+    was 200). **PENDING** in queue.
+12. **Exp8 per-pair** --- not resubmitted this session; lower priority,
+    queue already saturated with the above. Would need dedicated
+    resubmission with `--save-per-pair-phi` once GPU headroom frees up.
 
 ### Data/Code Hygiene
-8. **Gemma-4-27B phantom** — document clearly as nonexistent HF model; 26B is the rung.
-9. **Kaggle payload manifest** — already done (`sghose0/moe-bias-routing-shapley-perpair-phi`).
-10. **REPRODUCIBILITY.md** — done.
+13. ~~Gemma-4-27B phantom~~ --- documented, non-issue.
+14. ~~Kaggle payload manifest~~ --- done (`sghose0/moe-bias-routing-shapley-perpair-phi`).
+    Dense v1 per-pair payloads are NOT yet published there --- consider a
+    follow-up dataset version once Exp3/6/8 fully land.
+15. ~~REPRODUCIBILITY.md~~ --- done.
 
 ---
 
 ## 4. GPU Resource Plan (ICE Cluster)
 
-### Current Queue (as of 2026-08-10)
-- **5575070**: GPT-OSS 5000 pairs (4×H100, 04:00:00, ~2.7h remaining)
-- **5575082-5575089**: 8 dense per-pair shards (4 models × 2, 1×L40S each, 05:00:00, just submitted)
-- **Idle GPU capacity**: 4 H200 nodes (64 GPUs free), 3 H100 nodes (22 GPUs free), 4 L40S nodes (28 GPUs free), A100/A40/V100/RTX/A40/MI210
-
-### Immediate Submissions (Phase 1 — this session)
-| Job | Model | Config | GPUs | Time | QOS | Notes |
-|---|---|---|---|---|---|---|
-| Exp6-DBRX | DBRX | study.dbrx.concentration | 2×H200 | 04:00:00 | 360 min | Reuse Exp1 v1 config; submit via submit_slurm_experiment4.py |
-| Exp6-GPT-OSS | GPT-OSS-120B | study.gpt-oss-120b.concentration | 4×H100 | 04:00:00 | 960 min | Same as GPT-OSS 5000 config, just add --max-pairs 100 |
-| Exp6-Gemma | Gemma-4-26B | study.gemma4-26b.concentration.v1.yaml | 1×A100/L40S | 04:00:00 | 240 min | Model exists (26B); causal check only |
-| Exp3-OLMoE | OLMoE | study.olmoe.concentration | 1×L40S | 03:00:00 | 180 min | Exact Shapley on top layers only |
-| Exp3-Mixtral | Mixtral | study.mixtral-8x7b.concentration | 1×L40S | 03:00:00 | 180 min | |
-| Exp3-Phi | Phi-3.5-MoE | study.phi3.5-moe.concentration | 1×L40S | 03:00:00 | 180 min | |
-
-### Phase 2 (after Phase 1 completes)
-| Job | Model | Config | GPUs | Time | QOS |
-|---|---|---|---|---|---|
-| Exp7-OLMoE | OLMoE | study.olmoe.concentration | 1×L40S | 02:00:00 | 120 min |
-| Exp7-Phi | Phi-3.5-MoE | study.phi3.5-moe.concentration | 1×L40S | 02:00:00 | 120 min |
-| Exp8-OLMoE per-pair | OLMoE | study.olmoe.lloo | 1×L40S | 04:00:00 | 240 min |
-| Exp8-Phi per-pair | Phi-3.5-MoE | study.phi3.5-moe.lloo | 1×L40S | 04:00:00 | 240 min |
-
-**Total GPU-min estimate**: Phase 1 ≈ 2160 min (within coc-ice, staggered across nodes); Phase 2 ≈ 720 min.
+See `CLUSTER-STATUS.md` for the live job table (job IDs, states, notes). This
+file is not duplicated here to avoid drift between the two docs.
 
 ---
 
-## 5. Execution Priority
+## 5. Execution Priority (remaining)
 
-1. **Submit Phase 1 jobs NOW** (parallel, disjoint GPU types — H200 for DBRX, H100 for GPT-OSS, A100/L40S for Gemma, L40S for Exp3). Cluster has capacity.
-2. **Monitor 5575070 + dense shards** — when complete, pull results, rerun s03/s04, extend glob, update paper.
-3. **Submit Phase 2** once Phase 1 lands.
-4. **Paper integration loop**: each batch of results → update draft → compile → vision check.
+1. **Poll cluster periodically**: `ssh login-ice.pace.gatech.edu 'squeue -u sghose7'`
+   (VPN must be off). All 4 remaining jobs (5575538 Mixtral Exp3 refresh,
+   5575743 DBRX Exp3, 5575744 GPT-OSS Exp3, 5575745 GPT-OSS Exp6) were
+   **PENDING** (queued, not yet running) at last poll --- cluster-wide
+   GPU-minute backlog, not a bug on our side.
+2. **Pull results** into local `results/` as each job completes.
+3. **Integrate GPT-OSS-120B's Exp3/Exp6 numbers** into Section 5.5/5.6 and
+   Appendix B once landed (currently the only two "PENDING" placeholders
+   left in the causal/collectivity evidence chain).
+4. **Recompile + vision-check** after that integration pass.
+5. **Final commit + push**, then re-audit against every deliverable before
+   calling the goal complete.
 
----
-
-## 6. Next Actions (This Session)
-
-- [ ] Submit Exp6 DBRX, GPT-OSS, Gemma + Exp3 all 6 models (Phase 1)
-- [ ] Monitor 5575070 (GPT-OSS 5000) completion
-- [ ] Monitor dense per-pair shards (5575082-89) completion
-- [ ] When complete: pull, extend s04 glob, rerun bootstrap, regenerate figures, update draft
-- [ ] Submit Phase 2 jobs
-
-*Document generated from live repo state, study catalog, cluster inventory, and paper draft audit.*
+*Document generated from live repo state, study catalog, cluster inventory
+(squeue polled directly this session), and paper draft audit (2x pdflatex
+compile + page-image inspection of pages 3, 5, 6, 8, 10, 11).*

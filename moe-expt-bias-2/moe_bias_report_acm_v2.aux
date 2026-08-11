@@ -16,12 +16,12 @@
 \citation{nadeem2021}
 \citation{parrish2022}
 \citation{liang2023,mehrabi2021}
-\citation{moe_research_2026}
 \@writefile{toc}{\contentsline {section}{Abstract}{1}{section*.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
 \newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{1}{section.2}\protected@file@percent }
 \newlabel{sec:related}{{2}{1}{Related Work}{section.2}{}}
+\citation{moe_research_2026}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Method}{2}{section.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Routing-Shapley attribution}{2}{subsection.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Concentration metrics}{2}{subsection.3.2}\protected@file@percent }
@@ -33,7 +33,6 @@
 \@writefile{toc}{\contentsline {section}{\numberline {5}Results}{2}{section.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1}The ladder is monotone-consistent with H1, but not significant}{2}{subsection.5.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Top-fraction: no expert-level concentration}{2}{subsection.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Dense vs.\ MoE: a real split, not a ladder}{2}{subsection.5.3}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Sparsity ladder and concentration metrics (v1 point estimates, 5000 pairs except GPT-OSS-120B with 2000; values from \texttt  {s03\_h1\_verdict.json} ladder rows). $k/N$ = active-expert fraction ($k$ from the verified audit table in \texttt  {s03\_h1\_verdict.py}, $N$ from stored \texttt  {n\_players}). The CI column reports $95\%$ block-bootstrap intervals for $H$ (5000 resamples over pairs, seed 42, \texttt  {s04\_bootstrap\_cis.json}); intervals for Gini, $t_5$, $t_{10\%}$ are reported in Table\nonbreakingspace \ref {tab:cis}. $^{\dagger }$GPT-OSS-120B v1 is a valid capture ($n_{pairs}=2000$); its earlier all-zero v1 directory was a broken capture that has been superseded, and v0/v1 agree ($\Delta H = -0.003$). $^{\ddagger }$Gemma's mean bias gap $\approx 0$ (null-bias model); its concentration readings reflect routing noise, reported for transparency.}}{3}{table.caption.5}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{tab:ladder}{{1}{3}{Sparsity ladder and concentration metrics (v1 point estimates, 5000 pairs except GPT-OSS-120B with 2000; values from \texttt {s03\_h1\_verdict.json} ladder rows). $k/N$ = active-expert fraction ($k$ from the verified audit table in \texttt {s03\_h1\_verdict.py}, $N$ from stored \texttt {n\_players}). The CI column reports $95\%$ block-bootstrap intervals for $H$ (5000 resamples over pairs, seed 42, \texttt {s04\_bootstrap\_cis.json}); intervals for Gini, $t_5$, $t_{10\%}$ are reported in Table~\ref {tab:cis}. $^{\dagger }$GPT-OSS-120B v1 is a valid capture ($n_{pairs}=2000$); its earlier all-zero v1 directory was a broken capture that has been superseded, and v0/v1 agree ($\Delta H = -0.003$). $^{\ddagger }$Gemma's mean bias gap $\approx 0$ (null-bias model); its concentration readings reflect routing noise, reported for transparency}{table.caption.5}{}}
@@ -41,38 +40,53 @@
 \newlabel{tab:cis}{{2}{3}{$95\%$ block-bootstrap confidence intervals for every MoE rung's concentration metrics (5000 resamples over pairs with replacement, seed 42, stratified by prompt group; \texttt {s04\_bootstrap\_cis.json}). Intervals for $H$ are repeated for readability; point estimates appear in Table~\ref {tab:ladder}. GPT-OSS-120B uses its valid v1 capture ($n_{pairs}=2000$). $^{\ddagger }$Gemma: see Table~\ref {tab:ladder}}{table.caption.6}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Dense-baseline measures (v1 per-pair captures; \texttt  {exp2-*-v1}/ \texttt  {per\_pair\_phi.npy}, one FFN layer player per transformer layer, $N = 32$). The CI column reports $95\%$ block-bootstrap intervals for $H$ (5000 resamples over pairs, seed 42, stratified by prompt group, \texttt  {s04\_bootstrap\_cis.json}); Gini, $t_5$, $t_{10\%}$ intervals are $[0.677,0.748]$, $[0.693,0.777]$, $[0.497,0.611]$ (OLMo-7B); $[0.621,0.668]$, $[0.606,0.653]$, $[0.473,0.524]$ (Phi-3.5-Mini); $[0.624,0.699]$, $[0.666,0.733]$, $[0.605,0.687]$ (Llama-2-7B); $[0.669,0.734]$, $[0.683,0.747]$, $[0.622,0.696]$ (Llama-3.1-8B), in that column order. Per-pair $\phi $ payloads for dense baselines landed after the initial submission (8 GPU shard jobs, 4 models $\times $ 2 shards); point estimates shift modestly from the earlier v0 single-shot capture (e.g.\ OLMo-7B $H$: $0.719 \to 0.703$) but the qualitative pattern is unchanged: all four dense models fall well below every MoE ladder rung's entropy (Table\nonbreakingspace \ref {tab:ladder}), and CIs do not overlap the MoE band.}}{3}{table.caption.7}\protected@file@percent }
 \newlabel{tab:dense}{{3}{3}{Dense-baseline measures (v1 per-pair captures; \texttt {exp2-*-v1}/ \texttt {per\_pair\_phi.npy}, one FFN layer player per transformer layer, $N = 32$). The CI column reports $95\%$ block-bootstrap intervals for $H$ (5000 resamples over pairs, seed 42, stratified by prompt group, \texttt {s04\_bootstrap\_cis.json}); Gini, $t_5$, $t_{10\%}$ intervals are $[0.677,0.748]$, $[0.693,0.777]$, $[0.497,0.611]$ (OLMo-7B); $[0.621,0.668]$, $[0.606,0.653]$, $[0.473,0.524]$ (Phi-3.5-Mini); $[0.624,0.699]$, $[0.666,0.733]$, $[0.605,0.687]$ (Llama-2-7B); $[0.669,0.734]$, $[0.683,0.747]$, $[0.622,0.696]$ (Llama-3.1-8B), in that column order. Per-pair $\phi $ payloads for dense baselines landed after the initial submission (8 GPU shard jobs, 4 models $\times $ 2 shards); point estimates shift modestly from the earlier v0 single-shot capture (e.g.\ OLMo-7B $H$: $0.719 \to 0.703$) but the qualitative pattern is unchanged: all four dense models fall well below every MoE ladder rung's entropy (Table~\ref {tab:ladder}), and CIs do not overlap the MoE band}{table.caption.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Causal check: phi-ranked ablation}{3}{subsection.5.4}\protected@file@percent }
-\newlabel{sec:causal}{{5.4}{3}{Causal check: phi-ranked ablation}{subsection.5.4}{}}
-\@writefile{toc}{\contentsline {paragraph}{Design.}{3}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Dense vs.\ MoE: a real split, not a ladder}{3}{subsection.5.3}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Gini of the expert attribution across the ladder.}}{4}{figure.caption.9}\protected@file@percent }
 \newlabel{fig:gini}{{2}{4}{Gini of the expert attribution across the ladder}{figure.caption.9}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Entropy vs.\ active fraction $k/N$ (log scale). H1 (sparser $\Rightarrow $ more concentrated) is directionally consistent ($\rho _H = +0.754$, exact two-sided permutation $p = 0.106$), but not statistically significant at $0.05$ given $n = 6$ ladder points.}}{4}{figure.caption.10}\protected@file@percent }
 \newlabel{fig:scatter}{{3}{4}{Entropy vs.\ active fraction $k/N$ (log scale). H1 (sparser $\Rightarrow $ more concentrated) is directionally consistent ($\rho _H = +0.754$, exact two-sided permutation $p = 0.106$), but not statistically significant at $0.05$ given $n = 6$ ladder points}{figure.caption.10}{}}
-\@writefile{toc}{\contentsline {paragraph}{Results.}{4}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Effect sizes: geometry vs.\ magnitude}{4}{subsection.5.4}\protected@file@percent }
+\newlabel{sec:effect-sizes}{{5.4}{4}{Effect sizes: geometry vs.\ magnitude}{subsection.5.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Top-5 and top-10\% share across the ladder.}}{4}{figure.caption.11}\protected@file@percent }
 \newlabel{fig:topfrac}{{4}{4}{Top-5 and top-10\% share across the ladder}{figure.caption.11}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Dense vs.\ MoE Gini.}}{4}{figure.caption.12}\protected@file@percent }
 \newlabel{fig:dense}{{5}{4}{Dense vs.\ MoE Gini}{figure.caption.12}{}}
-\@writefile{toc}{\contentsline {paragraph}{Verdict.}{4}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Expert-pair synergy (Exp.\ 3)}{4}{subsection.5.5}\protected@file@percent }
+\newlabel{sec:synergy}{{5.5}{4}{Expert-pair synergy (Exp.\ 3)}{subsection.5.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Causal check: phi-ranked ablation}{5}{subsection.5.6}\protected@file@percent }
+\newlabel{sec:causal}{{5.6}{5}{Causal check: phi-ranked ablation}{subsection.5.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{Design.}{5}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Results.}{5}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Extended ladder (DBRX, Gemma-4-26B).}{5}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Verdict.}{5}{section*.16}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {6}Robustness and Sensitivity}{5}{section.6}\protected@file@percent }
 \newlabel{sec:robust}{{6}{5}{Robustness and Sensitivity}{section.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Run-to-run drift (v0 vs.\ v1)}{5}{subsection.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Permutation / null analysis}{5}{subsection.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Model-set sensitivity audit}{5}{subsection.6.3}\protected@file@percent }
-\newlabel{sec:verdict}{{6.3}{5}{Model-set sensitivity audit}{subsection.6.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Statistical method note}{5}{subsection.6.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Demographic-specificity}{5}{subsection.6.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Discussion}{5}{section.7}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces JS distance between per-cohort and pooled expert attribution distributions (OLMoE, 85 cohorts). The vertical line marks the expert-index permutation null.}}{6}{figure.caption.16}\protected@file@percent }
-\newlabel{fig:js}{{6}{6}{JS distance between per-cohort and pooled expert attribution distributions (OLMoE, 85 cohorts). The vertical line marks the expert-index permutation null}{figure.caption.16}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Limitations and Uncertainty Flags}{6}{section.8}\protected@file@percent }
-\newlabel{sec:limits}{{8}{6}{Limitations and Uncertainty Flags}{section.8}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{6}{section.9}\protected@file@percent }
-\newlabel{app:fulltable}{{9}{8}{Appendix A: Full Measurement Table and Drift Floors}{section*.18}{}}
-\@writefile{toc}{\contentsline {paragraph}{Drift floors.}{8}{section*.20}\protected@file@percent }
-\newlabel{app:causal}{{9}{8}{Appendix B: Causal Ablation and Proxy-Agreement Robustness}{section*.21}{}}
-\@writefile{toc}{\contentsline {paragraph}{Experiment 4/6 --- causal expert ablation (DONE for 4 models; Mixtral-GPT-OSS-Gemma-DBRX ladder extension PENDING).}{8}{section*.22}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Experiment 7 --- proxy-vs-exact-Shapley agreement (DONE; null result on all three tested models).}{8}{section*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Permutation / null analysis}{6}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Model-set sensitivity audit}{6}{subsection.6.3}\protected@file@percent }
+\newlabel{sec:verdict}{{6.3}{6}{Model-set sensitivity audit}{subsection.6.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Power analysis}{6}{subsection.6.4}\protected@file@percent }
+\newlabel{sec:power}{{6.4}{6}{Power analysis}{subsection.6.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Statistical method note}{6}{subsection.6.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}Demographic-specificity}{6}{subsection.6.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Discussion}{6}{section.7}\protected@file@percent }
+\newlabel{sec:disc}{{7}{6}{Discussion}{section.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces JS distance between per-cohort and pooled expert attribution distributions (OLMoE, 85 cohorts). The vertical line marks the expert-index permutation null.}}{7}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:js}{{6}{7}{JS distance between per-cohort and pooled expert attribution distributions (OLMoE, 85 cohorts). The vertical line marks the expert-index permutation null}{figure.caption.17}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Limitations and Uncertainty Flags}{7}{section.8}\protected@file@percent }
+\newlabel{sec:limits}{{8}{7}{Limitations and Uncertainty Flags}{section.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{8}{section.9}\protected@file@percent }
+\newlabel{app:fulltable}{{9}{9}{Appendix A: Full Measurement Table and Drift Floors}{section*.19}{}}
+\@writefile{toc}{\contentsline {paragraph}{Drift floors.}{9}{section*.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Localizability ratio and bias-gap-magnitude parity.}{9}{section*.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Split-half shard agreement.}{9}{section*.23}\protected@file@percent }
+\newlabel{app:causal}{{9}{9}{Appendix B: Causal Ablation and Proxy-Agreement Robustness}{section*.24}{}}
+\@writefile{toc}{\contentsline {paragraph}{Experiment 4/6 --- causal expert ablation (DONE for 6 models; GPT-OSS-120B PENDING GPU time).}{9}{section*.25}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Full measurement table. MoE rows: v1 captures from \texttt  {s03\_h1\_verdict.json} ladder and \texttt  {s04\_bootstrap\_cis.json} v1 model blocks (CI bounds quoted verbatim from the \texttt  {entropy}/\texttt  {gini} arrays); drift columns are the v0$\rightarrow $v1 absolute drifts from \texttt  {stats\_analysis/outputs/s01\_exp1\_stability.json} (\texttt  {abs\_dH}/\texttt  {abs\_dG}). Dense rows: v1 per-pair captures from the \texttt  {exp2-*-v1} runs as reported in Table\nonbreakingspace \ref {tab:dense}; CIs come from the same \texttt  {s04\_bootstrap\_cis.json} block bootstrap as the MoE ladder (no drift column: dense runs were not captured twice at different pair counts, so there is no v0$\rightarrow $v1 comparison to report). Exp\nonbreakingspace 5 row: pooled OLMoE concentration from \texttt  {exp5-demographic-specificity-olmoe-1b-7b-v1/result.json} (it is not among the s04 bootstrap blocks, so its CI cells are marked `---'). $^{\ddagger }$Gemma-4-26B is a null-bias model (mean bias gap $\approx 0$); see Section\nonbreakingspace \ref {sec:limits}. $^{*}$Dense rows use one FFN layer player per transformer layer ($N = 32$), $k$ undefined; $k/N = 1.0$ as in the dense-group row of Table\nonbreakingspace \ref {tab:ladder}.}}{10}{table.caption.20}\protected@file@percent }
+\newlabel{tab:appendix-full}{{4}{10}{Full measurement table. MoE rows: v1 captures from \texttt {s03\_h1\_verdict.json} ladder and \texttt {s04\_bootstrap\_cis.json} v1 model blocks (CI bounds quoted verbatim from the \texttt {entropy}/\texttt {gini} arrays); drift columns are the v0$\rightarrow $v1 absolute drifts from \texttt {stats\_analysis/outputs/s01\_exp1\_stability.json} (\texttt {abs\_dH}/\texttt {abs\_dG}). Dense rows: v1 per-pair captures from the \texttt {exp2-*-v1} runs as reported in Table~\ref {tab:dense}; CIs come from the same \texttt {s04\_bootstrap\_cis.json} block bootstrap as the MoE ladder (no drift column: dense runs were not captured twice at different pair counts, so there is no v0$\rightarrow $v1 comparison to report). Exp~5 row: pooled OLMoE concentration from \texttt {exp5-demographic-specificity-olmoe-1b-7b-v1/result.json} (it is not among the s04 bootstrap blocks, so its CI cells are marked `---'). $^{\ddagger }$Gemma-4-26B is a null-bias model (mean bias gap $\approx 0$); see Section~\ref {sec:limits}. $^{*}$Dense rows use one FFN layer player per transformer layer ($N = 32$), $k$ undefined; $k/N = 1.0$ as in the dense-group row of Table~\ref {tab:ladder}}{table.caption.20}{}}
+\@writefile{toc}{\contentsline {paragraph}{Experiment 7 --- proxy-vs-exact-Shapley agreement (DONE; null result on all three tested models).}{10}{section*.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Experiment 8 --- same-mechanism comparison (Phi-3.5-MoE DONE with per-pair CIs; OLMoE per-pair capture queued).}{10}{section*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Experiment 3 --- expert-pair synergy / collectivity check (DONE for 4 models; DBRX and GPT-OSS-120B PENDING).}{10}{section*.28}\protected@file@percent }
 \bibstyle{ACM-Reference-Format}
 \bibcite{shapley1953}{{1}{}{{}}{{}}}
 \bibcite{lundberg2017}{{2}{}{{}}{{}}}
@@ -97,10 +111,7 @@
 \newlabel{tocindent4}{0pt}
 \newlabel{tocindent5}{0pt}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Full measurement table. MoE rows: v1 captures from \texttt  {s03\_h1\_verdict.json} ladder and \texttt  {s04\_bootstrap\_cis.json} v1 model blocks (CI bounds quoted verbatim from the \texttt  {entropy}/\texttt  {gini} arrays); drift columns are the v0$\rightarrow $v1 absolute drifts from \texttt  {stats\_analysis/outputs/s01\_exp1\_stability.json} (\texttt  {abs\_dH}/\texttt  {abs\_dG}). Dense rows: v1 per-pair captures from the \texttt  {exp2-*-v1} runs as reported in Table\nonbreakingspace \ref {tab:dense}; CIs come from the same \texttt  {s04\_bootstrap\_cis.json} block bootstrap as the MoE ladder (no drift column: dense runs were not captured twice at different pair counts, so there is no v0$\rightarrow $v1 comparison to report). Exp\nonbreakingspace 5 row: pooled OLMoE concentration from \texttt  {exp5-demographic-specificity-olmoe-1b-7b-v1/result.json} (it is not among the s04 bootstrap blocks, so its CI cells are marked `---'). $^{\ddagger }$Gemma-4-26B is a null-bias model (mean bias gap $\approx 0$); see Section\nonbreakingspace \ref {sec:limits}. $^{*}$Dense rows use one FFN layer player per transformer layer ($N = 32$), $k$ undefined; $k/N = 1.0$ as in the dense-group row of Table\nonbreakingspace \ref {tab:ladder}.}}{9}{table.caption.19}\protected@file@percent }
-\newlabel{tab:appendix-full}{{4}{9}{Full measurement table. MoE rows: v1 captures from \texttt {s03\_h1\_verdict.json} ladder and \texttt {s04\_bootstrap\_cis.json} v1 model blocks (CI bounds quoted verbatim from the \texttt {entropy}/\texttt {gini} arrays); drift columns are the v0$\rightarrow $v1 absolute drifts from \texttt {stats\_analysis/outputs/s01\_exp1\_stability.json} (\texttt {abs\_dH}/\texttt {abs\_dG}). Dense rows: v1 per-pair captures from the \texttt {exp2-*-v1} runs as reported in Table~\ref {tab:dense}; CIs come from the same \texttt {s04\_bootstrap\_cis.json} block bootstrap as the MoE ladder (no drift column: dense runs were not captured twice at different pair counts, so there is no v0$\rightarrow $v1 comparison to report). Exp~5 row: pooled OLMoE concentration from \texttt {exp5-demographic-specificity-olmoe-1b-7b-v1/result.json} (it is not among the s04 bootstrap blocks, so its CI cells are marked `---'). $^{\ddagger }$Gemma-4-26B is a null-bias model (mean bias gap $\approx 0$); see Section~\ref {sec:limits}. $^{*}$Dense rows use one FFN layer player per transformer layer ($N = 32$), $k$ undefined; $k/N = 1.0$ as in the dense-group row of Table~\ref {tab:ladder}}{table.caption.19}{}}
-\@writefile{toc}{\contentsline {paragraph}{Experiment 8 --- same-mechanism comparison (DONE at the summary level; per-pair analysis PENDING).}{9}{section*.24}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Net status for reviewers.}{9}{section*.25}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{References}{9}{section*.27}\protected@file@percent }
-\newlabel{TotPages}{{9}{9}{}{page.9}{}}
-\gdef \@abspage@last{9}
+\@writefile{toc}{\contentsline {paragraph}{Net status for reviewers.}{11}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{References}{11}{section*.31}\protected@file@percent }
+\newlabel{TotPages}{{11}{11}{}{page.11}{}}
+\gdef \@abspage@last{11}

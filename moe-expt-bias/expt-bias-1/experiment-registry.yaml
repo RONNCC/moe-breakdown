@@ -328,7 +328,7 @@ experiments:
     id: "exp3-olmoe"
     config: "configs/study.olmoe.concentration.yaml"
     job_id: 5575246
-    status: "SUBMITTED"
+    status: "DONE"  # integrated into paper Sec 5.5 + Appendix B this session
     gpu: "a100:2"
     time: "04:00:00"
     max_pairs: 20
@@ -338,7 +338,7 @@ experiments:
     id: "exp3-phi35moe"
     config: "configs/study.phi3.5-moe.concentration.yaml"
     job_id: 5575247
-    status: "SUBMITTED"
+    status: "DONE"  # integrated into paper Sec 5.5 + Appendix B this session
     gpu: "a100:2"
     time: "04:00:00"
     max_pairs: 20
@@ -348,37 +348,38 @@ experiments:
     id: "exp3-mixtral"
     config: "configs/study.mixtral-8x7b.concentration.yaml"
     job_id: 5575248
-    status: "SUBMITTED"
+    status: "DONE"  # integrated using verified July capture (Sec 5.5 + Appendix B)
     gpu: "a100:2"
     time: "04:00:00"
     max_pairs: 20
     max_layers: 2
+    refresh_job_id: 5575538  # PENDING at last poll; redundant refresh, not blocking
 
   exp3-dbrx:
     id: "exp3-dbrx"
     config: "configs/study.dbrx.concentration.yaml"
-    job_id: "UNKNOWN (garbled submission output; verify with squeue)"
-    status: "SUBMITTED"
+    job_id: 5575743  # resubmitted this session after slurm.time bug fix (was 03:00:00, too short; job timed out)
+    status: "PENDING"  # queued at last poll (cluster-wide GPU-minute backlog, not a submission error)
     gpu: "a100:2"
     time: "04:00:00"
-    max_pairs: 20
+    max_pairs: 10  # reduced from 20 to fit revised time budget
     max_layers: 2
 
   exp3-gpt-oss:
     id: "exp3-gpt-oss"
     config: "configs/study.gpt-oss-120b.concentration.yaml"
-    job_id: 5575249
-    status: "SUBMITTED"
+    job_id: 5575744  # resubmitted this session after slurm.time bug fix (was 03:00:00, too short; job timed out)
+    status: "PENDING"  # queued at last poll (cluster-wide GPU-minute backlog, not a submission error)
     gpu: "a100:2"
-    time: "04:00:00"
-    max_pairs: 20
+    time: "08:00:00"
+    max_pairs: 10  # reduced from 20 to fit revised time budget
     max_layers: 2
 
   exp3-gemma:
     id: "exp3-gemma"
     config: "configs/study.gemma4-26b.concentration.v1.yaml"
     job_id: 5575250
-    status: "SUBMITTED"
+    status: "DONE"  # integrated into paper Sec 5.5 + Appendix B this session
     gpu: "a100:2"
     time: "04:00:00"
     max_pairs: 20
@@ -413,20 +414,20 @@ experiments:
 
   exp6-dbrx:
     id: "exp6-dbrx"
-    job_id: 5575242
-    status: "RUNNING"
+    job_id: 5575543  # original submission 5575242 superseded (WORKDIR path-doubling bug); resubmitted as 5575543
+    status: "COMPLETE"  # landed this session; integrated into Sec 5.6 + Appendix B
     max_pairs: 60
 
   exp6-gpt-oss:
     id: "exp6-gpt-oss"
-    job_id: 5575243
-    status: "RUNNING"
-    max_pairs: 60
+    job_id: 5575745  # original 5575243 superseded; 5575545 TIMEOUT'd at 03:00:00 (slurm.time bug); resubmitted as 5575745
+    status: "PENDING"  # queued at last poll; only remaining Exp6 gap (cluster-wide GPU-minute backlog, not a submission error)
+    max_pairs: 30  # reduced from 60; routing_freq_pairs: 60
 
   exp6-gemma:
     id: "exp6-gemma"
-    job_id: 5575244
-    status: "RUNNING"
+    job_id: 5575544  # original submission 5575244 superseded (WORKDIR path-doubling bug); resubmitted as 5575544
+    status: "COMPLETE"  # landed this session; integrated into Sec 5.6 + Appendix B (uninterpretable: baseline bias gap ~0)
     max_pairs: 60
 
   # ==========================================================================
@@ -443,41 +444,45 @@ experiments:
   exp7-olmoe:
     id: "exp7-olmoe"
     job_id: 5575251
-    status: "RUNNING"
+    status: "COMPLETE"
     gpu: "a100:2"
     time: "04:00:00"
+    result: "mean_spearman_rho: -0.024 (layer 0), +0.235 (layer 15); null"
 
   exp7-phi35moe:
     id: "exp7-phi35moe"
     job_id: 5575252
-    status: "RUNNING"
+    status: "COMPLETE"
     gpu: "a100:2"
     time: "04:00:00"
+    result: "mean_spearman_rho: -0.084 (layer 0), +0.076 (layer 31); null"
 
   # ==========================================================================
   # EXP8: Same-Mechanism Comparison (dense_loo on MoE)
   # ==========================================================================
   exp8-olmoe:
     id: "exp8-olmoe"
-    status: "DONE_SUMMARY"
+    status: "DONE_SUMMARY"  # summary result.json only; no per-pair payload on disk yet
     n_pairs: 100
     n_players: 16
-    H: 0.7513329831783248
-    Gini: 0.614543153196013
+    H: 0.7580371343577927
+    Gini: 0.6079121551347937
     result_path: "results/exp8-lloo-olmoe-1b-7b/result.json"
     per_pair: false
-    per_pair_job_id: 5575255  # RUNNING
+    per_pair_job_id: 5575748  # PENDING; resubmitted with --save-per-pair-phi after discovering job 5575255 never captured per-pair data
 
   exp8-phi35moe:
     id: "exp8-phi35moe"
-    status: "DONE_SUMMARY"
+    status: "DONE_PER_PAIR"  # per_pair_phi.npy landed; bootstrap CI computed via s04_bootstrap_cis.py
     n_pairs: 50
     n_players: 32
-    H: 0.8829717705954556
-    Gini: 0.4792328068088605
+    H: 0.8992873175950061
+    Gini: 0.451376045121638
+    H_ci: [0.8418, 0.9408]
+    Gini_ci: [0.3481, 0.5437]
     result_path: "results/exp8-lloo-phi3.5-moe/result.json"
-    per_pair: false
-    per_pair_job_id: 5575256  # RUNNING
+    per_pair: true
+    per_pair_job_id: 5575536  # COMPLETE (resubmit of 5575256, which never captured per-pair data)
 
   # ==========================================================================
   # EXP5: Demographic Specificity
@@ -501,7 +506,11 @@ experiments:
 # GPU Job Summary
 # ---------------------------------------------------------------------------
 gpu_jobs:
-  total_running: 26
+  # NOTE: this block is a historical submission-batch snapshot (job IDs as
+  # first submitted); several were later superseded/resubmitted due to bugs
+  # (WORKDIR path-doubling, slurm.time too short, missing --save-per-pair-phi).
+  # Current live status is tracked per-experiment above (exp3-*/exp6-*/exp7-*/exp8-*).
+  total_running: 26  # as of original submission wave; stale, see per-experiment status fields above
   by_type:
     GPT-OSS_5000: 1  # 5575070 (4xH100)
     Dense_per_pair: 8  # 5575082-89 (4 models x 2 shards, 1xL40S each)
@@ -583,13 +592,13 @@ artifacts:
 # ---------------------------------------------------------------------------
 paper_integration:
   exp1: "COMPLETE (Tables 1, 2, Figs 1-2)"
-  exp2: "COMPLETE v0 (Table 3); v1 CIs PENDING"
-  exp3: "MISSING from main text; jobs SUBMITTED"
+  exp2: "COMPLETE (Table 3 + Appendix A; v1 per-pair CIs landed for all 4 dense models)"
+  exp3: "COMPLETE for 4/6 models (OLMoE, Phi-3.5-MoE, Mixtral, Gemma-4-26B) in Sec 5.5 + Appendix B; DBRX/GPT-OSS-120B jobs 5575743/5575744 PENDING (slurm.time bug resubmit)"
   exp4: "MERGED with Exp6 in Appendix B"
   exp5: "COMPLETE (Sec 1.5, Fig 6, take-away)"
-  exp6: "PARTIAL (4/7 models in Sec 1.3 + Appendix B; 3 PENDING)"
-  exp7: "PARTIAL (Mixtral done in Appendix B; 2 PENDING)"
-  exp8: "PARTIAL (Summary in Appendix B; per-pair PENDING)"
+  exp6: "COMPLETE for 6/7 models (Sec 1.3/5.6 + Appendix B); GPT-OSS-120B job 5575745 PENDING (only remaining gap)"
+  exp7: "COMPLETE (Mixtral, OLMoE, Phi-3.5-MoE all null, |rho|<=0.24; Appendix B)"
+  exp8: "PARTIAL (Phi-3.5-MoE per-pair CI landed, Appendix B; OLMoE per-pair job 5575748 PENDING)"
 
 # ---------------------------------------------------------------------------
 # Kaggle Dataset Contents

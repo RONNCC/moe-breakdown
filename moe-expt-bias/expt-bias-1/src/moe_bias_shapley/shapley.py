@@ -314,6 +314,54 @@ def _discover_active_experts(
         active_experts = active_experts[:max_k]
     return active_experts
 
+def _resolve_router_tensors(args: tuple) -> tuple[int, int]:
+    """Locate the (top_k_index, top_k_weights) tensor positions inside a
+    MoE expert-module forward-hook ``args`` tuple.
+
+    Most MoE architectures (OLMoE, Phimoe, Mixtral) call
+    ``experts.forward(hidden_states, top_k_index, top_k_weights)`` — a fixed
+    3-tuple where position 1 is the index tensor and position 2 is the
+    weight tensor. DBRX's ``DbrxExperts.forward`` instead takes
+    ``(hidden_states, full_router_weights, top_weights, top_experts)`` — 4
+    positional tensors, with the index tensor LAST rather than second and an
+    extra full-width (``[tokens, num_experts]``) weights tensor that is not
+    the one actually used for scaling expert outputs.
+
+    Rather than hardcode a second fixed layout (fragile to a third
+    convention), resolve structurally: the index tensor is the sole
+    integer-dtype tensor among ``args[1:]``; the weight tensor is the
+    float-dtype tensor among ``args[1:]`` whose shape matches the index
+    tensor's shape (ruling out a wider full-router-weights tensor).
+    Returns (index_position, weight_position) into ``args``.
+    """
+    index_pos = None
+    for i in range(1, len(args)):
+        t = args[i]
+        if hasattr(t, "dtype") and not t.dtype.is_floating_point:
+            index_pos = i
+            break
+    if index_pos is None:
+        raise ValueError(
+            f"No integer-dtype top_k_index tensor found among {len(args) - 1} "
+            "non-hidden-state forward args; unrecognized MoE experts.forward signature"
+        )
+    index_shape = args[index_pos].shape
+    weight_pos = None
+    for i in range(1, len(args)):
+        if i == index_pos:
+            continue
+        t = args[i]
+        if hasattr(t, "dtype") and t.dtype.is_floating_point and t.shape == index_shape:
+            weight_pos = i
+            break
+    if weight_pos is None:
+        raise ValueError(
+            f"No float-dtype top_k_weights tensor matching index shape {index_shape} "
+            "found; unrecognized MoE experts.forward signature"
+        )
+    return index_pos, weight_pos
+
+
 
 def _build_coalition_payoff_cache(
     model: Any,
@@ -333,9 +381,12 @@ def _build_coalition_payoff_cache(
 
     Ablation is done via a forward pre-hook on `moe_layer.experts` that zeros
     the routing weights (`top_k_weights`) for experts not in the coalition.
-    This works for both fused expert modules (OLMoE, Phimoe, Mixtral — which
-    all use `experts.forward(hidden_states, top_k_index, top_k_weights)` in
-    transformers 5.x) and for nn.ModuleList-style architectures (where zero
+    The index/weight tensor positions are resolved structurally via
+    `_resolve_router_tensors` since architectures disagree on argument order
+    and count (OLMoE/Phimoe/Mixtral pass a fixed 3-tuple
+    `(hidden_states, top_k_index, top_k_weights)`; DBRX passes 4 positional
+    tensors with the index tensor last and an extra full-width weights
+    tensor). This also covers nn.ModuleList-style architectures (where zero
     routing weight trivially produces zero contribution via the weighted sum).
     """
     k = len(active_experts)
@@ -347,11 +398,14 @@ def _build_coalition_payoff_cache(
         def _pre_hook(module: Any, args: tuple) -> tuple:
             if not ablated or len(args) < 3:
                 return args
-            hidden_states, top_k_index, top_k_weights = args[0], args[1], args[2]
+            index_pos, weight_pos = _resolve_router_tensors(args)
+            top_k_index, top_k_weights = args[index_pos], args[weight_pos]
             top_k_weights = top_k_weights.clone()
             for e in ablated:
                 top_k_weights[top_k_index == e] = 0.0
-            return (hidden_states, top_k_index, top_k_weights) + args[3:]
+            new_args = list(args)
+            new_args[weight_pos] = top_k_weights
+            return tuple(new_args)
 
         hook_handle = moe_layer.experts.register_forward_pre_hook(_pre_hook)
         try:
@@ -676,11 +730,14 @@ def mean_bias_gap_with_players_ablated(
         def _pre_hook(module: Any, args: tuple) -> tuple:
             if len(args) < 3:
                 return args
-            hidden_states, top_k_index, top_k_weights = args[0], args[1], args[2]
+            index_pos, weight_pos = _resolve_router_tensors(args)
+            top_k_index, top_k_weights = args[index_pos], args[weight_pos]
             top_k_weights = top_k_weights.clone()
             for e in ablated_experts:
                 top_k_weights[top_k_index == e] = 0.0
-            return (hidden_states, top_k_index, top_k_weights) + args[3:]
+            new_args = list(args)
+            new_args[weight_pos] = top_k_weights
+            return tuple(new_args)
         return _pre_hook
 
     hook_handles = [

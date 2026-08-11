@@ -85,13 +85,25 @@ kaggle datasets download -d sghose0/moe-bias-routing-shapley-perpair-phi
 **Placement.** `stats_analysis/scripts/s04_bootstrap_cis.py` locates payloads
 verbatim as follows (verified by reading the script):
 
-- Model-dir glob: `RESULTS.glob("exp1-concentration-*")` with
-  `RESULTS = Path(__file__).resolve().parents[2] / "results"` — i.e. every
-  `results/exp1-concentration-*` directory is a candidate model.
+- Model-dir glob (`main()`): `RESULTS.glob("exp1-concentration-*")` +
+  `RESULTS.glob("exp2-dense-*")` + `RESULTS.glob("exp8-lloo-*")`, with
+  `RESULTS = Path(__file__).resolve().parents[2] / "results"` — every
+  `exp1-concentration-*` (ladder), `exp2-dense-*` (dense baseline), and
+  `exp8-lloo-*` (same-mechanism dense-LOO comparison) directory is a
+  candidate model.
 - Inside each candidate dir it tries, in order: `per_pair_phi.npy`,
   `per_pair_phi-v1.npy`, `per_pair_phi_v1.npy`, then any `per_pair_phi*.npy`
-  (glob fallback); for non-`-v1` dirs it additionally falls back to the
+  (glob fallback); for non-`-v1` exp1 dirs it additionally falls back to the
   sibling `-v1` dir's `per_pair_phi.npy` / `per_pair_phi-v1.npy`.
+- Model key (`_model_key()`): `exp1-concentration-<name>` -> `<name>`;
+  `exp2-<name>-dense-baseline|dense-crosscheck` -> `<name>`; `exp8-lloo-<name>`
+  -> **`lloo-<name>`** — namespaced with a `lloo-` prefix so exp8's
+  same-mechanism dense-LOO estimator never collides with (silently
+  overwrites) the exp1 routing-contrast ladder entry for the same base
+  model name in the output `models` dict. A real bug hit this session: before
+  the prefix was added, exp8's `phi3.5-moe`/`olmoe-1b-7b` keys clobbered the
+  exp1 ladder rows for those models, corrupting their CIs until caught by
+  manual inspection.
 
 So unzip the Kaggle download and place each model's payload at
 `moe-expt-bias/expt-bias-1/results/exp1-concentration-<model>-v1/per_pair_phi.npy`
@@ -137,9 +149,13 @@ What each does (verified against `main()`):
   unless the run is flagged broken.
 - **s04** — per-model block-bootstrap 95% percentile CIs for entropy H, gini G,
   top-5/top-10% fractions (n_boot=5000, seed=42, resample pairs with
-  replacement, stratified by `pair_meta.json` groups when present); cross-checks
-  point estimates against `result.json` (`MISMATCH` reported loudly); emits
-  `MISSING` for dirs without payloads.
+  replacement, stratified by `pair_meta.json` groups when present); covers
+  `exp1-concentration-*` (ladder), `exp2-dense-*` (dense baselines), and
+  `exp8-lloo-*` (same-mechanism dense-LOO comparison) — the latter keyed
+  `lloo-<model>` so it never collides with an exp1 ladder entry for the same
+  model (see glob-pattern note in Sec 2b); cross-checks point estimates
+  against `result.json` (`MISMATCH` reported loudly); emits `MISSING` for
+  dirs without payloads.
 - **paper_figures_seaborn.py** — regenerates all paper figures from the
   hardcoded `MOE` ladder tuple at the top (`(dir, label, N_players, N_active)`,
   currently all `-v1` dirs incl. `exp1-concentration-gpt-oss-120b-v1`), the
@@ -202,18 +218,31 @@ scp -r login-ice.pace.gatech.edu:/home/hice1/sghose7/scratch/moe-breakdown-bias-
   moe-expt-bias/expt-bias-1/results/
 ```
 
-### Currently-running job (as of 2026-08-10)
+### Currently-pending jobs (as of 2026-08-10, cluster-wide GPU-minute backlog)
 
-- **sbatch 5575070 — RUNNING**: GPT-OSS-120B exp1 re-run at 5000 pairs
-  (`configs/study.gpt-oss-120b.concentration.v2.yaml`, study_name
-  `exp1-concentration-gpt-oss-120b-5000`; 4xH100, walltime 04:00:00, per-pair
-  phi saved, ETA ~2.7h @ ~1.9 s/pair). Config requires `force_eager_moe: true`
-  (bf16-dequantized load — avoids the fused MXFP4 hub kernel that bypasses the
-  router hooks and produced the old all-zero-phi capture).
-- **Run-book note on completion**: pull `result.json` + `per_pair_phi.npy` into
-  `results/exp1-concentration-gpt-oss-120b-5000/`, then rerun
-  `s03_h1_verdict.py` and `s04_bootstrap_cis.py` (+ figures) so the ladder is
-  uniform at 5000 pairs and the GPT-OSS bootstrap CI reflects the full run.
+- **sbatch 5575070 — COMPLETE**: GPT-OSS-120B exp1 re-run at 5000 pairs
+  landed and is integrated (`s04` confirms $H=0.8789$ vs. the certified
+  2000-pair $H=0.8765$, $\Delta H=+0.0024$, within CI; Table 1 + Appendix A).
+- **5575538** — Exp3 collectivity, Mixtral-8x7B refresh: PENDING at last poll
+  (redundant; the paper already uses the verified July capture, not blocking).
+- **5575743** — Exp3 collectivity, DBRX-132B: PENDING (resubmitted this
+  session after a `slurm.time` bug — the original config's `03:00:00` was too
+  short for Exp3's ~9.6 min/pair cost and timed out; fixed to `04:00:00`,
+  10 pairs).
+- **5575744** — Exp3 collectivity, GPT-OSS-120B: PENDING (same `slurm.time`
+  fix, `08:00:00`, 10 pairs).
+- **5575745** — Exp6 ladder extension, GPT-OSS-120B: PENDING (same fix; the
+  only remaining gap in the causal-ablation evidence chain).
+- **5575748** — Exp8 same-mechanism LOO, OLMoE-1B-7B per-pair capture:
+  PENDING (resubmitted with `--save-per-pair-phi`; the prior per-pair job
+  5575255 only wrote a summary `result.json`, no `per_pair_phi.npy`).
+
+All PENDING jobs are queued (not running) due to a cluster-wide GPU-minute
+backlog at last poll — `scontrol show reservation` shows no active
+reservation despite the scheduler reporting `ReqNodeNotAvail, Reserved for
+maintenance`; not a submission error on our side. Re-poll with
+`squeue -u sghose7` (VPN must be off). See `CLUSTER-STATUS.md` for full queue
+history.
 
 ## 5. Paper compilation
 

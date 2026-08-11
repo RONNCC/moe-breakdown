@@ -60,10 +60,15 @@ every defensible subset after measurement corrections, but \emph{not
 statistically significant at $0.05$}: normalized entropy of the expert
 attribution is high across the entire ladder ($H \approx 0.79$--$0.92$; the
 top-5 experts hold $2$--$11\%$ of attribution mass), and the exact
-permutation $p$-values are $0.106$ (all 6 rungs, $\rho_H = +0.754$), $0.100$
-(5 rungs), $0.167$ (4 rungs), and $0.333$ (3 rungs)---the attainable $p$ is
-bounded below by $1/12$ on six points, so power is the limit. Dense
-baselines sit clearly lower ($H \in [0.63, 0.76]$, mean $0.69$), so the
+permutation $p$-values are $0.106$ (all 6 rungs, $\rho_H = +0.754$, $r^2 =
+0.57$), $0.100$ (5 rungs, $\rho_H = +0.872$, $r^2 = 0.76$), $0.167$ (4
+rungs, $\rho_H = +0.949$, $r^2 = 0.90$), and $0.333$ (3 rungs)---the exact
+tie-corrected attainable minimum is $0.0056$ at $n=6$ and $0.0333$ at
+$n=5$ (both well below $0.05$), so the 6- and 5-rung results are
+genuinely underpowered rather than floor-bound; a Monte Carlo power
+simulation at the observed $\rho_H$ indicates $n \approx 8$--$13$ ladder
+rungs would be needed for $80\%$ power (Section~\ref{sec:power}). Dense
+baselines sit clearly lower ($H \in [0.66, 0.76]$, mean $0.70$), so the
 routing dimension distinguishes decomposition geometry but does not
 compress bias into a small fixable subspace. A robustness suite---v0/v1
 rerun drift floors, split-half shards, a permutation null, $95\%$
@@ -201,7 +206,7 @@ Phi-3.5-MoE         & 64  & 512  & 0.1250 & 0.880 & 0.640 & 0.095 & 0.469 & $[0.
 Mixtral-8x7B        & 64  & 256  & 0.2500 & 0.917 & 0.516 & 0.107 & 0.357 & $[0.913,0.925]$ \\
 DBRX-132B           & 160 & 640  & 0.2500 & 0.897 & 0.599 & 0.091 & 0.436 & $[0.897,0.910]$ \\
 \midrule
-Dense baselines (mean, $N{=}32$) & --- & --- & 1.0 & 0.689 & 0.684 & 0.698 & 0.631 & --- \\
+Dense baselines (mean, $N{=}32$) & --- & --- & 1.0 & 0.704 & 0.682 & 0.699 & 0.595 & --- \\
 \bottomrule
 \end{tabular}
 \caption{Sparsity ladder and concentration metrics (v1 point estimates,
@@ -282,9 +287,12 @@ defensible subset. The primary H1 test---Spearman rank correlation between
 entropy and active-expert fraction across the six-rung ladder---gives
 $\rho_H = +0.754$ ($p = 0.106$, exact two-sided permutation); Gini gives
 $\rho_G = -0.754$ ($p = 0.106$). These are not significant at $0.05$, and
-with $n = 6$ ladder positions the test is simply underpowered (the
-smallest attainable $p$ on 6 points is $1/12 \approx 0.083$; on 5 points
-$0.10$). Normalized entropy spans only $0.789$--$0.917$ across the six
+with $n = 6$ ladder positions the test is simply underpowered: the
+tie-corrected exact-permutation minimum attainable $p$ is $0.0056$ at
+$n=6$ (well below $0.05$), so this reflects a genuine power shortfall,
+not a discreteness floor---a Monte Carlo simulation puts $80\%$ power at
+$n \approx 12$--$13$ rungs for this effect size (Section~\ref{sec:power}).
+Normalized entropy spans only $0.789$--$0.917$ across the six
 rungs ($H \approx 0.88$--$0.92$ for the four un-flagged rungs), and the
 $95\%$ bootstrap intervals in Table~\ref{tab:cis} confirm that adjacent
 rungs are statistically overlapping wherever they are close in $k/N$. By
@@ -348,6 +356,60 @@ It does not validate bias concentration by the router.
 \caption{Dense vs.\ MoE Gini.}
 \label{fig:dense}
 \end{figure}
+\subsection{Effect sizes: geometry vs.\ magnitude}
+\label{sec:effect-sizes}
+Two questions are conflated by significance testing alone: how large is
+the dense/MoE gap, and does that gap reflect a difference in bias
+\emph{magnitude} or only in attribution \emph{geometry}? Cohen's $d$
+(pooled SD, $n_{\text{dense}}=4$, $n_{\text{MoE}}=6$) answers the first:
+entropy $|d| = 3.91$ (all six MoE rungs) or $6.14$ (excluding the
+null-bias Gemma rung)---both far past the conventional ``huge'' threshold
+($|d|>1.3$); top-5 share $|d| = 15.4$ (mechanical: 5 of 32 dense layers
+vs.\ 5 of $256$--$4608$ experts); Gini $|d| = 0.18$ (negligible---Gini
+does \emph{not} separate the two groups the way entropy does). The
+second question has a sharp answer: the mean \emph{absolute contrastive
+bias-gap magnitude} (\texttt{bias\_scores.mean\_bias\_gap}, not a
+concentration metric) is $0.183$ for the four dense baselines and
+$0.183$ for the five non-null-bias MoE rungs ($0.176$ including Gemma),
+Cohen's $d = 0.011$ (excl.\ Gemma)---statistically indistinguishable.
+Concentration geometry and bias magnitude are therefore
+\emph{orthogonal}: dense and MoE models carry the same-sized contrastive
+bias, but express it through entirely different attribution shapes. This
+is the quantitative version of the routing-structure caveat revisited in
+Section~\ref{sec:disc}: every concentration or JS metric in this paper
+characterizes \emph{where} bias-relevant shift localizes, never
+\emph{how much} bias exists. We also compute a per-model
+\emph{localizability ratio} $LR = \bar H_{\text{dense}}/H_{\text{MoE}}$
+(Appendix~A): $LR \in [0.77, 0.89]$ for every MoE rung, including on
+matched families (OLMoE vs.\ OLMo-7B, $LR=0.800$; Phi-3.5-MoE vs.\
+Phi-3.5-Mini, $LR=0.863$), ruling out unmatched architecture as an
+explanation for the dense/MoE split.
+
+\subsection{Expert-pair synergy (Exp.\ 3)}
+\label{sec:synergy}
+The routing-Shapley decomposition reports only \emph{marginal}
+attributions $\phi_i$; if bias is driven by expert \emph{pairs} acting
+jointly rather than by individuals, marginal attribution understates the
+true mechanism. We compute pairwise Shapley \emph{interaction} values
+$\Phi_{ij}$ on the first and last routed MoE layer for four models
+($n=20$ prompt pairs, \path{scripts/run_experiment3_interactions.py}),
+reporting the synergy fraction $\sum|\Phi_{ij}| / (\sum|\phi_i| +
+\sum|\Phi_{ij}|)$: $0.705$ (layer 0) / $0.281$ (last layer) for
+OLMoE-1B-7B; $0.741$ / $0.200$ for Phi-3.5-MoE; $0.716$ / $0.503$ for
+Mixtral-8x7B; $0.747$ / $0.183$ for Gemma-4-26B. Every model shows the
+same pattern: synergy dominates marginal attribution in the
+\emph{first} routed layer ($0.70$--$0.75$ of attribution mass sits in
+pairwise interactions, not individual experts) and falls by roughly half
+at the \emph{last} layer ($0.18$--$0.50$), though marginal attribution
+never fully overtakes synergy. The $\phi_i$ ranking used throughout this
+paper (and by the causal ablation in Section~\ref{sec:causal}) is
+therefore a simplification: early-layer bias attribution is
+substantially a property of expert \emph{coalitions}, which is a
+plausible mechanistic reason for the causal ablation's partial failures
+below---removing the top individually-ranked experts does not fully
+explain the removable bias gap wherever synergy is high. DBRX-132B and
+GPT-OSS-120B collectivity runs are PENDING GPU time.
+
 
 \subsection{Causal check: phi-ranked ablation}
 \label{sec:causal}
@@ -385,22 +447,46 @@ experts carry most of the removable gap. The dense control
 with a single FFN-layer player: dropping one layer already overshoots
 ($108\%$, i.e. the gap flips sign), which mechanically reflects its
 32-player partition and is not comparable to the MoE curves.
+\paragraph{Extended ladder (DBRX, Gemma-4-26B).}
+\textbf{DBRX-132B} (60 pairs, \path{exp1-concentration-dbrx}): $\phi$-ranked
+ablation does \emph{not} lead here either. At top-10\% ($k{=}64$ of 640)
+all three orders \emph{increase} the bias gap relative to baseline
+($-10.1\%$ $\phi$, $-11.0\%$ random, $-39.2\%$ high-routing---negative
+values denote a gap increase); at 50\% ($k{=}320$) the gap drops but
+$\phi$ trails both controls ($+26.6\%$ $\phi$ vs.\ $+99.6\%$ random,
+$+118.6\%$ high-routing). \textbf{Gemma-4-26B} (60 pairs) is
+uninterpretable by this measure: its baseline bias gap is $0.0182$
+(consistent with its null-bias flag), so \texttt{disparity\_drop} values
+divide by a near-zero denominator and swing $4$--$10\times$ the baseline
+in either direction (e.g.\ $+412\%$ at 10\% $\phi$-ranked, $-223\%$
+high-routing at 50\%); we report these numbers for completeness but do
+not use them as causal evidence.
+
 
 \paragraph{Verdict.}
-The causal check is \emph{mixed}. For two of three MoE models (OLMoE,
-Phi-3.5-MoE) the $\phi$-ranked attribution does predict where bias-relevant
-shift is removable---faster than random ablation, supporting the
-interpretation of the concentration metrics; for Mixtral the high-routing
-control dominates, so expert selection by traffic beats attribution there.
-No model exhibits a tiny, stable, ``fixable'' expert set consistent with
-surgical pruning: even the best $\phi$ curve (OLMoE) needs ~10\% of experts
-ablated before half the gap is removed, with large perplexity cost
-(selectivity collapses from $0.24$ at $k{=}102$ to $0.03$ at $k{=}512$ on
-OLMoE). This narrows the paper's claim one step further: $\phi$ ranks
-bias-relevant experts on two of three MoE models, but ``prune the bias
-experts'' remains unsupported because no small ablation removes a large
-share of the bias without destroying capability. Full curves are tabulated
-in Appendix~B.
+The causal check is \emph{mixed, and weaker with the extended ladder}. Of
+four bias-bearing MoE models tested (Gemma excluded as uninterpretable),
+$\phi$-ranked ablation beats \emph{both} controls at every measured
+fraction on only two (OLMoE, Phi-3.5-MoE); on Mixtral the high-routing
+control dominates, and on DBRX $\phi$ is the \emph{worst}-performing
+ranking at the 50\% point, trailing both random and high-routing by a
+wide margin. Extending the ladder therefore \emph{weakens} rather than
+strengthens the causal reading: $\phi$-ranking is validated on only half
+of the tested MoE models, and one of the two failures (DBRX) is not a
+near-tie but an outright reversal. No model exhibits a tiny, stable,
+``fixable'' expert set consistent with surgical pruning: even the best
+$\phi$ curve (OLMoE) needs ~10\% of experts ablated before half the gap
+is removed, with large perplexity cost (selectivity collapses from
+$0.24$ at $k{=}102$ to $0.03$ at $k{=}512$ on OLMoE). The Exp.\,3 synergy
+finding (Section~\ref{sec:synergy}) offers a mechanistic explanation:
+$\phi$-ranked marginal ablation only fully explains removable bias when
+synergy is low relative to marginal attribution, which is layer- and
+model-dependent. This narrows the paper's claim one step further:
+$\phi$ ranks bias-relevant experts on half of the tested MoE models, but
+``prune the bias experts'' remains unsupported both because no small
+ablation removes a large share of the bias without destroying
+capability, and because the ranking itself fails outright on at least
+one model (DBRX). Full curves are tabulated in Appendix~B.
 
 \section{Robustness and Sensitivity}
 \label{sec:robust}
@@ -415,8 +501,9 @@ these floors (or than $2\times$ the floor for cross-model comparisons, which
 carry error on both sides) are classified as \emph{empirically unresolved};
 under that classification the remaining beyond-floor inversions all involve
 the null-bias Gemma rung or the GPT-OSS first rung, and no subset's verdict
-changes. Split-half shards (two sets of 2500 pairs) for Mixtral/DBRX agree
-to $\le 0.004$ in entropy.
+changes. Split-half shards (two contiguous halves of 2500 pairs each)
+for Mixtral/DBRX agree to $\le 0.006$ on entropy and Gini alike
+(Appendix~A).
 
 \subsection{Permutation / null analysis}
 We add (i) an expert-index permutation null that re-shuffles expert
@@ -443,12 +530,33 @@ v0 otherwise):
 Every subset is \emph{SUPPORTED} on point estimates and drift-aware (the
 remaining beyond-floor inversions involve only the null-bias Gemma rung and
 the GPT-OSS first rung), but no statistic is significant at $p < 0.05$ in
-\emph{any} subset: with $n \le 6$ ladder points the attainable
-$p$-values are bounded below ($1/12 \approx 0.083$ at $n = 6$, $0.10$ at
-$n = 5$, $0.167$ at $n = 4$, $0.333$ at $n = 3$), so the test is
-underpowered by construction. The directional signal is therefore
-consistent with H1 across all defensible subsets, yet not statistically
-significant at $0.05$; power is the limit, not the data.
+\emph{any} subset. The tie-corrected exact-permutation minimum $p$ is
+$0.0056$ at $n=6$ and $0.0333$ at $n=5$---both under $0.05$---so those two
+subsets are genuinely underpowered rather than floor-bound; only $n=4$
+($p_{\min}=0.167$) and $n=3$ ($p_{\min}=0.333$) have a hard discreteness
+floor above $0.05$. The directional signal is consistent with H1 across
+all defensible subsets, yet not statistically significant at $0.05$; a
+dedicated power analysis follows.
+
+\subsection{Power analysis}
+\label{sec:power}
+To separate ``underpowered'' from ``floor-bound'' precisely, we simulate
+the exact permutation test's power at the observed effect sizes
+(correlated-normal Monte Carlo, $8000$--$20000$ trials per $n$, exact
+permutation $p$ at small $n$). At the full ladder's $\rho_H = 0.754$:
+power is $0.37$ at $n=6$, $0.55$ at $n=8$, $0.79$ at $n=12$, crossing
+$80\%$ power at $n \approx 12$--$13$. At the higher $\rho_H = 0.872$
+observed on the 5-rung (no-GPT-OSS) subset: power is $0.58$ at $n=6$,
+$0.79$ at $n=8$, $0.87$ at $n=9$, crossing $80\%$ power at $n \approx
+8$--$9$. In short: at the full ladder's effect size, roughly $12$--$13$
+independently-sampled sparsity rungs would be needed for conventional
+power; if GPT-OSS-120B's rung is the outlier and the true effect is
+closer to the 5-rung subset's $\rho_H = 0.872$, $8$--$9$ rungs would
+suffice. Both figures exceed the six distinct open-weight MoE
+architectures with public routing internals available at the time of
+this study; confirming H1 needs either more architecturally-diverse
+ladder rungs or a within-model sparsity-sweep design (varying $k$
+directly on one architecture) to reach a definitive verdict.
 
 \subsection{Statistical method note}
 All confidence intervals are $95\%$ percentile intervals from a
@@ -490,6 +598,7 @@ expert-index permutation null.}
 \end{figure}
 
 \section{Discussion}
+\label{sec:disc}
 The honest picture has two parts. First, the direction: bias attributions
 spread broadly across the expert space in every MoE we measured, and the
 sparsity-to-concentration trend is monotone-consistent with H1 in every
@@ -497,18 +606,26 @@ defensible subset---including the full corrected six-rung ladder after
 Gemma's active-expert count was fixed ($N_A$: $960 \rightarrow 240$) and
 GPT-OSS-120B's v1 capture was validated. Second, the significance: with
 $n \le 6$ ladder points, none of these correlations reaches $p < 0.05$
-(all-6 $p = 0.106$; the attainable $p$ is bounded below by $1/12$ on six
-points), so the claim ``sparser routing concentrates bias attribution
+(all-6 $p = 0.106$; the tie-corrected attainable minimum is $0.0056$ at
+$n=6$, well below $0.05$, so this is a genuine power shortfall---Monte
+Carlo simulation puts $80\%$ power at $n\approx12$--$13$ rungs for this
+effect size, Section~\ref{sec:power}), so the claim ``sparser routing
+concentrates bias attribution
 more'' is directionally supported but statistically unresolved. The single
 robust separation is dense-per-layer vs.\ MoE-per-expert, which is a
 geometric property of the player partition (aggregation), not of the
-router. The causal ablation (Section~\ref{sec:causal}) partially
+router. The causal ablation (Section~\ref{sec:causal}) only partially
 rescues the attribution interpretation---$\phi$-ranked ablation drops the
 bias gap faster than random ablation on OLMoE and Phi-3.5-MoE, and faster
 than the high-routing control on those two models too---but not on
-Mixtral, where traffic-based selection dominates, and no curve supports
-pruning a small expert set. The demographic follow-up reinforces the
-same picture: no cohort sharply specializes in any expert subset.
+Mixtral, where traffic-based selection dominates, or on DBRX, where
+$\phi$-ranking is outright the worst of the three orders at the
+half-ladder point; the pairwise-synergy check (Section~\ref{sec:synergy})
+suggests why, since $20$--$75\%$ of attribution mass sits in
+expert-pair interactions that a marginal ranking discards. No curve
+supports pruning a small expert set. The demographic follow-up
+reinforces the same picture: no cohort sharply specializes in any expert
+subset.
 
 An apparent tension deserves an explicit resolution. The dense-baseline
 comparison and the demographic analysis both ask whether attribution
@@ -557,8 +674,11 @@ beyond-drift inversions in the subset audit all involve this rung (or the
 GPT-OSS first rung), and no subset verdict flips when it is excluded.
 \item \textbf{Exact permutation $p$ on $n \le 6$ --- flag:
 \path{small-n}.} Spearman $p$-values are exact two-sided permutation
-probabilities, which are bounded below by construction ($1/12 \approx 0.083$
-on 6 points, $0.10$ on 5, $0.167$ on 4, $0.333$ on 3). No subset reaches
+probabilities. Their tie-corrected attainable minima are $0.0056$ (6
+points), $0.0333$ (5), $0.167$ (4), $0.333$ (3): only the $n\!\le\!4$
+subsets are floor-bound above $0.05$ by construction; the $n=5,6$ results
+are genuinely underpowered (Section~\ref{sec:power} estimates
+$n\approx8$--$13$ rungs needed for $80\%$ power). No subset reaches
 $p < 0.05$; we therefore report drift floors, bootstrap intervals, and the
 explicit subset audit rather than a binary accept/reject verdict.
 \item \textbf{Label-permutation null --- flag: \allowbreak
@@ -706,6 +826,42 @@ floor---or than $2\times$ the floor for cross-model comparisons---are treated
 as empirically unresolved. If a value is absent from the JSONs it is marked
 `---' and never invented.
 
+\paragraph{Localizability ratio and bias-gap-magnitude parity.}
+A per-model \emph{localizability ratio} $LR = \bar H_{\text{dense}}/H_{\text{MoE}}$
+(mean dense entropy $\bar H_{\text{dense}} = 0.7043$ divided by each MoE
+rung's $H$): OLMoE $0.802$, Phi-3.5-MoE $0.801$, Mixtral $0.768$, DBRX
+$0.786$, GPT-OSS-120B $0.804$, Gemma-4-26B $0.893$---every value is
+$<1$, i.e.\ dense is uniformly more concentrated, including on matched
+model families (OLMoE vs.\ its OLMo-7B dense sibling, $LR=0.800$;
+Phi-3.5-MoE vs.\ Phi-3.5-Mini, $LR=0.863$), which rules out unmatched
+architecture as an explanation for the dense/MoE split. Separately, the
+mean \emph{absolute} contrastive bias-gap magnitude (from
+\texttt{bias\_scores.mean\_bias\_gap} in each \texttt{result.json}, not a
+concentration metric) is $0.183$ for the four dense baselines and
+$0.183$ for the five non-null-bias MoE rungs ($0.176$ including
+Gemma-4-26B), Cohen's $d = 0.011$ (excl.\ Gemma)---statistically
+indistinguishable. Per-model values: OLMoE $0.244$, Mixtral $0.200$, DBRX
+$0.170$, Phi-3.5-MoE $0.161$, GPT-OSS-120B $0.141$, Gemma-4-26B $0.142$
+(null-bias) vs.\ dense OLMo-7B $0.156$, Llama-2-7B $0.173$, Llama-3.1-8B
+$0.188$, Phi-3.5-Mini $0.215$. Concentration geometry ($d_H = 3.91$,
+Section~\ref{sec:effect-sizes}) and bias magnitude ($d_{\text{gap}} =
+0.011$) are therefore orthogonal quantities, reinforcing the
+routing-structure-not-magnitude framing used throughout this paper.
+
+\paragraph{Split-half shard agreement.}
+For Mixtral-8x7B and DBRX-132B (the two v1 captures with $\ge 5000$
+pairs), we split the pair set into two contiguous halves (2500 pairs
+each, \path{stats_analysis/outputs/s01_exp1_stability.json}
+\texttt{shards} field) and recompute concentration metrics independently
+on each half: Mixtral shard 0 $H{=}0.9148$, $G{=}0.5236$; shard 1
+$H{=}0.9173$, $G{=}0.5177$ ($|\Delta H|{=}0.0024$, $|\Delta G|{=}0.0058$);
+DBRX shard 0 $H{=}0.9040$, $G{=}0.5867$; shard 1 $H{=}0.9045$,
+$G{=}0.5831$ ($|\Delta H|{=}0.0005$, $|\Delta G|{=}0.0036$). Both models
+agree to $\le 0.006$ on every metric across independently-sampled
+prompt-pair halves---an internal-consistency check distinct from the
+v0$\rightarrow$v1 rerun-drift floor above (which compares different pair
+\emph{counts}, not disjoint samples at the same count).
+
 % ============================================================================
 % Appendix B -- causal ablation and proxy agreement
 % ============================================================================
@@ -715,12 +871,12 @@ as empirically unresolved. If a value is absent from the JSONs it is marked
 A reviewer will reasonably ask whether the routing-Shapley attribution---an
 approximate, proxy ranking over expert subsets---has been causally validated.
 The study catalog (\path{expt-bias-1/study-catalog.txt}, sections
-``Reviewer-Prioritized Extensions'') defines three experiments that speak to
+``Reviewer-Prioritized Extensions'') defines four experiments that speak to
 exactly this question. Their status is summarized below so that the omission
 of a causal check in the main text is explicit rather than accidental.
 
-\paragraph{Experiment 4/6 --- causal expert ablation (DONE for 4 models;
-Mixtral-GPT-OSS-Gemma-DBRX ladder extension PENDING).}
+\paragraph{Experiment 4/6 --- causal expert ablation (DONE for 6 models;
+GPT-OSS-120B PENDING GPU time).}
 Experiment 4 (`Independent cross-check (robustness)') validates Shapley
 rankings against expert-ablation disparity drops, and Experiment 6 extends it
 ladder-wide: ablating experts in $\phi$-ranked order and measuring how fast
@@ -728,9 +884,10 @@ the contrastive bias gap drops, compared against two controls---random expert
 ablation and ablation of the highest-\emph{routing}-frequency (high-routing)
 experts. The expected signature of a causal role is that $\phi$-ranked
 ablation drops the bias gap faster than either control.
-\textbf{Status: DONE for four models.} Ablation curves exist on disk at
+\textbf{Status: DONE for six models.} Ablation curves exist on disk at
 \path{results/{exp1-concentration-olmoe-1b-7b,exp1-concentration-mixtral-8x7b,
-exp1-concentration-phi3.5-moe,exp2-dense-baseline-olmo-7b}/experiment6/
+exp1-concentration-phi3.5-moe,exp1-concentration-dbrx-v1,exp1-concentration-gemma4-26b,
+exp2-dense-baseline-olmo-7b}/experiment6/
 experiment6_ablation_curve.json}, with the random and high-routing controls
 auto-generated inside \path{scripts/run_experiment6_ablation.py}
 (\path{shapley.compute_ablation_curve}, $k$-step schedule at 1--10 and 10\%,
@@ -740,11 +897,20 @@ JSONs: OLMoE-1B-7B ($n{=}60$ pairs) top-10\% ($k{=}102$) disparity drop
 $0.567$ ($\phi$), $-0.064$ (random), $0.374$ (high-routing); Mixtral-8x7B
 ($n{=}30$) top-10\% ($k{=}26$) $-0.121$, $-0.005$, $0.663$;
 Phi-3.5-MoE ($n{=}30$) top-10\% ($k{=}51$) $0.302$, $-0.364$, $-0.219$;
-OLMo-7B dense ($n{=}60$, $N{=}32$ layer players) has no high-routing control
-(no router) and overshoots at $k{=}1$ (drop $1.083$), reflecting its
-32-player partition. The full-curve analysis is reported in
-Section~\ref{sec:causal}. Ladder-wide extension (DBRX, GPT-OSS-120B,
-Gemma-4-26B) is still PENDING GPU time.
+DBRX-132B ($n{=}60$) top-10\% ($k{=}64$ of 640) $-0.101$, $-0.110$,
+$-0.392$ (all three orders \emph{increase} the gap at this fraction),
+50\% ($k{=}320$) $+0.266$, $+0.996$, $+1.186$ ($\phi$ trails both
+controls badly); Gemma-4-26B ($n{=}60$) is uninterpretable---its
+baseline bias gap is $0.0182$ (null-bias flag), so
+\texttt{disparity\_drop} at 10\% ($k{=}384$) is $+4.12$ ($\phi$),
+$+6.95$ (random), $+8.96$ (high-routing)---dividing by a near-zero
+denominator produces $4$--$9\times$ swings that carry no causal
+information; OLMo-7B dense ($n{=}60$, $N{=}32$ layer players) has no
+high-routing control (no router) and overshoots at $k{=}1$ (drop
+$1.083$), reflecting its 32-player partition. The full-curve analysis,
+including the reversal on DBRX, is reported in Section~\ref{sec:causal}.
+GPT-OSS-120B's ladder rung is still PENDING GPU time (job queued at time
+of writing).
 
 \paragraph{Experiment 7 --- proxy-vs-exact-Shapley agreement (DONE;
 null result on all three tested models).}
@@ -770,39 +936,74 @@ reproduce exact-Shapley ordering within this pair budget on any tested
 model, consistent with the noisy small-$k$ regime of the causal curves in
 Table~\ref{tab:appendix-full} and Section~\ref{sec:causal}.
 
-\paragraph{Experiment 8 --- same-mechanism comparison (DONE at the summary
-level; per-pair analysis PENDING).}
+\paragraph{Experiment 8 --- same-mechanism comparison (Phi-3.5-MoE DONE
+with per-pair CIs; OLMoE per-pair capture queued).}
 The dense-vs-MoE contrast in the main text compares two different
 mechanisms (FFN-layer leave-one-out for dense vs.~expert-subset
 routing-contrast for MoE). Experiment 8 removes this confound by running the
 \emph{same} leave-one-out mechanism on the MoE models themselves. Both result
 directories exist: \path{results/exp8-lloo-olmoe-1b-7b/result.json}
-(OLMoE, $n_{pairs}=100$, $N=16$ FFN-layer players, $H = 0.7513329831783248$,
-Gini $= 0.614543153196013$) and
+(OLMoE, $n_{pairs}=100$, $N=16$ FFN-layer players, $H = 0.7580$,
+Gini $= 0.6079$) and
 \path{results/exp8-lloo-phi3.5-moe/result.json} (Phi-3.5-MoE,
-$n_{pairs}=50$, $N=32$, $H = 0.8829717705954556$, Gini $=
-0.4792328068088605$). The catalog's key question---does layer-level LOO
+$n_{pairs}=50$, $N=32$, $H = 0.8993$, Gini $=
+0.4514$). The catalog's key question---does layer-level LOO
 entropy on MoE stay high (${\approx}0.90$) or drop toward the dense band
-$0.63$--$0.76$?---has a partial answer: OLMoE's $H_{\mathrm{lloo}} = 0.751$
-lands inside the dense band, while Phi-3.5-MoE's $H_{\mathrm{lloo}} = 0.883$
-stays near the MoE range. \textbf{Status: DONE for summary concentration
-metrics (both result.json files present); PENDING for any per-pair analysis
---- the exp8 directories contain only \path{player\_ids.json},
-\path{result.json}, and slurm logs, with no per-pair $\phi$ payloads, so
-bootstrap CIs and permutation tests are not yet derivable for these runs.}
+$0.66$--$0.76$?---has a partial answer: OLMoE's $H_{\mathrm{lloo}} = 0.758$
+lands inside the dense band, while Phi-3.5-MoE's $H_{\mathrm{lloo}} = 0.899$
+stays near the MoE range. A per-pair capture for Phi-3.5-MoE now supports a
+95\% stratified block-bootstrap CI ($n_{\mathrm{boot}}=5000$, seed 42):
+$H \in [0.842, 0.941]$, Gini $\in [0.348, 0.544]$ --- consistent with the
+MoE range and excluding the dense band's upper edge. \textbf{Status: DONE
+with bootstrap CIs for Phi-3.5-MoE; OLMoE's per-pair capture was
+resubmitted with \texttt{--save-per-pair-phi} (queued at time of writing)
+after discovering the original run only persisted summary-level $\phi$.}
+
+\paragraph{Experiment 3 --- expert-pair synergy / collectivity check
+(DONE for 4 models; DBRX and GPT-OSS-120B PENDING).}
+Marginal Shapley values $\phi_i$ assume experts contribute independently;
+Experiment 3 tests this by computing pairwise Shapley \emph{interaction}
+values $\Phi_{ij}$ on the first and last routed MoE layer ($n{=}20$ pairs,
+\path{scripts/run_experiment3_interactions.py},
+\path{shapley.compute_shapley_interactions_for_pair}) and reporting the
+synergy fraction $\sum|\Phi_{ij}|/(\sum|\phi_i|+\sum|\Phi_{ij}|)$.
+\textbf{Status: DONE for four models.} OLMoE-1B-7B: $0.705$ (layer 0) /
+$0.281$ (layer 15, last); Phi-3.5-MoE: $0.741$ / $0.200$ (layer 31,
+last); Mixtral-8x7B: $0.716$ / $0.503$ (layer 31, last); Gemma-4-26B:
+$0.747$ / $0.183$ (layer 29, last). All four models show the same
+shape: synergy dominates ($0.70$--$0.75$ of attribution mass) in the
+first routed layer and falls by roughly half at the last layer, but
+never disappears. This means the $\phi$-ranking used by the causal
+ablation (Exp.~4/6, above) discards $20$--$75\%$ of the true attribution
+mass depending on model and layer, a plausible mechanistic explanation
+for the ablation reversals reported above (DBRX, and Mixtral's
+high-routing win): where synergy is high, marginal $\phi$-ranking is a
+poor proxy for which experts actually carry the removable bias. DBRX
+and GPT-OSS-120B collectivity runs are PENDING GPU time (queued at time
+of writing).
 
 \paragraph{Net status for reviewers.}
-Of the three causal/robustness checks defined in the catalog: Experiment~4/6
-(causal ablation) is DONE for four models (OLMoE, Mixtral, Phi-3.5-MoE, and
-the OLMo-7B dense control; Section~\ref{sec:causal}) with the remaining
-ladder rungs PENDING; Experiment~7 (proxy agreement) is DONE and reports a
-null result on all three tested models (per-pair $\rho \approx 0$ on
-Mixtral, OLMoE, and Phi-3.5-MoE); and Experiment~8
-(same-mechanism) is DONE at the summary-metric level with per-pair analysis
-PENDING. The causal data are therefore now part of the paper's evidence: on
-OLMoE and Phi-3.5-MoE the $\phi$-ranked ablation drops the bias gap faster
-than random ablation, on Mixtral the high-routing-frequency control
-outperforms $\phi$, and no model supports a small fixable expert set.
+Of the four causal/robustness checks defined in the catalog:
+Experiment~3 (pairwise synergy) is DONE for four models and shows
+synergy is large and layer-dependent ($0.18$--$0.75$ of attribution
+mass); Experiment~4/6 (causal ablation) is DONE for six models (OLMoE,
+Mixtral, Phi-3.5-MoE, DBRX, Gemma-4-26B, and the OLMo-7B dense control;
+Section~\ref{sec:causal}) with GPT-OSS-120B PENDING; Experiment~7 (proxy
+agreement) is DONE and reports a null result on all three tested models
+(per-pair $\rho \approx 0$ on Mixtral, OLMoE, and Phi-3.5-MoE); and
+Experiment~8 (same-mechanism) is DONE with bootstrap CIs for Phi-3.5-MoE;
+OLMoE's per-pair capture is PENDING (resubmitted). The combined causal
+evidence is weaker than a
+single-model reading would suggest: on OLMoE and Phi-3.5-MoE the
+$\phi$-ranked ablation drops the bias gap faster than random ablation;
+on Mixtral the high-routing-frequency control outperforms $\phi$; on
+DBRX $\phi$-ranking is outright \emph{worse} than both controls at the
+half-ladder point; and Gemma-4-26B's near-zero baseline bias gap makes
+its ablation curve uninterpretable. No model supports a small fixable
+expert set, and the Exp.~3 synergy finding gives a mechanistic reason
+why: a purely marginal ranking is a partial proxy whenever pairwise
+interaction carries a large share of the attribution mass, which is
+every model we tested to varying degrees.
 
 \bibliographystyle{ACM-Reference-Format}
 \begin{thebibliography}{99}

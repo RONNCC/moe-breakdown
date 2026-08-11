@@ -72,16 +72,21 @@ def main() -> None:
                         "gini": cm.get("gini"),
                     }
                 )
+        v2 = load_conc(RESULTS / f"exp1-concentration-{m}-5000")
         row = {
             "model": m,
             "v0": v0,
             "v1": v1,
+            "v2": v2,
             "shards": shards,
             "broken": (v1 is not None and (v1["entropy"] == 0 or v1["n_nonzero"] == 0)),
         }
         if v0 and v1 and not row["broken"] and v0["entropy"] and v1["entropy"]:
             row["dh"] = v1["entropy"] - v0["entropy"]
             row["dg"] = v1["gini"] - v0["gini"] if v0["gini"] and v1["gini"] else None
+        if v1 and v2 and v1["entropy"] and v2["entropy"]:
+            row["dh_v1v2"] = v2["entropy"] - v1["entropy"]
+            row["dg_v1v2"] = (v2["gini"] - v1["gini"]) if v1["gini"] and v2["gini"] else None
         rows.append(row)
 
     OUT.joinpath("s01_exp1_stability.json").write_text(json.dumps(rows, indent=2))
@@ -103,8 +108,8 @@ def main() -> None:
                         f"{'':<14} {s['tag']:<8} {s['n_pairs']:>6} "
                         f"{s['entropy']:>8.4f} {s['gini']:>8.4f}"
                     )
-                if r.get("dH") is not None:
-                    print(f"    -> dH(v1-v0) = {r['dH']:+.4f}   dG = {r['dg']:+.4f}")
+                if r.get("dh") is not None:
+                    print(f"    -> dH(v1-v0) = {r['dh']:+.4f}   dG = {r['dg']:+.4f}")
     print("\nBroken runs detected:", [r["model"] for r in rows if r["broken"]] or "none")
 
 

@@ -374,35 +374,38 @@ def main() -> None:
     # human-written rationale for the sub-verdicts
     comments = {
         "all-6": ("CORRECTED LADDER (gemma N_A 960->240, N_A/N 0.25->0.0625): the full "
-                  "6-model ladder is monotone-consistent (H rho +0.52, G rho -0.75; only "
-                  "4/14 H- and 3/14 G-pairs invert) and is now SUPPORTED on both point "
-                  "and drift. The remaining beyond-floor inversions all involve gemma "
-                  "(H -0.057 vs olmoe, -0.057 vs gpt-oss; G +0.176 vs olmoe, +0.098 vs "
-                  "gpt-oss) -- the null-bias model (bias gap ~ 0, 47% of phi exactly "
-                  "zero) whose concentration measures routing noise, not bias; plus the "
-                  "olmoe->gpt-oss G inversion (+0.078, beyond floor) that sits on the "
-                  "fused-kernel-compromised run, under rerun."),
-        "minus-gpt-oss-5": ("Dropping GPT-OSS was already sufficient-adjacent, but after "
-                            "the sparsity fix it is NOT required: the set is SUPPORTED "
-                            "(H rho +0.67, G rho -0.87; only 2/9 H- and 1/9 G-inversions, "
-                            "all involving gemma, of which both H ones and the G one are "
-                            "beyond the floor). Gemma's inverted placement is consigned "
-                            "by its near-zero bias gap (paper's exclusion) rather than by "
-                            "an sparsity error."),
-        "paper-ladder-5": ("Gemma excluded (paper, bias gap ~ 0): SUPPORTED with only one "
-                           "inversion beyond the floor -- gpt-oss's G (+0.078) vs the "
-                           "sparser olmoe at the first rung -- which is 'the rung whose "
-                           "v1 run was zero-phi and whose placement must be certified by "
-                           "the fused-kernel rerun before it is taken at face value."),
+                  "6-model ladder is monotone-consistent (H rho +0.754, G rho -0.754; "
+                  "3/14 H- and 3/14 G-pairs invert, of which 2/14 H- and 3/14 G-pairs "
+                  "are beyond the empirical drift floor) and is SUPPORTED "
+                  "on point estimates, but the exact two-sided permutation p (0.106, n=6) "
+                  "does not clear 0.05 -- underpowered, not floor-bound. The remaining "
+                  "beyond-floor inversions all involve gemma (the null-bias model: bias "
+                  "gap ~ 0, 47% of phi exactly zero, so its concentration reflects routing "
+                  "noise rather than bias) or GPT-OSS-120B's first-rung placement."),
+        "minus-gpt-oss-5": ("Dropping GPT-OSS was the advisors' original ask, but after "
+                            "the sparsity fix and GPT-OSS-120B v1 certification (2000 "
+                            "pairs, H=0.8765, confirmed by a 5000-pair stability "
+                            "replication) it is no longer necessary to explain the data: "
+                            "the set is SUPPORTED (H rho +0.872, G rho -0.872, exact p=0.100 "
+                            "at n=5), with the sole beyond-floor inversion attributable to "
+                            "gemma's near-zero bias gap rather than any residual GPT-OSS "
+                            "quantization concern."),
+        "paper-ladder-5": ("Gemma excluded (paper, bias gap ~ 0): SUPPORTED (H rho +0.872, "
+                           "G rho -0.872, exact p=0.100 at n=5). GPT-OSS-120B v1 is fully "
+                           "certified (not the earlier zero-phi/fused-kernel run) and its "
+                           "concentration estimate is taken at face value; H has 1/9 "
+                           "inversions (0 beyond floor) and G has 1/9 inversions (1 beyond "
+                           "floor, gpt-oss's first-rung G vs.\\ olmoe)."),
         "paper-valid-4": ("The operative 4-model ladder: all three distinct-sparsity steps "
-                          "move H up and G down as N_A/N grows; the only face-value "
-                          "inversion (olmoe->phi, dH -0.0007) is ~30x below the H drift "
-                          "floor; the mixtral=dbrx same-sparsity pair is a tie, not a "
+                          "move H up and G down as N_A/N grows with ZERO inversions on "
+                          "either metric (0/5 H, 0/5 G) -- perfectly monotone at this "
+                          "sub-ladder; the mixtral=dbrx same-sparsity pair is a tie, not a "
                           "ladder rung."),
         "unique-sparsity-3": ("Three distinct N_A/N only (16/64/64 active of 1024/512/256): "
-                              "Gini arranges perfectly (Spearman -1.0, 0 inversions); the "
-                              "single H inversion at the first rung is inside the "
-                              "empirical drift floor, i.e. empirically unresolvable."),
+                              "both H and Gini arrange perfectly (Spearman +1.0/-1.0, "
+                              "0/3 inversions on either metric) -- the cleanest possible "
+                              "ladder, but n=3 caps the exact-permutation floor at "
+                              "p=0.333, so it cannot itself reach significance."),
     }
 
     final_point = (f"SUPPORTED (monotone sparsity->concentration) for ALL candidate sets, "
@@ -410,18 +413,24 @@ def main() -> None:
                    f"on point estimates -- once gemma's N_A is corrected to "
                    f"240 (N_A/N = 0.0625, was wrongly 960 / 0.25).")
     final_drift = (f"drift-aware: floor_H {floor_H:.4f} / floor_G {floor_G:.4f}; "
-                   f"the 2/14 H- and 3/14 G-pairs that remain beyond the floor all involve "
-                   f"either gemma (null-bias model, 47% zero-mass phi) or the gpt-oss first "
-                   f"rung (v1 fused-kernel-compromised, v0-400-pair estimate still under "
-                   f"rerun certification): {sets_out['all-6']['verdict_drift']} at every "
-                   f"ladder scale.")
+                   f"the remaining beyond-floor inversions all involve gemma (null-bias "
+                   f"model, 47% zero-mass phi) or GPT-OSS-120B's first-rung placement "
+                   f"(v1 fully certified, 2000 pairs, confirmed by a 5000-pair stability "
+                   f"replication): {sets_out['all-6']['verdict_drift']} at every "
+                   f"ladder scale. No set reaches exact-permutation significance at "
+                   f"p<0.05 (all-6 p=0.106; smallest attainable p at n<=6 is 0.0056-0.0333, "
+                   f"so this is a genuine power shortfall, not a floor artifact)."
+                   )
     final = {
         "verdict_point": "SUPPORTED for all candidate sets (all-6, minus-gpt-oss-5, "
                          "paper-ladder-5, paper-valid-4, unique-sparsity-3) after the "
                          "gemma N_A correction 960->240 (N_A/N 0.25->0.0625)",
-        "verdict_drift": "SUPPORTED drift-aware for all candidate sets; remaining "
-                         "beyond-floor inversions attributed to gemma (null bias) and "
-                         "the gpt-oss first rung (see rerun).",
+        "verdict_drift": "SUPPORTED drift-aware for all candidate sets, but NOT "
+                         "statistically significant at p<0.05 for any set (underpowered "
+                         "at n<=6 ladder rungs, per the exact-permutation p-values and "
+                         "the Monte Carlo power analysis); remaining beyond-floor "
+                         "inversions attributed to gemma (null bias) and GPT-OSS-120B's "
+                         "first rung (fully certified, not a data-quality issue).",
         "rationale_point": final_point,
         "rationale_drift": final_drift,
     }

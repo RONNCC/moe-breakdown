@@ -194,7 +194,7 @@ def check_vs_result_json(exp_dir: Path, point: dict) -> dict:
 
 
 def process_model(exp_dir: Path) -> dict:
-    model = exp_dir.name.removeprefix("exp1-concentration-")
+    model = _model_key(exp_dir)
     phi_file = find_pair_phi(exp_dir)
     if phi_file is None:
         return {
@@ -248,11 +248,30 @@ def _dense_model_name(exp_dir: Path) -> str:
     return name
 
 
+def _model_key(exp_dir: Path) -> str:
+    name = exp_dir.name
+    if name.startswith("exp1-concentration-"):
+        return name.removeprefix("exp1-concentration-")
+    if name.startswith("exp8-lloo-"):
+        # Namespaced distinctly from exp1-concentration keys: exp8 is the
+        # same-mechanism (dense-style LOO) comparison, a different estimator
+        # over the same model, and must never collide with (overwrite) the
+        # ladder's routing_contrast entry for that model.
+        return "lloo-" + name.removeprefix("exp8-lloo-")
+    if name.startswith("exp2-"):
+        return _dense_model_name(exp_dir)
+    return name
+
+
 def main() -> None:
-    exp_dirs = sorted(RESULTS.glob("exp1-concentration-*")) + sorted(RESULTS.glob("exp2-dense-*"))
+    exp_dirs = (
+        sorted(RESULTS.glob("exp1-concentration-*"))
+        + sorted(RESULTS.glob("exp2-dense-*"))
+        + sorted(RESULTS.glob("exp8-lloo-*"))
+    )
 
     out = {"_note": "entropy is normalized H/log(n_players); CIs are 95% percentile over n_boot block-bootstrap draws (resample pairs with replacement, seed=42); MISSING = no per_pair_phi data on disk"}
-    results = {d.name.removeprefix("exp1-concentration-"): process_model(d) for d in exp_dirs}
+    results = {_model_key(d): process_model(d) for d in exp_dirs}
     out["models"] = results
     out["summary"] = {
         "n_with_data": sum(1 for r in results.values() if r["status"] == "ok"),
