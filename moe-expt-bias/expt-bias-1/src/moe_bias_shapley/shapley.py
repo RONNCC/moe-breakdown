@@ -629,8 +629,26 @@ def compute_dense_layer_contrast(
         for layer in layers:
             original_forward = layer.module.forward
 
-            def zero_forward(x, *args, __orig=original_forward, **kwargs):
-                return torch.zeros_like(x)
+            # Some architectures' per-layer FFN module returns a tuple whose
+            # first element is the hidden-state tensor and the rest are
+            # auxiliary values discarded by the caller (e.g. GPT-OSS's
+            # GptOssMLP.forward returns `(hidden_states, router_scores)`,
+            # unpacked by the decoder layer as `hidden_states, _ = self.mlp(...)`).
+            # Ablating by zeroing must match that arity, or the caller's
+            # unpack crashes/misbehaves. Probe once (cheap: a single real
+            # forward call, cached on the handle, not repeated per pair).
+            if not hasattr(layer, "_probed_output_len"):
+                with torch.no_grad():
+                    probe_out = original_forward(
+                        torch.zeros(1, 1, model.config.hidden_size, dtype=next(model.parameters()).dtype,
+                                     device=next(model.parameters()).device)
+                    )
+                layer._probed_output_len = len(probe_out) if isinstance(probe_out, tuple) else 0
+            extra_len = layer._probed_output_len
+
+            def zero_forward(x, *args, __orig=original_forward, __extra=extra_len, **kwargs):
+                zeros = torch.zeros_like(x)
+                return (zeros,) + (None,) * (__extra - 1) if __extra else zeros
 
             layer.module.forward = zero_forward
             try:

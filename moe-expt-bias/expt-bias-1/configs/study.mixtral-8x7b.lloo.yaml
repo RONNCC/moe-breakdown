@@ -1,0 +1,48 @@
+# Experiment 8 (same-mechanism comparison) — Mixtral-8x7B with layer-LOO
+#
+# Extends Exp8 beyond the original 2-model set (OLMoE, Phi-3.5-MoE) to a third
+# ladder rung. The existing 2-model result is ambiguous on its own: OLMoE's
+# H_lloo=0.736 lands in the dense band (0.66-0.76) while Phi-3.5-MoE's
+# H_lloo=0.899 stays near the MoE range — a genuine split, not yet a trend.
+# Adding Mixtral-8x7B (top-2/8, mid-ladder sparsity between the two existing
+# points) turns that ambiguous 2-point split into a real 3-point comparison.
+#
+# Mixtral has 32 transformer layers (same as OLMoE's dense-equivalent N=32
+# used elsewhere in this study) -> 32 layers x 2 LOO passes x 50 pairs = 3200
+# forward passes, same order of magnitude as the existing Phi-3.5-MoE lloo
+# run (comment there: ~80 min at ~1.5s/pass). Resource block mirrors the
+# proven-working study.mixtral-8x7b.concentration.v1.yaml (4xH100), with the
+# GPU-minute budget kept far under the coc-ice 960 GPU-min/job cap since
+# dense_loo at 50 pairs does roughly 32x fewer total forward passes than the
+# routing_contrast v1 run's 5000 pairs x 2 passes.
+#
+# Key question (same as OLMoE/Phi-3.5-MoE lloo): does H_lloo(Mixtral) sit
+# nearer the dense band (0.66-0.76) or the MoE range (~0.79-0.92)?
+
+study_name: exp8-lloo-mixtral-8x7b
+
+model_id: mistralai/Mixtral-8x7B-v0.1
+model_family: mixtral
+trust_remote_code: false
+torch_dtype: bfloat16
+load_in_4bit: false
+device_map: auto
+
+benchmarks: [stereoset, bbq, winogender]
+shapley_method: dense_loo   # force LOO even though model is MoE
+max_prompts: 50
+seed: 42
+
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 01:00:00
+  cpus_per_task: 8
+  gpus_per_node: 4
+  gpu_type: h100
+  use_gres: true
+  mem: 96G
+  modules: [gcc/12.3.0, python/3.11, cuda/12.1.1]
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown

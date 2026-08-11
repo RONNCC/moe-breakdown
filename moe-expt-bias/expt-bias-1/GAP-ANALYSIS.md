@@ -126,6 +126,45 @@ numbers.
 CIs; the paper's Appendix B and Limitations flag report all 13 model
 payloads as landed.
 
+**New this session --- Exp8 ladder extension.** The 2-model result above is
+an *ambiguous split* on its own ($n=2$: one point in the dense band, one in
+the MoE range --- not yet a trend). Authored 3 new `dense_loo` configs to
+extend the same-mechanism check across the sparsity ladder:
+`configs/study.mixtral-8x7b.lloo.yaml`, `configs/study.dbrx.lloo.yaml`,
+`configs/study.gpt-oss-120b.lloo.yaml` (all $n_{pairs}=30$--$50$, sized to
+stay well under the 960 GPU-min/job QOS cap). Doing so surfaced two real
+bugs in `discover_dense_ffn_layers`/`compute_dense_layer_contrast`
+(`src/moe_bias_shapley/hooks.py`, `shapley.py`) that would have made the
+DBRX and GPT-OSS configs crash or silently misbehave:
+1. **DBRX uses `.ffn`, not `.mlp`**, and its decoder stack lives at
+   `transformer.blocks`, not `model.layers`/`transformer.h`/`gpt_neox.layers`
+   (verified against upstream `modeling_dbrx.py`). Fixed by rewriting
+   `discover_dense_ffn_layers` to walk `model.named_modules()` generically
+   (mirroring `discover_moe_layers`'s existing approach) instead of a
+   hardcoded path/attribute list.
+2. **GPT-OSS's `GptOssMLP.forward` returns a 2-tuple**
+   `(hidden_states, router_scores)`, unlike Mixtral/OLMoE/Phi-3.5-MoE's
+   single-tensor return; the LOO ablation's `zero_forward` monkey-patch
+   returned a bare zeroed tensor unconditionally, which would crash the
+   decoder layer's `hidden_states, _ = self.mlp(...)` unpacking. Fixed by
+   probing each layer's real output arity once (cheap, cached per layer)
+   and matching it in the zeroed replacement.
+
+Both fixes verified with a synthetic-module smoke test
+(`/tmp/smoke_discover.py`, not checked in --- exercises exact attribute
+names/container paths/return shapes sourced from upstream transformers
+source, not guessed) before shipping the configs; not yet run against the
+real 100+GB checkpoints (blocked on cluster access).
+
+**Gemma-4-26B excluded from this extension.** Its decoder layer forks into
+*two* parallel FFN branches (`self.shared_expert`, always-on dense; and
+`self.moe`, routed experts) that are summed, not a single ablatable module
+--- the current single-attribute LOO mechanism would under-ablate (zero one
+branch, leave the other active) rather than measure the true per-layer
+contribution. Left out rather than shipping a misleading number; a correct
+extension would need a compound-ablation code path (zero both branches
+together), not attempted this session.
+
 ---
 
 ## 3. Critical Gaps for Paper Acceptance (TIST/ACM)
@@ -166,13 +205,20 @@ payloads as landed.
     5575536, $n=50$) integrated earlier this session; OLMoE's per-pair
     capture (job **5575798**, node-pinned) landed with $H=0.7361$,
     Gini$=0.6239$, CI $H \in [0.692, 0.921]$, integrated into Appendix B.
+13. **Exp8 ladder extension (Mixtral, DBRX, GPT-OSS-120B)** --- 3 new
+    `dense_loo` configs authored + the underlying discovery/ablation code
+    bugs fixed and smoke-tested (see Section 2 above); **not yet
+    submitted** (blocked on cluster access during the maintenance window).
+    Ready to fire via `submit_slurm_study.py --config
+    configs/study.{mixtral-8x7b,dbrx,gpt-oss-120b}.lloo.yaml
+    --save-per-pair-phi` the moment the cluster reopens.
 
 ### Data/Code Hygiene
-13. ~~Gemma-4-27B phantom~~ --- documented, non-issue.
-14. ~~Kaggle payload manifest~~ --- done (`sghose0/moe-bias-routing-shapley-perpair-phi`).
+14. ~~Gemma-4-27B phantom~~ --- documented, non-issue.
+15. ~~Kaggle payload manifest~~ --- done (`sghose0/moe-bias-routing-shapley-perpair-phi`).
     Dense v1 per-pair payloads are NOT yet published there --- consider a
     follow-up dataset version once Exp3/6/8 fully land.
-15. ~~REPRODUCIBILITY.md~~ --- done.
+16. ~~REPRODUCIBILITY.md~~ --- done.
 
 ---
 

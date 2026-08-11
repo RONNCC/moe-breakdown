@@ -230,35 +230,50 @@ class DenseLayerHandle:
     module: Any
 
 
-def discover_dense_ffn_layers(model: Any) -> List[DenseLayerHandle]:
-    """Find per-transformer-block MLP/FFN modules for dense models.
+_FFN_ATTR_NAMES = ("mlp", "ffn", "feed_forward", "block_sparse_moe")
 
-    Looks for common attribute names used by HF dense decoder layers
-    (`.mlp` on OlmoDecoderLayer / LlamaDecoderLayer / etc.).
+
+def discover_dense_ffn_layers(model: Any) -> List[DenseLayerHandle]:
+    """Find per-transformer-block MLP/FFN modules for dense models (and for
+    MoE models being forced through the LOO fallback, see `shapley_method:
+    dense_loo`).
+
+    Rather than hardcoding the decoder-stack attribute path (fragile across
+    architectures: Llama/OLMo/Mixtral/GPT-OSS use `model.layers`, DBRX uses
+    `transformer.blocks`, GPT-NeoX uses `gpt_neox.layers`, ...), we walk
+    `model.named_modules()` for the first `nn.ModuleList` whose elements look
+    like decoder layers (have `.self_attn` plus one of the known per-layer
+    FFN attribute names). This mirrors the generic-discovery approach already
+    used by `discover_moe_layers` above, and additionally covers the FFN
+    attribute name itself varying by architecture (`.mlp` on
+    Llama/OLMo/Mixtral/OLMoE/Phi-3.5-MoE/GPT-OSS decoder layers, `.ffn` on
+    DBRX's `DbrxBlock`).
     """
+    import torch
+
     handles: List[DenseLayerHandle] = []
     layers = None
-    for attr_path in ("model.layers", "transformer.h", "gpt_neox.layers"):
-        obj = model
-        ok = True
-        for part in attr_path.split("."):
-            if hasattr(obj, part):
-                obj = getattr(obj, part)
-            else:
-                ok = False
-                break
-        if ok:
-            layers = obj
+    for _, module in model.named_modules():
+        if not isinstance(module, torch.nn.ModuleList) or len(module) == 0:
+            continue
+        first = module[0]
+        if hasattr(first, "self_attn") and any(hasattr(first, a) for a in _FFN_ATTR_NAMES):
+            layers = module
             break
 
     if layers is None:
         raise ValueError("Could not locate transformer layers for dense FFN discovery")
 
     for idx, layer in enumerate(layers):
-        mlp = getattr(layer, "mlp", None)
+        mlp = None
+        attr_name = None
+        for attr_name in _FFN_ATTR_NAMES:
+            mlp = getattr(layer, attr_name, None)
+            if mlp is not None:
+                break
         if mlp is None:
             continue
-        handles.append(DenseLayerHandle(layer_index=idx, module_name=f"layers.{idx}.mlp", module=mlp))
+        handles.append(DenseLayerHandle(layer_index=idx, module_name=f"layers.{idx}.{attr_name}", module=mlp))
 
     log.info("Discovered %d dense FFN layers", len(handles))
     return handles

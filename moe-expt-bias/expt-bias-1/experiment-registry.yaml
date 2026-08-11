@@ -486,6 +486,32 @@ experiments:
     per_pair: true
     per_pair_job_id: 5575536  # COMPLETE (resubmit of 5575256, which never captured per-pair data)
 
+  exp8-mixtral:
+    id: "exp8-mixtral"
+    status: "PENDING"  # config authored + discovery/ablation code fixed this session (config.yaml: study.mixtral-8x7b.lloo.yaml); not yet submitted, blocked on cluster access
+    n_pairs: 50
+    result_path: "results/exp8-lloo-mixtral-8x7b/result.json"
+    per_pair: true
+
+  exp8-dbrx:
+    id: "exp8-dbrx"
+    status: "PENDING"  # config.yaml: study.dbrx.lloo.yaml; required fixing discover_dense_ffn_layers (.ffn attr, transformer.blocks path) -- see GAP-ANALYSIS.md
+    n_pairs: 50
+    result_path: "results/exp8-lloo-dbrx/result.json"
+    per_pair: true
+
+  exp8-gpt-oss:
+    id: "exp8-gpt-oss"
+    status: "PENDING"  # config.yaml: study.gpt-oss-120b.lloo.yaml; required fixing zero_forward tuple-return arity -- see GAP-ANALYSIS.md
+    n_pairs: 30
+    result_path: "results/exp8-lloo-gpt-oss-120b/result.json"
+    per_pair: true
+
+  # NOTE: Gemma-4-26B intentionally excluded from Exp8 -- its dual-branch
+  # FFN (shared_expert + moe, summed) cannot be ablated by the current
+  # single-attribute LOO mechanism without under-ablating. See
+  # GAP-ANALYSIS.md Sec. 2 for the architectural reasoning.
+
   # ==========================================================================
   # EXP5: Demographic Specificity
   # ==========================================================================

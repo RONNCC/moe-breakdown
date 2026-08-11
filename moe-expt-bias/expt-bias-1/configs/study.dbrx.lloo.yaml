@@ -1,0 +1,42 @@
+# Experiment 8 (same-mechanism comparison) — DBRX-instruct with layer-LOO
+#
+# Extends Exp8 to DBRX (16 experts, top-4 routing — the widest fine-grained
+# ladder rung with a real capture). See study.mixtral-8x7b.lloo.yaml for the
+# rationale on why a 3rd/4th point matters (existing OLMoE/Phi-3.5-MoE split
+# is ambiguous with n=2).
+#
+# DBRX has 40 transformer layers -> 40 x 2 LOO passes x 50 pairs = 4000
+# forward passes. Resource block mirrors the proven-working
+# study.dbrx.concentration.v1.yaml (4xH100, 200G mem, cuda/12.6.1 — DBRX's
+# trust_remote_code path needs the newer CUDA module used there). GPU-minute
+# budget kept far under the coc-ice 960 GPU-min/job cap: dense_loo at 50
+# pairs does ~25x fewer total forward passes than the v1 run's 5000 pairs x
+# 2 passes.
+
+study_name: exp8-lloo-dbrx
+
+model_id: alpindale/dbrx-instruct
+model_family: dbrx
+trust_remote_code: true
+torch_dtype: bfloat16
+load_in_4bit: false
+device_map: auto
+
+benchmarks: [stereoset, bbq, winogender]
+shapley_method: dense_loo   # force LOO even though model is MoE
+max_prompts: 50
+seed: 42
+
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 01:30:00
+  cpus_per_task: 16
+  gpus_per_node: 4
+  gpu_type: h100
+  use_gres: true
+  mem: 200G
+  modules: [gcc/12.3.0, python/3.11, cuda/12.6.1]
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown

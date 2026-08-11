@@ -1,0 +1,50 @@
+# Experiment 8 (same-mechanism comparison) — GPT-OSS-120B with layer-LOO
+#
+# Extends Exp8 to GPT-OSS-120B, the sparsest ladder rung (128 experts,
+# top-4). This is the single most informative point to add: if H_lloo here
+# also lands high (near the routing_contrast v1 result, H=0.876), the
+# same-mechanism check would hold across the FULL sparsity range instead of
+# only the two mid-ladder points already run.
+#
+# force_eager_moe: true is REQUIRED — see study.gpt-oss-120b.concentration.v1.yaml
+# for the MXFP4 dequantization trap (transformers>=5.13 otherwise auto-attaches
+# a fused hub kernel that crashes on torch 2.6 / silently zeroes phi).
+#
+# Cost control: dense_loo does (n_layers x 2) forward passes per pair, vs. 2
+# for routing_contrast, so max_prompts is cut hard to 30 (not the 50 used for
+# the other 3 new lloo configs) to keep this under the coc-ice 960 GPU-min/job
+# cap given the CPU-offload overhead observed on the 2xH100 v1 capture
+# (2000 pairs x 2 passes took ~10-12h there; this run does ~36x fewer total
+# passes at 30 pairs x 2x36 layers, so a 4h budget is generous headroom, not
+# a tight estimate — GPT-OSS-120B's per-pass cost under CPU offload is not
+# precisely known and this is the least certain sizing of the 4 new configs).
+# 2xH100 x 4h = 480 GPU-min, half of the 960 cap.
+
+study_name: exp8-lloo-gpt-oss-120b
+
+model_id: openai/gpt-oss-120b
+model_family: gpt-oss
+trust_remote_code: false
+torch_dtype: bfloat16
+load_in_4bit: false
+device_map: auto
+force_eager_moe: true
+
+benchmarks: [stereoset, bbq, winogender]
+shapley_method: dense_loo   # force LOO even though model is MoE
+max_prompts: 30
+seed: 42
+
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 04:00:00
+  cpus_per_task: 16
+  gpus_per_node: 2
+  gpu_type: h100
+  use_gres: true
+  mem: 512G
+  modules: [gcc/12.3.0, python/3.11, cuda/12.6.1]
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown
