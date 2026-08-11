@@ -1,0 +1,26 @@
+---------------------------------------
+Begin Slurm Prolog: Jul-07-2026 17:05:19
+Job ID:    5484047
+User ID:   sghose7
+Account:   coc
+Job name:  bias-exp2-dense-baseline-olmo-7b-v1-s1of2
+Partition: ice-gpu
+QOS:       coc-ice
+---------------------------------------
+[slurm] WORKDIR=/home/hice1/sghose7/scratch/moe-breakdown
+[slurm] ROOT_DIR=/home/hice1/sghose7/scratch/moe-breakdown/moe-expt-bias/expt-bias-1
+[slurm] STUDY_CONFIG=/storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1/configs/study.olmo-7b.dense-baseline.v1.yaml
+[slurm] OUT_DIR=/storage/ice1/0/2/sghose7/moe-breakdown-bias-runs/expt-bias-1/exp2-dense-baseline-olmo-7b-v1
+[slurm] GPUs visible: 1
+---------------------------------------
+Begin Slurm Epilog: Jul-07-2026 17:29:56
+Job ID:        5484047
+User ID:       sghose7
+Account:       coc
+Job name:      bias-exp2-dense-baseline-olmo-7b-v1-s1of2
+Resources:     cpu=8,gres/gpu:a100=1,mem=64G,node=1
+Rsrc Used:     cput=03:17:12,vmem=0,walltime=00:24:39,mem=36618388K,energy_used=0
+Partition:     ice-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-005-13-0
+---------------------------------------

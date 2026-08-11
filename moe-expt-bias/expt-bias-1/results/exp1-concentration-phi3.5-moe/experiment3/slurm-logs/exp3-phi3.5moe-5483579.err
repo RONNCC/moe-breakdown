@@ -1,0 +1,6 @@
+Using CPython 3.11.15
+Creating virtual environment at: /home/hice1/sghose7/scratch/moe-bias-shapley-venv
+error: Failed to create virtual environment
+  Caused by: A directory already exists at: /home/hice1/sghose7/scratch/moe-bias-shapley-venv
+
+hint: Use the `--clear` flag or set `UV_VENV_CLEAR=1` to replace the existing directory

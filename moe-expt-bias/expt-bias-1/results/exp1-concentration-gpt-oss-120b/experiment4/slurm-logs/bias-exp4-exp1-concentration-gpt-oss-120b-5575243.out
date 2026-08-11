@@ -1,0 +1,16 @@
+---------------------------------------
+Begin Slurm Prolog: Aug-10-2026 16:08:55
+Job ID:    5575243
+User ID:   sghose7
+Account:   coc
+Job name:  bias-exp4-exp1-concentration-gpt-oss-120b
+Partition: ice-gpu
+QOS:       coc-ice
+---------------------------------------
+[slurm] WORKDIR=/home/hice1/sghose7/scratch/moe-breakdown
+[slurm] ROOT_DIR=/home/hice1/sghose7/scratch/moe-breakdown/moe-expt-bias/expt-bias-1
+[slurm] SCRIPT=scripts/run_experiment4_ablation.py
+[slurm] STUDY_CONFIG=/storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1/configs/study.gpt-oss-120b.concentration.yaml
+[slurm] OUT_DIR=/storage/ice1/0/2/sghose7/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-gpt-oss-120b/experiment4
+[slurm] EXTRA_ARGS=--result-dir /home/hice1/sghose7/scratch/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-gpt-oss-120b --max-pairs 60
+[slurm] GPUs visible: 2

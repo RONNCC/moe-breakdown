@@ -92,6 +92,26 @@
         "mismatches": {}
       }
     },
+    "dbrx-v1-perpair": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "dbrx-v1-perpair-b": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
     "gemma4-26b": {
       "status": "ok",
       "n_pairs": 400,
@@ -126,6 +146,26 @@
         "result_json": "ok",
         "mismatches": {}
       }
+    },
+    "gemma4-26b-perpair": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "gemma4-26b-perpair-b": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
     },
     "gemma4-26b-v1": {
       "status": "ok",
@@ -223,6 +263,36 @@
         }
       }
     },
+    "gpt-oss-120b-5000": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "gpt-oss-120b-perpair": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "gpt-oss-120b-perpair-b": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
     "gpt-oss-120b-v1": {
       "status": "ok",
       "n_pairs": 2000,
@@ -257,6 +327,16 @@
         "result_json": "ok",
         "mismatches": {}
       }
+    },
+    "gpt-oss-120b-v1-smoke": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
     },
     "mixtral-8x7b": {
       "status": "ok",
@@ -338,6 +418,26 @@
         "result_json": "ok",
         "mismatches": {}
       }
+    },
+    "mixtral-8x7b-v1-perpair": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "mixtral-8x7b-v1-perpair-b": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
     },
     "olmoe-1b-7b": {
       "status": "ok",
@@ -430,6 +530,26 @@
         "mismatches": {}
       }
     },
+    "olmoe-1b-7b-v1-perpair": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "olmoe-1b-7b-v1-perpair-b": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
     "phi3.5-moe": {
       "status": "ok",
       "n_pairs": 5000,
@@ -521,7 +641,7 @@
         "mismatches": {}
       }
     },
-    "exp2-dense-baseline-olmo-7b": {
+    "phi3.5-moe-v1-perpair": {
       "status": "MISSING",
       "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
       "entropy": null,
@@ -530,91 +650,401 @@
       "t10": null,
       "n_pairs": null,
       "source": null
+    },
+    "phi3.5-moe-v1-perpair-b": {
+      "status": "MISSING",
+      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
+      "entropy": null,
+      "gini": null,
+      "t5": null,
+      "t10": null,
+      "n_pairs": null,
+      "source": null
+    },
+    "exp2-dense-baseline-olmo-7b": {
+      "status": "ok",
+      "n_pairs": 1800,
+      "n_players": 32,
+      "n_boot": 5000,
+      "seed": 42,
+      "block_method": "iid-over-pairs",
+      "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp2-dense-baseline-olmo-7b-v1/per_pair_phi.npy",
+      "entropy": [
+        0.6724177274414853,
+        0.7439277014834522
+      ],
+      "gini": [
+        0.6764998180022618,
+        0.7478036463675187
+      ],
+      "t5": [
+        0.6934763074987235,
+        0.777427155673416
+      ],
+      "t10": [
+        0.4969269169938663,
+        0.6112516069432381
+      ],
+      "point_estimates": {
+        "entropy": 0.702576,
+        "gini": 0.719123,
+        "t5": 0.749066,
+        "t10": 0.562216
+      },
+      "consistency_check": {
+        "result_json": "MISMATCH",
+        "mismatches": {
+          "entropy": {
+            "mine": 0.702576,
+            "result_json": 0.719408,
+            "abs_diff": 0.016832
+          },
+          "gini": {
+            "mine": 0.719123,
+            "result_json": 0.692974,
+            "abs_diff": 0.026148
+          },
+          "t5": {
+            "mine": 0.749066,
+            "result_json": 0.686799,
+            "abs_diff": 0.062267
+          },
+          "t10": {
+            "mine": 0.562216,
+            "result_json": 0.605115,
+            "abs_diff": 0.042899
+          }
+        }
+      }
     },
     "exp2-dense-baseline-olmo-7b-v1": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
+      "status": "ok",
+      "n_pairs": 1800,
+      "n_players": 32,
+      "n_boot": 5000,
+      "seed": 42,
+      "block_method": "stratified-by-group",
+      "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp2-dense-baseline-olmo-7b-v1/per_pair_phi.npy",
+      "entropy": [
+        0.6724177274414853,
+        0.7439277014834522
+      ],
+      "gini": [
+        0.6764998180022618,
+        0.7478036463675187
+      ],
+      "t5": [
+        0.6934763074987235,
+        0.777427155673416
+      ],
+      "t10": [
+        0.4969269169938663,
+        0.6112516069432381
+      ],
+      "point_estimates": {
+        "entropy": 0.702576,
+        "gini": 0.719123,
+        "t5": 0.749066,
+        "t10": 0.562216
+      },
+      "consistency_check": {
+        "result_json": "ok",
+        "mismatches": {}
+      }
     },
     "exp2-dense-baseline-phi3.5-mini": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
+      "status": "ok",
+      "n_pairs": 4000,
+      "n_players": 32,
+      "n_boot": 5000,
+      "seed": 42,
+      "block_method": "iid-over-pairs",
+      "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp2-dense-baseline-phi3.5-mini-v1/per_pair_phi.npy",
+      "entropy": [
+        0.7374305357401991,
+        0.7807960072026446
+      ],
+      "gini": [
+        0.6207679378704429,
+        0.6683939960188785
+      ],
+      "t5": [
+        0.6060498401381189,
+        0.6529869042568821
+      ],
+      "t10": [
+        0.47328493832529456,
+        0.5237441586612737
+      ],
+      "point_estimates": {
+        "entropy": 0.759191,
+        "gini": 0.645043,
+        "t5": 0.63157,
+        "t10": 0.4993
+      },
+      "consistency_check": {
+        "result_json": "MISMATCH",
+        "mismatches": {
+          "entropy": {
+            "mine": 0.759191,
+            "result_json": 0.757905,
+            "abs_diff": 0.001286
+          },
+          "gini": {
+            "mine": 0.645043,
+            "result_json": 0.613053,
+            "abs_diff": 0.03199
+          },
+          "t5": {
+            "mine": 0.63157,
+            "result_json": 0.624754,
+            "abs_diff": 0.006816
+          },
+          "t10": {
+            "mine": 0.4993,
+            "result_json": 0.527724,
+            "abs_diff": 0.028423
+          }
+        }
+      }
     },
     "exp2-dense-baseline-phi3.5-mini-v1": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
+      "status": "ok",
+      "n_pairs": 4000,
+      "n_players": 32,
+      "n_boot": 5000,
+      "seed": 42,
+      "block_method": "stratified-by-group",
+      "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp2-dense-baseline-phi3.5-mini-v1/per_pair_phi.npy",
+      "entropy": [
+        0.7374305357401991,
+        0.7807960072026446
+      ],
+      "gini": [
+        0.6207679378704429,
+        0.6683939960188785
+      ],
+      "t5": [
+        0.6060498401381189,
+        0.6529869042568821
+      ],
+      "t10": [
+        0.47328493832529456,
+        0.5237441586612737
+      ],
+      "point_estimates": {
+        "entropy": 0.759191,
+        "gini": 0.645043,
+        "t5": 0.63157,
+        "t10": 0.4993
+      },
+      "consistency_check": {
+        "result_json": "ok",
+        "mismatches": {}
+      }
     },
     "exp2-dense-crosscheck-llama-2-7b": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
+      "status": "ok",
+      "n_pairs": 1800,
+      "n_players": 32,
+      "n_boot": 5000,
+      "seed": 42,
+      "block_method": "iid-over-pairs",
+      "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp2-dense-crosscheck-llama-2-7b-v1/per_pair_phi.npy",
+      "entropy": [
+        0.6587456217347756,
+        0.72958028440434
+      ],
+      "gini": [
+        0.6239089684675354,
+        0.6993249937106085
+      ],
+      "t5": [
+        0.665502059124329,
+        0.7327385461308895
+      ],
+      "t10": [
+        0.6052493707164825,
+        0.6866645344063281
+      ],
+      "point_estimates": {
+        "entropy": 0.696892,
+        "gini": 0.654092,
+        "t5": 0.695581,
+        "t10": 0.647874
+      },
+      "consistency_check": {
+        "result_json": "MISMATCH",
+        "mismatches": {
+          "entropy": {
+            "mine": 0.696892,
+            "result_json": 0.65063,
+            "abs_diff": 0.046262
+          },
+          "gini": {
+            "mine": 0.654092,
+            "result_json": 0.699521,
+            "abs_diff": 0.045429
+          },
+          "t5": {
+            "mine": 0.695581,
+            "result_json": 0.731723,
+            "abs_diff": 0.036141
+          },
+          "t10": {
+            "mine": 0.647874,
+            "result_json": 0.692095,
+            "abs_diff": 0.044221
+          }
+        }
+      }
     },
     "exp2-dense-crosscheck-llama-2-7b-v1": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
+      "status": "ok",
+      "n_pairs": 1800,
+      "n_players": 32,
+      "n_boot": 5000,
+      "seed": 42,
+      "block_method": "stratified-by-group",
+      "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp2-dense-crosscheck-llama-2-7b-v1/per_pair_phi.npy",
+      "entropy": [
+        0.6587456217347756,
+        0.72958028440434
+      ],
+      "gini": [
+        0.6239089684675354,
+        0.6993249937106085
+      ],
+      "t5": [
+        0.665502059124329,
+        0.7327385461308895
+      ],
+      "t10": [
+        0.6052493707164825,
+        0.6866645344063281
+      ],
+      "point_estimates": {
+        "entropy": 0.696892,
+        "gini": 0.654092,
+        "t5": 0.695581,
+        "t10": 0.647874
+      },
+      "consistency_check": {
+        "result_json": "ok",
+        "mismatches": {}
+      }
     },
     "exp2-dense-crosscheck-llama-3.1-8b": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
+      "status": "ok",
+      "n_pairs": 1800,
+      "n_players": 32,
+      "n_boot": 5000,
+      "seed": 42,
+      "block_method": "iid-over-pairs",
+      "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp2-dense-crosscheck-llama-3.1-8b-v1/per_pair_phi.npy",
+      "entropy": [
+        0.630231291109897,
+        0.7012513439006255
+      ],
+      "gini": [
+        0.6693251516848482,
+        0.7344723860528478
+      ],
+      "t5": [
+        0.6831589596740497,
+        0.7472942098850889
+      ],
+      "t10": [
+        0.6216873401220346,
+        0.6957354642020643
+      ],
+      "point_estimates": {
+        "entropy": 0.658706,
+        "gini": 0.707863,
+        "t5": 0.720812,
+        "t10": 0.668744
+      },
+      "consistency_check": {
+        "result_json": "MISMATCH",
+        "mismatches": {
+          "entropy": {
+            "mine": 0.658706,
+            "result_json": 0.630097,
+            "abs_diff": 0.028608
+          },
+          "gini": {
+            "mine": 0.707863,
+            "result_json": 0.729997,
+            "abs_diff": 0.022134
+          },
+          "t5": {
+            "mine": 0.720812,
+            "result_json": 0.748673,
+            "abs_diff": 0.027862
+          },
+          "t10": {
+            "mine": 0.668744,
+            "result_json": 0.698322,
+            "abs_diff": 0.029578
+          }
+        }
+      }
     },
     "exp2-dense-crosscheck-llama-3.1-8b-v1": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
+      "status": "ok",
+      "n_pairs": 1800,
+      "n_players": 32,
+      "n_boot": 5000,
+      "seed": 42,
+      "block_method": "stratified-by-group",
+      "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp2-dense-crosscheck-llama-3.1-8b-v1/per_pair_phi.npy",
+      "entropy": [
+        0.630231291109897,
+        0.7012513439006255
+      ],
+      "gini": [
+        0.6693251516848482,
+        0.7344723860528478
+      ],
+      "t5": [
+        0.6831589596740497,
+        0.7472942098850889
+      ],
+      "t10": [
+        0.6216873401220346,
+        0.6957354642020643
+      ],
+      "point_estimates": {
+        "entropy": 0.658706,
+        "gini": 0.707863,
+        "t5": 0.720812,
+        "t10": 0.668744
+      },
+      "consistency_check": {
+        "result_json": "ok",
+        "mismatches": {}
+      }
     }
   },
   "summary": {
-    "n_with_data": 12,
-    "n_missing": 9,
+    "n_with_data": 20,
+    "n_missing": 15,
     "missing_models": [
+      "dbrx-v1-perpair",
+      "dbrx-v1-perpair-b",
+      "gemma4-26b-perpair",
+      "gemma4-26b-perpair-b",
       "gemma4-27b",
-      "exp2-dense-baseline-olmo-7b",
-      "exp2-dense-baseline-olmo-7b-v1",
-      "exp2-dense-baseline-phi3.5-mini",
-      "exp2-dense-baseline-phi3.5-mini-v1",
-      "exp2-dense-crosscheck-llama-2-7b",
-      "exp2-dense-crosscheck-llama-2-7b-v1",
-      "exp2-dense-crosscheck-llama-3.1-8b",
-      "exp2-dense-crosscheck-llama-3.1-8b-v1"
+      "gpt-oss-120b-5000",
+      "gpt-oss-120b-perpair",
+      "gpt-oss-120b-perpair-b",
+      "gpt-oss-120b-v1-smoke",
+      "mixtral-8x7b-v1-perpair",
+      "mixtral-8x7b-v1-perpair-b",
+      "olmoe-1b-7b-v1-perpair",
+      "olmoe-1b-7b-v1-perpair-b",
+      "phi3.5-moe-v1-perpair",
+      "phi3.5-moe-v1-perpair-b"
     ]
   }
 }

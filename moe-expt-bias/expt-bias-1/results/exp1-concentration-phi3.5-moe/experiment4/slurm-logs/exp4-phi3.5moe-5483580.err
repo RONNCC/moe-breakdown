@@ -1,0 +1,131 @@
+Using Python 3.11.15 environment at: /home/hice1/sghose7/scratch/moe-bias-shapley-venv
+Resolved 4 packages in 172ms
+Checked 4 packages in 1ms
+Using Python 3.11.15 environment at: /home/hice1/sghose7/scratch/moe-bias-shapley-venv
+Resolved 4 packages in 186ms
+   Building moe-bias-shapley @ file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1
+      Built moe-bias-shapley @ file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1
+Prepared 1 package in 963ms
+Uninstalled 1 package in 5ms
+warning: Failed to hardlink files; falling back to full copy. This may lead to degraded performance.
+         If the cache and target directories are on different filesystems, hardlinking may not be supported.
+         If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
+Installed 1 package in 132ms
+ ~ moe-bias-shapley==0.1.0 (from file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1)
+Using Python 3.11.15 environment at: /home/hice1/sghose7/scratch/moe-bias-shapley-venv
+Checked 1 package in 2m 30s
+Using Python 3.11.15 environment at: /home/hice1/sghose7/scratch/moe-bias-shapley-venv
+Checked 5 packages in 28.57s
+Using Python 3.11.15 environment at: /home/hice1/sghose7/scratch/moe-bias-shapley-venv
+Checked 1 package in 1.96s
+[2026-07-07 02:18:13,478] INFO run_experiment4_ablation: === Experiment 4 (ablation cross-check): exp1-concentration-phi3.5-moe ===
+[2026-07-07 02:18:13,478] INFO run_experiment4_ablation: Model: microsoft/Phi-3.5-MoE-instruct | family: phi3.5moe | max_pairs: 30 | result_dir: /home/hice1/sghose7/scratch/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-phi3.5-moe
+[2026-07-07 02:18:13,482] INFO run_experiment4_ablation: Loaded 512 ranked players from /home/hice1/sghose7/scratch/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-phi3.5-moe
+[2026-07-07 02:18:20,731] INFO moe_bias_shapley.benchmarks: Loading StereoSet (intrasentence / validation) …
+[2026-07-07 02:18:20,772] INFO httpx: HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+[2026-07-07 02:18:20,812] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:18:20,816] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/McGill-NLP/stereoset/bf6e7ce50491784d094fb7afe60a70ecccb89035/README.md "HTTP/1.1 200 OK"
+[2026-07-07 02:18:20,822] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/McGill-NLP/stereoset/bf6e7ce50491784d094fb7afe60a70ecccb89035/README.md "HTTP/1.1 200 OK"
+[2026-07-07 02:18:20,858] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/stereoset.py "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:20,940] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/McGill-NLP/stereoset/McGill-NLP/stereoset.py "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:21,142] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/revision/bf6e7ce50491784d094fb7afe60a70ecccb89035 "HTTP/1.1 200 OK"
+[2026-07-07 02:18:21,174] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:21,257] INFO httpx: HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=McGill-NLP/stereoset "HTTP/1.1 200 OK"
+[2026-07-07 02:18:21,294] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035/intersentence?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:18:21,326] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:18:21,362] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:21,398] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035/intrasentence?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:18:22,687] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/intrasentence/validation-00000-of-00001.parquet "HTTP/1.1 302 Found"
+Generating validation split:   0%|          | 0/2106 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 2106/2106 [00:00<00:00, 55371.22 examples/s]
+[2026-07-07 02:18:23,262] INFO moe_bias_shapley.benchmarks: Loaded 30 StereoSet pairs from 2106 items
+[2026-07-07 02:18:23,262] INFO moe_bias_shapley.benchmarks: Loading BBQ category=Gender_identity split=test …
+[2026-07-07 02:18:23,295] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/refs%2Fconvert%2Fparquet/README.md "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:23,325] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/refs%2Fconvert%2Fparquet "HTTP/1.1 200 OK"
+[2026-07-07 02:18:23,357] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/bbq.py "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:23,421] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/heegyu/bbq/heegyu/bbq.py "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:23,453] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/README.md "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:23,561] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/da21e4bdbe74d6bed714ee80b4941c9c73958aea "HTTP/1.1 200 OK"
+[2026-07-07 02:18:23,592] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:23,625] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity%2Fdata?recursive=true&expand=false "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:23,659] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:18:23,697] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity%2Ftest?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:18:23,730] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:18:23,782] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:23,823] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity/test/0000.parquet "HTTP/1.1 302 Found"
+Generating test split: 0 examples [00:00, ? examples/s]Generating test split: 5672 examples [00:00, 603748.15 examples/s]
+[2026-07-07 02:18:24,085] INFO moe_bias_shapley.benchmarks: Loaded 30 BBQ pairs across 2 categories
+[2026-07-07 02:18:24,091] INFO moe_bias_shapley.benchmarks: Loaded 30 WinoGender pairs
+[2026-07-07 02:18:24,091] INFO moe_bias_shapley.benchmarks: Total prompt pairs: 30
+[2026-07-07 02:18:30,716] INFO moe_bias_shapley.modeling: Loading tokenizer + model: microsoft/Phi-3.5-MoE-instruct (family=phi3.5moe)
+[2026-07-07 02:18:30,757] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-MoE-instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:18:30,761] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/config.json "HTTP/1.1 200 OK"
+[2026-07-07 02:18:30,766] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/config.json "HTTP/1.1 200 OK"
+[transformers] Unrecognized keys in `rope_parameters` for 'rope_type'='longrope': {'short_mscale', 'long_mscale'}
+[transformers] This model config has set a `rope_parameters['original_max_position_embeddings']` field, to be used together with `max_position_embeddings` to determine a scaling factor. Please set the `factor` field of `rope_parameters`with this ratio instead -- we recommend the use of this field over `original_max_position_embeddings`, as it is compatible with most model architectures.
+[2026-07-07 02:18:30,837] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-MoE-instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:18:30,841] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-07-07 02:18:30,846] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-07-07 02:18:30,881] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-MoE-instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:18:30,887] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-07-07 02:18:30,924] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/microsoft/Phi-3.5-MoE-instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:30,961] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/microsoft/Phi-3.5-MoE-instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:18:30,994] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-MoE-instruct/resolve/main/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:18:30,998] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/tokenizer.json "HTTP/1.1 200 OK"
+[2026-07-07 02:18:31,003] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/tokenizer.json "HTTP/1.1 200 OK"
+[2026-07-07 02:18:31,050] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-MoE-instruct/resolve/main/tokenizer.model "HTTP/1.1 302 Found"
+[2026-07-07 02:18:31,405] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-MoE-instruct/resolve/main/added_tokens.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:18:31,410] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/added_tokens.json "HTTP/1.1 200 OK"
+[2026-07-07 02:18:31,414] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/added_tokens.json "HTTP/1.1 200 OK"
+[2026-07-07 02:18:31,448] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-MoE-instruct/resolve/main/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:18:31,453] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/special_tokens_map.json "HTTP/1.1 200 OK"
+[2026-07-07 02:18:31,457] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/special_tokens_map.json "HTTP/1.1 200 OK"
+[2026-07-07 02:18:31,489] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-MoE-instruct/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:31,703] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-MoE-instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:18:31,708] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/config.json "HTTP/1.1 200 OK"
+[transformers] Unrecognized keys in `rope_parameters` for 'rope_type'='longrope': {'short_mscale', 'long_mscale'}
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[2026-07-07 02:18:41,459] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-MoE-instruct/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+[2026-07-07 02:18:41,494] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-MoE-instruct/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:18:41,498] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/model.safetensors.index.json "HTTP/1.1 200 OK"
+[2026-07-07 02:18:41,504] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/model.safetensors.index.json "HTTP/1.1 200 OK"
+[2026-07-07 02:18:41,542] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/microsoft/Phi-3.5-MoE-instruct/revision/main "HTTP/1.1 200 OK"
+[2026-07-07 02:18:41,632] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/microsoft/Phi-3.5-MoE-instruct/tree/43688451b462a3351d8580625ebe1931adb3986d?recursive=true&expand=false "HTTP/1.1 200 OK"
+Fetching 17 files:   0%|          | 0/17 [00:00<?, ?it/s]Fetching 17 files:   6%|▌         | 1/17 [00:30<08:14, 30.89s/it]Fetching 17 files:  29%|██▉       | 5/17 [00:31<00:56,  4.67s/it]Fetching 17 files:  53%|█████▎    | 9/17 [00:43<00:30,  3.85s/it]Fetching 17 files:  59%|█████▉    | 10/17 [01:02<00:44,  6.31s/it]Fetching 17 files:  65%|██████▍   | 11/17 [01:02<00:30,  5.15s/it]Fetching 17 files:  71%|███████   | 12/17 [01:03<00:20,  4.08s/it]Fetching 17 files:  76%|███████▋  | 13/17 [01:04<00:13,  3.46s/it]Fetching 17 files: 100%|██████████| 17/17 [01:04<00:00,  3.80s/it]
+Loading weights:   0%|          | 0/485 [00:00<?, ?it/s]Loading weights:   1%|          | 4/485 [00:00<01:06,  7.27it/s]Loading weights:   4%|▍         | 19/485 [00:00<00:20, 23.10it/s]Loading weights:   7%|▋         | 34/485 [00:01<00:21, 21.29it/s]Loading weights:  10%|█         | 49/485 [00:02<00:19, 22.42it/s]Loading weights:  13%|█▎        | 64/485 [00:03<00:20, 20.06it/s]Loading weights:  16%|█▋        | 79/485 [00:03<00:18, 22.22it/s]Loading weights:  19%|█▉        | 94/485 [00:04<00:18, 20.68it/s]Loading weights:  22%|██▏       | 109/485 [00:05<00:19, 19.55it/s]Loading weights:  26%|██▌       | 124/485 [00:06<00:21, 16.96it/s]Loading weights:  29%|██▊       | 139/485 [00:07<00:21, 15.77it/s]Loading weights:  32%|███▏      | 154/485 [00:08<00:20, 16.50it/s]Loading weights:  35%|███▍      | 169/485 [00:09<00:18, 17.12it/s]Loading weights:  38%|███▊      | 184/485 [00:10<00:17, 17.48it/s]Loading weights:  41%|████      | 199/485 [00:10<00:16, 17.67it/s]Loading weights:  44%|████▍     | 214/485 [00:11<00:15, 17.86it/s]Loading weights:  47%|████▋     | 229/485 [00:12<00:14, 17.91it/s]Loading weights:  50%|█████     | 244/485 [00:13<00:13, 18.21it/s]Loading weights:  53%|█████▎    | 259/485 [00:14<00:12, 17.99it/s]Loading weights:  56%|█████▋    | 274/485 [00:15<00:11, 17.82it/s]Loading weights:  60%|█████▉    | 289/485 [00:15<00:10, 18.47it/s]Loading weights:  63%|██████▎   | 304/485 [00:16<00:08, 20.81it/s]Loading weights:  66%|██████▌   | 319/485 [00:17<00:08, 19.68it/s]Loading weights:  69%|██████▉   | 334/485 [00:17<00:07, 21.39it/s]Loading weights:  72%|███████▏  | 349/485 [00:18<00:07, 18.19it/s]Loading weights:  75%|███████▌  | 364/485 [00:19<00:07, 17.12it/s]Loading weights:  78%|███████▊  | 379/485 [00:20<00:06, 16.12it/s]Loading weights:  81%|████████  | 394/485 [00:22<00:05, 15.19it/s]Loading weights:  84%|████████▍ | 409/485 [00:24<00:07, 10.34it/s]Loading weights:  85%|████████▍ | 411/485 [00:24<00:07, 10.28it/s]Loading weights:  87%|████████▋ | 424/485 [00:25<00:05, 10.48it/s]Loading weights:  91%|█████████ | 439/485 [00:27<00:04, 11.24it/s]Loading weights:  94%|█████████▎| 454/485 [00:28<00:02, 12.34it/s]Loading weights:  97%|█████████▋| 469/485 [00:29<00:01, 12.53it/s]Loading weights: 100%|██████████| 485/485 [00:29<00:00, 16.57it/s]
+[2026-07-07 02:20:17,534] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-MoE-instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:20:17,539] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/generation_config.json "HTTP/1.1 200 OK"
+[2026-07-07 02:20:17,544] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-MoE-instruct/43688451b462a3351d8580625ebe1931adb3986d/generation_config.json "HTTP/1.1 200 OK"
+[2026-07-07 02:20:17,628] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:20:24,015] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:20:29,664] INFO moe_bias_shapley.shapley: ablation_curve: k=1/512 fraction=0.002 bias_gap=0.3761 disparity_drop=-0.064
+[2026-07-07 02:20:29,666] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:20:35,302] INFO moe_bias_shapley.shapley: ablation_curve: k=2/512 fraction=0.004 bias_gap=0.3409 disparity_drop=0.035
+[2026-07-07 02:20:35,304] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:20:40,945] INFO moe_bias_shapley.shapley: ablation_curve: k=3/512 fraction=0.006 bias_gap=0.3514 disparity_drop=0.005
+[2026-07-07 02:20:40,947] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:20:46,589] INFO moe_bias_shapley.shapley: ablation_curve: k=4/512 fraction=0.008 bias_gap=0.3634 disparity_drop=-0.028
+[2026-07-07 02:20:46,591] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:20:52,253] INFO moe_bias_shapley.shapley: ablation_curve: k=5/512 fraction=0.010 bias_gap=0.3884 disparity_drop=-0.099
+[2026-07-07 02:20:52,256] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:20:58,142] INFO moe_bias_shapley.shapley: ablation_curve: k=6/512 fraction=0.012 bias_gap=0.3633 disparity_drop=-0.028
+[2026-07-07 02:20:58,144] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:21:03,795] INFO moe_bias_shapley.shapley: ablation_curve: k=7/512 fraction=0.014 bias_gap=0.3510 disparity_drop=0.007
+[2026-07-07 02:21:03,797] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:21:09,438] INFO moe_bias_shapley.shapley: ablation_curve: k=8/512 fraction=0.016 bias_gap=0.3476 disparity_drop=0.016
+[2026-07-07 02:21:09,440] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:21:15,086] INFO moe_bias_shapley.shapley: ablation_curve: k=9/512 fraction=0.018 bias_gap=0.3574 disparity_drop=-0.011
+[2026-07-07 02:21:15,088] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:21:20,746] INFO moe_bias_shapley.shapley: ablation_curve: k=10/512 fraction=0.020 bias_gap=0.3504 disparity_drop=0.008
+[2026-07-07 02:21:20,748] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:21:26,485] INFO moe_bias_shapley.shapley: ablation_curve: k=51/512 fraction=0.100 bias_gap=0.2239 disparity_drop=0.366
+[2026-07-07 02:21:26,488] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:21:32,494] INFO moe_bias_shapley.shapley: ablation_curve: k=102/512 fraction=0.199 bias_gap=0.1865 disparity_drop=0.472
+[2026-07-07 02:21:32,496] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:21:38,434] INFO moe_bias_shapley.shapley: ablation_curve: k=154/512 fraction=0.301 bias_gap=0.3040 disparity_drop=0.140
+[2026-07-07 02:21:38,436] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:21:43,937] INFO moe_bias_shapley.shapley: ablation_curve: k=256/512 fraction=0.500 bias_gap=0.0427 disparity_drop=0.879
+[2026-07-07 02:21:43,939] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:21:49,315] INFO moe_bias_shapley.shapley: ablation_curve: k=384/512 fraction=0.750 bias_gap=-0.0608 disparity_drop=1.172
+[2026-07-07 02:21:49,317] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:21:54,794] INFO moe_bias_shapley.shapley: ablation_curve: k=512/512 fraction=1.000 bias_gap=0.0387 disparity_drop=0.891
+[2026-07-07 02:21:54,799] INFO run_experiment4_ablation: Done. Experiment 4 results in /home/hice1/sghose7/scratch/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-phi3.5-moe/experiment4/experiment4_ablation_curve.json

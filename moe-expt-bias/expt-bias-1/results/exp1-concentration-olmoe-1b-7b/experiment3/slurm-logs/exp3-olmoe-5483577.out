@@ -1,0 +1,28 @@
+---------------------------------------
+Begin Slurm Prolog: Jul-07-2026 02:14:32
+Job ID:    5483577
+User ID:   sghose7
+Account:   coc
+Job name:  exp3-olmoe
+Partition: coc-gpu
+QOS:       coc-ice
+---------------------------------------
+[slurm] WORKDIR=/home/hice1/sghose7/scratch/moe-breakdown
+[slurm] ROOT_DIR=/home/hice1/sghose7/scratch/moe-breakdown/moe-expt-bias/expt-bias-1
+[slurm] SCRIPT=scripts/run_experiment3_interactions.py
+[slurm] STUDY_CONFIG=/home/hice1/sghose7/scratch/moe-breakdown/moe-expt-bias/expt-bias-1/configs/study.olmoe.concentration.yaml
+[slurm] OUT_DIR=/home/hice1/sghose7/scratch/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-olmoe-1b-7b/experiment3
+[slurm] EXTRA_ARGS=--max-pairs 20 --max-layers 2
+[slurm] GPUs visible: 1
+---------------------------------------
+Begin Slurm Epilog: Jul-07-2026 03:37:31
+Job ID:        5483577
+User ID:       sghose7
+Account:       coc
+Job name:      exp3-olmoe
+Resources:     cpu=8,gres/gpu:a100=1,mem=64G,node=1
+Rsrc Used:     cput=11:04:08,vmem=0,walltime=01:23:01,mem=21479700K,energy_used=0
+Partition:     coc-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-03-007-33-0
+---------------------------------------

@@ -1,0 +1,26 @@
+---------------------------------------
+Begin Slurm Prolog: Jul-07-2026 17:08:53
+Job ID:    5484053
+User ID:   sghose7
+Account:   coc
+Job name:  bias-exp2-dense-crosscheck-llama-2-7b-v1-s1of2
+Partition: ice-gpu
+QOS:       coc-ice
+---------------------------------------
+[slurm] WORKDIR=/home/hice1/sghose7/scratch/moe-breakdown
+[slurm] ROOT_DIR=/home/hice1/sghose7/scratch/moe-breakdown/moe-expt-bias/expt-bias-1
+[slurm] STUDY_CONFIG=/storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1/configs/study.llama-2-7b.dense-crosscheck-2.v1.yaml
+[slurm] OUT_DIR=/storage/ice1/0/2/sghose7/moe-breakdown-bias-runs/expt-bias-1/exp2-dense-crosscheck-llama-2-7b-v1
+[slurm] GPUs visible: 1
+---------------------------------------
+Begin Slurm Epilog: Jul-07-2026 17:26:42
+Job ID:        5484053
+User ID:       sghose7
+Account:       coc
+Job name:      bias-exp2-dense-crosscheck-llama-2-7b-v1-s1of2
+Resources:     cpu=8,gres/gpu:h100=1,mem=48G,node=1
+Rsrc Used:     cput=02:22:48,vmem=0,walltime=00:17:51,mem=22720632K,energy_used=0
+Partition:     ice-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-03-013-3-0
+---------------------------------------

@@ -1,0 +1,336 @@
+Using CPython 3.11.15
+Creating virtual environment at: /tmp/moe-bias-shapley-venv
+Activate with: source /tmp/moe-bias-shapley-venv/bin/activate
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 4 packages in 317ms
+Downloading pip (1.7MiB)
+ Downloaded pip
+Prepared 4 packages in 136ms
+Installed 4 packages in 30ms
+ + packaging==26.3
+ + pip==26.2.1
+ + setuptools==84.0.0
+ + wheel==0.47.0
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 4 packages in 217ms
+   Building moe-bias-shapley @ file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1
+Downloading numpy (16.1MiB)
+Downloading scipy (33.7MiB)
+ Downloaded numpy
+ Downloaded scipy
+      Built moe-bias-shapley @ file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1
+Prepared 4 packages in 6.55s
+Installed 4 packages in 42ms
+ + moe-bias-shapley==0.1.0 (from file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1)
+ + numpy==2.4.6
+ + pyyaml==6.0.3
+ + scipy==1.17.1
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 23 packages in 304ms
+Downloading nvidia-cuda-nvrtc-cu12 (23.5MiB)
+Downloading nvidia-cuda-cupti-cu12 (13.2MiB)
+Downloading nvidia-nvjitlink-cu12 (20.1MiB)
+Downloading nvidia-curand-cu12 (53.7MiB)
+Downloading nvidia-nccl-cu12 (179.9MiB)
+Downloading nvidia-cufft-cu12 (201.7MiB)
+Downloading networkx (2.0MiB)
+Downloading sympy (5.9MiB)
+Downloading nvidia-cublas-cu12 (346.6MiB)
+Downloading nvidia-cudnn-cu12 (634.0MiB)
+Downloading nvidia-cusparselt-cu12 (143.1MiB)
+Downloading nvidia-cusolver-cu12 (122.0MiB)
+Downloading nvidia-cusparse-cu12 (197.8MiB)
+Downloading torch (732.9MiB)
+Downloading triton (159.0MiB)
+ Downloaded nvidia-cuda-cupti-cu12
+ Downloaded nvidia-nvjitlink-cu12
+ Downloaded nvidia-cuda-nvrtc-cu12
+ Downloaded networkx
+ Downloaded triton
+ Downloaded nvidia-curand-cu12
+ Downloaded sympy
+ Downloaded nvidia-cusolver-cu12
+ Downloaded nvidia-cusparselt-cu12
+ Downloaded nvidia-nccl-cu12
+ Downloaded nvidia-cusparse-cu12
+ Downloaded nvidia-cufft-cu12
+ Downloaded nvidia-cublas-cu12
+ Downloaded nvidia-cudnn-cu12
+ Downloaded torch
+Prepared 23 packages in 29.76s
+Installed 23 packages in 351ms
+ + filelock==3.29.0
+ + fsspec==2026.4.0
+ + jinja2==3.1.6
+ + markupsafe==3.0.3
+ + mpmath==1.3.0
+ + networkx==3.6.1
+ + nvidia-cublas-cu12==12.4.5.8
+ + nvidia-cuda-cupti-cu12==12.4.127
+ + nvidia-cuda-nvrtc-cu12==12.4.127
+ + nvidia-cuda-runtime-cu12==12.4.127
+ + nvidia-cudnn-cu12==9.1.0.70
+ + nvidia-cufft-cu12==11.2.1.3
+ + nvidia-curand-cu12==10.3.5.147
+ + nvidia-cusolver-cu12==11.6.1.9
+ + nvidia-cusparse-cu12==12.3.1.170
+ + nvidia-cusparselt-cu12==0.6.2
+ + nvidia-nccl-cu12==2.21.5
+ + nvidia-nvjitlink-cu12==12.4.127
+ + nvidia-nvtx-cu12==12.4.127
+ + sympy==1.13.1
+ + torch==2.6.0+cu124
+ + triton==3.2.0
+ + typing-extensions==4.15.0
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 71 packages in 561ms
+Downloading tiktoken (1.1MiB)
+Downloading aiohttp (1.7MiB)
+Downloading pandas (10.8MiB)
+Downloading hf-xet (4.3MiB)
+Downloading sentencepiece (1.3MiB)
+Downloading pyarrow (47.7MiB)
+Downloading pygments (1.2MiB)
+Downloading tokenizers (3.1MiB)
+Downloading transformers (11.2MiB)
+ Downloaded tiktoken
+ Downloaded sentencepiece
+ Downloaded aiohttp
+ Downloaded tokenizers
+ Downloaded hf-xet
+ Downloaded pygments
+ Downloaded pandas
+ Downloaded pyarrow
+ Downloaded transformers
+Prepared 45 packages in 1.24s
+Installed 45 packages in 175ms
+ + accelerate==1.14.0
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + annotated-doc==0.0.5
+ + anyio==4.14.2
+ + attrs==26.1.0
+ + certifi==2026.7.22
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + datasets==5.0.1
+ + dill==0.4.1
+ + frozenlist==1.8.0
+ + h11==0.16.0
+ + hf-xet==1.6.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + huggingface-hub==1.27.0
+ + idna==3.18
+ + markdown-it-py==4.2.0
+ + mdurl==0.1.2
+ + multidict==6.7.1
+ + multiprocess==0.70.19
+ + pandas==3.0.5
+ + propcache==0.5.2
+ + protobuf==7.35.1
+ + psutil==7.2.2
+ + pyarrow==25.0.0
+ + pygments==2.20.0
+ + python-dateutil==2.9.0.post0
+ + regex==2026.7.19
+ + requests==2.34.2
+ + rich==15.0.0
+ + safetensors==0.8.0
+ + sentencepiece==0.2.2
+ + shellingham==1.5.4
+ + six==1.17.0
+ + tiktoken==0.13.0
+ + tokenizers==0.22.2
+ + tqdm==4.70.0
+ + transformers==5.15.0
+ + typer==0.27.1
+ + urllib3==2.7.0
+ + xxhash==3.8.1
+ + yarl==1.24.5
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 26 packages in 142ms
+Downloading bitsandbytes (39.0MiB)
+ Downloaded bitsandbytes
+Prepared 1 package in 591ms
+Installed 1 package in 22ms
+ + bitsandbytes==0.50.0
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 19 packages in 156ms
+Downloading kernels-data (1.2MiB)
+Downloading triton (188.5MiB)
+ Downloaded kernels-data
+ Downloaded triton
+Prepared 4 packages in 2.59s
+Uninstalled 1 package in 9ms
+Installed 4 packages in 152ms
+ + kernels==0.15.2
+ + kernels-data==0.16.0
+ + tomlkit==0.15.1
+ - triton==3.2.0
+ + triton==3.7.1
+[2026-08-10 08:16:59,015] INFO run_bias_study: === Study: exp2-dense-crosscheck-llama-2-7b-v1 ===
+[2026-08-10 08:16:59,015] INFO run_bias_study: Model: NousResearch/Llama-2-7b-hf | family: llama | shapley_method: dense_loo
+[2026-08-10 08:16:59,015] INFO run_bias_study: Benchmarks: ['stereoset', 'bbq', 'winogender'] | max_prompts: 1800
+[2026-08-10 08:16:59,015] INFO run_bias_study: Shard: 1 / 2
+[2026-08-10 08:17:01,579] INFO moe_bias_shapley.benchmarks: Loading StereoSet (intrasentence / validation) …
+[2026-08-10 08:17:01,618] INFO httpx: HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+[2026-08-10 08:17:01,653] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 08:17:01,658] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/McGill-NLP/stereoset/bf6e7ce50491784d094fb7afe60a70ecccb89035/README.md "HTTP/1.1 200 OK"
+[2026-08-10 08:17:01,664] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/McGill-NLP/stereoset/bf6e7ce50491784d094fb7afe60a70ecccb89035/README.md "HTTP/1.1 200 OK"
+[2026-08-10 08:17:01,697] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/stereoset.py "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:01,771] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/McGill-NLP/stereoset/McGill-NLP/stereoset.py "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:01,816] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/revision/bf6e7ce50491784d094fb7afe60a70ecccb89035 "HTTP/1.1 200 OK"
+[2026-08-10 08:17:01,853] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:01,904] INFO httpx: HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=McGill-NLP/stereoset "HTTP/1.1 200 OK"
+[2026-08-10 08:17:01,941] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035/intersentence?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 08:17:01,976] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 08:17:02,024] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:02,059] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035/intrasentence?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 08:17:02,435] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/intrasentence/validation-00000-of-00001.parquet "HTTP/1.1 302 Found"
+Generating validation split:   0%|          | 0/2106 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 2106/2106 [00:00<00:00, 202843.00 examples/s]
+[2026-08-10 08:17:02,986] INFO moe_bias_shapley.benchmarks: Loaded 1800 StereoSet pairs from 2106 items
+[2026-08-10 08:17:02,987] INFO moe_bias_shapley.benchmarks: Loading BBQ category=Gender_identity split=test …
+[2026-08-10 08:17:03,023] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/refs%2Fconvert%2Fparquet/README.md "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:03,053] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/refs%2Fconvert%2Fparquet "HTTP/1.1 200 OK"
+[2026-08-10 08:17:03,084] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/bbq.py "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:03,109] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/heegyu/bbq/heegyu/bbq.py "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:03,139] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/README.md "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:03,178] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/da21e4bdbe74d6bed714ee80b4941c9c73958aea "HTTP/1.1 200 OK"
+[2026-08-10 08:17:03,208] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:03,247] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity%2Fdata?recursive=true&expand=false "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:03,279] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 08:17:03,316] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity%2Ftest?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 08:17:03,351] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 08:17:03,402] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:03,439] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity/test/0000.parquet "HTTP/1.1 302 Found"
+Generating test split: 0 examples [00:00, ? examples/s]Generating test split: 5672 examples [00:00, 609986.73 examples/s]
+[2026-08-10 08:17:04,096] INFO moe_bias_shapley.benchmarks: Loaded 1800 BBQ pairs across 2 categories
+[2026-08-10 08:17:04,098] INFO moe_bias_shapley.benchmarks: Loaded 240 WinoGender pairs
+[2026-08-10 08:17:04,098] INFO moe_bias_shapley.benchmarks: Total prompt pairs: 1800
+[2026-08-10 08:17:04,099] INFO run_bias_study: After sharding: 900 pairs (shard 2 of 2)
+[2026-08-10 08:17:08,750] INFO moe_bias_shapley.modeling: Loading tokenizer + model: NousResearch/Llama-2-7b-hf (family=llama)
+[2026-08-10 08:17:08,788] INFO httpx: HTTP Request: HEAD https://huggingface.co/NousResearch/Llama-2-7b-hf/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 08:17:08,822] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/NousResearch/Llama-2-7b-hf/8efe6c9b93655b934e27bd9981e3ec13e55aee9d/config.json "HTTP/1.1 200 OK"
+[2026-08-10 08:17:08,861] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/NousResearch/Llama-2-7b-hf/8efe6c9b93655b934e27bd9981e3ec13e55aee9d/config.json "HTTP/1.1 200 OK"
+[2026-08-10 08:17:08,958] INFO httpx: HTTP Request: HEAD https://huggingface.co/NousResearch/Llama-2-7b-hf/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 08:17:08,991] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/NousResearch/Llama-2-7b-hf/8efe6c9b93655b934e27bd9981e3ec13e55aee9d/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-08-10 08:17:09,028] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/NousResearch/Llama-2-7b-hf/8efe6c9b93655b934e27bd9981e3ec13e55aee9d/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-08-10 08:17:09,070] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/NousResearch/Llama-2-7b-hf/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:09,138] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/NousResearch/Llama-2-7b-hf/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 08:17:09,175] INFO httpx: HTTP Request: HEAD https://huggingface.co/NousResearch/Llama-2-7b-hf/resolve/main/tokenizer.model "HTTP/1.1 302 Found"
+[2026-08-10 08:17:09,546] INFO httpx: HTTP Request: HEAD https://huggingface.co/NousResearch/Llama-2-7b-hf/resolve/main/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 08:17:09,578] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/NousResearch/Llama-2-7b-hf/8efe6c9b93655b934e27bd9981e3ec13e55aee9d/tokenizer.json "HTTP/1.1 200 OK"
+[2026-08-10 08:17:09,616] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/NousResearch/Llama-2-7b-hf/8efe6c9b93655b934e27bd9981e3ec13e55aee9d/tokenizer.json "HTTP/1.1 200 OK"
+[2026-08-10 08:17:09,685] INFO httpx: HTTP Request: HEAD https://huggingface.co/NousResearch/Llama-2-7b-hf/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:09,718] INFO httpx: HTTP Request: HEAD https://huggingface.co/NousResearch/Llama-2-7b-hf/resolve/main/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 08:17:09,752] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/NousResearch/Llama-2-7b-hf/8efe6c9b93655b934e27bd9981e3ec13e55aee9d/special_tokens_map.json "HTTP/1.1 200 OK"
+[2026-08-10 08:17:09,788] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/NousResearch/Llama-2-7b-hf/8efe6c9b93655b934e27bd9981e3ec13e55aee9d/special_tokens_map.json "HTTP/1.1 200 OK"
+[2026-08-10 08:17:09,823] INFO httpx: HTTP Request: HEAD https://huggingface.co/NousResearch/Llama-2-7b-hf/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:09,981] INFO httpx: HTTP Request: HEAD https://huggingface.co/NousResearch/Llama-2-7b-hf/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 08:17:09,987] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/NousResearch/Llama-2-7b-hf/8efe6c9b93655b934e27bd9981e3ec13e55aee9d/config.json "HTTP/1.1 200 OK"
+[2026-08-10 08:17:10,859] INFO httpx: HTTP Request: HEAD https://huggingface.co/NousResearch/Llama-2-7b-hf/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+[2026-08-10 08:17:10,892] INFO httpx: HTTP Request: HEAD https://huggingface.co/NousResearch/Llama-2-7b-hf/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 08:17:10,924] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/NousResearch/Llama-2-7b-hf/8efe6c9b93655b934e27bd9981e3ec13e55aee9d/model.safetensors.index.json "HTTP/1.1 200 OK"
+[2026-08-10 08:17:10,958] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/NousResearch/Llama-2-7b-hf/8efe6c9b93655b934e27bd9981e3ec13e55aee9d/model.safetensors.index.json "HTTP/1.1 200 OK"
+[2026-08-10 08:17:10,994] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/NousResearch/Llama-2-7b-hf/revision/main "HTTP/1.1 200 OK"
+[2026-08-10 08:17:11,042] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/NousResearch/Llama-2-7b-hf/tree/8efe6c9b93655b934e27bd9981e3ec13e55aee9d?recursive=true&expand=false "HTTP/1.1 200 OK"
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:55<00:55, 55.41s/it]Fetching 2 files: 100%|██████████| 2/2 [01:41<00:00, 49.66s/it]Fetching 2 files: 100%|██████████| 2/2 [01:41<00:00, 50.52s/it]
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   1%|          | 2/291 [00:00<00:16, 18.05it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:03, 72.97it/s]Loading weights:  10%|▉         | 28/291 [00:00<00:02, 97.81it/s]Loading weights:  14%|█▎        | 40/291 [00:00<00:02, 98.35it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:02, 94.88it/s]Loading weights:  22%|██▏       | 63/291 [00:00<00:02, 105.05it/s]Loading weights:  25%|██▌       | 74/291 [00:00<00:02, 100.08it/s]Loading weights:  29%|██▉       | 85/291 [00:00<00:02, 99.68it/s] Loading weights:  33%|███▎      | 96/291 [00:01<00:01, 99.06it/s]Loading weights:  37%|███▋      | 109/291 [00:01<00:01, 105.22it/s]Loading weights:  41%|████      | 120/291 [00:01<00:01, 105.69it/s]Loading weights:  45%|████▌     | 131/291 [00:01<00:01, 97.70it/s] Loading weights:  49%|████▉     | 143/291 [00:01<00:01, 100.51it/s]Loading weights:  53%|█████▎    | 155/291 [00:01<00:01, 103.24it/s]Loading weights:  57%|█████▋    | 166/291 [00:01<00:01, 100.85it/s]Loading weights:  61%|██████    | 177/291 [00:01<00:01, 99.95it/s] Loading weights:  65%|██████▍   | 189/291 [00:01<00:00, 105.23it/s]Loading weights:  69%|██████▊   | 200/291 [00:02<00:00, 100.49it/s]Loading weights:  73%|███████▎  | 211/291 [00:02<00:00, 99.78it/s] Loading weights:  76%|███████▋  | 222/291 [00:02<00:00, 102.53it/s]Loading weights:  82%|████████▏ | 238/291 [00:02<00:00, 117.92it/s]Loading weights:  87%|████████▋ | 252/291 [00:02<00:00, 123.78it/s]Loading weights:  91%|█████████ | 265/291 [00:02<00:00, 117.70it/s]Loading weights:  97%|█████████▋| 282/291 [00:02<00:00, 131.73it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 106.92it/s]
+[2026-08-10 08:18:55,441] INFO httpx: HTTP Request: HEAD https://huggingface.co/NousResearch/Llama-2-7b-hf/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 08:18:55,471] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/NousResearch/Llama-2-7b-hf/8efe6c9b93655b934e27bd9981e3ec13e55aee9d/generation_config.json "HTTP/1.1 200 OK"
+[2026-08-10 08:18:55,510] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/NousResearch/Llama-2-7b-hf/8efe6c9b93655b934e27bd9981e3ec13e55aee9d/generation_config.json "HTTP/1.1 200 OK"
+[2026-08-10 08:18:55,513] INFO moe_bias_shapley.hooks: Discovered 32 dense FFN layers
+[2026-08-10 08:19:11,048] INFO moe_bias_shapley.shapley: dense_loo: processed 10/900 pairs
+[2026-08-10 08:19:26,287] INFO moe_bias_shapley.shapley: dense_loo: processed 20/900 pairs
+[2026-08-10 08:19:41,451] INFO moe_bias_shapley.shapley: dense_loo: processed 30/900 pairs
+[2026-08-10 08:19:56,540] INFO moe_bias_shapley.shapley: dense_loo: processed 40/900 pairs
+[2026-08-10 08:20:11,633] INFO moe_bias_shapley.shapley: dense_loo: processed 50/900 pairs
+[2026-08-10 08:20:26,753] INFO moe_bias_shapley.shapley: dense_loo: processed 60/900 pairs
+[2026-08-10 08:20:41,978] INFO moe_bias_shapley.shapley: dense_loo: processed 70/900 pairs
+[2026-08-10 08:20:57,283] INFO moe_bias_shapley.shapley: dense_loo: processed 80/900 pairs
+[2026-08-10 08:21:12,466] INFO moe_bias_shapley.shapley: dense_loo: processed 90/900 pairs
+[2026-08-10 08:21:27,856] INFO moe_bias_shapley.shapley: dense_loo: processed 100/900 pairs
+[2026-08-10 08:21:42,996] INFO moe_bias_shapley.shapley: dense_loo: processed 110/900 pairs
+[2026-08-10 08:21:58,277] INFO moe_bias_shapley.shapley: dense_loo: processed 120/900 pairs
+[2026-08-10 08:22:13,425] INFO moe_bias_shapley.shapley: dense_loo: processed 130/900 pairs
+[2026-08-10 08:22:28,531] INFO moe_bias_shapley.shapley: dense_loo: processed 140/900 pairs
+[2026-08-10 08:22:43,760] INFO moe_bias_shapley.shapley: dense_loo: processed 150/900 pairs
+[2026-08-10 08:22:58,845] INFO moe_bias_shapley.shapley: dense_loo: processed 160/900 pairs
+[2026-08-10 08:23:14,080] INFO moe_bias_shapley.shapley: dense_loo: processed 170/900 pairs
+[2026-08-10 08:23:29,238] INFO moe_bias_shapley.shapley: dense_loo: processed 180/900 pairs
+[2026-08-10 08:23:44,372] INFO moe_bias_shapley.shapley: dense_loo: processed 190/900 pairs
+[2026-08-10 08:23:59,622] INFO moe_bias_shapley.shapley: dense_loo: processed 200/900 pairs
+[2026-08-10 08:24:14,779] INFO moe_bias_shapley.shapley: dense_loo: processed 210/900 pairs
+[2026-08-10 08:24:30,051] INFO moe_bias_shapley.shapley: dense_loo: processed 220/900 pairs
+[2026-08-10 08:24:45,189] INFO moe_bias_shapley.shapley: dense_loo: processed 230/900 pairs
+[2026-08-10 08:25:00,398] INFO moe_bias_shapley.shapley: dense_loo: processed 240/900 pairs
+[2026-08-10 08:25:15,470] INFO moe_bias_shapley.shapley: dense_loo: processed 250/900 pairs
+[2026-08-10 08:25:30,639] INFO moe_bias_shapley.shapley: dense_loo: processed 260/900 pairs
+[2026-08-10 08:25:46,029] INFO moe_bias_shapley.shapley: dense_loo: processed 270/900 pairs
+[2026-08-10 08:26:01,281] INFO moe_bias_shapley.shapley: dense_loo: processed 280/900 pairs
+[2026-08-10 08:26:16,350] INFO moe_bias_shapley.shapley: dense_loo: processed 290/900 pairs
+[2026-08-10 08:26:31,588] INFO moe_bias_shapley.shapley: dense_loo: processed 300/900 pairs
+[2026-08-10 08:26:46,720] INFO moe_bias_shapley.shapley: dense_loo: processed 310/900 pairs
+[2026-08-10 08:27:01,776] INFO moe_bias_shapley.shapley: dense_loo: processed 320/900 pairs
+[2026-08-10 08:27:17,050] INFO moe_bias_shapley.shapley: dense_loo: processed 330/900 pairs
+[2026-08-10 08:27:32,190] INFO moe_bias_shapley.shapley: dense_loo: processed 340/900 pairs
+[2026-08-10 08:27:47,284] INFO moe_bias_shapley.shapley: dense_loo: processed 350/900 pairs
+[2026-08-10 08:28:02,438] INFO moe_bias_shapley.shapley: dense_loo: processed 360/900 pairs
+[2026-08-10 08:28:17,592] INFO moe_bias_shapley.shapley: dense_loo: processed 370/900 pairs
+[2026-08-10 08:28:32,829] INFO moe_bias_shapley.shapley: dense_loo: processed 380/900 pairs
+[2026-08-10 08:28:47,987] INFO moe_bias_shapley.shapley: dense_loo: processed 390/900 pairs
+[2026-08-10 08:29:03,325] INFO moe_bias_shapley.shapley: dense_loo: processed 400/900 pairs
+[2026-08-10 08:29:18,376] INFO moe_bias_shapley.shapley: dense_loo: processed 410/900 pairs
+[2026-08-10 08:29:33,499] INFO moe_bias_shapley.shapley: dense_loo: processed 420/900 pairs
+[2026-08-10 08:29:48,750] INFO moe_bias_shapley.shapley: dense_loo: processed 430/900 pairs
+[2026-08-10 08:30:03,816] INFO moe_bias_shapley.shapley: dense_loo: processed 440/900 pairs
+[2026-08-10 08:30:18,949] INFO moe_bias_shapley.shapley: dense_loo: processed 450/900 pairs
+[2026-08-10 08:30:34,152] INFO moe_bias_shapley.shapley: dense_loo: processed 460/900 pairs
+[2026-08-10 08:30:49,295] INFO moe_bias_shapley.shapley: dense_loo: processed 470/900 pairs
+[2026-08-10 08:31:04,533] INFO moe_bias_shapley.shapley: dense_loo: processed 480/900 pairs
+[2026-08-10 08:31:19,720] INFO moe_bias_shapley.shapley: dense_loo: processed 490/900 pairs
+[2026-08-10 08:31:34,994] INFO moe_bias_shapley.shapley: dense_loo: processed 500/900 pairs
+[2026-08-10 08:31:50,258] INFO moe_bias_shapley.shapley: dense_loo: processed 510/900 pairs
+[2026-08-10 08:32:05,530] INFO moe_bias_shapley.shapley: dense_loo: processed 520/900 pairs
+[2026-08-10 08:32:20,879] INFO moe_bias_shapley.shapley: dense_loo: processed 530/900 pairs
+[2026-08-10 08:32:36,119] INFO moe_bias_shapley.shapley: dense_loo: processed 540/900 pairs
+[2026-08-10 08:32:51,277] INFO moe_bias_shapley.shapley: dense_loo: processed 550/900 pairs
+[2026-08-10 08:33:06,331] INFO moe_bias_shapley.shapley: dense_loo: processed 560/900 pairs
+[2026-08-10 08:33:21,708] INFO moe_bias_shapley.shapley: dense_loo: processed 570/900 pairs
+[2026-08-10 08:33:36,922] INFO moe_bias_shapley.shapley: dense_loo: processed 580/900 pairs
+[2026-08-10 08:33:51,960] INFO moe_bias_shapley.shapley: dense_loo: processed 590/900 pairs
+[2026-08-10 08:34:07,078] INFO moe_bias_shapley.shapley: dense_loo: processed 600/900 pairs
+[2026-08-10 08:34:22,292] INFO moe_bias_shapley.shapley: dense_loo: processed 610/900 pairs
+[2026-08-10 08:34:37,445] INFO moe_bias_shapley.shapley: dense_loo: processed 620/900 pairs
+[2026-08-10 08:34:52,501] INFO moe_bias_shapley.shapley: dense_loo: processed 630/900 pairs
+[2026-08-10 08:35:07,552] INFO moe_bias_shapley.shapley: dense_loo: processed 640/900 pairs
+[2026-08-10 08:35:22,644] INFO moe_bias_shapley.shapley: dense_loo: processed 650/900 pairs
+[2026-08-10 08:35:37,814] INFO moe_bias_shapley.shapley: dense_loo: processed 660/900 pairs
+[2026-08-10 08:35:52,868] INFO moe_bias_shapley.shapley: dense_loo: processed 670/900 pairs
+[2026-08-10 08:36:08,009] INFO moe_bias_shapley.shapley: dense_loo: processed 680/900 pairs
+[2026-08-10 08:36:23,250] INFO moe_bias_shapley.shapley: dense_loo: processed 690/900 pairs
+[2026-08-10 08:36:38,297] INFO moe_bias_shapley.shapley: dense_loo: processed 700/900 pairs
+[2026-08-10 08:36:53,358] INFO moe_bias_shapley.shapley: dense_loo: processed 710/900 pairs
+[2026-08-10 08:37:08,745] INFO moe_bias_shapley.shapley: dense_loo: processed 720/900 pairs
+[2026-08-10 08:37:23,891] INFO moe_bias_shapley.shapley: dense_loo: processed 730/900 pairs
+[2026-08-10 08:37:38,952] INFO moe_bias_shapley.shapley: dense_loo: processed 740/900 pairs
+[2026-08-10 08:37:54,017] INFO moe_bias_shapley.shapley: dense_loo: processed 750/900 pairs
+[2026-08-10 08:38:09,351] INFO moe_bias_shapley.shapley: dense_loo: processed 760/900 pairs
+[2026-08-10 08:38:24,427] INFO moe_bias_shapley.shapley: dense_loo: processed 770/900 pairs
+[2026-08-10 08:38:39,571] INFO moe_bias_shapley.shapley: dense_loo: processed 780/900 pairs
+[2026-08-10 08:38:54,748] INFO moe_bias_shapley.shapley: dense_loo: processed 790/900 pairs
+[2026-08-10 08:39:09,806] INFO moe_bias_shapley.shapley: dense_loo: processed 800/900 pairs
+[2026-08-10 08:39:24,948] INFO moe_bias_shapley.shapley: dense_loo: processed 810/900 pairs
+[2026-08-10 08:39:40,091] INFO moe_bias_shapley.shapley: dense_loo: processed 820/900 pairs
+[2026-08-10 08:39:55,212] INFO moe_bias_shapley.shapley: dense_loo: processed 830/900 pairs
+[2026-08-10 08:40:10,347] INFO moe_bias_shapley.shapley: dense_loo: processed 840/900 pairs
+[2026-08-10 08:40:25,464] INFO moe_bias_shapley.shapley: dense_loo: processed 850/900 pairs
+[2026-08-10 08:40:40,742] INFO moe_bias_shapley.shapley: dense_loo: processed 860/900 pairs
+[2026-08-10 08:40:55,859] INFO moe_bias_shapley.shapley: dense_loo: processed 870/900 pairs
+[2026-08-10 08:41:11,004] INFO moe_bias_shapley.shapley: dense_loo: processed 880/900 pairs
+[2026-08-10 08:41:26,166] INFO moe_bias_shapley.shapley: dense_loo: processed 890/900 pairs
+[2026-08-10 08:41:41,466] INFO moe_bias_shapley.shapley: dense_loo: processed 900/900 pairs
+[2026-08-10 08:41:41,555] INFO moe_bias_shapley.reporting: Saved bias-Shapley results to /storage/ice1/0/2/sghose7/moe-breakdown-bias-runs/expt-bias-1/exp2-dense-crosscheck-llama-2-7b-v1
+[2026-08-10 08:41:41,555] INFO run_bias_study: Done. Results in /storage/ice1/0/2/sghose7/moe-breakdown-bias-runs/expt-bias-1/exp2-dense-crosscheck-llama-2-7b-v1

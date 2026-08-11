@@ -1,0 +1,106 @@
+[2026-07-07 02:22:04,559] INFO run_experiment4_ablation: === Experiment 4 (ablation cross-check): exp1-concentration-mixtral-8x7b ===
+[2026-07-07 02:22:04,560] INFO run_experiment4_ablation: Model: mistralai/Mixtral-8x7B-v0.1 | family: mixtral | max_pairs: 30 | result_dir: /home/hice1/sghose7/scratch/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-mixtral-8x7b
+[2026-07-07 02:22:04,564] INFO run_experiment4_ablation: Loaded 256 ranked players from /home/hice1/sghose7/scratch/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-mixtral-8x7b
+[2026-07-07 02:22:06,515] INFO moe_bias_shapley.benchmarks: Loading StereoSet (intrasentence / validation) …
+[2026-07-07 02:22:06,573] INFO httpx: HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+[2026-07-07 02:22:06,604] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:22:06,609] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/McGill-NLP/stereoset/bf6e7ce50491784d094fb7afe60a70ecccb89035/README.md "HTTP/1.1 200 OK"
+[2026-07-07 02:22:06,613] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/McGill-NLP/stereoset/bf6e7ce50491784d094fb7afe60a70ecccb89035/README.md "HTTP/1.1 200 OK"
+[2026-07-07 02:22:06,650] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/stereoset.py "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:06,769] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/McGill-NLP/stereoset/McGill-NLP/stereoset.py "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:06,814] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/revision/bf6e7ce50491784d094fb7afe60a70ecccb89035 "HTTP/1.1 200 OK"
+[2026-07-07 02:22:06,846] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:06,918] INFO httpx: HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=McGill-NLP/stereoset "HTTP/1.1 200 OK"
+[2026-07-07 02:22:06,955] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035/intersentence?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:22:06,984] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:22:07,021] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:07,055] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035/intrasentence?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:22:07,302] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/intrasentence/validation-00000-of-00001.parquet "HTTP/1.1 302 Found"
+Generating validation split:   0%|          | 0/2106 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 2106/2106 [00:00<00:00, 56462.40 examples/s]
+[2026-07-07 02:22:07,855] INFO moe_bias_shapley.benchmarks: Loaded 30 StereoSet pairs from 2106 items
+[2026-07-07 02:22:07,855] INFO moe_bias_shapley.benchmarks: Loading BBQ category=Gender_identity split=test …
+[2026-07-07 02:22:07,904] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/refs%2Fconvert%2Fparquet/README.md "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:07,937] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/refs%2Fconvert%2Fparquet "HTTP/1.1 200 OK"
+[2026-07-07 02:22:07,972] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/bbq.py "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:07,995] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/heegyu/bbq/heegyu/bbq.py "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:08,026] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/README.md "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:08,200] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/da21e4bdbe74d6bed714ee80b4941c9c73958aea "HTTP/1.1 200 OK"
+[2026-07-07 02:22:08,233] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:08,267] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity%2Fdata?recursive=true&expand=false "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:08,300] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:22:08,341] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity%2Ftest?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:22:08,374] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:22:08,426] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:08,464] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity/test/0000.parquet "HTTP/1.1 302 Found"
+Generating test split: 0 examples [00:00, ? examples/s]Generating test split: 5672 examples [00:00, 535162.02 examples/s]
+[2026-07-07 02:22:08,736] INFO moe_bias_shapley.benchmarks: Loaded 30 BBQ pairs across 2 categories
+[2026-07-07 02:22:08,741] INFO moe_bias_shapley.benchmarks: Loaded 30 WinoGender pairs
+[2026-07-07 02:22:08,741] INFO moe_bias_shapley.benchmarks: Total prompt pairs: 30
+[2026-07-07 02:22:13,314] INFO moe_bias_shapley.modeling: Loading tokenizer + model: mistralai/Mixtral-8x7B-v0.1 (family=mixtral)
+[2026-07-07 02:22:13,350] INFO httpx: HTTP Request: HEAD https://huggingface.co/mistralai/Mixtral-8x7B-v0.1/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:22:13,355] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/config.json "HTTP/1.1 200 OK"
+[2026-07-07 02:22:13,360] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/config.json "HTTP/1.1 200 OK"
+[2026-07-07 02:22:13,407] INFO httpx: HTTP Request: HEAD https://huggingface.co/mistralai/Mixtral-8x7B-v0.1/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:22:13,412] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-07-07 02:22:13,417] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-07-07 02:22:13,453] INFO httpx: HTTP Request: HEAD https://huggingface.co/mistralai/Mixtral-8x7B-v0.1/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:22:13,458] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-07-07 02:22:13,494] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/mistralai/Mixtral-8x7B-v0.1/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:13,531] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/mistralai/Mixtral-8x7B-v0.1/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 02:22:13,560] INFO httpx: HTTP Request: HEAD https://huggingface.co/mistralai/Mixtral-8x7B-v0.1/resolve/main/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:22:13,564] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/tokenizer.json "HTTP/1.1 200 OK"
+[2026-07-07 02:22:13,569] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/tokenizer.json "HTTP/1.1 200 OK"
+[2026-07-07 02:22:13,618] INFO httpx: HTTP Request: HEAD https://huggingface.co/mistralai/Mixtral-8x7B-v0.1/resolve/main/tokenizer.model "HTTP/1.1 302 Found"
+[2026-07-07 02:22:13,846] INFO httpx: HTTP Request: HEAD https://huggingface.co/mistralai/Mixtral-8x7B-v0.1/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:13,880] INFO httpx: HTTP Request: HEAD https://huggingface.co/mistralai/Mixtral-8x7B-v0.1/resolve/main/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:22:13,885] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/special_tokens_map.json "HTTP/1.1 200 OK"
+[2026-07-07 02:22:13,890] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/special_tokens_map.json "HTTP/1.1 200 OK"
+[2026-07-07 02:22:13,926] INFO httpx: HTTP Request: HEAD https://huggingface.co/mistralai/Mixtral-8x7B-v0.1/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:14,127] INFO httpx: HTTP Request: HEAD https://huggingface.co/mistralai/Mixtral-8x7B-v0.1/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:22:14,132] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/config.json "HTTP/1.1 200 OK"
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[2026-07-07 02:22:16,435] INFO httpx: HTTP Request: HEAD https://huggingface.co/mistralai/Mixtral-8x7B-v0.1/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+[2026-07-07 02:22:16,466] INFO httpx: HTTP Request: HEAD https://huggingface.co/mistralai/Mixtral-8x7B-v0.1/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:22:16,471] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/model.safetensors.index.json "HTTP/1.1 200 OK"
+[2026-07-07 02:22:16,476] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/model.safetensors.index.json "HTTP/1.1 200 OK"
+[2026-07-07 02:22:16,514] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/mistralai/Mixtral-8x7B-v0.1/revision/main "HTTP/1.1 200 OK"
+[2026-07-07 02:22:16,550] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/mistralai/Mixtral-8x7B-v0.1/tree/fc7ac94680e38d7348cfa806e51218e6273104b0?recursive=true&expand=false "HTTP/1.1 200 OK"
+Fetching 19 files:   0%|          | 0/19 [00:00<?, ?it/s]Fetching 19 files:   5%|▌         | 1/19 [00:31<09:22, 31.23s/it]Fetching 19 files:  11%|█         | 2/19 [00:32<03:48, 13.44s/it]Fetching 19 files:  16%|█▌        | 3/19 [00:33<02:04,  7.78s/it]Fetching 19 files:  47%|████▋     | 9/19 [00:45<00:32,  3.27s/it]Fetching 19 files:  53%|█████▎    | 10/19 [00:59<00:44,  4.92s/it]Fetching 19 files:  63%|██████▎   | 12/19 [01:04<00:29,  4.15s/it]Fetching 19 files:  79%|███████▉  | 15/19 [01:04<00:10,  2.53s/it]Fetching 19 files:  89%|████████▉ | 17/19 [01:07<00:04,  2.26s/it]Fetching 19 files:  95%|█████████▍| 18/19 [01:11<00:02,  2.46s/it]Fetching 19 files: 100%|██████████| 19/19 [01:11<00:00,  2.05s/it]Fetching 19 files: 100%|██████████| 19/19 [01:11<00:00,  3.78s/it]
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   1%|          | 3/291 [00:01<02:25,  1.98it/s]Loading weights:   4%|▍         | 12/291 [00:02<00:44,  6.23it/s]Loading weights:   4%|▍         | 13/291 [00:02<00:43,  6.46it/s]Loading weights:   7%|▋         | 21/291 [00:03<00:31,  8.68it/s]Loading weights:  10%|▉         | 28/291 [00:03<00:19, 13.63it/s]Loading weights:  11%|█         | 32/291 [00:03<00:27,  9.31it/s]Loading weights:  13%|█▎        | 39/291 [00:04<00:28,  8.98it/s]Loading weights:  14%|█▍        | 41/291 [00:04<00:26,  9.60it/s]Loading weights:  16%|█▋        | 48/291 [00:05<00:26,  9.19it/s]Loading weights:  17%|█▋        | 50/291 [00:05<00:24,  9.82it/s]Loading weights:  20%|█▉        | 57/291 [00:06<00:25,  9.13it/s]Loading weights:  20%|██        | 59/291 [00:06<00:23,  9.81it/s]Loading weights:  23%|██▎       | 66/291 [00:07<00:22, 10.09it/s]Loading weights:  23%|██▎       | 68/291 [00:07<00:21, 10.52it/s]Loading weights:  26%|██▌       | 75/291 [00:08<00:21, 10.01it/s]Loading weights:  26%|██▋       | 77/291 [00:08<00:20, 10.69it/s]Loading weights:  29%|██▉       | 84/291 [00:09<00:21,  9.85it/s]Loading weights:  30%|██▉       | 86/291 [00:09<00:19, 10.49it/s]Loading weights:  32%|███▏      | 93/291 [00:10<00:21,  9.17it/s]Loading weights:  33%|███▎      | 95/291 [00:10<00:20,  9.65it/s]Loading weights:  35%|███▌      | 102/291 [00:11<00:19,  9.80it/s]Loading weights:  36%|███▌      | 104/291 [00:11<00:17, 10.46it/s]Loading weights:  38%|███▊      | 111/291 [00:12<00:18,  9.53it/s]Loading weights:  39%|███▉      | 113/291 [00:12<00:17, 10.20it/s]Loading weights:  41%|████      | 120/291 [00:12<00:16, 10.32it/s]Loading weights:  42%|████▏     | 122/291 [00:12<00:15, 11.00it/s]Loading weights:  44%|████▍     | 129/291 [00:13<00:16,  9.98it/s]Loading weights:  45%|████▌     | 131/291 [00:13<00:15, 10.36it/s]Loading weights:  47%|████▋     | 138/291 [00:14<00:14, 10.87it/s]Loading weights:  51%|█████     | 147/291 [00:15<00:12, 11.92it/s]Loading weights:  54%|█████▎    | 156/291 [00:16<00:12, 10.72it/s]Loading weights:  54%|█████▍    | 158/291 [00:16<00:12, 11.06it/s]Loading weights:  57%|█████▋    | 165/291 [00:17<00:12,  9.97it/s]Loading weights:  57%|█████▋    | 167/291 [00:17<00:11, 10.50it/s]Loading weights:  60%|█████▉    | 174/291 [00:17<00:10, 10.69it/s]Loading weights:  63%|██████▎   | 183/291 [00:18<00:10, 10.17it/s]Loading weights:  64%|██████▎   | 185/291 [00:18<00:09, 10.67it/s]Loading weights:  66%|██████▌   | 192/291 [00:19<00:11,  8.60it/s]Loading weights:  67%|██████▋   | 194/291 [00:20<00:10,  9.01it/s]Loading weights:  69%|██████▉   | 201/291 [00:21<00:10,  8.47it/s]Loading weights:  70%|██████▉   | 203/291 [00:21<00:10,  8.02it/s]Loading weights:  72%|███████▏  | 210/291 [00:24<00:18,  4.29it/s]Loading weights:  73%|███████▎  | 211/291 [00:24<00:19,  4.16it/s]Loading weights:  75%|███████▌  | 219/291 [00:26<00:16,  4.48it/s]Loading weights:  76%|███████▌  | 220/291 [00:26<00:15,  4.60it/s]Loading weights:  78%|███████▊  | 228/291 [00:27<00:10,  5.91it/s]Loading weights:  79%|███████▊  | 229/291 [00:27<00:10,  5.90it/s]Loading weights:  81%|████████▏ | 237/291 [00:28<00:07,  6.81it/s]Loading weights:  82%|████████▏ | 238/291 [00:28<00:07,  6.79it/s]Loading weights:  85%|████████▍ | 246/291 [00:29<00:06,  7.37it/s]Loading weights:  85%|████████▍ | 247/291 [00:29<00:06,  7.33it/s]Loading weights:  88%|████████▊ | 255/291 [00:30<00:04,  7.37it/s]Loading weights:  88%|████████▊ | 256/291 [00:30<00:04,  7.31it/s]Loading weights:  91%|█████████ | 264/291 [00:31<00:03,  7.51it/s]Loading weights:  91%|█████████ | 265/291 [00:31<00:03,  7.26it/s]Loading weights:  94%|█████████▍| 273/291 [00:33<00:02,  6.88it/s]Loading weights:  94%|█████████▍| 274/291 [00:33<00:02,  6.72it/s]Loading weights:  97%|█████████▋| 282/291 [00:33<00:00,  9.27it/s]Loading weights: 100%|██████████| 291/291 [00:33<00:00,  8.59it/s]
+[2026-07-07 02:24:04,124] INFO httpx: HTTP Request: HEAD https://huggingface.co/mistralai/Mixtral-8x7B-v0.1/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 02:24:04,129] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/generation_config.json "HTTP/1.1 200 OK"
+[2026-07-07 02:24:04,134] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/mistralai/Mixtral-8x7B-v0.1/fc7ac94680e38d7348cfa806e51218e6273104b0/generation_config.json "HTTP/1.1 200 OK"
+[2026-07-07 02:24:04,201] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:24:11,017] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:24:17,113] INFO moe_bias_shapley.shapley: ablation_curve: k=1/256 fraction=0.004 bias_gap=0.2496 disparity_drop=0.005
+[2026-07-07 02:24:17,115] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:24:23,198] INFO moe_bias_shapley.shapley: ablation_curve: k=2/256 fraction=0.008 bias_gap=0.2473 disparity_drop=0.014
+[2026-07-07 02:24:23,200] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:24:29,271] INFO moe_bias_shapley.shapley: ablation_curve: k=3/256 fraction=0.012 bias_gap=0.2484 disparity_drop=0.010
+[2026-07-07 02:24:29,273] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:24:35,439] INFO moe_bias_shapley.shapley: ablation_curve: k=4/256 fraction=0.016 bias_gap=0.2498 disparity_drop=0.004
+[2026-07-07 02:24:35,441] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:24:41,528] INFO moe_bias_shapley.shapley: ablation_curve: k=5/256 fraction=0.020 bias_gap=0.2544 disparity_drop=-0.014
+[2026-07-07 02:24:41,530] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:24:47,695] INFO moe_bias_shapley.shapley: ablation_curve: k=6/256 fraction=0.023 bias_gap=0.2554 disparity_drop=-0.018
+[2026-07-07 02:24:47,697] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:24:53,763] INFO moe_bias_shapley.shapley: ablation_curve: k=7/256 fraction=0.027 bias_gap=0.2664 disparity_drop=-0.062
+[2026-07-07 02:24:53,765] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:24:59,820] INFO moe_bias_shapley.shapley: ablation_curve: k=8/256 fraction=0.031 bias_gap=0.2650 disparity_drop=-0.056
+[2026-07-07 02:24:59,822] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:25:05,886] INFO moe_bias_shapley.shapley: ablation_curve: k=9/256 fraction=0.035 bias_gap=0.2605 disparity_drop=-0.038
+[2026-07-07 02:25:05,888] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:25:11,952] INFO moe_bias_shapley.shapley: ablation_curve: k=10/256 fraction=0.039 bias_gap=0.2599 disparity_drop=-0.036
+[2026-07-07 02:25:11,954] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:25:18,171] INFO moe_bias_shapley.shapley: ablation_curve: k=26/256 fraction=0.102 bias_gap=0.2889 disparity_drop=-0.151
+[2026-07-07 02:25:18,173] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:25:24,258] INFO moe_bias_shapley.shapley: ablation_curve: k=51/256 fraction=0.199 bias_gap=0.2990 disparity_drop=-0.192
+[2026-07-07 02:25:24,260] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:25:30,450] INFO moe_bias_shapley.shapley: ablation_curve: k=77/256 fraction=0.301 bias_gap=0.1384 disparity_drop=0.448
+[2026-07-07 02:25:30,451] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:25:36,524] INFO moe_bias_shapley.shapley: ablation_curve: k=128/256 fraction=0.500 bias_gap=-0.0312 disparity_drop=1.124
+[2026-07-07 02:25:36,526] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:25:41,827] INFO moe_bias_shapley.shapley: ablation_curve: k=192/256 fraction=0.750 bias_gap=-0.0788 disparity_drop=1.314
+[2026-07-07 02:25:41,829] INFO moe_bias_shapley.hooks: Discovered 32 MoE layers
+[2026-07-07 02:25:46,954] INFO moe_bias_shapley.shapley: ablation_curve: k=256/256 fraction=1.000 bias_gap=-0.0634 disparity_drop=1.253
+[2026-07-07 02:25:46,968] INFO run_experiment4_ablation: Done. Experiment 4 results in /home/hice1/sghose7/scratch/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-mixtral-8x7b/experiment4/experiment4_ablation_curve.json

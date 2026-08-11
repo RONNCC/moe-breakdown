@@ -1,0 +1,256 @@
+Using CPython 3.11.15
+Creating virtual environment at: /tmp/moe-bias-shapley-venv
+Activate with: source /tmp/moe-bias-shapley-venv/bin/activate
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 4 packages in 218ms
+Downloading pip (1.7MiB)
+ Downloaded pip
+Prepared 4 packages in 126ms
+Installed 4 packages in 27ms
+ + packaging==26.3
+ + pip==26.2.1
+ + setuptools==84.0.0
+ + wheel==0.47.0
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 4 packages in 218ms
+   Building moe-bias-shapley @ file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1
+Downloading numpy (16.1MiB)
+Downloading scipy (33.7MiB)
+ Downloaded numpy
+ Downloaded scipy
+      Built moe-bias-shapley @ file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1
+Prepared 4 packages in 832ms
+Installed 4 packages in 82ms
+ + moe-bias-shapley==0.1.0 (from file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1)
+ + numpy==2.4.6
+ + pyyaml==6.0.3
+ + scipy==1.17.1
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 23 packages in 383ms
+Downloading nvidia-cuda-nvrtc-cu12 (23.5MiB)
+Downloading nvidia-cuda-cupti-cu12 (13.2MiB)
+Downloading networkx (2.0MiB)
+Downloading sympy (5.9MiB)
+Downloading triton (159.0MiB)
+Downloading nvidia-nvjitlink-cu12 (20.1MiB)
+Downloading nvidia-curand-cu12 (53.7MiB)
+Downloading nvidia-nccl-cu12 (179.9MiB)
+Downloading nvidia-cufft-cu12 (201.7MiB)
+Downloading nvidia-cublas-cu12 (346.6MiB)
+Downloading nvidia-cusolver-cu12 (122.0MiB)
+Downloading nvidia-cusparse-cu12 (197.8MiB)
+Downloading nvidia-cusparselt-cu12 (143.1MiB)
+Downloading nvidia-cudnn-cu12 (634.0MiB)
+Downloading torch (732.9MiB)
+ Downloaded nvidia-cuda-cupti-cu12
+ Downloaded nvidia-nvjitlink-cu12
+ Downloaded nvidia-cuda-nvrtc-cu12
+ Downloaded nvidia-curand-cu12
+ Downloaded networkx
+ Downloaded triton
+ Downloaded nvidia-cusolver-cu12
+ Downloaded nvidia-nccl-cu12
+ Downloaded nvidia-cusparselt-cu12
+ Downloaded nvidia-cusparse-cu12
+ Downloaded nvidia-cufft-cu12
+ Downloaded sympy
+ Downloaded nvidia-cublas-cu12
+ Downloaded nvidia-cudnn-cu12
+ Downloaded torch
+Prepared 23 packages in 26.91s
+Installed 23 packages in 1.06s
+ + filelock==3.29.0
+ + fsspec==2026.4.0
+ + jinja2==3.1.6
+ + markupsafe==3.0.3
+ + mpmath==1.3.0
+ + networkx==3.6.1
+ + nvidia-cublas-cu12==12.4.5.8
+ + nvidia-cuda-cupti-cu12==12.4.127
+ + nvidia-cuda-nvrtc-cu12==12.4.127
+ + nvidia-cuda-runtime-cu12==12.4.127
+ + nvidia-cudnn-cu12==9.1.0.70
+ + nvidia-cufft-cu12==11.2.1.3
+ + nvidia-curand-cu12==10.3.5.147
+ + nvidia-cusolver-cu12==11.6.1.9
+ + nvidia-cusparse-cu12==12.3.1.170
+ + nvidia-cusparselt-cu12==0.6.2
+ + nvidia-nccl-cu12==2.21.5
+ + nvidia-nvjitlink-cu12==12.4.127
+ + nvidia-nvtx-cu12==12.4.127
+ + sympy==1.13.1
+ + torch==2.6.0+cu124
+ + triton==3.2.0
+ + typing-extensions==4.15.0
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 71 packages in 538ms
+Downloading pandas (10.8MiB)
+Downloading pygments (1.2MiB)
+Downloading transformers (11.2MiB)
+Downloading hf-xet (4.3MiB)
+Downloading pyarrow (47.7MiB)
+Downloading tokenizers (3.1MiB)
+Downloading tiktoken (1.1MiB)
+Downloading aiohttp (1.7MiB)
+Downloading sentencepiece (1.3MiB)
+ Downloaded tiktoken
+ Downloaded sentencepiece
+ Downloaded aiohttp
+ Downloaded tokenizers
+ Downloaded hf-xet
+ Downloaded pygments
+ Downloaded pandas
+ Downloaded pyarrow
+ Downloaded transformers
+Prepared 45 packages in 1.11s
+Installed 45 packages in 147ms
+ + accelerate==1.14.0
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + annotated-doc==0.0.5
+ + anyio==4.14.2
+ + attrs==26.1.0
+ + certifi==2026.7.22
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + datasets==5.0.1
+ + dill==0.4.1
+ + frozenlist==1.8.0
+ + h11==0.16.0
+ + hf-xet==1.6.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + huggingface-hub==1.27.0
+ + idna==3.18
+ + markdown-it-py==4.2.0
+ + mdurl==0.1.2
+ + multidict==6.7.1
+ + multiprocess==0.70.19
+ + pandas==3.0.5
+ + propcache==0.5.2
+ + protobuf==7.35.1
+ + psutil==7.2.2
+ + pyarrow==25.0.1
+ + pygments==2.20.0
+ + python-dateutil==2.9.0.post0
+ + regex==2026.7.19
+ + requests==2.34.2
+ + rich==15.0.0
+ + safetensors==0.8.0
+ + sentencepiece==0.2.2
+ + shellingham==1.5.4
+ + six==1.17.0
+ + tiktoken==0.13.0
+ + tokenizers==0.22.2
+ + tqdm==4.70.0
+ + transformers==5.15.0
+ + typer==0.27.1
+ + urllib3==2.7.0
+ + xxhash==3.8.1
+ + yarl==1.24.5
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 26 packages in 136ms
+Downloading bitsandbytes (39.0MiB)
+ Downloaded bitsandbytes
+Prepared 1 package in 603ms
+Installed 1 package in 23ms
+ + bitsandbytes==0.50.0
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 19 packages in 188ms
+Downloading triton (188.5MiB)
+Downloading kernels-data (1.2MiB)
+ Downloaded kernels-data
+ Downloaded triton
+Prepared 4 packages in 2.71s
+Uninstalled 1 package in 4ms
+Installed 4 packages in 112ms
+ + kernels==0.15.2
+ + kernels-data==0.16.0
+ + tomlkit==0.15.1
+ - triton==3.2.0
+ + triton==3.7.1
+[2026-08-10 16:09:37,143] INFO run_experiment4_ablation: === Experiment 4 (ablation cross-check): exp1-concentration-gpt-oss-120b ===
+[2026-08-10 16:09:37,143] INFO run_experiment4_ablation: Model: openai/gpt-oss-120b | family: gpt-oss | max_pairs: 60 | result_dir: /home/hice1/sghose7/scratch/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-gpt-oss-120b
+[2026-08-10 16:09:37,224] INFO run_experiment4_ablation: Loaded 4608 ranked players from /home/hice1/sghose7/scratch/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-gpt-oss-120b (controls: ['random'])
+[2026-08-10 16:09:39,536] INFO moe_bias_shapley.benchmarks: Loading StereoSet (intrasentence / validation) …
+[2026-08-10 16:09:39,574] INFO httpx: HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+[2026-08-10 16:09:39,615] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 16:09:39,620] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/McGill-NLP/stereoset/bf6e7ce50491784d094fb7afe60a70ecccb89035/README.md "HTTP/1.1 200 OK"
+[2026-08-10 16:09:39,629] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/McGill-NLP/stereoset/bf6e7ce50491784d094fb7afe60a70ecccb89035/README.md "HTTP/1.1 200 OK"
+[2026-08-10 16:09:39,663] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/stereoset.py "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:39,767] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/McGill-NLP/stereoset/McGill-NLP/stereoset.py "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:39,811] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/revision/bf6e7ce50491784d094fb7afe60a70ecccb89035 "HTTP/1.1 200 OK"
+[2026-08-10 16:09:39,845] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:39,937] INFO httpx: HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=McGill-NLP/stereoset "HTTP/1.1 200 OK"
+[2026-08-10 16:09:39,972] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035/intersentence?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 16:09:40,010] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 16:09:40,044] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:40,082] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035/intrasentence?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 16:09:40,428] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/intrasentence/validation-00000-of-00001.parquet "HTTP/1.1 302 Found"
+Generating validation split:   0%|          | 0/2106 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 2106/2106 [00:00<00:00, 208531.93 examples/s]
+[2026-08-10 16:09:41,042] INFO moe_bias_shapley.benchmarks: Loaded 60 StereoSet pairs from 2106 items
+[2026-08-10 16:09:41,042] INFO moe_bias_shapley.benchmarks: Loading BBQ category=Gender_identity split=test …
+[2026-08-10 16:09:41,076] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/refs%2Fconvert%2Fparquet/README.md "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:41,123] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/refs%2Fconvert%2Fparquet "HTTP/1.1 200 OK"
+[2026-08-10 16:09:41,156] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/bbq.py "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:41,185] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/heegyu/bbq/heegyu/bbq.py "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:41,217] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/README.md "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:41,252] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/da21e4bdbe74d6bed714ee80b4941c9c73958aea "HTTP/1.1 200 OK"
+[2026-08-10 16:09:41,282] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:41,327] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity%2Fdata?recursive=true&expand=false "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:41,361] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 16:09:41,399] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity%2Ftest?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 16:09:41,432] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 16:09:41,482] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:41,522] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity/test/0000.parquet "HTTP/1.1 302 Found"
+Generating test split: 0 examples [00:00, ? examples/s]Generating test split: 5672 examples [00:00, 648160.75 examples/s]
+[2026-08-10 16:09:41,903] INFO moe_bias_shapley.benchmarks: Loaded 60 BBQ pairs across 2 categories
+[2026-08-10 16:09:41,907] INFO moe_bias_shapley.benchmarks: Loaded 60 WinoGender pairs
+[2026-08-10 16:09:41,907] INFO moe_bias_shapley.benchmarks: Total prompt pairs: 60
+[2026-08-10 16:09:46,190] INFO moe_bias_shapley.modeling: Loading tokenizer + model: openai/gpt-oss-120b (family=gpt-oss)
+[2026-08-10 16:09:46,226] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 16:09:46,233] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/config.json "HTTP/1.1 200 OK"
+[2026-08-10 16:09:46,240] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/config.json "HTTP/1.1 200 OK"
+[2026-08-10 16:09:46,283] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 16:09:46,288] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-08-10 16:09:46,294] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-08-10 16:09:46,333] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-120b/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:46,368] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-120b/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-08-10 16:09:46,403] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+[2026-08-10 16:09:46,832] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/tokenizer.model "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:46,866] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:46,899] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 16:09:46,905] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/special_tokens_map.json "HTTP/1.1 200 OK"
+[2026-08-10 16:09:46,911] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/special_tokens_map.json "HTTP/1.1 200 OK"
+[2026-08-10 16:09:46,949] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 16:09:46,955] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/chat_template.jinja "HTTP/1.1 200 OK"
+[2026-08-10 16:09:46,961] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/chat_template.jinja "HTTP/1.1 200 OK"
+[2026-08-10 16:09:48,553] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-120b "HTTP/1.1 200 OK"
+[2026-08-10 16:09:49,045] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 16:09:49,052] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/config.json "HTTP/1.1 200 OK"
+[transformers] MXFP4 quantization requires the `kernels` package: Please install a compatible version (0.16.0 <= version < 0.17.0), e.g. `pip install kernels==0.16.0`We will default to dequantizing the model to bf16.
+[2026-08-10 16:09:49,962] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+[2026-08-10 16:09:50,002] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 16:09:50,009] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/model.safetensors.index.json "HTTP/1.1 200 OK"
+[2026-08-10 16:09:50,016] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/model.safetensors.index.json "HTTP/1.1 200 OK"
+[2026-08-10 16:09:50,056] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-120b/revision/main "HTTP/1.1 200 OK"
+[2026-08-10 16:09:50,097] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-120b/tree/b5c939de8f754692c1647ca79fbf85e8c1e70f8a?recursive=true&expand=false "HTTP/1.1 200 OK"
+Fetching 15 files:   0%|          | 0/15 [00:00<?, ?it/s]Fetching 15 files:   7%|▋         | 1/15 [00:21<04:57, 21.25s/it]Fetching 15 files:  20%|██        | 3/15 [00:25<01:26,  7.23s/it]Fetching 15 files:  27%|██▋       | 4/15 [00:28<01:01,  5.63s/it]Fetching 15 files:  33%|███▎      | 5/15 [00:35<01:00,  6.06s/it]Fetching 15 files:  40%|████      | 6/15 [00:37<00:44,  4.89s/it]Fetching 15 files:  47%|████▋     | 7/15 [00:44<00:43,  5.43s/it]Fetching 15 files:  53%|█████▎    | 8/15 [00:50<00:38,  5.52s/it]Fetching 15 files:  60%|██████    | 9/15 [00:51<00:24,  4.10s/it]Fetching 15 files:  67%|██████▋   | 10/15 [00:53<00:17,  3.52s/it]Fetching 15 files:  73%|███████▎  | 11/15 [00:56<00:13,  3.38s/it]Fetching 15 files:  87%|████████▋ | 13/15 [01:00<00:05,  2.69s/it]Fetching 15 files:  93%|█████████▎| 14/15 [01:00<00:02,  2.05s/it]Fetching 15 files: 100%|██████████| 15/15 [01:02<00:00,  2.03s/it]Fetching 15 files: 100%|██████████| 15/15 [01:02<00:00,  4.15s/it]
+Loading weights:   0%|          | 0/615 [00:00<?, ?it/s]Loading weights:   0%|          | 3/615 [00:00<00:29, 20.65it/s]Loading weights:   1%|          | 6/615 [00:00<01:27,  6.94it/s]Loading weights:   1%|▏         | 8/615 [00:01<02:37,  3.85it/s]Loading weights:   4%|▎         | 22/615 [00:01<00:41, 14.27it/s]Loading weights:   4%|▍         | 25/615 [00:02<00:43, 13.52it/s]Loading weights:   9%|▉         | 56/615 [00:02<00:12, 45.18it/s]Loading weights:  12%|█▏        | 75/615 [00:02<00:08, 62.28it/s]Loading weights:  17%|█▋        | 107/615 [00:02<00:05, 96.05it/s]Loading weights:  20%|██        | 126/615 [00:02<00:04, 105.81it/s]Loading weights:  23%|██▎       | 141/615 [00:03<00:06, 73.39it/s] Loading weights:  25%|██▍       | 153/615 [00:03<00:08, 52.78it/s]Loading weights:  26%|██▋       | 162/615 [00:04<00:14, 31.48it/s]Loading weights:  31%|███       | 192/615 [00:04<00:07, 54.49it/s]Loading weights:  34%|███▍      | 211/615 [00:04<00:05, 68.56it/s]Loading weights:  37%|███▋      | 228/615 [00:04<00:04, 81.63it/s]Loading weights:  42%|████▏     | 260/615 [00:04<00:03, 112.16it/s]Loading weights:  45%|████▌     | 278/615 [00:04<00:02, 123.63it/s]Loading weights:  48%|████▊     | 296/615 [00:07<00:15, 19.95it/s] Loading weights:  51%|█████     | 311/615 [00:08<00:16, 18.64it/s]Loading weights:  52%|█████▏    | 321/615 [00:10<00:23, 12.45it/s]Loading weights:  53%|█████▎    | 328/615 [00:11<00:25, 11.18it/s]Loading weights:  54%|█████▍    | 333/615 [00:13<00:37,  7.62it/s]Loading weights:  56%|█████▌    | 345/615 [00:14<00:31,  8.69it/s]Loading weights:  57%|█████▋    | 348/615 [00:16<00:45,  5.87it/s]Loading weights:  59%|█████▉    | 362/615 [00:17<00:32,  7.75it/s]Loading weights:  59%|█████▉    | 364/615 [00:19<00:48,  5.15it/s]Loading weights:  62%|██████▏   | 379/615 [00:20<00:32,  7.37it/s]Loading weights:  62%|██████▏   | 381/615 [00:22<00:47,  4.94it/s]Loading weights:  64%|██████▍   | 396/615 [00:23<00:30,  7.18it/s]Loading weights:  65%|██████▍   | 398/615 [00:25<00:44,  4.84it/s]Loading weights:  67%|██████▋   | 413/615 [00:26<00:28,  7.09it/s]Loading weights:  67%|██████▋   | 415/615 [00:28<00:41,  4.79it/s]Loading weights:  70%|██████▉   | 430/615 [00:29<00:26,  7.05it/s]Loading weights:  70%|███████   | 432/615 [00:31<00:38,  4.77it/s]Loading weights:  73%|███████▎  | 447/615 [00:32<00:23,  7.04it/s]Loading weights:  73%|███████▎  | 449/615 [00:34<00:34,  4.75it/s]Loading weights:  75%|███████▌  | 464/615 [00:35<00:21,  7.01it/s]Loading weights:  76%|███████▌  | 466/615 [00:37<00:31,  4.75it/s]Loading weights:  78%|███████▊  | 481/615 [00:38<00:19,  7.01it/s]Loading weights:  79%|███████▊  | 483/615 [00:40<00:27,  4.75it/s]Loading weights:  81%|████████  | 498/615 [00:41<00:16,  7.02it/s]Loading weights:  81%|████████▏ | 500/615 [00:43<00:24,  4.75it/s]Loading weights:  84%|████████▎ | 515/615 [00:43<00:14,  7.02it/s]Loading weights:  84%|████████▍ | 517/615 [00:45<00:20,  4.75it/s]Loading weights:  87%|████████▋ | 532/615 [00:46<00:11,  7.02it/s]Loading weights:  87%|████████▋ | 534/615 [00:48<00:17,  4.75it/s]Loading weights:  89%|████████▉ | 549/615 [00:49<00:09,  7.02it/s]Loading weights:  90%|████████▉ | 551/615 [00:51<00:13,  4.75it/s]Loading weights:  92%|█████████▏| 566/615 [00:52<00:06,  7.03it/s]Loading weights:  92%|█████████▏| 568/615 [00:54<00:09,  4.75it/s]Loading weights:  95%|█████████▍| 583/615 [00:55<00:04,  7.02it/s]Loading weights:  95%|█████████▌| 585/615 [00:57<00:06,  4.75it/s]Loading weights:  98%|█████████▊| 600/615 [00:58<00:02,  7.02it/s]Loading weights:  98%|█████████▊| 602/615 [01:00<00:02,  4.75it/s]Loading weights: 100%|██████████| 615/615 [01:00<00:00, 10.16it/s]
+[2026-08-10 16:11:54,022] INFO httpx: HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-120b/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-08-10 16:11:54,028] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/generation_config.json "HTTP/1.1 200 OK"
+[2026-08-10 16:11:54,034] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-120b/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/generation_config.json "HTTP/1.1 200 OK"
+[2026-08-10 16:11:54,197] WARNING accelerate.big_modeling: Some parameters are on the meta device because they were offloaded to the cpu.
+[2026-08-10 16:11:54,248] INFO moe_bias_shapley.hooks: Discovered 36 MoE layers
+[2026-08-10 16:37:29,874] INFO moe_bias_shapley.hooks: Discovered 36 MoE layers
+[2026-08-10 17:02:57,884] INFO moe_bias_shapley.shapley: ablation_curve[phi_ranked]: k=1/4608 fraction=0.000 bias_gap=0.1583 drop=-0.028 loss=5.6697 ppl=289.96 ppl_inc_frac=0.0065 selectivity=-4.265
+[2026-08-10 17:02:57,887] INFO moe_bias_shapley.hooks: Discovered 36 MoE layers
+[2026-08-10 17:28:25,733] INFO moe_bias_shapley.shapley: ablation_curve[phi_ranked]: k=2/4608 fraction=0.000 bias_gap=0.1440 drop=0.065 loss=5.6764 ppl=291.90 ppl_inc_frac=0.0133 selectivity=4.880
+[2026-08-10 17:28:25,737] INFO moe_bias_shapley.hooks: Discovered 36 MoE layers
+[2026-08-10 17:53:53,618] INFO moe_bias_shapley.shapley: ablation_curve[phi_ranked]: k=3/4608 fraction=0.001 bias_gap=0.1419 drop=0.079 loss=5.6785 ppl=292.51 ppl_inc_frac=0.0154 selectivity=5.104
+[2026-08-10 17:53:53,621] INFO moe_bias_shapley.hooks: Discovered 36 MoE layers
+[2026-08-10 18:19:21,590] INFO moe_bias_shapley.shapley: ablation_curve[phi_ranked]: k=4/4608 fraction=0.001 bias_gap=0.1406 drop=0.087 loss=5.6797 ppl=292.86 ppl_inc_frac=0.0166 selectivity=5.220
+[2026-08-10 18:19:21,594] INFO moe_bias_shapley.hooks: Discovered 36 MoE layers
+[2026-08-10 18:44:49,702] INFO moe_bias_shapley.shapley: ablation_curve[phi_ranked]: k=5/4608 fraction=0.001 bias_gap=0.1472 drop=0.044 loss=5.6819 ppl=293.51 ppl_inc_frac=0.0189 selectivity=2.341
+[2026-08-10 18:44:49,705] INFO moe_bias_shapley.hooks: Discovered 36 MoE layers

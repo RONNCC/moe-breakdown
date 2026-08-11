@@ -1,0 +1,450 @@
+Using CPython 3.11.15
+Creating virtual environment at: /tmp/moe-bias-shapley-venv
+Activate with: source /tmp/moe-bias-shapley-venv/bin/activate
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 4 packages in 211ms
+Downloading pip (1.7MiB)
+ Downloaded pip
+Prepared 4 packages in 128ms
+Installed 4 packages in 39ms
+ + packaging==26.2
+ + pip==26.1.2
+ + setuptools==83.0.0
+ + wheel==0.47.0
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 4 packages in 223ms
+   Building moe-bias-shapley @ file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1
+Downloading numpy (16.1MiB)
+Downloading scipy (33.7MiB)
+ Downloaded numpy
+ Downloaded scipy
+      Built moe-bias-shapley @ file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1
+Prepared 4 packages in 789ms
+Installed 4 packages in 111ms
+ + moe-bias-shapley==0.1.0 (from file:///storage/ice1/0/2/sghose7/moe-breakdown/moe-expt-bias/expt-bias-1)
+ + numpy==2.4.6
+ + pyyaml==6.0.3
+ + scipy==1.17.1
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 23 packages in 231ms
+Downloading nvidia-cusparselt-cu12 (149.5MiB)
+Downloading nvidia-nvjitlink-cu12 (18.8MiB)
+Downloading nvidia-curand-cu12 (53.7MiB)
+Downloading nvidia-cudnn-cu12 (544.5MiB)
+Downloading nvidia-cufft-cu12 (190.9MiB)
+Downloading nvidia-nccl-cu12 (179.9MiB)
+Downloading nvidia-cuda-nvrtc-cu12 (22.6MiB)
+Downloading nvidia-cusparse-cu12 (206.5MiB)
+Downloading nvidia-cuda-cupti-cu12 (8.5MiB)
+Downloading nvidia-cublas-cu12 (374.9MiB)
+Downloading nvidia-cusolver-cu12 (150.9MiB)
+Downloading triton (159.0MiB)
+Downloading torch (729.2MiB)
+Downloading networkx (2.0MiB)
+Downloading sympy (5.9MiB)
+ Downloaded nvidia-nvjitlink-cu12
+ Downloaded nvidia-cuda-cupti-cu12
+ Downloaded nvidia-cuda-nvrtc-cu12
+ Downloaded nvidia-curand-cu12
+ Downloaded nvidia-cusparselt-cu12
+ Downloaded networkx
+ Downloaded triton
+ Downloaded nvidia-cufft-cu12
+ Downloaded nvidia-nccl-cu12
+ Downloaded sympy
+ Downloaded nvidia-cudnn-cu12
+ Downloaded nvidia-cusparse-cu12
+ Downloaded nvidia-cusolver-cu12
+ Downloaded nvidia-cublas-cu12
+ Downloaded torch
+Prepared 23 packages in 26.67s
+Installed 23 packages in 411ms
+ + filelock==3.29.0
+ + fsspec==2026.4.0
+ + jinja2==3.1.6
+ + markupsafe==3.0.3
+ + mpmath==1.3.0
+ + networkx==3.6.1
+ + nvidia-cublas-cu12==12.6.4.1
+ + nvidia-cuda-cupti-cu12==12.6.80
+ + nvidia-cuda-nvrtc-cu12==12.6.77
+ + nvidia-cuda-runtime-cu12==12.6.77
+ + nvidia-cudnn-cu12==9.5.1.17
+ + nvidia-cufft-cu12==11.3.0.4
+ + nvidia-curand-cu12==10.3.7.77
+ + nvidia-cusolver-cu12==11.7.1.2
+ + nvidia-cusparse-cu12==12.5.4.2
+ + nvidia-cusparselt-cu12==0.6.3
+ + nvidia-nccl-cu12==2.21.5
+ + nvidia-nvjitlink-cu12==12.6.85
+ + nvidia-nvtx-cu12==12.6.77
+ + sympy==1.13.1
+ + torch==2.6.0+cu126
+ + triton==3.2.0
+ + typing-extensions==4.15.0
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 71 packages in 577ms
+Downloading pygments (1.2MiB)
+Downloading aiohttp (1.7MiB)
+Downloading sentencepiece (1.3MiB)
+Downloading tiktoken (1.1MiB)
+Downloading hf-xet (4.3MiB)
+Downloading tokenizers (3.1MiB)
+Downloading pyarrow (46.6MiB)
+Downloading pandas (10.8MiB)
+Downloading transformers (11.0MiB)
+ Downloaded tiktoken
+ Downloaded sentencepiece
+ Downloaded aiohttp
+ Downloaded tokenizers
+ Downloaded hf-xet
+ Downloaded pygments
+ Downloaded pandas
+ Downloaded pyarrow
+ Downloaded transformers
+Prepared 45 packages in 1.13s
+Installed 45 packages in 150ms
+ + accelerate==1.14.0
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.1
+ + aiosignal==1.4.0
+ + annotated-doc==0.0.4
+ + anyio==4.14.1
+ + attrs==26.1.0
+ + certifi==2026.6.17
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + datasets==5.0.0
+ + dill==0.4.1
+ + frozenlist==1.8.0
+ + h11==0.16.0
+ + hf-xet==1.5.1
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + huggingface-hub==1.22.0
+ + idna==3.18
+ + markdown-it-py==4.2.0
+ + mdurl==0.1.2
+ + multidict==6.7.1
+ + multiprocess==0.70.19
+ + pandas==3.0.3
+ + propcache==0.5.2
+ + protobuf==7.35.1
+ + psutil==7.2.2
+ + pyarrow==24.0.0
+ + pygments==2.20.0
+ + python-dateutil==2.9.0.post0
+ + regex==2026.6.28
+ + requests==2.34.2
+ + rich==15.0.0
+ + safetensors==0.8.0
+ + sentencepiece==0.2.1
+ + shellingham==1.5.4
+ + six==1.17.0
+ + tiktoken==0.13.0
+ + tokenizers==0.22.2
+ + tqdm==4.68.4
+ + transformers==5.13.0
+ + typer==0.26.8
+ + urllib3==2.7.0
+ + xxhash==3.8.1
+ + yarl==1.24.2
+Using Python 3.11.15 environment at: /tmp/moe-bias-shapley-venv
+Resolved 26 packages in 142ms
+Downloading bitsandbytes (57.8MiB)
+ Downloaded bitsandbytes
+Prepared 1 package in 823ms
+Installed 1 package in 34ms
+ + bitsandbytes==0.49.2
+[2026-07-07 17:09:30,276] INFO run_bias_study: === Study: exp2-dense-baseline-phi3.5-mini-v1 ===
+[2026-07-07 17:09:30,276] INFO run_bias_study: Model: microsoft/Phi-3.5-mini-instruct | family: dense | shapley_method: dense_loo
+[2026-07-07 17:09:30,276] INFO run_bias_study: Benchmarks: ['stereoset', 'bbq', 'winogender'] | max_prompts: 4000
+[2026-07-07 17:09:30,276] INFO run_bias_study: Shard: 1 / 2
+[2026-07-07 17:09:32,770] INFO moe_bias_shapley.benchmarks: Loading StereoSet (intrasentence / validation) …
+[2026-07-07 17:09:32,808] INFO httpx: HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+[2026-07-07 17:09:32,850] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 17:09:32,855] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/McGill-NLP/stereoset/bf6e7ce50491784d094fb7afe60a70ecccb89035/README.md "HTTP/1.1 200 OK"
+[2026-07-07 17:09:32,862] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/McGill-NLP/stereoset/bf6e7ce50491784d094fb7afe60a70ecccb89035/README.md "HTTP/1.1 200 OK"
+[2026-07-07 17:09:32,894] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/stereoset.py "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:32,977] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/McGill-NLP/stereoset/McGill-NLP/stereoset.py "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:33,022] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/revision/bf6e7ce50491784d094fb7afe60a70ecccb89035 "HTTP/1.1 200 OK"
+[2026-07-07 17:09:33,060] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:33,114] INFO httpx: HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=McGill-NLP/stereoset "HTTP/1.1 200 OK"
+[2026-07-07 17:09:33,154] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035/intersentence?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 17:09:33,190] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 17:09:33,226] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:33,271] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/McGill-NLP/stereoset/tree/bf6e7ce50491784d094fb7afe60a70ecccb89035/intrasentence?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 17:09:33,652] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/McGill-NLP/stereoset/resolve/bf6e7ce50491784d094fb7afe60a70ecccb89035/intrasentence/validation-00000-of-00001.parquet "HTTP/1.1 302 Found"
+Generating validation split:   0%|          | 0/2106 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 2106/2106 [00:00<00:00, 202843.00 examples/s]
+[2026-07-07 17:09:34,045] INFO moe_bias_shapley.benchmarks: Loaded 2106 StereoSet pairs from 2106 items
+[2026-07-07 17:09:34,045] INFO moe_bias_shapley.benchmarks: Loading BBQ category=Gender_identity split=test …
+[2026-07-07 17:09:34,080] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/refs%2Fconvert%2Fparquet/README.md "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:34,500] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/refs%2Fconvert%2Fparquet "HTTP/1.1 200 OK"
+[2026-07-07 17:09:34,530] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/bbq.py "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:34,558] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/heegyu/bbq/heegyu/bbq.py "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:34,589] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/README.md "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:34,794] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/da21e4bdbe74d6bed714ee80b4941c9c73958aea "HTTP/1.1 200 OK"
+[2026-07-07 17:09:34,825] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:34,869] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity%2Fdata?recursive=true&expand=false "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:34,913] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 17:09:34,957] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity%2Ftest?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 17:09:34,992] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 17:09:35,043] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:35,083] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Gender_identity/test/0000.parquet "HTTP/1.1 302 Found"
+Generating test split: 0 examples [00:00, ? examples/s]Generating test split: 5672 examples [00:00, 612988.72 examples/s]
+[2026-07-07 17:09:35,852] INFO moe_bias_shapley.benchmarks: Loading BBQ category=Race_ethnicity split=test …
+[2026-07-07 17:09:35,888] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/refs%2Fconvert%2Fparquet/README.md "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:36,004] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/revision/refs%2Fconvert%2Fparquet "HTTP/1.1 200 OK"
+[2026-07-07 17:09:36,046] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/bbq.py "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:36,108] INFO httpx: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/heegyu/bbq/heegyu/bbq.py "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:36,144] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/README.md "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:36,186] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/.huggingface.yaml "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:36,218] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Race_ethnicity%2Fdata?recursive=true&expand=false "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:36,253] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Race_ethnicity?recursive=false&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 17:09:36,299] INFO httpx: HTTP Request: GET https://huggingface.co/api/datasets/heegyu/bbq/tree/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Race_ethnicity%2Ftest?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 17:09:36,343] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/dataset_infos.json "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:36,382] INFO httpx: HTTP Request: HEAD https://huggingface.co/datasets/heegyu/bbq/resolve/da21e4bdbe74d6bed714ee80b4941c9c73958aea/Race_ethnicity/test/0000.parquet "HTTP/1.1 302 Found"
+Generating test split: 0 examples [00:00, ? examples/s]Generating test split: 6880 examples [00:00, 625771.17 examples/s]
+[2026-07-07 17:09:36,747] INFO moe_bias_shapley.benchmarks: Loaded 4000 BBQ pairs across 2 categories
+[2026-07-07 17:09:36,748] INFO moe_bias_shapley.benchmarks: Loaded 240 WinoGender pairs
+[2026-07-07 17:09:36,749] INFO moe_bias_shapley.benchmarks: Total prompt pairs: 4000
+[2026-07-07 17:09:36,749] INFO run_bias_study: After sharding: 2000 pairs (shard 1 of 2)
+[2026-07-07 17:09:42,284] INFO moe_bias_shapley.modeling: Loading tokenizer + model: microsoft/Phi-3.5-mini-instruct (family=dense)
+[2026-07-07 17:09:42,326] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 17:09:42,335] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/config.json "HTTP/1.1 200 OK"
+[2026-07-07 17:09:42,341] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/config.json "HTTP/1.1 200 OK"
+[transformers] This model config has set a `rope_parameters['original_max_position_embeddings']` field, to be used together with `max_position_embeddings` to determine a scaling factor. Please set the `factor` field of `rope_parameters`with this ratio instead -- we recommend the use of this field over `original_max_position_embeddings`, as it is compatible with most model architectures.
+[2026-07-07 17:09:42,391] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 17:09:42,396] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-07-07 17:09:42,402] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-07-07 17:09:42,445] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 17:09:42,451] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-07-07 17:09:42,492] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/microsoft/Phi-3.5-mini-instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:42,532] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/microsoft/Phi-3.5-mini-instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-07-07 17:09:42,592] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 17:09:42,598] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/tokenizer.json "HTTP/1.1 200 OK"
+[2026-07-07 17:09:42,604] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/tokenizer.json "HTTP/1.1 200 OK"
+[2026-07-07 17:09:42,716] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/tokenizer.model "HTTP/1.1 302 Found"
+[2026-07-07 17:09:43,053] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/added_tokens.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 17:09:43,059] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/added_tokens.json "HTTP/1.1 200 OK"
+[2026-07-07 17:09:43,064] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/added_tokens.json "HTTP/1.1 200 OK"
+[2026-07-07 17:09:43,095] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 17:09:43,101] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/special_tokens_map.json "HTTP/1.1 200 OK"
+[2026-07-07 17:09:43,107] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/special_tokens_map.json "HTTP/1.1 200 OK"
+[2026-07-07 17:09:43,140] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:43,330] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 17:09:43,338] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/config.json "HTTP/1.1 200 OK"
+[2026-07-07 17:09:44,082] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+[2026-07-07 17:09:44,130] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 17:09:44,136] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/model.safetensors.index.json "HTTP/1.1 200 OK"
+[2026-07-07 17:09:44,143] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/model.safetensors.index.json "HTTP/1.1 200 OK"
+[2026-07-07 17:09:44,180] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/microsoft/Phi-3.5-mini-instruct/revision/main "HTTP/1.1 200 OK"
+[2026-07-07 17:09:44,222] INFO httpx: HTTP Request: GET https://huggingface.co/api/models/microsoft/Phi-3.5-mini-instruct/tree/2fe192450127e6a83f7441aef6e3ca586c338b77?recursive=true&expand=false "HTTP/1.1 200 OK"
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:26<00:26, 26.62s/it]Fetching 2 files: 100%|██████████| 2/2 [00:26<00:00, 13.31s/it]
+Loading weights:   0%|          | 0/195 [00:00<?, ?it/s]Loading weights:   8%|▊         | 15/195 [00:00<00:01, 144.75it/s]Loading weights:  18%|█▊        | 35/195 [00:00<00:00, 171.07it/s]Loading weights:  29%|██▊       | 56/195 [00:00<00:00, 187.20it/s]Loading weights:  39%|███▉      | 76/195 [00:00<00:00, 192.05it/s]Loading weights:  49%|████▉     | 96/195 [00:00<00:00, 190.60it/s]Loading weights:  59%|█████▉    | 116/195 [00:00<00:00, 191.74it/s]Loading weights:  70%|██████▉   | 136/195 [00:00<00:00, 193.63it/s]Loading weights:  80%|████████  | 156/195 [00:00<00:00, 185.64it/s]Loading weights:  90%|████████▉ | 175/195 [00:00<00:00, 185.31it/s]Loading weights:  99%|█████████▉| 194/195 [00:01<00:00, 179.33it/s]Loading weights: 100%|██████████| 195/195 [00:01<00:00, 184.68it/s]
+[2026-07-07 17:10:13,887] INFO httpx: HTTP Request: HEAD https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-07-07 17:10:13,902] INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/generation_config.json "HTTP/1.1 200 OK"
+[2026-07-07 17:10:13,917] INFO httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/microsoft/Phi-3.5-mini-instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/generation_config.json "HTTP/1.1 200 OK"
+[2026-07-07 17:10:13,920] INFO moe_bias_shapley.hooks: Discovered 32 dense FFN layers
+[2026-07-07 17:10:28,236] INFO moe_bias_shapley.shapley: dense_loo: processed 10/2000 pairs
+[2026-07-07 17:10:40,369] INFO moe_bias_shapley.shapley: dense_loo: processed 20/2000 pairs
+[2026-07-07 17:10:52,480] INFO moe_bias_shapley.shapley: dense_loo: processed 30/2000 pairs
+[2026-07-07 17:11:04,588] INFO moe_bias_shapley.shapley: dense_loo: processed 40/2000 pairs
+[2026-07-07 17:11:16,697] INFO moe_bias_shapley.shapley: dense_loo: processed 50/2000 pairs
+[2026-07-07 17:11:28,820] INFO moe_bias_shapley.shapley: dense_loo: processed 60/2000 pairs
+[2026-07-07 17:11:40,938] INFO moe_bias_shapley.shapley: dense_loo: processed 70/2000 pairs
+[2026-07-07 17:11:53,056] INFO moe_bias_shapley.shapley: dense_loo: processed 80/2000 pairs
+[2026-07-07 17:12:05,176] INFO moe_bias_shapley.shapley: dense_loo: processed 90/2000 pairs
+[2026-07-07 17:12:17,288] INFO moe_bias_shapley.shapley: dense_loo: processed 100/2000 pairs
+[2026-07-07 17:12:29,395] INFO moe_bias_shapley.shapley: dense_loo: processed 110/2000 pairs
+[2026-07-07 17:12:41,513] INFO moe_bias_shapley.shapley: dense_loo: processed 120/2000 pairs
+[2026-07-07 17:12:53,619] INFO moe_bias_shapley.shapley: dense_loo: processed 130/2000 pairs
+[2026-07-07 17:13:05,718] INFO moe_bias_shapley.shapley: dense_loo: processed 140/2000 pairs
+[2026-07-07 17:13:17,818] INFO moe_bias_shapley.shapley: dense_loo: processed 150/2000 pairs
+[2026-07-07 17:13:29,921] INFO moe_bias_shapley.shapley: dense_loo: processed 160/2000 pairs
+[2026-07-07 17:13:42,033] INFO moe_bias_shapley.shapley: dense_loo: processed 170/2000 pairs
+[2026-07-07 17:13:54,178] INFO moe_bias_shapley.shapley: dense_loo: processed 180/2000 pairs
+[2026-07-07 17:14:06,324] INFO moe_bias_shapley.shapley: dense_loo: processed 190/2000 pairs
+[2026-07-07 17:14:18,466] INFO moe_bias_shapley.shapley: dense_loo: processed 200/2000 pairs
+[2026-07-07 17:14:30,605] INFO moe_bias_shapley.shapley: dense_loo: processed 210/2000 pairs
+[2026-07-07 17:14:42,746] INFO moe_bias_shapley.shapley: dense_loo: processed 220/2000 pairs
+[2026-07-07 17:14:54,879] INFO moe_bias_shapley.shapley: dense_loo: processed 230/2000 pairs
+[2026-07-07 17:15:07,015] INFO moe_bias_shapley.shapley: dense_loo: processed 240/2000 pairs
+[2026-07-07 17:15:19,145] INFO moe_bias_shapley.shapley: dense_loo: processed 250/2000 pairs
+[2026-07-07 17:15:31,276] INFO moe_bias_shapley.shapley: dense_loo: processed 260/2000 pairs
+[2026-07-07 17:15:43,406] INFO moe_bias_shapley.shapley: dense_loo: processed 270/2000 pairs
+[2026-07-07 17:15:55,533] INFO moe_bias_shapley.shapley: dense_loo: processed 280/2000 pairs
+[2026-07-07 17:16:07,672] INFO moe_bias_shapley.shapley: dense_loo: processed 290/2000 pairs
+[2026-07-07 17:16:19,802] INFO moe_bias_shapley.shapley: dense_loo: processed 300/2000 pairs
+[2026-07-07 17:16:31,933] INFO moe_bias_shapley.shapley: dense_loo: processed 310/2000 pairs
+[2026-07-07 17:16:44,064] INFO moe_bias_shapley.shapley: dense_loo: processed 320/2000 pairs
+[2026-07-07 17:16:56,230] INFO moe_bias_shapley.shapley: dense_loo: processed 330/2000 pairs
+[2026-07-07 17:17:08,376] INFO moe_bias_shapley.shapley: dense_loo: processed 340/2000 pairs
+[2026-07-07 17:17:20,535] INFO moe_bias_shapley.shapley: dense_loo: processed 350/2000 pairs
+[2026-07-07 17:17:32,659] INFO moe_bias_shapley.shapley: dense_loo: processed 360/2000 pairs
+[2026-07-07 17:17:44,791] INFO moe_bias_shapley.shapley: dense_loo: processed 370/2000 pairs
+[2026-07-07 17:17:56,940] INFO moe_bias_shapley.shapley: dense_loo: processed 380/2000 pairs
+[2026-07-07 17:18:09,068] INFO moe_bias_shapley.shapley: dense_loo: processed 390/2000 pairs
+[2026-07-07 17:18:21,218] INFO moe_bias_shapley.shapley: dense_loo: processed 400/2000 pairs
+[2026-07-07 17:18:33,355] INFO moe_bias_shapley.shapley: dense_loo: processed 410/2000 pairs
+[2026-07-07 17:18:45,492] INFO moe_bias_shapley.shapley: dense_loo: processed 420/2000 pairs
+[2026-07-07 17:18:57,638] INFO moe_bias_shapley.shapley: dense_loo: processed 430/2000 pairs
+[2026-07-07 17:19:09,779] INFO moe_bias_shapley.shapley: dense_loo: processed 440/2000 pairs
+[2026-07-07 17:19:21,898] INFO moe_bias_shapley.shapley: dense_loo: processed 450/2000 pairs
+[2026-07-07 17:19:34,033] INFO moe_bias_shapley.shapley: dense_loo: processed 460/2000 pairs
+[2026-07-07 17:19:46,159] INFO moe_bias_shapley.shapley: dense_loo: processed 470/2000 pairs
+[2026-07-07 17:19:58,292] INFO moe_bias_shapley.shapley: dense_loo: processed 480/2000 pairs
+[2026-07-07 17:20:10,438] INFO moe_bias_shapley.shapley: dense_loo: processed 490/2000 pairs
+[2026-07-07 17:20:22,591] INFO moe_bias_shapley.shapley: dense_loo: processed 500/2000 pairs
+[2026-07-07 17:20:34,741] INFO moe_bias_shapley.shapley: dense_loo: processed 510/2000 pairs
+[2026-07-07 17:20:46,859] INFO moe_bias_shapley.shapley: dense_loo: processed 520/2000 pairs
+[2026-07-07 17:20:59,004] INFO moe_bias_shapley.shapley: dense_loo: processed 530/2000 pairs
+[2026-07-07 17:21:11,147] INFO moe_bias_shapley.shapley: dense_loo: processed 540/2000 pairs
+[2026-07-07 17:21:23,279] INFO moe_bias_shapley.shapley: dense_loo: processed 550/2000 pairs
+[2026-07-07 17:21:35,407] INFO moe_bias_shapley.shapley: dense_loo: processed 560/2000 pairs
+[2026-07-07 17:21:47,538] INFO moe_bias_shapley.shapley: dense_loo: processed 570/2000 pairs
+[2026-07-07 17:21:59,666] INFO moe_bias_shapley.shapley: dense_loo: processed 580/2000 pairs
+[2026-07-07 17:22:11,787] INFO moe_bias_shapley.shapley: dense_loo: processed 590/2000 pairs
+[2026-07-07 17:22:23,908] INFO moe_bias_shapley.shapley: dense_loo: processed 600/2000 pairs
+[2026-07-07 17:22:36,044] INFO moe_bias_shapley.shapley: dense_loo: processed 610/2000 pairs
+[2026-07-07 17:22:48,182] INFO moe_bias_shapley.shapley: dense_loo: processed 620/2000 pairs
+[2026-07-07 17:23:00,310] INFO moe_bias_shapley.shapley: dense_loo: processed 630/2000 pairs
+[2026-07-07 17:23:12,435] INFO moe_bias_shapley.shapley: dense_loo: processed 640/2000 pairs
+[2026-07-07 17:23:24,548] INFO moe_bias_shapley.shapley: dense_loo: processed 650/2000 pairs
+[2026-07-07 17:23:36,682] INFO moe_bias_shapley.shapley: dense_loo: processed 660/2000 pairs
+[2026-07-07 17:23:48,803] INFO moe_bias_shapley.shapley: dense_loo: processed 670/2000 pairs
+[2026-07-07 17:24:00,937] INFO moe_bias_shapley.shapley: dense_loo: processed 680/2000 pairs
+[2026-07-07 17:24:13,064] INFO moe_bias_shapley.shapley: dense_loo: processed 690/2000 pairs
+[2026-07-07 17:24:25,186] INFO moe_bias_shapley.shapley: dense_loo: processed 700/2000 pairs
+[2026-07-07 17:24:37,308] INFO moe_bias_shapley.shapley: dense_loo: processed 710/2000 pairs
+[2026-07-07 17:24:49,439] INFO moe_bias_shapley.shapley: dense_loo: processed 720/2000 pairs
+[2026-07-07 17:25:01,563] INFO moe_bias_shapley.shapley: dense_loo: processed 730/2000 pairs
+[2026-07-07 17:25:13,700] INFO moe_bias_shapley.shapley: dense_loo: processed 740/2000 pairs
+[2026-07-07 17:25:25,829] INFO moe_bias_shapley.shapley: dense_loo: processed 750/2000 pairs
+[2026-07-07 17:25:37,954] INFO moe_bias_shapley.shapley: dense_loo: processed 760/2000 pairs
+[2026-07-07 17:25:50,081] INFO moe_bias_shapley.shapley: dense_loo: processed 770/2000 pairs
+[2026-07-07 17:26:02,205] INFO moe_bias_shapley.shapley: dense_loo: processed 780/2000 pairs
+[2026-07-07 17:26:14,321] INFO moe_bias_shapley.shapley: dense_loo: processed 790/2000 pairs
+[2026-07-07 17:26:26,435] INFO moe_bias_shapley.shapley: dense_loo: processed 800/2000 pairs
+[2026-07-07 17:26:38,563] INFO moe_bias_shapley.shapley: dense_loo: processed 810/2000 pairs
+[2026-07-07 17:26:50,690] INFO moe_bias_shapley.shapley: dense_loo: processed 820/2000 pairs
+[2026-07-07 17:27:02,799] INFO moe_bias_shapley.shapley: dense_loo: processed 830/2000 pairs
+[2026-07-07 17:27:14,945] INFO moe_bias_shapley.shapley: dense_loo: processed 840/2000 pairs
+[2026-07-07 17:27:27,069] INFO moe_bias_shapley.shapley: dense_loo: processed 850/2000 pairs
+[2026-07-07 17:27:39,187] INFO moe_bias_shapley.shapley: dense_loo: processed 860/2000 pairs
+[2026-07-07 17:27:51,310] INFO moe_bias_shapley.shapley: dense_loo: processed 870/2000 pairs
+[2026-07-07 17:28:03,429] INFO moe_bias_shapley.shapley: dense_loo: processed 880/2000 pairs
+[2026-07-07 17:28:15,552] INFO moe_bias_shapley.shapley: dense_loo: processed 890/2000 pairs
+[2026-07-07 17:28:27,672] INFO moe_bias_shapley.shapley: dense_loo: processed 900/2000 pairs
+[2026-07-07 17:28:39,799] INFO moe_bias_shapley.shapley: dense_loo: processed 910/2000 pairs
+[2026-07-07 17:28:51,918] INFO moe_bias_shapley.shapley: dense_loo: processed 920/2000 pairs
+[2026-07-07 17:29:04,037] INFO moe_bias_shapley.shapley: dense_loo: processed 930/2000 pairs
+[2026-07-07 17:29:16,150] INFO moe_bias_shapley.shapley: dense_loo: processed 940/2000 pairs
+[2026-07-07 17:29:28,270] INFO moe_bias_shapley.shapley: dense_loo: processed 950/2000 pairs
+[2026-07-07 17:29:40,387] INFO moe_bias_shapley.shapley: dense_loo: processed 960/2000 pairs
+[2026-07-07 17:29:52,521] INFO moe_bias_shapley.shapley: dense_loo: processed 970/2000 pairs
+[2026-07-07 17:30:04,641] INFO moe_bias_shapley.shapley: dense_loo: processed 980/2000 pairs
+[2026-07-07 17:30:16,764] INFO moe_bias_shapley.shapley: dense_loo: processed 990/2000 pairs
+[2026-07-07 17:30:28,879] INFO moe_bias_shapley.shapley: dense_loo: processed 1000/2000 pairs
+[2026-07-07 17:30:40,991] INFO moe_bias_shapley.shapley: dense_loo: processed 1010/2000 pairs
+[2026-07-07 17:30:53,106] INFO moe_bias_shapley.shapley: dense_loo: processed 1020/2000 pairs
+[2026-07-07 17:31:05,235] INFO moe_bias_shapley.shapley: dense_loo: processed 1030/2000 pairs
+[2026-07-07 17:31:17,370] INFO moe_bias_shapley.shapley: dense_loo: processed 1040/2000 pairs
+[2026-07-07 17:31:29,501] INFO moe_bias_shapley.shapley: dense_loo: processed 1050/2000 pairs
+[2026-07-07 17:31:41,695] INFO moe_bias_shapley.shapley: dense_loo: processed 1060/2000 pairs
+[2026-07-07 17:31:53,900] INFO moe_bias_shapley.shapley: dense_loo: processed 1070/2000 pairs
+[2026-07-07 17:32:06,125] INFO moe_bias_shapley.shapley: dense_loo: processed 1080/2000 pairs
+[2026-07-07 17:32:18,315] INFO moe_bias_shapley.shapley: dense_loo: processed 1090/2000 pairs
+[2026-07-07 17:32:30,472] INFO moe_bias_shapley.shapley: dense_loo: processed 1100/2000 pairs
+[2026-07-07 17:32:42,629] INFO moe_bias_shapley.shapley: dense_loo: processed 1110/2000 pairs
+[2026-07-07 17:32:54,785] INFO moe_bias_shapley.shapley: dense_loo: processed 1120/2000 pairs
+[2026-07-07 17:33:06,945] INFO moe_bias_shapley.shapley: dense_loo: processed 1130/2000 pairs
+[2026-07-07 17:33:19,114] INFO moe_bias_shapley.shapley: dense_loo: processed 1140/2000 pairs
+[2026-07-07 17:33:31,311] INFO moe_bias_shapley.shapley: dense_loo: processed 1150/2000 pairs
+[2026-07-07 17:33:43,500] INFO moe_bias_shapley.shapley: dense_loo: processed 1160/2000 pairs
+[2026-07-07 17:33:55,696] INFO moe_bias_shapley.shapley: dense_loo: processed 1170/2000 pairs
+[2026-07-07 17:34:07,910] INFO moe_bias_shapley.shapley: dense_loo: processed 1180/2000 pairs
+[2026-07-07 17:34:20,128] INFO moe_bias_shapley.shapley: dense_loo: processed 1190/2000 pairs
+[2026-07-07 17:34:32,361] INFO moe_bias_shapley.shapley: dense_loo: processed 1200/2000 pairs
+[2026-07-07 17:34:44,543] INFO moe_bias_shapley.shapley: dense_loo: processed 1210/2000 pairs
+[2026-07-07 17:34:56,713] INFO moe_bias_shapley.shapley: dense_loo: processed 1220/2000 pairs
+[2026-07-07 17:35:08,874] INFO moe_bias_shapley.shapley: dense_loo: processed 1230/2000 pairs
+[2026-07-07 17:35:21,036] INFO moe_bias_shapley.shapley: dense_loo: processed 1240/2000 pairs
+[2026-07-07 17:35:33,199] INFO moe_bias_shapley.shapley: dense_loo: processed 1250/2000 pairs
+[2026-07-07 17:35:45,363] INFO moe_bias_shapley.shapley: dense_loo: processed 1260/2000 pairs
+[2026-07-07 17:35:57,530] INFO moe_bias_shapley.shapley: dense_loo: processed 1270/2000 pairs
+[2026-07-07 17:36:09,721] INFO moe_bias_shapley.shapley: dense_loo: processed 1280/2000 pairs
+[2026-07-07 17:36:21,920] INFO moe_bias_shapley.shapley: dense_loo: processed 1290/2000 pairs
+[2026-07-07 17:36:34,118] INFO moe_bias_shapley.shapley: dense_loo: processed 1300/2000 pairs
+[2026-07-07 17:36:46,324] INFO moe_bias_shapley.shapley: dense_loo: processed 1310/2000 pairs
+[2026-07-07 17:36:58,544] INFO moe_bias_shapley.shapley: dense_loo: processed 1320/2000 pairs
+[2026-07-07 17:37:10,727] INFO moe_bias_shapley.shapley: dense_loo: processed 1330/2000 pairs
+[2026-07-07 17:37:22,910] INFO moe_bias_shapley.shapley: dense_loo: processed 1340/2000 pairs
+[2026-07-07 17:37:35,108] INFO moe_bias_shapley.shapley: dense_loo: processed 1350/2000 pairs
+[2026-07-07 17:37:47,369] INFO moe_bias_shapley.shapley: dense_loo: processed 1360/2000 pairs
+[2026-07-07 17:37:59,581] INFO moe_bias_shapley.shapley: dense_loo: processed 1370/2000 pairs
+[2026-07-07 17:38:11,756] INFO moe_bias_shapley.shapley: dense_loo: processed 1380/2000 pairs
+[2026-07-07 17:38:23,922] INFO moe_bias_shapley.shapley: dense_loo: processed 1390/2000 pairs
+[2026-07-07 17:38:36,103] INFO moe_bias_shapley.shapley: dense_loo: processed 1400/2000 pairs
+[2026-07-07 17:38:48,360] INFO moe_bias_shapley.shapley: dense_loo: processed 1410/2000 pairs
+[2026-07-07 17:39:00,571] INFO moe_bias_shapley.shapley: dense_loo: processed 1420/2000 pairs
+[2026-07-07 17:39:12,764] INFO moe_bias_shapley.shapley: dense_loo: processed 1430/2000 pairs
+[2026-07-07 17:39:24,960] INFO moe_bias_shapley.shapley: dense_loo: processed 1440/2000 pairs
+[2026-07-07 17:39:37,142] INFO moe_bias_shapley.shapley: dense_loo: processed 1450/2000 pairs
+[2026-07-07 17:39:49,331] INFO moe_bias_shapley.shapley: dense_loo: processed 1460/2000 pairs
+[2026-07-07 17:40:01,524] INFO moe_bias_shapley.shapley: dense_loo: processed 1470/2000 pairs
+[2026-07-07 17:40:13,756] INFO moe_bias_shapley.shapley: dense_loo: processed 1480/2000 pairs
+[2026-07-07 17:40:25,960] INFO moe_bias_shapley.shapley: dense_loo: processed 1490/2000 pairs
+[2026-07-07 17:40:38,146] INFO moe_bias_shapley.shapley: dense_loo: processed 1500/2000 pairs
+[2026-07-07 17:40:50,338] INFO moe_bias_shapley.shapley: dense_loo: processed 1510/2000 pairs
+[2026-07-07 17:41:02,515] INFO moe_bias_shapley.shapley: dense_loo: processed 1520/2000 pairs
+[2026-07-07 17:41:14,785] INFO moe_bias_shapley.shapley: dense_loo: processed 1530/2000 pairs
+[2026-07-07 17:41:27,055] INFO moe_bias_shapley.shapley: dense_loo: processed 1540/2000 pairs
+[2026-07-07 17:41:39,360] INFO moe_bias_shapley.shapley: dense_loo: processed 1550/2000 pairs
+[2026-07-07 17:41:51,669] INFO moe_bias_shapley.shapley: dense_loo: processed 1560/2000 pairs
+[2026-07-07 17:42:03,945] INFO moe_bias_shapley.shapley: dense_loo: processed 1570/2000 pairs
+[2026-07-07 17:42:16,138] INFO moe_bias_shapley.shapley: dense_loo: processed 1580/2000 pairs
+[2026-07-07 17:42:28,340] INFO moe_bias_shapley.shapley: dense_loo: processed 1590/2000 pairs
+[2026-07-07 17:42:40,543] INFO moe_bias_shapley.shapley: dense_loo: processed 1600/2000 pairs
+[2026-07-07 17:42:52,708] INFO moe_bias_shapley.shapley: dense_loo: processed 1610/2000 pairs
+[2026-07-07 17:43:04,876] INFO moe_bias_shapley.shapley: dense_loo: processed 1620/2000 pairs
+[2026-07-07 17:43:17,103] INFO moe_bias_shapley.shapley: dense_loo: processed 1630/2000 pairs
+[2026-07-07 17:43:29,330] INFO moe_bias_shapley.shapley: dense_loo: processed 1640/2000 pairs
+[2026-07-07 17:43:41,524] INFO moe_bias_shapley.shapley: dense_loo: processed 1650/2000 pairs
+[2026-07-07 17:43:53,746] INFO moe_bias_shapley.shapley: dense_loo: processed 1660/2000 pairs
+[2026-07-07 17:44:05,964] INFO moe_bias_shapley.shapley: dense_loo: processed 1670/2000 pairs
+[2026-07-07 17:44:18,157] INFO moe_bias_shapley.shapley: dense_loo: processed 1680/2000 pairs
+[2026-07-07 17:44:30,341] INFO moe_bias_shapley.shapley: dense_loo: processed 1690/2000 pairs
+[2026-07-07 17:44:42,464] INFO moe_bias_shapley.shapley: dense_loo: processed 1700/2000 pairs
+[2026-07-07 17:44:54,554] INFO moe_bias_shapley.shapley: dense_loo: processed 1710/2000 pairs
+[2026-07-07 17:45:06,653] INFO moe_bias_shapley.shapley: dense_loo: processed 1720/2000 pairs
+[2026-07-07 17:45:18,739] INFO moe_bias_shapley.shapley: dense_loo: processed 1730/2000 pairs
+[2026-07-07 17:45:30,812] INFO moe_bias_shapley.shapley: dense_loo: processed 1740/2000 pairs
+[2026-07-07 17:45:42,891] INFO moe_bias_shapley.shapley: dense_loo: processed 1750/2000 pairs
+[2026-07-07 17:45:54,971] INFO moe_bias_shapley.shapley: dense_loo: processed 1760/2000 pairs
+[2026-07-07 17:46:07,041] INFO moe_bias_shapley.shapley: dense_loo: processed 1770/2000 pairs
+[2026-07-07 17:46:19,097] INFO moe_bias_shapley.shapley: dense_loo: processed 1780/2000 pairs
+[2026-07-07 17:46:31,153] INFO moe_bias_shapley.shapley: dense_loo: processed 1790/2000 pairs
+[2026-07-07 17:46:43,201] INFO moe_bias_shapley.shapley: dense_loo: processed 1800/2000 pairs
+[2026-07-07 17:46:55,244] INFO moe_bias_shapley.shapley: dense_loo: processed 1810/2000 pairs
+[2026-07-07 17:47:07,287] INFO moe_bias_shapley.shapley: dense_loo: processed 1820/2000 pairs
+[2026-07-07 17:47:19,353] INFO moe_bias_shapley.shapley: dense_loo: processed 1830/2000 pairs
+[2026-07-07 17:47:31,426] INFO moe_bias_shapley.shapley: dense_loo: processed 1840/2000 pairs
+[2026-07-07 17:47:43,506] INFO moe_bias_shapley.shapley: dense_loo: processed 1850/2000 pairs
+[2026-07-07 17:47:55,616] INFO moe_bias_shapley.shapley: dense_loo: processed 1860/2000 pairs
+[2026-07-07 17:48:07,793] INFO moe_bias_shapley.shapley: dense_loo: processed 1870/2000 pairs
+[2026-07-07 17:48:20,308] INFO moe_bias_shapley.shapley: dense_loo: processed 1880/2000 pairs
+[2026-07-07 17:48:32,460] INFO moe_bias_shapley.shapley: dense_loo: processed 1890/2000 pairs
+[2026-07-07 17:48:44,556] INFO moe_bias_shapley.shapley: dense_loo: processed 1900/2000 pairs
+[2026-07-07 17:48:56,675] INFO moe_bias_shapley.shapley: dense_loo: processed 1910/2000 pairs
+[2026-07-07 17:49:08,997] INFO moe_bias_shapley.shapley: dense_loo: processed 1920/2000 pairs
+[2026-07-07 17:49:21,089] INFO moe_bias_shapley.shapley: dense_loo: processed 1930/2000 pairs
+[2026-07-07 17:49:33,126] INFO moe_bias_shapley.shapley: dense_loo: processed 1940/2000 pairs
+[2026-07-07 17:49:45,150] INFO moe_bias_shapley.shapley: dense_loo: processed 1950/2000 pairs
+[2026-07-07 17:49:57,197] INFO moe_bias_shapley.shapley: dense_loo: processed 1960/2000 pairs
+[2026-07-07 17:50:09,253] INFO moe_bias_shapley.shapley: dense_loo: processed 1970/2000 pairs
+[2026-07-07 17:50:21,304] INFO moe_bias_shapley.shapley: dense_loo: processed 1980/2000 pairs
+[2026-07-07 17:50:33,342] INFO moe_bias_shapley.shapley: dense_loo: processed 1990/2000 pairs
+[2026-07-07 17:50:45,386] INFO moe_bias_shapley.shapley: dense_loo: processed 2000/2000 pairs
+[2026-07-07 17:50:45,403] INFO moe_bias_shapley.reporting: Saved bias-Shapley results to /storage/ice1/0/2/sghose7/moe-breakdown-bias-runs/expt-bias-1/exp2-dense-baseline-phi3.5-mini-v1
+[2026-07-07 17:50:45,403] INFO run_bias_study: Done. Results in /storage/ice1/0/2/sghose7/moe-breakdown-bias-runs/expt-bias-1/exp2-dense-baseline-phi3.5-mini-v1

@@ -150,6 +150,28 @@ def merge_study_shards(study_dir: Path) -> None:
     if routing_freq_merged is not None:
         np.save(study_dir / "routing_freq.npy", routing_freq_merged)
 
+    # 7. Merge per-pair phi + pair_meta shards (concatenate along the pair axis;
+    # these are NOT weight-averaged like the aggregate phi -- s04's bootstrap
+    # CIs need every individual pair's contribution preserved).
+    per_pair_shards = sorted(study_dir.glob("per_pair_phi_shard*of*.npy"))
+    if per_pair_shards and not (study_dir / "per_pair_phi.npy").exists():
+        pair_arrays = [np.load(p) for p in per_pair_shards]
+        per_pair_phi_merged = np.concatenate(pair_arrays, axis=0)
+        np.save(study_dir / "per_pair_phi.npy", per_pair_phi_merged)
+        log.info("Merged %d per-pair phi shard(s) -> per_pair_phi.npy shape %s",
+                 len(per_pair_shards), per_pair_phi_merged.shape)
+
+        meta_shards = sorted(study_dir.glob("pair_meta_shard*of*.json"))
+        if meta_shards:
+            pair_meta_merged: list = []
+            for p in meta_shards:
+                pair_meta_merged.extend(json.loads(p.read_text()))
+            for i, entry in enumerate(pair_meta_merged):
+                entry["index"] = i
+            (study_dir / "pair_meta.json").write_text(json.dumps(pair_meta_merged, indent=2))
+            log.info("Merged %d pair_meta shard(s) -> pair_meta.json (%d entries)",
+                      len(meta_shards), len(pair_meta_merged))
+
     log.info("=== Merged Results ===")
     log.info("Total Pairs: %d", total_pairs)
     log.info("Mean Bias Gap: %.4f (std: %.4f)", mean_bias_gap_merged, std_bias_gap_merged)

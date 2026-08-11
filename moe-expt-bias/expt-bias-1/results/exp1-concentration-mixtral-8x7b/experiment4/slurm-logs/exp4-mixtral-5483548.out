@@ -1,0 +1,28 @@
+---------------------------------------
+Begin Slurm Prolog: Jul-07-2026 01:42:53
+Job ID:    5483548
+User ID:   sghose7
+Account:   coc
+Job name:  exp4-mixtral
+Partition: ice-gpu
+QOS:       coc-ice
+---------------------------------------
+[slurm] WORKDIR=/home/hice1/sghose7/scratch/moe-breakdown
+[slurm] ROOT_DIR=/home/hice1/sghose7/scratch/moe-breakdown/moe-expt-bias/expt-bias-1
+[slurm] SCRIPT=scripts/run_experiment4_ablation.py
+[slurm] STUDY_CONFIG=/home/hice1/sghose7/scratch/moe-breakdown/moe-expt-bias/expt-bias-1/configs/study.mixtral-8x7b.concentration.yaml
+[slurm] OUT_DIR=/home/hice1/sghose7/scratch/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-mixtral-8x7b/experiment4
+[slurm] EXTRA_ARGS=--max-pairs 30 --result-dir /home/hice1/sghose7/scratch/moe-breakdown-bias-runs/expt-bias-1/exp1-concentration-mixtral-8x7b
+[slurm] GPUs visible: 2
+---------------------------------------
+Begin Slurm Epilog: Jul-07-2026 01:45:37
+Job ID:        5483548
+User ID:       sghose7
+Account:       coc
+Job name:      exp4-mixtral
+Resources:     cpu=8,gres/gpu:a100=2,mem=64G,node=1
+Rsrc Used:     cput=00:22:08,vmem=0,walltime=00:02:46,mem=67134288K,energy_used=0
+Partition:     ice-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-005-13-0
+---------------------------------------
