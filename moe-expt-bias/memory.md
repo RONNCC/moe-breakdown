@@ -235,7 +235,7 @@ integrated. Four Exp8 lloo configs (mixtral-8x7b, dbrx, gpt-oss-120b,
 gemma4-26b) are authored + code-complete and just need submission
 (`submit_slurm_study.py --config configs/study.{...}.lloo.yaml --save-per-pair-phi`).
 
-**Offline audit deliverables (commit 552c03c):**
+**Offline audit deliverables (commit 552c03c + this session):**
 - Full paper re-verification against local JSONs: Table 2 / Appendix A numbers,
   s01 shards, s03 permutation verdicts, s04 CIs, s06 split-half, Exp4/6/7 readouts,
   Exp3 `-v1` sources, Exp5 row — all PASS. `scripts/audit_appendix.py` PASS 12/12.
@@ -246,9 +246,19 @@ gemma4-26b) are authored + code-complete and just need submission
   parity tests from result.json `mean_bias_gap` (exact perm p=0.992 over
   C(9,4)=126, Welch p=0.986, Cohen's d=0.011; Gemma signed −0.142 → incl. mean
   0.129, perm p=0.66). Paper §5.4 + Appendix A updated with all of these.
-- Docs: REPRODUCIBILITY.md now covers s01–s07 + audit_appendix (pipeline table,
+- Docs: REPRODUCIBILITY.md now covers s01–s08 + audit_appendix (pipeline table,
   directory map); GAP-ANALYSIS item 6 updated; experiment-registry: 34
   experiments, Exp3×2/Exp6-GPT-OSS marked UNKNOWN, exp8-gemma4-26b added as 4th
   PENDING rung (compound branch-ablation landed in `compute_dense_layer_contrast`).
+- **s08_power_analysis.py** (new): Section 6.4's Monte Carlo power now
+  persisted/reproducible — exact-permutation null (n≤10) + t-approx beyond gives
+  80% crossings n≈12.4 (rho=0.754) and n≈8.6 (rho=0.872); t-approx-all-n variant
+  (the originally-published convention, 0.37/0.55/0.79…) matches the old table
+  and gives the same crossings. §6.4 updated to the reproducible numbers;
+  convention-robustness clause added.
+- **s04 smoke exclusion**: scratch `*-smoke` dirs no longer surface as MISSING
+  (only phantom gemma4-27b reports MISSING, matching the paper).
+- **Fig5 determinism**: strip-jitter seeded (np.random.seed(42)); all 5 figures
+  now byte-reproducible.
 - Paper recompiled 2× pdflatex: 12 pages, zero Overfull, all fonts embedded.
 - Kaggle v2: 15 files (~565 MB), float32. Next v3 only if post-window runs land.

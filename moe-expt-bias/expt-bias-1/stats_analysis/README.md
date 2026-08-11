@@ -1,5 +1,22 @@
 # stats_analysis — "Review-response" robustness series
 
+> **SUPERSEDED (2026-08-11): historical working log from 2026-08-08.**
+> Everything marked "decision needed" / "MAJOR DISCREPANCY" / "broken" below
+> has since been RESOLVED; this file is kept for provenance, not as current
+> state. Resolution map:
+> - **GPT-OSS-120B v1 is VALID** (2000-pair capture H=0.8764 + 5000-pair
+>   replication H=0.8789), not "broken all-zero phi" — the broken run was
+>   discarded and re-captured (`gpt-oss-120b-v1-smoke` is a scratch dir).
+> - **s02 "MAJOR DISCREPANCY 0.42 vs 0.22"** resolved: the paper now reports
+>   the recomputed values (mean pairwise JSD 0.22, CI [0.206,0.231],
+>   expert-identity permutation null mean 0.31 / p95 0.37; abstract + §5.6.5).
+> - **H1 verdict** reframed as directionally consistent + exact-permutation
+>   p-values + Monte Carlo power analysis (§6.4, repro `s08_power_analysis.py`).
+> - **CIs/SEs/tests** landed for all models (`s04_bootstrap_cis.py`).
+> Current sources of truth: `REPRODUCIBILITY.md` (pipeline s01–s08 +
+> `audit_appendix.py`) and the paper `moe-expt-bias-2/moe_bias_report_acm_v2.tex`.
+> Per-script run records below are unchanged history.
+
 Dedicated workstream answering the advisor feedback on `moe_bias_report_draft.tex`.
 Everything for this series lives here; nothing in `results/`, `figures/`, or the
 paper's numbers should be touched from this series until a task below marks it DONE.
