@@ -261,4 +261,12 @@ gemma4-26b) are authored + code-complete and just need submission
 - **Fig5 determinism**: strip-jitter seeded (np.random.seed(42)); all 5 figures
   now byte-reproducible.
 - Paper recompiled 2× pdflatex: 12 pages, zero Overfull, all fonts embedded.
+- **Submission-scope pass (commit 3224a29)**: internal flag machinery
+  (`flag: \path{...}` codes) stripped from Limitations; WIP language
+  ("queued", "not yet run", "at time of writing", job IDs, exact
+  maintenance-window dates) rewritten to submission-grade scoping —
+  unlanded runs (Exp3-DBRX/GPT-OSS, Exp6-GPT-OSS, Exp8 4-model extension)
+  are explicitly "not landed within the compute window" / "primary
+  follow-up", not pending. Audit 12/12 re-PASS; 12 pages, zero Overfull.
+  Paper now reads as complete against on-disk data.
 - Kaggle v2: 15 files (~565 MB), float32. Next v3 only if post-window runs land.
