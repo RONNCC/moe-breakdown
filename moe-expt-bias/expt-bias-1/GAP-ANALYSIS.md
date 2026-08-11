@@ -128,14 +128,16 @@ payloads as landed.
 
 **New this session --- Exp8 ladder extension.** The 2-model result above is
 an *ambiguous split* on its own ($n=2$: one point in the dense band, one in
-the MoE range --- not yet a trend). Authored 3 new `dense_loo` configs to
+the MoE range --- not yet a trend). Authored 4 new `dense_loo` configs to
 extend the same-mechanism check across the sparsity ladder:
 `configs/study.mixtral-8x7b.lloo.yaml`, `configs/study.dbrx.lloo.yaml`,
-`configs/study.gpt-oss-120b.lloo.yaml` (all $n_{pairs}=30$--$50$, sized to
-stay well under the 960 GPU-min/job QOS cap). Doing so surfaced two real
-bugs in `discover_dense_ffn_layers`/`compute_dense_layer_contrast`
-(`src/moe_bias_shapley/hooks.py`, `shapley.py`) that would have made the
-DBRX and GPT-OSS configs crash or silently misbehave:
+`configs/study.gpt-oss-120b.lloo.yaml`, `configs/study.gemma4-26b.lloo.yaml`
+(all $n_{pairs}=30$--$50$, sized to stay well under the 960 GPU-min/job
+QOS cap). Doing so surfaced three real bugs in
+`discover_dense_ffn_layers`/`compute_dense_layer_contrast`/
+`mean_bias_gap_with_players_ablated` (`src/moe_bias_shapley/hooks.py`,
+`shapley.py`) that would have made 3 of the 4 configs crash or silently
+misbehave:
 1. **DBRX uses `.ffn`, not `.mlp`**, and its decoder stack lives at
    `transformer.blocks`, not `model.layers`/`transformer.h`/`gpt_neox.layers`
    (verified against upstream `modeling_dbrx.py`). Fixed by rewriting
@@ -149,21 +151,34 @@ DBRX and GPT-OSS configs crash or silently misbehave:
    decoder layer's `hidden_states, _ = self.mlp(...)` unpacking. Fixed by
    probing each layer's real output arity once (cheap, cached per layer)
    and matching it in the zeroed replacement.
+3. **Gemma-4's decoder layer forks into *two* parallel FFN branches**
+   (`self.shared_expert`, always-on dense; `self.moe`, routed experts) that
+   are summed before the residual add, not a single ablatable module --- the
+   single-attribute LOO mechanism would under-ablate (zero one branch, leave
+   the other active), undercounting the layer's true contribution. Fixed by
+   adding `_COMPOUND_FFN_ATTR_GROUPS = (("shared_expert", "moe"),)` to
+   `discover_dense_ffn_layers`: when a layer matches every attribute in a
+   group, `DenseLayerHandle` now carries the extra branch(es) in a new
+   `extra_modules` field, and both `compute_dense_layer_contrast` (Exp8) and
+   `mean_bias_gap_with_players_ablated` (Exp4) zero every module in the
+   group together (probing each branch's own output arity independently,
+   since `shared_expert` and `moe` need not share a forward signature).
+   Single-branch architectures (Llama/OLMo/Mixtral/DBRX/GPT-OSS) are
+   unaffected --- none match the compound group.
 
-Both fixes verified with a synthetic-module smoke test
-(`/tmp/smoke_discover.py`, not checked in --- exercises exact attribute
-names/container paths/return shapes sourced from upstream transformers
-source, not guessed) before shipping the configs; not yet run against the
-real 100+GB checkpoints (blocked on cluster access).
-
-**Gemma-4-26B excluded from this extension.** Its decoder layer forks into
-*two* parallel FFN branches (`self.shared_expert`, always-on dense; and
-`self.moe`, routed experts) that are summed, not a single ablatable module
---- the current single-attribute LOO mechanism would under-ablate (zero one
-branch, leave the other active) rather than measure the true per-layer
-contribution. Left out rather than shipping a misleading number; a correct
-extension would need a compound-ablation code path (zero both branches
-together), not attempted this session.
+All three fixes verified with a synthetic-module smoke test
+(`/tmp/smoke_compound_ablation.py`, not checked in --- exercises exact
+attribute names/container paths/return shapes already established earlier
+this session, not guessed) that (a) confirms discovery finds both Gemma
+branches as one player and leaves single-branch layers unchanged, (b) shows
+the old single-attribute-only ablation leaves a nonzero residual (the bug
+this fixes) while the new compound path zeroes the full contribution, and
+(c) runs the real `compute_dense_layer_contrast` function end-to-end (not a
+hand-simulation) against a mixed compound + single-branch synthetic ladder,
+checking per-pair phi shape, NaN-freedom, and post-run forward restoration
+on every branch. Not yet run against the real 240GB+ checkpoints (blocked on
+cluster access) --- all 4 configs (including `gemma4-26b`) are ready to fire
+the moment the cluster reopens; none are excluded any more.
 
 ---
 
@@ -205,12 +220,13 @@ together), not attempted this session.
     5575536, $n=50$) integrated earlier this session; OLMoE's per-pair
     capture (job **5575798**, node-pinned) landed with $H=0.7361$,
     Gini$=0.6239$, CI $H \in [0.692, 0.921]$, integrated into Appendix B.
-13. **Exp8 ladder extension (Mixtral, DBRX, GPT-OSS-120B)** --- 3 new
-    `dense_loo` configs authored + the underlying discovery/ablation code
-    bugs fixed and smoke-tested (see Section 2 above); **not yet
-    submitted** (blocked on cluster access during the maintenance window).
-    Ready to fire via `submit_slurm_study.py --config
-    configs/study.{mixtral-8x7b,dbrx,gpt-oss-120b}.lloo.yaml
+13. **Exp8 ladder extension (Mixtral, DBRX, GPT-OSS-120B, Gemma-4-26B)**
+    --- 4 new `dense_loo` configs authored + the underlying
+    discovery/ablation code bugs fixed and smoke-tested (see Section 2
+    above, including the Gemma compound-branch fix); **not yet submitted**
+    (blocked on cluster access during the maintenance window). Ready to
+    fire via `submit_slurm_study.py --config
+    configs/study.{mixtral-8x7b,dbrx,gpt-oss-120b,gemma4-26b}.lloo.yaml
     --save-per-pair-phi` the moment the cluster reopens.
 
 ### Data/Code Hygiene

@@ -1,0 +1,64 @@
+# Experiment 8 (same-mechanism comparison) — Gemma-4-26B with layer-LOO
+#
+# Extends Exp8's dense-LOO same-mechanism check to the 4th and last remaining
+# ladder rung. Previously EXCLUDED (see GAP-ANALYSIS.md Sec 2): Gemma-4's
+# decoder layer computes `hidden_states = shared_expert(x) + moe(x)` — an
+# always-on dense branch summed with the routed-expert branch — so the
+# single-attribute LOO ablation (`discover_dense_ffn_layers` zeroing only one
+# named FFN attribute per layer) would under-ablate this model: zero one
+# branch, leave the other's contribution live, and undercount the layer's
+# true bias contribution.
+#
+# Fixed this session (no cluster access needed — pure code, smoke-tested
+# against synthetic modules mirroring the exact two-branch structure, see
+# `/tmp/smoke_compound_ablation.py`, not checked in): `discover_dense_ffn_layers`
+# now recognizes `_COMPOUND_FFN_ATTR_GROUPS = (("shared_expert", "moe"),)` and
+# returns a `DenseLayerHandle` with both real submodules
+# (`module` + `extra_modules`); `compute_dense_layer_contrast` and
+# `mean_bias_gap_with_players_ablated` (Exp4) both zero every module in a
+# compound player together, not just the first. Verified: (1) both branches
+# are discovered as one player, (2) ablating the compound player forces the
+# ENTIRE layer contribution to zero (not just one branch), (3) the real
+# `compute_dense_layer_contrast` function runs end-to-end (arity-probing
+# cache, per-pair save, multi-layer restore) against a mixed compound +
+# single-branch synthetic ladder without regressing the existing
+# single-attribute path (Llama/OLMo/Mixtral/DBRX/GPT-OSS unaffected — none of
+# them match `_COMPOUND_FFN_ATTR_GROUPS`).
+#
+# Sizing: gemma-4-26B-A4B has 30 decoder layers x 8 experts/layer
+# (N_A=240, per CLUSTER-STATUS.md "Missing / non-issues"). dense_loo does
+# (2 + 2 x n_layers) = 62 forward passes/pair vs. routing_contrast's 2; at
+# 62 passes/pair x 30 pairs = 1860 passes and the v1 capture's observed
+# ~2.16s/pass (1xH100, 5000 pairs x 2 passes in ~6h), that is ~1.1h of
+# compute --- time budget below is generous headroom on top of that, not a
+# tight estimate. 1xH100 x 3h = 180 GPU-min, well under the coc-ice 960
+# GPU-min/job cap. Resource block otherwise mirrors the proven-working
+# study.gemma4-26b.concentration.v1.yaml (1xH100, 80G mem, cuda/12.6.1).
+
+study_name: exp8-lloo-gemma4-26b
+
+model_id: google/gemma-4-26B-A4B-it
+model_family: gemma4moe
+trust_remote_code: false
+torch_dtype: bfloat16
+load_in_4bit: false
+device_map: auto
+
+benchmarks: [stereoset, bbq, winogender]
+shapley_method: dense_loo   # force LOO even though model is MoE
+max_prompts: 30
+seed: 42
+
+output_root: ~/scratch/moe-breakdown-bias-runs/expt-bias-1
+
+slurm:
+  partition: ice-gpu
+  qos: coc-ice
+  time: 03:00:00
+  cpus_per_task: 8
+  gpus_per_node: 1
+  gpu_type: h100
+  use_gres: true
+  mem: 80G
+  modules: [gcc/12.3.0, python/3.11, cuda/12.6.1]
+  workdir: /home/hice1/sghose7/scratch/moe-breakdown

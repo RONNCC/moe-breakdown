@@ -627,7 +627,8 @@ def compute_dense_layer_contrast(
         gaps.append(full_gap)
 
         for layer in layers:
-            original_forward = layer.module.forward
+            modules = [layer.module] + layer.extra_modules
+            originals = [m.forward for m in modules]
 
             # Some architectures' per-layer FFN module returns a tuple whose
             # first element is the hidden-state tensor and the rest are
@@ -635,28 +636,39 @@ def compute_dense_layer_contrast(
             # GptOssMLP.forward returns `(hidden_states, router_scores)`,
             # unpacked by the decoder layer as `hidden_states, _ = self.mlp(...)`).
             # Ablating by zeroing must match that arity, or the caller's
-            # unpack crashes/misbehaves. Probe once (cheap: a single real
-            # forward call, cached on the handle, not repeated per pair).
-            if not hasattr(layer, "_probed_output_len"):
+            # unpack crashes/misbehaves. Probe once per real submodule (cheap:
+            # a single real forward call each, cached on the handle, not
+            # repeated per pair). Compound players (e.g. Gemma's
+            # shared_expert+moe) probe each branch independently since their
+            # forward signatures need not match.
+            if not hasattr(layer, "_probed_output_lens"):
+                probe_x = torch.zeros(
+                    1, 1, model.config.hidden_size,
+                    dtype=next(model.parameters()).dtype,
+                    device=next(model.parameters()).device,
+                )
+                def _probe_len(orig):
+                    out = orig(probe_x)
+                    return len(out) if isinstance(out, tuple) else 0
                 with torch.no_grad():
-                    probe_out = original_forward(
-                        torch.zeros(1, 1, model.config.hidden_size, dtype=next(model.parameters()).dtype,
-                                     device=next(model.parameters()).device)
-                    )
-                layer._probed_output_len = len(probe_out) if isinstance(probe_out, tuple) else 0
-            extra_len = layer._probed_output_len
+                    layer._probed_output_lens = [_probe_len(orig) for orig in originals]
+            extra_lens = layer._probed_output_lens
 
-            def zero_forward(x, *args, __orig=original_forward, __extra=extra_len, **kwargs):
-                zeros = torch.zeros_like(x)
-                return (zeros,) + (None,) * (__extra - 1) if __extra else zeros
+            def make_zero_forward(extra_len: int):
+                def zero_forward(x, *args, **kwargs):
+                    zeros = torch.zeros_like(x)
+                    return (zeros,) + (None,) * (extra_len - 1) if extra_len else zeros
+                return zero_forward
 
-            layer.module.forward = zero_forward
+            for m, extra_len in zip(modules, extra_lens):
+                m.forward = make_zero_forward(extra_len)
             try:
                 logp_s = _sequence_logprob(model, tokenizer, pair.stereo, device)
                 logp_a = _sequence_logprob(model, tokenizer, pair.anti_stereo, device)
                 ablated_gap = _bias_gap_from_logits(logp_s, logp_a)
             finally:
-                layer.module.forward = original_forward
+                for m, orig in zip(modules, originals):
+                    m.forward = orig
 
             phi[layer.layer_index] += (full_gap - ablated_gap)
             if save_per_pair:
@@ -739,8 +751,9 @@ def mean_bias_gap_with_players_ablated(
             if handle is None:
                 log.warning("Player %s: no dense FFN layer %d discovered — skipping", player_id, layer_idx)
                 continue
-            patched_dense.append((handle.module, handle.module.forward))
-            handle.module.forward = lambda x, *a, **kw: torch.zeros_like(x)
+            for sub in [handle.module] + handle.extra_modules:
+                patched_dense.append((sub, sub.forward))
+                sub.forward = lambda x, *a, **kw: torch.zeros_like(x)
             continue
         log.warning("Unrecognized player_id format %r — skipping", player_id)
 

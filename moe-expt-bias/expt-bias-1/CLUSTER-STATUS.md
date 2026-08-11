@@ -194,19 +194,21 @@ All of these have result.json + per_pair_phi.npy locally (bootstrap CIs computab
   `per_pair_phi.npy`, $n=50$; CI $H \in [0.842, 0.941]$). Both integrated
   into Appendix B; all 13 model payloads referenced in the Limitations
   bootstrap-CI flag are now on disk.
-- **Exp8 ladder extension (new this session)**: 3 new `dense_loo` configs
+- **Exp8 ladder extension (new this session)**: 4 new `dense_loo` configs
   authored to turn the ambiguous 2-model OLMoE/Phi-3.5-MoE split into a
   real ladder trend --- `study.mixtral-8x7b.lloo.yaml`, `study.dbrx.lloo.yaml`,
-  `study.gpt-oss-120b.lloo.yaml`. Authoring these surfaced and fixed two
-  real bugs in `discover_dense_ffn_layers`/`compute_dense_layer_contrast`
-  (DBRX's `.ffn`/`transformer.blocks` naming, GPT-OSS's tuple-returning
-  `.mlp`); both fixes smoke-tested against synthetic modules matching the
-  real architectures exactly (see GAP-ANALYSIS.md Sec. 2). **Not yet
-  submitted** --- blocked on cluster access. Gemma-4-26B deliberately
-  excluded: its dual-branch FFN (`shared_expert` + `moe`, summed) can't be
-  ablated by the current single-attribute LOO mechanism without silently
-  under-ablating; documented as a known limitation rather than shipped
-  broken.
+  `study.gpt-oss-120b.lloo.yaml`, `study.gemma4-26b.lloo.yaml`. Authoring
+  these surfaced and fixed three real bugs in
+  `discover_dense_ffn_layers`/`compute_dense_layer_contrast`/
+  `mean_bias_gap_with_players_ablated` (DBRX's `.ffn`/`transformer.blocks`
+  naming, GPT-OSS's tuple-returning `.mlp`, and Gemma-4's dual-branch
+  `shared_expert`+`moe` sum which the single-attribute LOO mechanism would
+  have under-ablated); all three fixes smoke-tested against synthetic
+  modules matching the real architectures exactly (see GAP-ANALYSIS.md
+  Sec. 2). **Not yet submitted** --- blocked on cluster access. Gemma-4-26B
+  is no longer excluded: `discover_dense_ffn_layers` now recognizes the
+  `shared_expert`+`moe` pair as one compound player and ablates both
+  branches together.
 
 ### Missing / non-issues
 

@@ -228,9 +228,30 @@ class DenseLayerHandle:
     layer_index: int
     module_name: str
     module: Any
+    # Additional real submodules that are summed with `module` into the same
+    # residual-stream contribution and therefore MUST be zero-ablated
+    # together with it (a compound player), rather than as separate players
+    # or (worse) leaving one branch un-ablated. See
+    # `_COMPOUND_FFN_ATTR_GROUPS` below.
+    extra_modules: List[Any] = field(default_factory=list)
 
 
 _FFN_ATTR_NAMES = ("mlp", "ffn", "feed_forward", "block_sparse_moe")
+
+# Decoder-layer attribute-name groups whose modules are summed into ONE
+# residual-stream contribution (`hidden_states = sum(getattr(layer, a)(x) for
+# a in group)`), so a leave-one-out ablation must zero every attribute in the
+# group simultaneously to correctly measure that layer's total FFN
+# contribution. Gemma-4's decoder layer computes
+# `hidden_states = shared_expert(x) + moe(x)` (always-on dense branch plus
+# routed experts, added before the residual connection) --- zeroing only
+# `moe` (as the generic single-attribute path would, since `shared_expert`
+# is unrelated to any of `_FFN_ATTR_NAMES`) would under-ablate: the
+# always-on branch keeps contributing and the measured LOO effect is too
+# small. Checked group-by-group, first full match wins.
+_COMPOUND_FFN_ATTR_GROUPS: Tuple[Tuple[str, ...], ...] = (
+    ("shared_expert", "moe"),
+)
 
 
 def discover_dense_ffn_layers(model: Any) -> List[DenseLayerHandle]:
@@ -243,21 +264,25 @@ def discover_dense_ffn_layers(model: Any) -> List[DenseLayerHandle]:
     `transformer.blocks`, GPT-NeoX uses `gpt_neox.layers`, ...), we walk
     `model.named_modules()` for the first `nn.ModuleList` whose elements look
     like decoder layers (have `.self_attn` plus one of the known per-layer
-    FFN attribute names). This mirrors the generic-discovery approach already
-    used by `discover_moe_layers` above, and additionally covers the FFN
-    attribute name itself varying by architecture (`.mlp` on
-    Llama/OLMo/Mixtral/OLMoE/Phi-3.5-MoE/GPT-OSS decoder layers, `.ffn` on
-    DBRX's `DbrxBlock`).
+    FFN attribute names, single or compound). This mirrors the generic-
+    discovery approach already used by `discover_moe_layers` above, and
+    additionally covers the FFN attribute name itself varying by
+    architecture (`.mlp` on Llama/OLMo/Mixtral/OLMoE/Phi-3.5-MoE/GPT-OSS
+    decoder layers, `.ffn` on DBRX's `DbrxBlock`, the compound
+    `.shared_expert`+`.moe` pair on Gemma-4's decoder layer).
     """
     import torch
 
     handles: List[DenseLayerHandle] = []
     layers = None
+    all_attr_names = _FFN_ATTR_NAMES + tuple(
+        a for grp in _COMPOUND_FFN_ATTR_GROUPS for a in grp
+    )
     for _, module in model.named_modules():
         if not isinstance(module, torch.nn.ModuleList) or len(module) == 0:
             continue
         first = module[0]
-        if hasattr(first, "self_attn") and any(hasattr(first, a) for a in _FFN_ATTR_NAMES):
+        if hasattr(first, "self_attn") and any(hasattr(first, a) for a in all_attr_names):
             layers = module
             break
 
@@ -265,6 +290,20 @@ def discover_dense_ffn_layers(model: Any) -> List[DenseLayerHandle]:
         raise ValueError("Could not locate transformer layers for dense FFN discovery")
 
     for idx, layer in enumerate(layers):
+        compound_group = next(
+            (grp for grp in _COMPOUND_FFN_ATTR_GROUPS if all(hasattr(layer, a) for a in grp)),
+            None,
+        )
+        if compound_group is not None:
+            modules = [getattr(layer, a) for a in compound_group]
+            handles.append(DenseLayerHandle(
+                layer_index=idx,
+                module_name=f"layers.{idx}.{'+'.join(compound_group)}",
+                module=modules[0],
+                extra_modules=modules[1:],
+            ))
+            continue
+
         mlp = None
         attr_name = None
         for attr_name in _FFN_ATTR_NAMES:
