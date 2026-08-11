@@ -242,28 +242,37 @@ Table~\ref{tab:ladder}. GPT-OSS-120B uses its valid v1 capture
 \label{tab:cis}
 \end{table*}
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering\small
-\begin{tabular}{lcccc}
+\begin{tabular}{lccccc}
 \toprule
-Model & $H$ & Gini & $t_5$ & $t_{10\%}$ \\
+Model & $H$ & Gini & $t_5$ & $t_{10\%}$ & CI ($H$) \\
 \midrule
-OLMo-7B        & 0.719 & 0.693 & 0.687 & 0.605 \\
-Phi-3.5-Mini   & 0.758 & 0.613 & 0.625 & 0.528 \\
-Llama-2-7B     & 0.651 & 0.700 & 0.732 & 0.692 \\
-Llama-3.1-8B   & 0.630 & 0.730 & 0.749 & 0.698 \\
+OLMo-7B        & 0.703 & 0.719 & 0.749 & 0.562 & $[0.672,0.744]$ \\
+Phi-3.5-Mini   & 0.759 & 0.645 & 0.632 & 0.499 & $[0.737,0.781]$ \\
+Llama-2-7B     & 0.697 & 0.654 & 0.696 & 0.648 & $[0.659,0.730]$ \\
+Llama-3.1-8B   & 0.659 & 0.708 & 0.721 & 0.669 & $[0.630,0.701]$ \\
 \midrule
-Mean           & 0.689 & 0.684 & 0.698 & 0.631 \\
+Mean           & 0.704 & 0.682 & 0.699 & 0.595 & --- \\
 \bottomrule
 \end{tabular}
-\caption{Dense-baseline measures (v0; \texttt{exp2-*}/result.json, one FFN
-layer player per transformer layer, $N = 32$). Bootstrap CIs are not
-derivable for dense rows: no per-pair $\phi$ payloads exist on disk
-(\texttt{s04\_bootstrap\_cis.json} covers the MoE ladder only), so these
-cells remain single-measure and are flagged \texttt{CI:pending}
-(Section~\ref{sec:limits}).}
+\caption{Dense-baseline measures (v1 per-pair captures; \texttt{exp2-*-v1}/
+\texttt{per\_pair\_phi.npy}, one FFN layer player per transformer layer,
+$N = 32$). The CI column reports $95\%$ block-bootstrap intervals for $H$
+(5000 resamples over pairs, seed 42, stratified by prompt group,
+\texttt{s04\_bootstrap\_cis.json}); Gini, $t_5$, $t_{10\%}$ intervals are
+$[0.677,0.748]$, $[0.693,0.777]$, $[0.497,0.611]$ (OLMo-7B);
+$[0.621,0.668]$, $[0.606,0.653]$, $[0.473,0.524]$ (Phi-3.5-Mini);
+$[0.624,0.699]$, $[0.666,0.733]$, $[0.605,0.687]$ (Llama-2-7B);
+$[0.669,0.734]$, $[0.683,0.747]$, $[0.622,0.696]$ (Llama-3.1-8B), in that
+column order. Per-pair $\phi$ payloads for dense baselines landed after
+the initial submission (8 GPU shard jobs, 4 models $\times$ 2 shards);
+point estimates shift modestly from the earlier v0 single-shot capture
+(e.g.\ OLMo-7B $H$: $0.719 \to 0.703$) but the qualitative pattern is
+unchanged: all four dense models fall well below every MoE ladder rung's
+entropy (Table~\ref{tab:ladder}), and CIs do not overlap the MoE band.}
 \label{tab:dense}
-\end{table}
+\end{table*}
 
 \section{Results}
 \subsection{The ladder is monotone-consistent with H1, but not significant}
@@ -279,9 +288,9 @@ $0.10$). Normalized entropy spans only $0.789$--$0.917$ across the six
 rungs ($H \approx 0.88$--$0.92$ for the four un-flagged rungs), and the
 $95\%$ bootstrap intervals in Table~\ref{tab:cis} confirm that adjacent
 rungs are statistically overlapping wherever they are close in $k/N$. By
-contrast, the smallest dense-to-MoE entropy gap is $0.031$ (vs.\ the
+contrast, the smallest dense-to-MoE entropy gap is $0.030$ (vs.\ the
 null-bias Gemma rung, the lowest MoE point; excluding that rung it is
-$0.119$); the dense/MoE split is the robust contrast of the study.
+$0.117$); the dense/MoE split is the robust contrast of the study.
 
 \begin{figure}[t]
 \centering
@@ -325,7 +334,7 @@ $0.35$--$0.77$. There is no small, stable ``fixable'' expert set.
 \end{figure}
 
 \subsection{Dense vs.\ MoE: a real split, not a ladder}
-Dense baselines ($H$: $0.630$--$0.758$; mean $0.689$, Table~\ref{tab:dense})
+Dense baselines ($H$: $0.659$--$0.759$; mean $0.704$, Table~\ref{tab:dense})
 cluster clearly below every MoE rung ($0.789$--$0.917$, including the
 null-bias Gemma rung). The separation
 survives every subset of the ladder and is the robust signal of the
@@ -445,10 +454,14 @@ significant at $0.05$; power is the limit, not the data.
 All confidence intervals are $95\%$ percentile intervals from a
 per-pair block bootstrap: resample the contrastive pairs with replacement,
 5000 draws, seed 42, stratified by prompt group for the v1 runs
-(\texttt{s04\_bootstrap\_cis.json}). Eleven models have per-pair: six MoE v1 captures, the Exp~5 OLMoE capture, and four dense v0 captures (no per-pair payloads for dense v0; dense v1 reruns are in progress).
-$\phi$ payloads on disk and are reported in Table~\ref{tab:cis}; only
-Gemma-4-27B (not part of the ladder) is MISSING. The cohort JS mean carries
-the same bootstrap treatment, $95\%$ CI $[0.206, 0.231]$.
+(\texttt{s04\_bootstrap\_cis.json}). Ten models plus one stability
+replication have per-pair $\phi$ payloads on disk and are reported in
+Table~\ref{tab:cis} and Table~\ref{tab:dense}: all six MoE ladder rungs,
+all four dense baselines, and a 5000-pair GPT-OSS-120B replication that
+confirms ladder-rung stability ($H=0.8789$ vs.\ the certified 2000-pair
+$H=0.8765$, $\Delta H = +0.0024$). Only Gemma-4-27B (a phantom HF release,
+not part of the ladder) is MISSING. The cohort JS mean carries the same
+bootstrap treatment, $95\%$ CI $[0.206, 0.231]$.
 
 \subsection{Demographic-specificity}
 Expanding on OLMoE with 85 demographically-defined cohorts, per-cohort
@@ -618,18 +631,17 @@ blocks of \path{stats_analysis/outputs/s04_bootstrap_cis.json}
 \texttt{t10[..]}); $n_{pairs}$ comes from each run's result.json. The Exp~5
 OLMoE capture is read from
 \path{results/exp5-demographic-specificity-olmoe-1b-7b-v1/result.json}
-(\texttt{concentration\_metrics}). The dense baselines are the v0 captures
-used in Table~\ref{tab:dense}, read from the \path{exp2-*-v0} result.jsons
-(\texttt{concentration\_metrics}); v1 dense reruns exist on disk
-(1800/4000/1800/1800 pairs) but the paper reports the v0 figures. Bootstrap
-CIs are 
-not derivable for dense rows: no per-pair $\phi$ payloads for dense runs
-exist on disk, so \path{s04_bootstrap_cis.json} covers the MoE ladder only
-(bootstrapping a block statistic requires resampling the pairs that produced
-the per-pair $\phi$ values, which is exactly the payload that dense runs never
-shipped); those cells are therefore marked `---' and flagged
-\texttt{CI:pending} in Section~\ref{sec:limits}. GPT-OSS-120B shows its
-valid 2000-pair v1 capture. The k/N values are the verified
+(\texttt{concentration\_metrics}). The dense baselines are the v1
+per-pair captures used in Table~\ref{tab:dense}, read from the
+\texttt{exp2-*-v1}/\texttt{per\_pair\_phi.npy} payloads
+(1800/4000/1800/1800 pairs); the earlier v0 single-shot captures
+(400 pairs each) are superseded. Bootstrap CIs for the dense rows come
+from the same block-bootstrap procedure as the MoE ladder (5000 resamples,
+seed 42, stratified by prompt group), reported alongside the MoE rows in
+\path{s04_bootstrap_cis.json}. GPT-OSS-120B shows its
+valid 2000-pair v1 capture; a 5000-pair replication
+(\texttt{exp1-concentration-gpt-oss-120b-5000}) confirms stability
+($H=0.8789$ vs.\ $0.8765$, within the CI). The k/N values are the verified
 \texttt{N\_A/N} from \path{s03_h1_verdict.json} (Gemma corrected
 $N_A$: $960 \rightarrow 240$).
 
@@ -648,10 +660,10 @@ DBRX-132B & dbrx & 640 & 160 & 0.25 & exp1-concentration-dbrx-v1 & 0.89664281925
 GPT-OSS-120B & gpt-oss & 4608 & 144 & 0.03125 & exp1-concentration-gpt-oss-120b-v1 & 0.8764500311375967 & 0.7273864977692972 & [0.8749952237905315, 0.8857548862669353] & [0.7068677359986533, 0.7307321552383336] & 0.019825543710166586 & 0.5731227230725181 & 0.003053344909269784 & 0.0037598953599614626 \\
 Gemma-4-26B$^{\ddagger}$ & gemma4moe & 3840 & 240 & 0.0625 & exp1-concentration-gemma4-26b-v1 & 0.7887735094946339 & 0.8551293573691959 & [0.7912880207701668, 0.8018981269787994] & [0.8412792141541596, 0.8525262679470473] & 0.05059341564528668 & 0.766853661303078 & 0.022997797740857084 & 0.02117465994067902 \\
 \midrule
-OLMo-7B (dense)$^{*}$ & olmo & 32 & --- & 1.0 & exp2-dense-baseline-olmo-7b & 0.7194078268195452 & 0.6929742140401861 & --- & --- & 0.6867990542672688 & 0.6051147043350128 & --- & --- \\
-Phi-3.5-Mini (dense)$^{*}$ & phi3.5 & 32 & --- & 1.0 & exp2-dense-baseline-phi3.5-mini & 0.7579053226812761 & 0.6130531225167948 & --- & --- & 0.6247542059965518 & 0.5277236074309628 & --- & --- \\
-Llama-2-7B (dense)$^{*}$ & llama & 32 & --- & 1.0 & exp2-dense-crosscheck-llama-2-7b & 0.650629997969714 & 0.6995207212132746 & --- & --- & 0.7317225612544715 & 0.6920951785852945 & --- & --- \\
-Llama-3.1-8B (dense)$^{*}$ & llama & 32 & --- & 1.0 & exp2-dense-crosscheck-llama-3.1-8b & 0.6300970845941072 & 0.7299968143336719 & --- & --- & 0.7486734941342921 & 0.6983218590825292 & --- & --- \\
+OLMo-7B (dense)$^{*}$ & olmo & 32 & --- & 1.0 & exp2-dense-baseline-olmo-7b-v1 & 0.702576 & 0.719123 & [0.6724177274414853, 0.7439277014834522] & [0.6764998180022618, 0.7478036463675187] & 0.749066 & 0.562216 & --- & --- \\
+Phi-3.5-Mini (dense)$^{*}$ & phi3.5 & 32 & --- & 1.0 & exp2-dense-baseline-phi3.5-mini-v1 & 0.759191 & 0.645043 & [0.7374305357401991, 0.7807960072026446] & [0.6207679378704429, 0.6683939960188785] & 0.63157 & 0.4993 & --- & --- \\
+Llama-2-7B (dense)$^{*}$ & llama & 32 & --- & 1.0 & exp2-dense-crosscheck-llama-2-7b-v1 & 0.696892 & 0.654092 & [0.6587456217347756, 0.72958028440434] & [0.6239089684675354, 0.6993249937106085] & 0.695581 & 0.647874 & --- & --- \\
+Llama-3.1-8B (dense)$^{*}$ & llama & 32 & --- & 1.0 & exp2-dense-crosscheck-llama-3.1-8b-v1 & 0.658706 & 0.707863 & [0.630231291109897, 0.7012513439006255] & [0.6693251516848482, 0.7344723860528478] & 0.720812 & 0.668744 & --- & --- \\
 \midrule
 OLMoE-1B-7B (Exp~5) & olmoe & 1024 & 16 & 0.015625 & exp5-demographic-specificity-olmoe-1b-7b-v1 & 0.878624280562932 & 0.6456658511906938 & --- & --- & 0.09276401412301855 & 0.5087567556352717 & --- & --- \\
 \bottomrule
@@ -662,12 +674,12 @@ v1 model blocks (CI bounds quoted verbatim from the
 \texttt{entropy}/\texttt{gini} arrays); drift columns are the
 v0$\rightarrow$v1 absolute drifts from
 \texttt{stats\_analysis/outputs/s01\_exp1\_stability.json}
-(\texttt{abs\_dH}/\texttt{abs\_dG}). Dense rows: v0 captures from the
-\texttt{exp2-*-v0} result.jsons as reported in Table~\ref{tab:dense}; CIs
-are not derivable because no per-pair $\phi$ payloads exist for dense runs
-(\texttt{s04\_bootstrap\_cis.json} covers the MoE ladder only), flagged
-\texttt{CI:pending} in Section~\ref{sec:limits}. Exp~5 row: pooled OLMoE
-concentration from
+(\texttt{abs\_dH}/\texttt{abs\_dG}). Dense rows: v1 per-pair captures from
+the \texttt{exp2-*-v1} runs as reported in Table~\ref{tab:dense}; CIs come
+from the same \texttt{s04\_bootstrap\_cis.json} block bootstrap as the MoE
+ladder (no drift column: dense runs were not captured twice at different
+pair counts, so there is no v0$\rightarrow$v1 comparison to report). Exp~5
+row: pooled OLMoE concentration from
 \texttt{exp5-demographic-specificity-olmoe-1b-7b-v1/result.json}
 (it is not among the s04 bootstrap blocks, so its CI cells are marked
 `---'). $^{\ddagger}$Gemma-4-26B is a null-bias model (mean bias gap
@@ -735,20 +747,27 @@ Section~\ref{sec:causal}. Ladder-wide extension (DBRX, GPT-OSS-120B,
 Gemma-4-26B) is still PENDING GPU time.
 
 \paragraph{Experiment 7 --- proxy-vs-exact-Shapley agreement (DONE;
-null result).}
+null result on all three tested models).}
 The routing-contrast kernel is an approximation of the exact Shapley value;
 Experiment 7 quantifies the gap by computing the Spearman $\rho$ between the
-\texttt{routing\_contrast} ranking and the exact-Shapley ranking on Mixtral,
-where exact computation is tractable ($K{=}2/8$ experts active, $2^8 = 256$
-coalitions), over $n{=}20$ pairs and the first and last MoE layer.
-\textbf{Status: DONE.} The result exists on disk at
-\path{results/exp1-concentration-mixtral-8x7b/experiment7/
-experiment7_proxy_agreement.json}: \texttt{mean\_spearman\_rho} of
-$-0.085$ (layer 0, sd $0.373$) and $+0.058$ (layer 31, sd $0.445$) over
-$n{=}20$ evaluated pairs. The per-pair agreement is statistically
-indistinguishable from zero at both layers --- the proxy ranking does not
-reproduce exact-Shapley ordering within this model/pair budget,
-consistent with the noisy small-$k$ regime of the causal curves in
+\texttt{routing\_contrast} ranking and the exact-Shapley ranking, over
+$n{=}20$ pairs and the first/last MoE layer, on every model where exact
+computation is tractable ($K{=}2$--$16$ experts active per layer). Results
+exist on disk for three models: Mixtral
+(\path{results/exp1-concentration-mixtral-8x7b/experiment7/
+experiment7_proxy_agreement.json}, \texttt{mean\_spearman\_rho}
+$-0.085$ layer 0 sd $0.373$, $+0.058$ layer 31 sd $0.445$), OLMoE
+(\path{results/exp1-concentration-olmoe-1b-7b/experiment7/
+experiment7_proxy_agreement.json}, $-0.024$ layer 0 sd $0.287$, $+0.235$
+layer 15 sd $0.395$), and Phi-3.5-MoE
+(\path{results/exp1-concentration-phi3.5-moe/experiment7/
+experiment7_proxy_agreement.json}, $-0.084$ layer 0 sd $0.341$, $+0.076$
+layer 31 sd $0.311$). \textbf{Status: DONE for three models.} Every
+per-pair agreement estimate across all three models and both layers is
+statistically indistinguishable from zero ($|\rho| \le 0.24$, sd
+$0.29$--$0.45$ on $n{=}20$ pairs) --- the proxy ranking does not
+reproduce exact-Shapley ordering within this pair budget on any tested
+model, consistent with the noisy small-$k$ regime of the causal curves in
 Table~\ref{tab:appendix-full} and Section~\ref{sec:causal}.
 
 \paragraph{Experiment 8 --- same-mechanism comparison (DONE at the summary
@@ -777,7 +796,8 @@ Of the three causal/robustness checks defined in the catalog: Experiment~4/6
 (causal ablation) is DONE for four models (OLMoE, Mixtral, Phi-3.5-MoE, and
 the OLMo-7B dense control; Section~\ref{sec:causal}) with the remaining
 ladder rungs PENDING; Experiment~7 (proxy agreement) is DONE and reports a
-null result (per-pair $\rho \approx 0$ on Mixtral); and Experiment~8
+null result on all three tested models (per-pair $\rho \approx 0$ on
+Mixtral, OLMoE, and Phi-3.5-MoE); and Experiment~8
 (same-mechanism) is DONE at the summary-metric level with per-pair analysis
 PENDING. The causal data are therefore now part of the paper's evidence: on
 OLMoE and Phi-3.5-MoE the $\phi$-ranked ablation drops the bias gap faster

@@ -264,14 +264,39 @@
       }
     },
     "gpt-oss-120b-5000": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
+      "status": "ok",
+      "n_pairs": 5000,
+      "n_players": 4608,
+      "n_boot": 5000,
+      "seed": 42,
+      "block_method": "stratified-by-group",
+      "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp1-concentration-gpt-oss-120b-5000/per_pair_phi.npy",
+      "entropy": [
+        0.8790978152468271,
+        0.8869734206343873
+      ],
+      "gini": [
+        0.7039108102947615,
+        0.7225948856112226
+      ],
+      "t5": [
+        0.021177138284175726,
+        0.02575016568188025
+      ],
+      "t10": [
+        0.533120396701229,
+        0.5586811732169007
+      ],
+      "point_estimates": {
+        "entropy": 0.878885,
+        "gini": 0.722784,
+        "t5": 0.024588,
+        "t10": 0.560853
+      },
+      "consistency_check": {
+        "result_json": "ok",
+        "mismatches": {}
+      }
     },
     "gpt-oss-120b-perpair": {
       "status": "MISSING",
@@ -1027,15 +1052,14 @@
     }
   },
   "summary": {
-    "n_with_data": 20,
-    "n_missing": 15,
+    "n_with_data": 21,
+    "n_missing": 14,
     "missing_models": [
       "dbrx-v1-perpair",
       "dbrx-v1-perpair-b",
       "gemma4-26b-perpair",
       "gemma4-26b-perpair-b",
       "gemma4-27b",
-      "gpt-oss-120b-5000",
       "gpt-oss-120b-perpair",
       "gpt-oss-120b-perpair-b",
       "gpt-oss-120b-v1-smoke",
