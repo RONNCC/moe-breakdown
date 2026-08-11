@@ -92,26 +92,6 @@
         "mismatches": {}
       }
     },
-    "dbrx-v1-perpair": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
-    },
-    "dbrx-v1-perpair-b": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
-    },
     "gemma4-26b": {
       "status": "ok",
       "n_pairs": 400,
@@ -146,26 +126,6 @@
         "result_json": "ok",
         "mismatches": {}
       }
-    },
-    "gemma4-26b-perpair": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
-    },
-    "gemma4-26b-perpair-b": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
     },
     "gemma4-26b-v1": {
       "status": "ok",
@@ -298,26 +258,6 @@
         "mismatches": {}
       }
     },
-    "gpt-oss-120b-perpair": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
-    },
-    "gpt-oss-120b-perpair-b": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
-    },
     "gpt-oss-120b-v1": {
       "status": "ok",
       "n_pairs": 2000,
@@ -444,26 +384,6 @@
         "mismatches": {}
       }
     },
-    "mixtral-8x7b-v1-perpair": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
-    },
-    "mixtral-8x7b-v1-perpair-b": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
-    },
     "olmoe-1b-7b": {
       "status": "ok",
       "n_pairs": 5000,
@@ -555,26 +475,6 @@
         "mismatches": {}
       }
     },
-    "olmoe-1b-7b-v1-perpair": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
-    },
-    "olmoe-1b-7b-v1-perpair-b": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
-    },
     "phi3.5-moe": {
       "status": "ok",
       "n_pairs": 5000,
@@ -665,26 +565,6 @@
         "result_json": "ok",
         "mismatches": {}
       }
-    },
-    "phi3.5-moe-v1-perpair": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
-    },
-    "phi3.5-moe-v1-perpair-b": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
     },
     "dense-baseline-olmo-7b": {
       "status": "ok",
@@ -1051,14 +931,39 @@
       }
     },
     "lloo-olmoe-1b-7b": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
+      "status": "ok",
+      "n_pairs": 100,
+      "n_players": 16,
+      "n_boot": 5000,
+      "seed": 42,
+      "block_method": "stratified-by-group",
+      "source": "/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown/moe-expt-bias/expt-bias-1/results/exp8-lloo-olmoe-1b-7b/per_pair_phi.npy",
+      "entropy": [
+        0.6919077370600266,
+        0.921328206932942
+      ],
+      "gini": [
+        0.3553458252739785,
+        0.6565632001701416
+      ],
+      "t5": [
+        0.5555860771292166,
+        0.814971922264811
+      ],
+      "t10": [
+        0.2742001384665065,
+        0.598472127285889
+      ],
+      "point_estimates": {
+        "entropy": 0.736142,
+        "gini": 0.623868,
+        "t5": 0.77482,
+        "t10": 0.550239
+      },
+      "consistency_check": {
+        "result_json": "ok",
+        "mismatches": {}
+      }
     },
     "lloo-phi3.5-moe": {
       "status": "ok",
@@ -1097,24 +1002,11 @@
     }
   },
   "summary": {
-    "n_with_data": 22,
-    "n_missing": 15,
+    "n_with_data": 23,
+    "n_missing": 2,
     "missing_models": [
-      "dbrx-v1-perpair",
-      "dbrx-v1-perpair-b",
-      "gemma4-26b-perpair",
-      "gemma4-26b-perpair-b",
       "gemma4-27b",
-      "gpt-oss-120b-perpair",
-      "gpt-oss-120b-perpair-b",
-      "gpt-oss-120b-v1-smoke",
-      "mixtral-8x7b-v1-perpair",
-      "mixtral-8x7b-v1-perpair-b",
-      "olmoe-1b-7b-v1-perpair",
-      "olmoe-1b-7b-v1-perpair-b",
-      "phi3.5-moe-v1-perpair",
-      "phi3.5-moe-v1-perpair-b",
-      "lloo-olmoe-1b-7b"
+      "gpt-oss-120b-v1-smoke"
     ]
   }
 }

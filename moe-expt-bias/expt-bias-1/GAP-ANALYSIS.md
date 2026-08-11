@@ -72,10 +72,11 @@ and an Appendix B paragraph. Landed data (verified non-degenerate) for
 Phi-3.5-MoE ($0.741$/$0.200$), Mixtral-8x7B ($0.716$/$0.503$, the
 2026-07-07 stale capture --- checked, non-degenerate, $n{=}20$ pairs both
 layers, used as-is), Gemma-4-26B ($0.747$/$0.183$). DBRX and
-GPT-OSS-120B resubmitted this session (jobs **5575743**, **5575744**,
-4h/8h walltime after the config time-limit fix below) --- **PENDING**,
-blocked by a cluster-side `Reserved for maintenance` scheduler reason
-despite idle H100 capacity (see `CLUSTER-STATUS.md` live-poll section).
+GPT-OSS-120B resubmitted this session (jobs **5575799**, **5575791**,
+node-pinned around a cluster maintenance-window reservation after the
+first attempts (5575743/5575744) were blocked --- see `CLUSTER-STATUS.md`
+root-cause section) --- **RUNNING** as of last poll, `--time` reduced to
+~1h10m to fit the maintenance-window runway (down from the original 4h/8h).
 A redundant Mixtral refresh (job 5575538, from a prior session) was
 **cancelled** this session after confirming it requested 1440 GPU-min
 against the `coc-ice` 960 GPU-min/job cap and could never run; not
@@ -84,7 +85,7 @@ blocking (July capture already verified usable).
 ### Experiment 4 --- Independent Cross-Check (Robustness)
 - **DONE** for 6 models (OLMoE, Mixtral, Phi-3.5-MoE, DBRX, Gemma-4-26B,
   OLMo-7B dense) under Exp6 (Section 5.6/causal check). GPT-OSS-120B
-  ladder extension resubmitted this session (job 5575745).
+  ladder extension resubmitted this session (job 5575800, node-pinned).
 
 ### Experiment 5 --- Demographic Specificity (RQ3/C3)
 - **DONE** for OLMoE (5000 pairs, 85 cohorts, JS CI [0.206,0.231]). Exp5 flag
@@ -99,7 +100,7 @@ blocking (July capture already verified usable).
 | OLMo-7B (dense) | x (60 pairs) | DONE, cited in paper |
 | DBRX | x (60 pairs) | **DONE, integrated this session** --- $\phi$ is the *worst*-performing ranking at the 50% point (reversal), reported honestly |
 | Gemma-4-26B | x (60 pairs) | **DONE, integrated this session** --- baseline bias gap $\approx 0$, flagged uninterpretable, numbers reported for completeness only |
-| GPT-OSS-120B | resubmitted (job 5575745, 8h/30 pairs) | **PENDING** in queue at last poll |
+| GPT-OSS-120B | resubmitted (job 5575800, node-pinned, 1h/30 pairs) | **RUNNING** as of last poll |
 
 **Gap remaining**: only GPT-OSS-120B's Exp6 ladder rung is still missing;
 once it lands, update Section 5.6/Appendix B from "DONE for six models" to
@@ -118,12 +119,12 @@ numbers.
 ### Experiment 8 --- Same-Mechanism Comparison (Method-Confound)
 | Model | Result | Status |
 |---|---|---|
-| OLMoE | H_lloo=0.758 (summary only) | DONE at summary level; per-pair capture resubmitted with `--save-per-pair-phi` as job **5575752** (queued) after discovering job 5575255 only persisted summary $\phi$ |
+| OLMoE | H_lloo=0.7361, per-pair CI $[0.692,0.921]$ | **DONE with per-pair CI** (job 5575798, node-pinned around the maintenance window; $n=100$, bootstrap $n_{\mathrm{boot}}=5000$, seed 42); integrated into paper Appendix B |
 | Phi-3.5-MoE | H_lloo=0.899, per-pair CI $[0.842,0.941]$ | **DONE with per-pair CI** (job 5575536, $n=50$, bootstrap $n_{\mathrm{boot}}=5000$, seed 42); integrated into paper Appendix B |
 
-**Gap remaining**: OLMoE's per-pair payload is still not on disk (job
-5575752 queued); Phi-3.5-MoE's landed this session and is fully
-integrated. Paper's Appendix B now reports this split accurately.
+**Fully resolved** --- both models now have per-pair captures and bootstrap
+CIs; the paper's Appendix B and Limitations flag report all 13 model
+payloads as landed.
 
 ---
 
@@ -150,19 +151,21 @@ integrated. Paper's Appendix B now reports this split accurately.
 9. ~~Split-half shard exact numbers~~ --- **DONE**, added to Appendix A
    with precise $H$/$G$ per shard for Mixtral and DBRX.
 
-### Still open (GPU-bound, queue-saturated at last poll)
-10. **Exp3 Collectivity (DBRX, GPT-OSS-120B)** --- resubmitted (5575743,
-    5575744) with QOS-max walltime (4h/8h) after discovering the prior
-    submissions' 3h time limit was too short for the observed
-    ~9.6min/pair $\times$ 2-layer cost; reduced to 10 pairs/model to fit.
-    **PENDING** in queue.
-11. **Exp6 GPT-OSS-120B** --- resubmitted (5575745) with 8h walltime
-    (was 3h) and reduced pairs (30) + reduced routing-freq sample (60,
-    was 200). **PENDING** in queue.
-12. ~~Exp8 per-pair (Phi-3.5-MoE)~~ --- **DONE**, job 5575536 landed
-    ($n=50$, bootstrap CI integrated into Appendix B). OLMoE's per-pair
-    capture resubmitted with `--save-per-pair-phi` as job **5575752**,
-    still **PENDING** in queue.
+### Still open (GPU-bound; root cause found and worked around this session)
+10. **Exp3 Collectivity (DBRX, GPT-OSS-120B)** --- resubmitted node-pinned
+    (jobs **5575799**, **5575791**) after discovering the earlier
+    attempts (5575743/5575744) were blocked by a real, non-admin-visible
+    cluster maintenance-window reservation rather than the QOS cap or a
+    scheduler bug (see `CLUSTER-STATUS.md` root-cause section).
+    **RUNNING** as of last poll, `--time` reduced to ~1h10m to fit the
+    reservation's runway.
+11. **Exp6 GPT-OSS-120B** --- resubmitted node-pinned (job **5575800**)
+    with the same maintenance-window workaround. **RUNNING** as of last
+    poll, `--time=01:00:00`.
+12. ~~Exp8 per-pair (both models)~~ --- **DONE**. Phi-3.5-MoE (job
+    5575536, $n=50$) integrated earlier this session; OLMoE's per-pair
+    capture (job **5575798**, node-pinned) landed with $H=0.7361$,
+    Gini$=0.6239$, CI $H \in [0.692, 0.921]$, integrated into Appendix B.
 
 ### Data/Code Hygiene
 13. ~~Gemma-4-27B phantom~~ --- documented, non-issue.
@@ -182,14 +185,20 @@ file is not duplicated here to avoid drift between the two docs.
 
 ## 5. Execution Priority (remaining)
 
-1. **Poll cluster periodically**: `ssh login-ice.pace.gatech.edu 'squeue -u sghose7'`
-   (VPN must be off). 4 jobs (5575743 DBRX Exp3, 5575744 GPT-OSS Exp3,
-   5575745 GPT-OSS Exp6, 5575752 OLMoE Exp8 per-pair) are **PENDING**,
-   all blocked by a `Reserved for maintenance` scheduler reason despite
-   idle H100 capacity (see `CLUSTER-STATUS.md` live-poll section) --- not
-   a bug on our side, may need a PACE support ticket if it persists. Job
+1. **BLOCKED until 2026-08-13 23:59**: PACE ICE is in its scheduled
+   quarterly maintenance window (2026-08-11 06:00 -- 2026-08-13 23:59,
+   confirmed via the login banner; login itself is refused cluster-wide,
+   not just job scheduling). The 3 jobs that were RUNNING when the
+   window closed (5575799 DBRX Exp3, 5575791 GPT-OSS Exp3, 5575800
+   GPT-OSS Exp6) had unknown-but-healthy-at-last-poll status; OLMoE Exp8
+   per-pair (job 5575798) already **COMPLETED** and is integrated. Job
    5575538 (redundant Mixtral refresh) was cancelled: it exceeded the
-   960 GPU-min/job QOS cap and could never run.
+   960 GPU-min/job QOS cap and could never run. **First action once the
+   cluster reopens**: `sacct -j 5575799,5575791,5575800
+   --format=JobID,State,ExitCode,Elapsed -X -n`; pull results if
+   COMPLETED, resubmit (plain `sbatch`, no node-pinning needed once
+   maintenance is over) if TIMEOUT/CANCELLED/NODE_FAIL. See
+   `CLUSTER-STATUS.md` for full detail and exact submit lines.
 2. **Pull results** into local `results/` as each job completes.
 3. **Integrate GPT-OSS-120B's Exp3/Exp6 numbers** into Section 5.5/5.6 and
    Appendix B once landed (currently the only two "PENDING" placeholders
