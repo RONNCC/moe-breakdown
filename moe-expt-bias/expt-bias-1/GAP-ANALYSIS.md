@@ -256,3 +256,61 @@ file is not duplicated here to avoid drift between the two docs.
 *Document generated from live repo state, study catalog, cluster inventory
 (squeue polled directly this session), and paper draft audit (2x pdflatex
 compile + page-image inspection of pages 3, 5, 6, 8, 10, 11).*
+
+---
+
+## 6. Third-pass audit: citations, anonymity, ethics/data-availability (this session)
+
+**Date**: 2026-08-11 (re-poll), cluster still unreachable.
+
+A close read of the front/back matter (not just the numeric claims already
+audited in Sections 0-3) found four real gaps missed by the prior two
+passes, all now fixed in `moe_bias_report_acm_v2.tex` and pushed:
+
+1. **Missing citations for 3/6 ladder models + 1/3 benchmarks.** Related
+   Work named all six MoE models (Mixtral, OLMoE, Gemma, DBRX, Phi-3.5-MoE,
+   GPT-OSS) and all three benchmarks (StereoSet, BBQ, Winogender) in prose,
+   but only had `\bibitem`s for 3 models and 2 benchmarks -- DBRX,
+   Phi-3.5-MoE, GPT-OSS, and Winogender were used throughout the study
+   with zero citation. Added 4 bibitems (Databricks DBRX blog post, Abdin
+   et al. Phi-3 technical report `arXiv:2404.14219`, OpenAI gpt-oss model
+   card `arXiv:2508.10925`, Rudinger et al. Winogender NAACL-HLT 2018) and
+   wired `\cite{}` into the listing sentence.
+2. **No Data Availability disclosure for the ~360MB per-pair payloads.**
+   The `Data \& Code` section pointed only at `results/*/result.json`,
+   which does not carry the per-pair phi arrays (gitignored, Kaggle-hosted
+   per `CLUSTER-STATUS.md` Sec.\ "Kaggle data release"). Fixed the claim to
+   state the payloads exceed the code repo's size limit and are hosted
+   externally -- **without** naming the Kaggle owner slug, since the
+   dataset owner name would deanonymize the paper (see next point).
+3. **No Ethical Considerations section.** Standard expectation for
+   bias-evaluation papers; added one scoping the metric as structural
+   (not a safety/deployment-risk measure), cross-referencing
+   Section~5.6's causal-check finding that phi-ranking is a marginal, not
+   exact, proxy, and noting no new human-subjects data or released
+   weights/jailbreak artifacts.
+4. **Anonymity leak: "our prior work" self-citation.** The paper uses
+   `\author{Anonymous}` (double-blind submission) but Related Work said
+   "the routing-Shapley decomposition introduced in **our** prior work
+   [cite]" -- a known de-anonymization vector (self-citation + first-person
+   possessive). Reworded to "introduced in prior work [cite]". Grepped the
+   full draft for cluster hostnames, usernames, and institution names
+   (`sghose`, `pace.gatech`, `login-ice`, `hice1`, `RONNCC`, `kaggle.com`,
+   etc.) -- none present elsewhere.
+
+**Verification**: recompiled 2x pdflatex after each fix (clean, 0 errors,
+11 pages, 0 undefined refs each time); vision-checked the related-work
+page, the Data\&Code/Ethics page, and the bibliography page via
+`pdftocairo` raster + image read. Cross-checked every "landed" claim in
+the current draft (5000-pair GPT-OSS replication $H=0.8789$, dense-baseline
+per-model CIs, Exp3/6/7/8 model counts) directly against
+`stats_analysis/outputs/s04_bootstrap_cis.json` and the `results/*/experiment{3,6,7}/*.json`
+files on disk -- all match; nothing in the draft is stale or fabricated.
+
+**Re-polled cluster this session** (`ssh -o BatchMode=yes
+login-ice.pace.gatech.edu`): still refused (`Connection timed out during
+banner exchange`, i.e.\ no TCP response at all -- consistent with the
+confirmed maintenance window closing the login service outright, not just
+job scheduling). No further paper- or repo-side gaps found after this
+pass; the only remaining open items are the three GPU jobs blocked on the
+PACE maintenance window per Section 5 above.
