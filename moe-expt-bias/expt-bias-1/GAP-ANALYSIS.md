@@ -216,8 +216,10 @@ together), not attempted this session.
 ### Data/Code Hygiene
 14. ~~Gemma-4-27B phantom~~ --- documented, non-issue.
 15. ~~Kaggle payload manifest~~ --- done (`sghose0/moe-bias-routing-shapley-perpair-phi`).
-    Dense v1 per-pair payloads are NOT yet published there --- consider a
-    follow-up dataset version once Exp3/6/8 fully land.
+    ~~Dense v1 per-pair payloads~~ --- **RESOLVED (2026-08-11)**: dataset
+    version 2 published, 15 files (~565MB) covering all payloads generated
+    to date (4 dense v1 baselines, GPT-OSS-120B 5000-pair replication,
+    Exp8 LOO x2), verified via `kaggle datasets files`.
 16. ~~REPRODUCIBILITY.md~~ --- done.
 
 ---

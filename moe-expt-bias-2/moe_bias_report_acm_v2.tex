@@ -763,9 +763,11 @@ experts'' to be a workable fix.}
 \begin{itemize}\setlength\itemsep{0pt}
 \item Runs, \texttt{result.json} summaries, and pair/player metadata:
   \path{expt-bias-1/results/*/result.json}.
-\item Per-pair Shapley payloads (\path{per_pair_phi*.npy}, $\approx 360$MB
-  across 8 captures) exceed the code repository's file-size limits and are
-  hosted on an external, anonymized data-sharing platform; a
+\item Per-pair Shapley payloads (\path{per_pair_phi*.npy}, $\approx 565$MB
+  across 15 captures --- the original 8 plus 4 dense v1 baselines, the
+  GPT-OSS-120B 5000-pair stability replication, and the two Exp8
+  same-mechanism LOO captures) exceed the code repository's file-size
+  limits and are hosted on an external, anonymized data-sharing platform; a
   de-anonymized dataset link will be provided upon acceptance.
 \item Analysis scripts: \path{paper_figures_seaborn.py},
   \path{s01_exp1_stability.py}, \path{s02_exp5_js.py},
