@@ -353,13 +353,13 @@ experiments:
     time: "04:00:00"
     max_pairs: 20
     max_layers: 2
-    refresh_job_id: 5575538  # PENDING at last poll; redundant refresh, not blocking
+    refresh_job_id: null  # was 5575538, CANCELLED (exceeded 960 GPU-min/job QOS cap, could never run); not blocking, July capture already verified usable
 
   exp3-dbrx:
     id: "exp3-dbrx"
     config: "configs/study.dbrx.concentration.yaml"
     job_id: 5575743  # resubmitted this session after slurm.time bug fix (was 03:00:00, too short; job timed out)
-    status: "PENDING"  # queued at last poll (cluster-wide GPU-minute backlog, not a submission error)
+    status: "PENDING"  # PENDING: ReqNodeNotAvail, Reserved for maintenance (idle H100 capacity visible; see CLUSTER-STATUS.md live-poll)
     gpu: "a100:2"
     time: "04:00:00"
     max_pairs: 10  # reduced from 20 to fit revised time budget
@@ -369,7 +369,7 @@ experiments:
     id: "exp3-gpt-oss"
     config: "configs/study.gpt-oss-120b.concentration.yaml"
     job_id: 5575744  # resubmitted this session after slurm.time bug fix (was 03:00:00, too short; job timed out)
-    status: "PENDING"  # queued at last poll (cluster-wide GPU-minute backlog, not a submission error)
+    status: "PENDING"  # PENDING: ReqNodeNotAvail, Reserved for maintenance (idle H100 capacity visible; see CLUSTER-STATUS.md live-poll)
     gpu: "a100:2"
     time: "08:00:00"
     max_pairs: 10  # reduced from 20 to fit revised time budget
@@ -421,7 +421,7 @@ experiments:
   exp6-gpt-oss:
     id: "exp6-gpt-oss"
     job_id: 5575745  # original 5575243 superseded; 5575545 TIMEOUT'd at 03:00:00 (slurm.time bug); resubmitted as 5575745
-    status: "PENDING"  # queued at last poll; only remaining Exp6 gap (cluster-wide GPU-minute backlog, not a submission error)
+    status: "PENDING"  # PENDING: ReqNodeNotAvail, Reserved for maintenance; only remaining Exp6 gap (see CLUSTER-STATUS.md live-poll)
     max_pairs: 30  # reduced from 60; routing_freq_pairs: 60
 
   exp6-gemma:

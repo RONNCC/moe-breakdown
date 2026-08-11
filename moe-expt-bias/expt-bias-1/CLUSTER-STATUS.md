@@ -1,7 +1,34 @@
 # ICE Cluster Status & Experiment Tracking (expt-bias-1)
 
-Last updated: 2026-08-10 (statistical-audit / paper-integration-II session;
-cluster reachable this session, queue polled directly via `squeue`).
+Last updated: 2026-08-11 (VPN toggled off mid-session; cluster reachable,
+queue re-polled directly via `squeue`/`scontrol`).
+
+## Live poll, 2026-08-11 ~04:00 cluster time
+
+`squeue -u sghose7` after VPN was disabled: **all 4 remaining jobs PENDING**
+with reason `ReqNodeNotAvail, Reserved for maintenance`
+(5575743 DBRX Exp3, 5575744 GPT-OSS-120B Exp3, 5575745 GPT-OSS-120B Exp6,
+5575748 OLMoE Exp8 per-pair). This is **not** a QOS/resource problem: all
+four fit the `coc-ice` 960 GPU-min/job cap exactly or under it, and
+`sinfo -p ice-gpu -N` shows 4+ fully **idle** H100 nodes (`atl1-1-03-012-28-0`,
+`-013-3-0`, `-013-8-0`, `-013-13-0`, 8xH100 each) plus 3 idle L40S nodes
+throughout a 4-minute repoll window --- yet `scontrol show reservation`
+reports **no reservations in the system**, and the target nodes' own
+`scontrol show node` shows `State=IDLE` with no reservation flag. This
+looks like a stale/cached backfill-scheduler reason string tied to a
+maintenance event around node reboot time (`BootTime=2026-08-10T09:58`)
+rather than a real live block, but it did not clear within the polling
+window. **Not actionable by this agent** (no admin/PACE-support access);
+if it persists past a few hours, file a PACE ICE support ticket citing
+these job IDs and the `Reserved for maintenance` reason with no matching
+`scontrol show reservation` entry.
+
+**Cancelled this session**: job **5575538** (redundant Mixtral-8x7B Exp3
+refresh) --- confirmed mis-submitted: requested `gres/gpu=4` x `06:00:00`
+= 1440 GPU-min, exceeding the `coc-ice` 960 GPU-min/job cap, so it could
+never run (scheduler's projected start was 2026-08-16, a stale backfill
+estimate). Non-blocking: the July capture it would have refreshed is
+already verified non-degenerate and used in the paper.
 
 ## GPU Inventory (sinfo -p ice-gpu, 2026-08-10)
 

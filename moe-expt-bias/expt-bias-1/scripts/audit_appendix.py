@@ -5,7 +5,7 @@ Per the caption:
   - MoE H, Gini, t5, t10%  -> v1 result.json concentration_metrics
   - CIs -> s04_bootstrap_cis.json v1 model blocks
   - |dH|, |dG| -> s01_exp1_stability.json absolute drifts
-  - Dense rows -> v0 result.json concentration_metrics
+  - Dense rows -> v1 per-pair result.json concentration_metrics + s04 CIs
 """
 from __future__ import annotations
 
@@ -57,10 +57,10 @@ RES_DIR = {
     "dbrx": "exp1-concentration-dbrx-v1",
     "gpt-oss-120b": "exp1-concentration-gpt-oss-120b-v1",
     "gemma4-26b": "exp1-concentration-gemma4-26b-v1",
-    "exp2-dense-baseline-olmo-7b": "exp2-dense-baseline-olmo-7b",
-    "exp2-dense-baseline-phi3.5-mini": "exp2-dense-baseline-phi3.5-mini",
-    "exp2-dense-crosscheck-llama-2-7b": "exp2-dense-crosscheck-llama-2-7b",
-    "exp2-dense-crosscheck-llama-3.1-8b": "exp2-dense-crosscheck-llama-3.1-8b",
+    "exp2-dense-baseline-olmo-7b": "exp2-dense-baseline-olmo-7b-v1",
+    "exp2-dense-baseline-phi3.5-mini": "exp2-dense-baseline-phi3.5-mini-v1",
+    "exp2-dense-crosscheck-llama-2-7b": "exp2-dense-crosscheck-llama-2-7b-v1",
+    "exp2-dense-crosscheck-llama-3.1-8b": "exp2-dense-crosscheck-llama-3.1-8b-v1",
 }
 
 DENSE_KEYS = [
@@ -103,20 +103,25 @@ for r in rows:
         mismatches.append((model, "result.json missing concentration_metrics"))
         continue
 
-    # Compare H, G, t5, t10% against result.json (full precision)
+    # Compare H, G, t5, t10% against result.json. MoE rows quote full
+    # precision (exact-match tolerance); dense rows are rounded to 6 dp
+    # for readability (round-trip tolerance).
+    tol = 6e-7 if key in DENSE_KEYS else 1e-12
     checks = {
-        "H": abs(H - cm.get("entropy", float('nan'))) < 1e-12,
-        "G": abs(G - cm.get("gini", float('nan'))) < 1e-12,
-        "t5": abs(t5 - cm.get("top_5_fraction", float('nan'))) < 1e-12,
-        "t10": abs(t10 - cm.get("top_10pct_fraction", float('nan'))) < 1e-12,
+        "H": abs(H - cm.get("entropy", float('nan'))) < tol,
+        "G": abs(G - cm.get("gini", float('nan'))) < tol,
+        "t5": abs(t5 - cm.get("top_5_fraction", float('nan'))) < tol,
+        "t10": abs(t10 - cm.get("top_10pct_fraction", float('nan'))) < tol,
     }
     bad = [m for m, ok in checks.items() if not ok]
     if bad:
         mismatches.append((model, f"metrics:{','.join(bad)} (paper={dict(H=H,G=G,t5=t5,t10=t10)} vs json={cm})"))
 
-    # CIs: MoE rows only; dense rows paper=---, s04=MISSING
-    if key in s04["models"] and key not in DENSE_KEYS:
-        s04k = (key + "-v1") if (key + "-v1") in s04["models"] else key
+    # CIs: MoE keys match s04 directly (+"-v1"); dense keys need the
+    # "exp2-" dir prefix stripped to match s04's "dense-*"/"dense-*-v1" keys.
+    s04_lookup_key = key[len("exp2-"):] if key in DENSE_KEYS else key
+    if s04_lookup_key in s04["models"] or (s04_lookup_key + "-v1") in s04["models"]:
+        s04k = (s04_lookup_key + "-v1") if (s04_lookup_key + "-v1") in s04["models"] else s04_lookup_key
         ci = s04["models"].get(s04k, {})
         entropy = ci.get("entropy")
         gini = ci.get("gini")

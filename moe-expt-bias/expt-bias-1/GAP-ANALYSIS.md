@@ -73,10 +73,13 @@ Phi-3.5-MoE ($0.741$/$0.200$), Mixtral-8x7B ($0.716$/$0.503$, the
 2026-07-07 stale capture --- checked, non-degenerate, $n{=}20$ pairs both
 layers, used as-is), Gemma-4-26B ($0.747$/$0.183$). DBRX and
 GPT-OSS-120B resubmitted this session (jobs **5575743**, **5575744**,
-4h/8h walltime after the config time-limit fix below) --- **PENDING** in
-queue at last poll. A redundant Mixtral refresh (job 5575538, from a
-prior session) is also still PENDING; once it lands it can cross-check
-the stale July capture but is not blocking (already verified usable).
+4h/8h walltime after the config time-limit fix below) --- **PENDING**,
+blocked by a cluster-side `Reserved for maintenance` scheduler reason
+despite idle H100 capacity (see `CLUSTER-STATUS.md` live-poll section).
+A redundant Mixtral refresh (job 5575538, from a prior session) was
+**cancelled** this session after confirming it requested 1440 GPU-min
+against the `coc-ice` 960 GPU-min/job cap and could never run; not
+blocking (July capture already verified usable).
 
 ### Experiment 4 --- Independent Cross-Check (Robustness)
 - **DONE** for 6 models (OLMoE, Mixtral, Phi-3.5-MoE, DBRX, Gemma-4-26B,
@@ -115,13 +118,12 @@ numbers.
 ### Experiment 8 --- Same-Mechanism Comparison (Method-Confound)
 | Model | Result | Status |
 |---|---|---|
-| OLMoE | H_lloo=0.751 (summary) | DONE at summary level, cited |
-| Phi-3.5-MoE | H_lloo=0.883 (summary) | DONE at summary level, cited |
-| Both models per-pair | no per-pair payloads on disk (only player_ids.json/result.json) | **PENDING** --- not re-submitted this session (lower priority than Exp3/6 causal gaps; would need dedicated GPU allocation and the queue is already saturated) |
+| OLMoE | H_lloo=0.758 (summary only) | DONE at summary level; per-pair capture resubmitted with `--save-per-pair-phi` as job **5575748** (queued) after discovering job 5575255 only persisted summary $\phi$ |
+| Phi-3.5-MoE | H_lloo=0.899, per-pair CI $[0.842,0.941]$ | **DONE with per-pair CI** (job 5575536, $n=50$, bootstrap $n_{\mathrm{boot}}=5000$, seed 42); integrated into paper Appendix B |
 
-**Gap remaining**: per-pair payloads for Exp8 still not on disk for either
-model; paper's Appendix B "PENDING for any per-pair analysis" language is
-still accurate.
+**Gap remaining**: OLMoE's per-pair payload is still not on disk (job
+5575748 queued); Phi-3.5-MoE's landed this session and is fully
+integrated. Paper's Appendix B now reports this split accurately.
 
 ---
 
@@ -157,9 +159,10 @@ still accurate.
 11. **Exp6 GPT-OSS-120B** --- resubmitted (5575745) with 8h walltime
     (was 3h) and reduced pairs (30) + reduced routing-freq sample (60,
     was 200). **PENDING** in queue.
-12. **Exp8 per-pair** --- not resubmitted this session; lower priority,
-    queue already saturated with the above. Would need dedicated
-    resubmission with `--save-per-pair-phi` once GPU headroom frees up.
+12. ~~Exp8 per-pair (Phi-3.5-MoE)~~ --- **DONE**, job 5575536 landed
+    ($n=50$, bootstrap CI integrated into Appendix B). OLMoE's per-pair
+    capture resubmitted with `--save-per-pair-phi` as job **5575748**,
+    still **PENDING** in queue.
 
 ### Data/Code Hygiene
 13. ~~Gemma-4-27B phantom~~ --- documented, non-issue.
@@ -180,10 +183,13 @@ file is not duplicated here to avoid drift between the two docs.
 ## 5. Execution Priority (remaining)
 
 1. **Poll cluster periodically**: `ssh login-ice.pace.gatech.edu 'squeue -u sghose7'`
-   (VPN must be off). All 4 remaining jobs (5575538 Mixtral Exp3 refresh,
-   5575743 DBRX Exp3, 5575744 GPT-OSS Exp3, 5575745 GPT-OSS Exp6) were
-   **PENDING** (queued, not yet running) at last poll --- cluster-wide
-   GPU-minute backlog, not a bug on our side.
+   (VPN must be off). 4 jobs (5575743 DBRX Exp3, 5575744 GPT-OSS Exp3,
+   5575745 GPT-OSS Exp6, 5575748 OLMoE Exp8 per-pair) are **PENDING**,
+   all blocked by a `Reserved for maintenance` scheduler reason despite
+   idle H100 capacity (see `CLUSTER-STATUS.md` live-poll section) --- not
+   a bug on our side, may need a PACE support ticket if it persists. Job
+   5575538 (redundant Mixtral refresh) was cancelled: it exceeded the
+   960 GPU-min/job QOS cap and could never run.
 2. **Pull results** into local `results/` as each job completes.
 3. **Integrate GPT-OSS-120B's Exp3/Exp6 numbers** into Section 5.5/5.6 and
    Appendix B once landed (currently the only two "PENDING" placeholders
