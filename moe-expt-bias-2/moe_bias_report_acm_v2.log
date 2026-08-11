@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.1)  11 AUG 2026 15:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.1)  11 AUG 2026 15:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1137,28 +1137,9 @@ $ \OT1/cmr/m/n/9 (+20) (OL-MoE,
  []
 
 
-Underfull \hbox (badness 1107) in paragraph at lines 1051--1087
-\OT1/cmr/m/n/9 (+20) band's up-per edge; OL-MoE $\OML/cmm/m/it/9 H \OMS/cmsy/m/
-n/9 2 \OT1/cmr/m/n/9 (+20) [0\OML/cmm/m/it/9 :\OT1/cmr/m/n/9 (+20) 692\OML/cmm/
-m/it/9 ; \OT1/cmr/m/n/9 (+20) 0\OML/cmm/m/it/9 :\OT1/cmr/m/n/9 (+20) 921]$, Gin
-i
- []
-
-
-Underfull \hbox (badness 1629) in paragraph at lines 1051--1087
-\OT1/cmr/m/n/9 (+20) and queued ($\OT1/cmtt/m/n/9 configs / study . \{mixtral -
-[] 8x7b ,[] dbrx ,[] gpt -[]
- []
-
-
-Underfull \hbox (badness 4416) in paragraph at lines 1051--1087
-\OT1/cmtt/m/n/9 oss -[] 120b ,[] gemma4 -[] 26b \ } . lloo . yaml$\OT1/cmr/m/n/
-9 (+20) ) but not yet run.
- []
-
-
-Underfull \hbox (badness 1442) in paragraph at lines 1051--1087
-\OT1/cmr/m/n/9 (+20) par-tially zero; the com-pound branch-ablation path is
+Underfull \hbox (badness 3148) in paragraph at lines 1051--1087
+\OT1/cmtt/m/n/9 8x7b ,[] dbrx ,[] gpt -[] oss -[] 120b ,[] gemma4 -[] 26b \ } .
+ lloo . yaml$\OT1/cmr/m/n/9 (+20) ) but
  []
 
 
@@ -1196,10 +1177,7 @@ Underfull \hbox (badness 7740) in paragraph at lines 1090--1112
 r/m/n/9 (+20) ) and
  []
 
-
-Underfull \vbox (badness 1337) has occurred while \output is active []
-
- [11.11]
+[11.11]
 Underfull \hbox (badness 10000) in paragraph at lines 1170--1172
 []\OT1/cmr/m/n/7 (+20) OpenAI. gpt-oss-120b & gpt-oss-20b Model Card.
  []
@@ -1228,11 +1206,11 @@ Package rerunfilecheck Info: File `moe_bias_report_acm_v2.out' has not changed.
 Here is how much of TeX's memory you used:
  17546 strings out of 469006
  285277 string characters out of 5454814
- 833578 words of memory out of 5000000
+ 833427 words of memory out of 5000000
  45471 multiletter control sequences out of 15000+600000
  645453 words of font info for 192 fonts, out of 8000000 for 9000
  480 hyphenation exceptions out of 8191
- 90i,12n,131p,1477b,671s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,12n,131p,1477b,677s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </Users/ronnie.ghose/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jkn
 appen/ec/tcrm0900.600pk></usr/local/texlive/2026basic/texmf-dist/fonts/type1/pu
 blic/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type
@@ -1259,7 +1237,7 @@ mti7.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/c
 m/cmti9.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfont
 s/cm/cmtt8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsf
 onts/cm/cmtt9.pfb>
-Output written on moe_bias_report_acm_v2.pdf (12 pages, 903986 bytes).
+Output written on moe_bias_report_acm_v2.pdf (12 pages, 904021 bytes).
 PDF statistics:
  433 PDF objects out of 1000 (max. 8388607)
  364 compressed objects within 4 object streams
