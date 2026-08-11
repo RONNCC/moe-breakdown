@@ -118,11 +118,11 @@ numbers.
 ### Experiment 8 --- Same-Mechanism Comparison (Method-Confound)
 | Model | Result | Status |
 |---|---|---|
-| OLMoE | H_lloo=0.758 (summary only) | DONE at summary level; per-pair capture resubmitted with `--save-per-pair-phi` as job **5575748** (queued) after discovering job 5575255 only persisted summary $\phi$ |
+| OLMoE | H_lloo=0.758 (summary only) | DONE at summary level; per-pair capture resubmitted with `--save-per-pair-phi` as job **5575752** (queued) after discovering job 5575255 only persisted summary $\phi$ |
 | Phi-3.5-MoE | H_lloo=0.899, per-pair CI $[0.842,0.941]$ | **DONE with per-pair CI** (job 5575536, $n=50$, bootstrap $n_{\mathrm{boot}}=5000$, seed 42); integrated into paper Appendix B |
 
 **Gap remaining**: OLMoE's per-pair payload is still not on disk (job
-5575748 queued); Phi-3.5-MoE's landed this session and is fully
+5575752 queued); Phi-3.5-MoE's landed this session and is fully
 integrated. Paper's Appendix B now reports this split accurately.
 
 ---
@@ -161,7 +161,7 @@ integrated. Paper's Appendix B now reports this split accurately.
     was 200). **PENDING** in queue.
 12. ~~Exp8 per-pair (Phi-3.5-MoE)~~ --- **DONE**, job 5575536 landed
     ($n=50$, bootstrap CI integrated into Appendix B). OLMoE's per-pair
-    capture resubmitted with `--save-per-pair-phi` as job **5575748**,
+    capture resubmitted with `--save-per-pair-phi` as job **5575752**,
     still **PENDING** in queue.
 
 ### Data/Code Hygiene
@@ -184,7 +184,7 @@ file is not duplicated here to avoid drift between the two docs.
 
 1. **Poll cluster periodically**: `ssh login-ice.pace.gatech.edu 'squeue -u sghose7'`
    (VPN must be off). 4 jobs (5575743 DBRX Exp3, 5575744 GPT-OSS Exp3,
-   5575745 GPT-OSS Exp6, 5575748 OLMoE Exp8 per-pair) are **PENDING**,
+   5575745 GPT-OSS Exp6, 5575752 OLMoE Exp8 per-pair) are **PENDING**,
    all blocked by a `Reserved for maintenance` scheduler reason despite
    idle H100 capacity (see `CLUSTER-STATUS.md` live-poll section) --- not
    a bug on our side, may need a PACE support ticket if it persists. Job

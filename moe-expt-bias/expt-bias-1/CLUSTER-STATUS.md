@@ -8,20 +8,24 @@ queue re-polled directly via `squeue`/`scontrol`).
 `squeue -u sghose7` after VPN was disabled: **all 4 remaining jobs PENDING**
 with reason `ReqNodeNotAvail, Reserved for maintenance`
 (5575743 DBRX Exp3, 5575744 GPT-OSS-120B Exp3, 5575745 GPT-OSS-120B Exp6,
-5575748 OLMoE Exp8 per-pair). This is **not** a QOS/resource problem: all
+5575752 OLMoE Exp8 per-pair). This is **not** a QOS/resource problem: all
 four fit the `coc-ice` 960 GPU-min/job cap exactly or under it, and
 `sinfo -p ice-gpu -N` shows 4+ fully **idle** H100 nodes (`atl1-1-03-012-28-0`,
 `-013-3-0`, `-013-8-0`, `-013-13-0`, 8xH100 each) plus 3 idle L40S nodes
 throughout a 4-minute repoll window --- yet `scontrol show reservation`
 reports **no reservations in the system**, and the target nodes' own
 `scontrol show node` shows `State=IDLE` with no reservation flag. This
-looks like a stale/cached backfill-scheduler reason string tied to a
-maintenance event around node reboot time (`BootTime=2026-08-10T09:58`)
-rather than a real live block, but it did not clear within the polling
-window. **Not actionable by this agent** (no admin/PACE-support access);
-if it persists past a few hours, file a PACE ICE support ticket citing
-these job IDs and the `Reserved for maintenance` reason with no matching
-`scontrol show reservation` entry.
+looks like a scheduler-side block tied to a maintenance event around
+node reboot time (`BootTime=2026-08-10T09:58`). **Confirmed live, not a
+stale per-job cache**: cancelled job 5575752's predecessor
+(5575748) and issued a brand-new `sbatch` with the identical
+submit line; the fresh JobId (5575752) hit the exact same
+`ReqNodeNotAvail, Reserved for maintenance` reason immediately, ruling
+out a per-job staleness explanation. **Not actionable by this agent**
+(no admin/PACE-support access); recommend filing a PACE ICE support
+ticket citing job IDs 5575743/5575744/5575745/5575752, the
+`Reserved for maintenance` reason, and that `scontrol show reservation`
+shows no matching entry despite 4+ idle H100 nodes.
 
 **Cancelled this session**: job **5575538** (redundant Mixtral-8x7B Exp3
 refresh) --- confirmed mis-submitted: requested `gres/gpu=4` x `06:00:00`
@@ -75,7 +79,7 @@ for Exp6 on GPT-OSS-120B). Resubmitted as jobs **5575743** (DBRX Exp3),
 | 5575543 (DBRX), 5575544 (Gemma-4-26B) | Exp6 ladder-completion | **COMPLETE** | Both landed on disk this session; integrated into paper (Section 5.6 causal check, Appendix B). DBRX shows a $\phi$-ranking reversal (worst of 3 orders at 50%); Gemma flagged uninterpretable (baseline bias gap $\approx 0$). |
 | 5575545 (GPT-OSS-120B, Exp6 first attempt) | Exp6 ladder extension | TIMEOUT at 3:00:0x | Root cause: `slurm.time: 03:00:00` in the study config, too short. Fixed (see above); resubmitted as **5575745**. |
 | 5575251, 5575252 | Exp7 proxy agreement (OLMoE, Phi-3.5-MoE) | **COMPLETE** | OLMoE $\rho=-0.024$ (layer0), $+0.235$ (layer15); Phi-3.5-MoE $\rho=-0.084$ (layer0), $+0.076$ (layer31); both null. Integrated into paper (Appendix B). |
-| 5575255->5575748, 5575536 | Exp8 per-pair LOO (OLMoE, Phi-3.5-MoE) | Phi-3.5-MoE DONE, OLMoE pending | Phi-3.5-MoE per-pair phi landed (job 5575536, `per_pair_phi.npy`, $n_{pairs}=50$); bootstrap CI computed and integrated (Appendix B). OLMoE's original job (5575255) only persisted summary `result.json`; resubmitted with `--save-per-pair-phi` as **5575748** (queued). |
+| 5575255->5575752, 5575536 | Exp8 per-pair LOO (OLMoE, Phi-3.5-MoE) | Phi-3.5-MoE DONE, OLMoE pending | Phi-3.5-MoE per-pair phi landed (job 5575536, `per_pair_phi.npy`, $n_{pairs}=50$); bootstrap CI computed and integrated (Appendix B). OLMoE's original job (5575255) only persisted summary `result.json`; resubmitted with `--save-per-pair-phi` as **5575752** (queued). |
 | 5575538 | Exp3 collectivity, Mixtral-8x7B refresh (redundant; stale July data already usable) | **PENDING** at last poll | Prior-session resubmission; not blocking (July capture already verified non-degenerate and used in paper). |
 | **5575743** | Exp3 collectivity, DBRX-132B (time-limit fix: 4h, 10 pairs) | **PENDING** at last poll | Resubmitted this session. |
 | **5575744** | Exp3 collectivity, GPT-OSS-120B (time-limit fix: 8h, 10 pairs) | **PENDING** at last poll | Resubmitted this session. |
@@ -138,7 +142,7 @@ All of these have result.json + per_pair_phi.npy locally (bootstrap CIs computab
   (Section 5.6 currently reports "DONE for six models").
 - **Exp8 per-pair LOO** (OLMoE): no per-pair payload on disk (only summary
   `result.json`, job 5575255). Resubmitted with `--save-per-pair-phi` as
-  job **5575748** (queued). Phi-3.5-MoE's per-pair payload landed this
+  job **5575752** (queued). Phi-3.5-MoE's per-pair payload landed this
   session (job 5575536, `per_pair_phi.npy`, $n=50$); bootstrap CI computed
   and integrated into Appendix B ($H \in [0.842, 0.941]$).
 

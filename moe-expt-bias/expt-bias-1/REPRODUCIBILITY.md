@@ -233,7 +233,7 @@ scp -r login-ice.pace.gatech.edu:/home/hice1/sghose7/scratch/moe-breakdown-bias-
   fix, `08:00:00`, 10 pairs).
 - **5575745** — Exp6 ladder extension, GPT-OSS-120B: PENDING (same fix; the
   only remaining gap in the causal-ablation evidence chain).
-- **5575748** — Exp8 same-mechanism LOO, OLMoE-1B-7B per-pair capture:
+- **5575752** — Exp8 same-mechanism LOO, OLMoE-1B-7B per-pair capture:
   PENDING (resubmitted with `--save-per-pair-phi`; the prior per-pair job
   5575255 only wrote a summary `result.json`, no `per_pair_phi.npy`).
 
