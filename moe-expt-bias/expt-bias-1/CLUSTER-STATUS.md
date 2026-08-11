@@ -232,8 +232,8 @@ insufficient for per-pair phi retention across 32 LOO passes).
 ## Kaggle data release
 
 Per-pair phi payloads (totalling ~565MB, 15 captures) are published as Kaggle
-dataset `sghose0/moe-bias-routing-shapley-perpair-phi` (see repo
-README/data note). GitHub rejects >100MB files, so these payloads ship via
+dataset `sghose0/moe-bias-routing-shapley-perpair-phi` (see
+`REPRODUCIBILITY.md`). GitHub rejects >100MB files, so these payloads ship via
 Kaggle; the repo carries result.json + pair_meta.json + phi.npy aggregates
 instead. Version 2 (2026-08-11) added the 4 dense v1 baselines
 (OLMo-7B, Phi-3.5-Mini, Llama-2-7B, Llama-3.1-8B), the GPT-OSS-120B

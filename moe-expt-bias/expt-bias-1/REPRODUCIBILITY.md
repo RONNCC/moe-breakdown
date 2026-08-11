@@ -70,8 +70,8 @@ Each study run is a directory under `moe-expt-bias/expt-bias-1/results/` (e.g.
 
 The **per-pair payloads (`per_pair_phi*.npy`) are gitignored** (repo `.gitignore`:
 `results/**/per_pair_phi*.npy`, `results/**/phi*.npy`,
-`results/**/routing_freq*.npy`) because they total ~360 MB and GitHub rejects
->100 MB files. They are distributed separately — see (b).
+`results/**/routing_freq*.npy`) because they total ~565 MB across 15 captures
+and GitHub rejects >100 MB files. They are distributed separately — see (b).
 
 ### (b) Per-pair phi payloads: Kaggle
 
