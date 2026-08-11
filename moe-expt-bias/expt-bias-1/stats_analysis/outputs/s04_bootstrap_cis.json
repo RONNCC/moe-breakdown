@@ -293,16 +293,6 @@
         "mismatches": {}
       }
     },
-    "gpt-oss-120b-v1-smoke": {
-      "status": "MISSING",
-      "note": "no per_pair_phi*.npy on disk (check cluster results; data not synced locally)",
-      "entropy": null,
-      "gini": null,
-      "t5": null,
-      "t10": null,
-      "n_pairs": null,
-      "source": null
-    },
     "mixtral-8x7b": {
       "status": "ok",
       "n_pairs": 5000,
@@ -1003,10 +993,9 @@
   },
   "summary": {
     "n_with_data": 23,
-    "n_missing": 2,
+    "n_missing": 1,
     "missing_models": [
-      "gemma4-27b",
-      "gpt-oss-120b-v1-smoke"
+      "gemma4-27b"
     ]
   }
 }

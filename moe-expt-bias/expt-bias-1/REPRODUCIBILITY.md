@@ -156,7 +156,10 @@ What each does (verified against `main()`):
   `exp1-concentration-*` (ladder), `exp2-dense-*` (dense baselines), and
   `exp8-lloo-*` (same-mechanism dense-LOO comparison) — the latter keyed
   `lloo-<model>` so it never collides with an exp1 ladder entry for the same
-  model (see glob-pattern note in Sec 2b); cross-checks point estimates
+  model (see glob-pattern note in Sec 2b); scratch `*-smoke` dirs are
+  excluded (a smoke test is not a capture; only the phantom `gemma4-27b`
+  release surfaces as MISSING, matching the paper's Limitations note);
+  cross-checks point estimates
   against `result.json` (`MISMATCH` reported loudly); emits `MISSING` for
   dirs without payloads.
 - **s06** — post-hoc split-half (shard) agreement for the four ladder models

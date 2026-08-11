@@ -264,8 +264,15 @@ def _model_key(exp_dir: Path) -> str:
 
 
 def main() -> None:
+    # Scratch artifact dirs (smoke tests, phantom HF releases) are not model
+    # captures: exclude them so they never surface as MISSING rows (e.g. the
+    # gpt-oss-120b-v1-smoke smoke study). gemma4-27b (phantom HF release,
+    # never run) is still reported, matching the paper's Limitations note.
+    def _real_captures(pat: str):
+        return sorted(d for d in RESULTS.glob(pat) if not d.name.endswith("-smoke"))
+
     exp_dirs = (
-        sorted(RESULTS.glob("exp1-concentration-*"))
+        _real_captures("exp1-concentration-*")
         + sorted(RESULTS.glob("exp2-dense-*"))
         + sorted(RESULTS.glob("exp8-lloo-*"))
     )
