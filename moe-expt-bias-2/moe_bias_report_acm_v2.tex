@@ -116,11 +116,11 @@ permutation nulls, exact two-sided permutation $p$-values, and an explicit
 model-set sensitivity audit reported for every subset so that ``selecting
 the subsample that supports the claim'' is impossible.
 \item A demographic-specificity analysis (85 cohorts, per-cohort
-routing-Shapley flights) showing no demographic specialist structure.
+routing-Shapley attributions) showing no demographic specialist structure.
 \item Data/code release (\texttt{expt-bias-1/}).
 \end{enumerate}
 
-\takeaway{Take-away: none of the six MoE models we measured hides its bias
+\takeaway{None of the six MoE models we measured hides its bias
 in a few experts---bias attribution is spread broadly, and the observed
 sparsity trend is real in direction but not yet statistically significant.}
 
@@ -135,18 +135,18 @@ architectures from the sparsely-gated layer \cite{shazeer2017} through
 GShard \cite{lepikhin2021}, Switch \cite{fedus2022}, and current open
 models (Mixtral \cite{jiang2024}, OLMoE \cite{muennighoff2024}, Gemma
 \cite{gemmaTeam2024}) define the routers we instrument; recent surveys
-\cite{cai2024} catalogue the design space. Bias evaluation in LLMs is
+\cite{cai2024} catalog the design space. Bias evaluation in LLMs is
 commonly benchmark-driven (StereoSet \cite{nadeem2021}, BBQ
 \cite{parrish2022}, holistic audits \cite{liang2023,mehrabi2021}); our
-contribution measures not model-level bias magnitude but the \emph{kernel
-location} of bias-relevant counterfactual shift within the routing space.
+contribution measures not model-level bias magnitude but \emph{where}
+bias-relevant counterfactual shift localizes within the routing space.
 
 \section{Method}
 \subsection{Routing-Shapley attribution}
-For each model, on contrastive prompt pairs $(x^+, x^-)$ (stereotypical vs.\
-anti-stereotypical completions) drawn from the study batteries, we attach
-router hooks and represent every expert as a Shapley player
- \cite{moe_research_2026}. The routing-Shapley value $\phi_i$ of expert $i$
+For each model, we attach router hooks and represent every expert as a
+Shapley player, evaluated on contrastive prompt pairs $(x^+, x^-)$
+(stereotypical vs.\ anti-stereotypical completions) drawn from the study
+batteries \cite{moe_research_2026}. The routing-Shapley value $\phi_i$ of expert $i$
 is the Shapley marginal of the contrastive log-probability shift, computed
 over coalitions of the active expert set (\texttt{routing\_contrast} kernel,
 \path{src/moe_bias_shapley/shapley.py}). For dense baselines there is no
@@ -339,7 +339,7 @@ statistically significant at $0.05$ given $n = 6$ ladder points.}
 \label{fig:scatter}
 \end{figure}
 
-\takeaway{Take-away: the sparsity-to-concentration direction holds in the
+\takeaway{The sparsity-to-concentration direction holds in the
 data, but with six (or fewer) ladder rungs the effect is not statistically
 significant---power, not signal, is the limit.}
 
@@ -364,7 +364,7 @@ Dense baselines ($H$: $0.659$--$0.759$; mean $0.704$, Table~\ref{tab:dense})
 cluster clearly below every MoE rung ($0.789$--$0.917$, including the
 null-bias Gemma rung). The separation
 survives every subset of the ladder and is the robust signal of the
-study---but it is a pointer-geometry effect: a dense layer is a single
+study---but it is a player-partition-geometry effect: a dense layer is a single
 aggregated player, which mechanically narrows the attribution distribution.
 It does not validate bias concentration by the router.
 
@@ -378,6 +378,7 @@ dense models clustered lower and MoE models clustered higher.}
 \caption{Dense vs.\ MoE Gini.}
 \label{fig:dense}
 \end{figure}
+
 \subsection{Effect sizes: geometry vs.\ magnitude}
 \label{sec:effect-sizes}
 Two questions are conflated by significance testing alone: how large is
@@ -430,8 +431,9 @@ substantially a property of expert \emph{coalitions}, which is a
 plausible mechanistic reason for the causal ablation's partial failures
 below---removing the top individually-ranked experts does not fully
 explain the removable bias gap wherever synergy is high. DBRX-132B and
-GPT-OSS-120B collectivity runs are PENDING GPU time.
-
+GPT-OSS-120B collectivity runs were still running when the cluster
+entered its scheduled maintenance window; their outcome is not yet known
+(Appendix~B).
 
 \subsection{Causal check: phi-ranked ablation}
 \label{sec:causal}
@@ -442,7 +444,7 @@ we zero out experts cumulatively in three orders---(i)~$\phi$-ranked
 (descending $|\phi|$, the attribution ranking the paper relies on),
 (ii)~random, and (iii)~highest-\emph{routing}-frequency---and record the
 fraction of the baseline bias gap that disappears
-(	exttt{disparity\_drop}; \path{scripts/run\_experiment6\_ablation.py},
+(\texttt{disparity\_drop}; \path{scripts/run\_experiment6\_ablation.py},
 \path{shapley.compute\_ablation\_curve}). If $\phi$ isolation locates the
 bias-relevant experts, $\phi$-ranked ablation should drop the gap faster
 than either control. Results exist on disk for four models
@@ -483,7 +485,6 @@ divide by a near-zero denominator and swing $4$--$10\times$ the baseline
 in either direction (e.g.\ $+412\%$ at 10\% $\phi$-ranked, $-223\%$
 high-routing at 50\%); we report these numbers for completeness but do
 not use them as causal evidence.
-
 
 \paragraph{Verdict.}
 The causal check is \emph{mixed, and weaker with the extended ladder}. Of
@@ -530,7 +531,8 @@ for Mixtral/DBRX agree to $\le 0.006$ on entropy and Gini alike
 \subsection{Permutation / null analysis}
 We add (i) an expert-index permutation null that re-shuffles expert
 identities within each run, and (ii) a reported-label permutation null
-(paper-as-reported; per-prompt assignment not yet shipped, flagged in
+(computed as-reported, not a true within-prompt permutation---per-prompt
+label assignment is not yet shipped; flagged in
 Section~\ref{sec:limits}). On the cohort study below, the index null has
 mean $0.31$ (sd $0.03$; $p_{95} = 0.37$), and only $0.5\%$ of observed
 cohort pairs exceed the null's $p_{95}$---cohort-specific attributions are
@@ -590,7 +592,7 @@ Table~\ref{tab:cis} and Table~\ref{tab:dense}: all six MoE ladder rungs,
 all four dense baselines, and a 5000-pair GPT-OSS-120B replication that
 confirms ladder-rung stability ($H=0.8789$ vs.\ the certified 2000-pair
 $H=0.8765$, $\Delta H = +0.0024$). Only Gemma-4-27B (a phantom HF release,
-not part of the ladder) is MISSING. The cohort JS mean carries the same
+not part of the ladder) is \emph{MISSING}. The cohort JS mean carries the same
 bootstrap treatment, $95\%$ CI $[0.206, 0.231]$.
 
 \subsection{Demographic-specificity}
@@ -602,11 +604,12 @@ $95\%$ CI $[0.206, 0.231]$), far below the expert-index permutation line
 $0.31$ (Fig.~\ref{fig:js}); only $0.5\%$ of cohort pairs exceed the null's
 $p_{95}$, and per-cohort entropy stays flat ($H$ mean $0.885$, sd $0.026$;
 Gini mean $0.638$). No cohort is a ``specialist''---consistent with the
-ladder finding. The most divergent pairs (e.g.,
+lack of expert-level concentration observed across the ladder
+(Fig.~\ref{fig:topfrac}). The most divergent pairs (e.g.,
 Vietnam$\times$software\_developer, JS $0.27$) do not form a coherent
 demographic structure.
 
-\takeaway{Take-away: bias attribution is a routing-structure quantity, not
+\takeaway{Bias attribution is a routing-structure quantity, not
 an expert-level one---no cohort specializes in an expert subset, and no
 MoE concentrates bias into a few fixable experts.}
 
@@ -709,14 +712,14 @@ $n\approx8$--$13$ rungs needed for $80\%$ power). No subset reaches
 $p < 0.05$; we therefore report drift floors, bootstrap intervals, and the
 explicit subset audit rather than a binary accept/reject verdict.
 \item \textbf{Label-permutation null --- flag: \allowbreak
-\path{null:label-resolved}.}
+\path{null:label-pending}.}
 The reported-label null in \texttt{s02} was computed as-reported; a
 within-prompt label-permutation null would require per-prompt
 stereo/anti-stereo label assignments that are not persisted with the
 release (cohort payloads hold aggregate group labels only) and would
 require re-downloading the benchmarks. We therefore rely on the
 \emph{expert-index} permutation null, which is marginal-preserving by
-construction and on-disk reproducible (\texttt{s02}\: mean $0.31$, sd
+construction and on-disk reproducible (\texttt{s02}: mean $0.31$, sd
 $0.03$, $p_{95}=0.37$; only $0.5\%$ of observed cohort pairs exceed
 $p_{95}$).
 \item \textbf{Top-$k$ plumbing --- flag: \path{hooks:pending}.} $k$
@@ -744,9 +747,11 @@ the dense-vs-MoE offset (a player-partition geometry effect) and the
 absence of demographic specialist structure. Expert-level pruning of
 social bias is not supported as a strategy by this data.
 
-\takeaway{Take-away: the sparsity trend is real in direction and verified on
-valid captures, but it is not yet significant---with only six ladder rungs,
-power is the limit.}
+\takeaway{Sparser routing does tend to concentrate bias more,
+but the effect is too small and the sample too thin to call it proven; more
+importantly, bias is spread across too many experts---and no demographic
+group leans on a distinct subset of them---for ``just prune the biased
+experts'' to be a workable fix.}
 
 \section*{Data \& Code}
 \begin{itemize}\setlength\itemsep{0pt}
@@ -782,7 +787,7 @@ OLMoE capture is read from
 per-pair captures used in Table~\ref{tab:dense}, read from the
 \texttt{exp2-*-v1}/\texttt{per\_pair\_phi.npy} payloads
 (1800/4000/1800/1800 pairs); the earlier v0 single-shot captures
-(400 pairs each) are superseded. Bootstrap CIs for the dense rows come
+(150/400/400/400 pairs) are superseded. Bootstrap CIs for the dense rows come
 from the same block-bootstrap procedure as the MoE ladder (5000 resamples,
 seed 42, stratified by prompt group), reported alongside the MoE rows in
 \path{s04_bootstrap_cis.json}. GPT-OSS-120B shows its
@@ -821,11 +826,11 @@ v1 model blocks (CI bounds quoted verbatim from the
 \texttt{entropy}/\texttt{gini} arrays); drift columns are the
 v0$\rightarrow$v1 absolute drifts from
 \texttt{stats\_analysis/outputs/s01\_exp1\_stability.json}
-(\texttt{abs\_dH}/\texttt{abs\_dG}). Dense rows: v1 per-pair captures from
+(\texttt{dh}/\texttt{dg}). Dense rows: v1 per-pair captures from
 the \texttt{exp2-*-v1} runs as reported in Table~\ref{tab:dense}; CIs come
 from the same \texttt{s04\_bootstrap\_cis.json} block bootstrap as the MoE
-ladder (no drift column: dense runs were not captured twice at different
-pair counts, so there is no v0$\rightarrow$v1 comparison to report). Exp~5
+ladder (no drift column: the \texttt{s01\_exp1\_stability.json}
+drift-floor analysis covers only the six-model MoE ladder, not the dense baselines, so no v0$\rightarrow$v1 comparison is reported for dense rows). Exp~5
 row: pooled OLMoE concentration from
 \texttt{exp5-demographic-specificity-olmoe-1b-7b-v1/result.json}
 (it is not among the s04 bootstrap blocks, so its CI cells are marked
@@ -903,7 +908,7 @@ exactly this question. Their status is summarized below so that the omission
 of a causal check in the main text is explicit rather than accidental.
 
 \paragraph{Experiment 4/6 --- causal expert ablation (DONE for 6 models;
-GPT-OSS-120B PENDING GPU time).}
+GPT-OSS-120B not yet landed).}
 Experiment 4 (`Independent cross-check (robustness)') validates Shapley
 rankings against expert-ablation disparity drops, and Experiment 6 extends it
 ladder-wide: ablating experts in $\phi$-ranked order and measuring how fast
@@ -992,7 +997,7 @@ MoE range at this pair count. \textbf{Status: DONE with bootstrap CIs for
 both OLMoE and Phi-3.5-MoE.}
 
 \paragraph{Experiment 3 --- expert-pair synergy / collectivity check
-(DONE for 4 models; DBRX and GPT-OSS-120B PENDING).}
+(DONE for 4 models; DBRX and GPT-OSS-120B not yet landed).}
 Marginal Shapley values $\phi_i$ assume experts contribute independently;
 Experiment 3 tests this by computing pairwise Shapley \emph{interaction}
 values $\Phi_{ij}$ on the first and last routed MoE layer ($n{=}20$ pairs,
@@ -1006,7 +1011,7 @@ $0.747$ / $0.183$ (layer 29, last). All four models show the same
 shape: synergy dominates ($0.70$--$0.75$ of attribution mass) in the
 first routed layer and falls by roughly half at the last layer, but
 never disappears. This means the $\phi$-ranking used by the causal
-ablation (Exp.~4/6, above) discards $20$--$75\%$ of the true attribution
+ablation (Exp.~4/6, above) discards $18$--$75\%$ of the true attribution
 mass depending on model and layer, a plausible mechanistic explanation
 for the ablation reversals reported above (DBRX, and Mixtral's
 high-routing win): where synergy is high, marginal $\phi$-ranking is a
@@ -1022,7 +1027,7 @@ Experiment~3 (pairwise synergy) is DONE for four models and shows
 synergy is large and layer-dependent ($0.18$--$0.75$ of attribution
 mass); Experiment~4/6 (causal ablation) is DONE for six models (OLMoE,
 Mixtral, Phi-3.5-MoE, DBRX, Gemma-4-26B, and the OLMo-7B dense control;
-Section~\ref{sec:causal}) with GPT-OSS-120B PENDING; Experiment~7 (proxy
+Section~\ref{sec:causal}) with GPT-OSS-120B not yet landed; Experiment~7 (proxy
 agreement) is DONE and reports a null result on all three tested models
 (per-pair $\rho \approx 0$ on Mixtral, OLMoE, and Phi-3.5-MoE); and
 Experiment~8 (same-mechanism) is DONE with bootstrap CIs for both
@@ -1075,8 +1080,7 @@ every model we tested to varying degrees.
   Hand-Built Bias Benchmark for Question Answering. In \emph{Findings of
   ACL}, 2022.
 \bibitem{liang2023} P.~Liang \emph{et al.} Holistic Evaluation of Language
-  Models. \emph{Transactions of the Association for Computational
-  Linguistics}, 11:1--48, 2023.
+  Models. \emph{Transactions on Machine Learning Research}, 2023.
 \bibitem{mehrabi2021} N.~Mehrabi, F.~Morstatter, N.~Saxena, K.~Lerman, and
   A.~Galstyan. A Survey on Bias and Fairness in Machine Learning. \emph{ACM
   Computing Surveys}, 54(6):1--35, 2021.

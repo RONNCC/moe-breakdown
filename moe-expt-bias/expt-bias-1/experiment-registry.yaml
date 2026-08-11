@@ -151,11 +151,11 @@ experiments:
     n_active: 144
     sparsity: 0.03125
     pairs_v0: 400
-    pairs_v1: 2000  # v1 at 2000, v2 running at 5000
+    pairs_v1: 2000  # v1 at 2000, v2 (5000-pair stability replication, job 5575070) COMPLETE
     shards: 1
     gpu: "h100:4"
     time: "04:00:00"
-    status: "RUNNING_5000"  # 5000-pair job 5575070 running
+    status: "DONE"  # 5000-pair job 5575070 COMPLETE, integrated (Table 1, Appendix A)
     result_dir_local: "results/exp1-concentration-gpt-oss-120b-v1"
     result_dir_remote: "exp1-concentration-gpt-oss-120b-v1"
     result_dir_remote_v2: "exp1-concentration-gpt-oss-120b-5000"
@@ -169,7 +169,7 @@ experiments:
     per_pair_phi: true
     experiments_done: ["exp1", "exp3", "exp4", "exp6"]
     experiments_pending: ["exp7", "exp8"]
-    notes: "v1 at 2000 pairs (valid); 5000-pair job 5575070 running; MXFP4 requires force_eager_moe"
+    notes: "v1 at 2000 pairs (valid); 5000-pair job 5575070 COMPLETE, confirms v1 (Delta H=+0.0024); MXFP4 requires force_eager_moe"
 
   exp1-gemma:
     id: "exp1-gemma"
@@ -229,7 +229,7 @@ experiments:
     shards: 2
     gpu: "l40s:1"
     time: "05:00:00"
-    status: "RUNNING_PER_PAIR"  # 8 shards 5575082-89 running
+    status: "DONE"  # 8 shards 5575082-89 COMPLETE
     result_dir_local: "results/exp2-dense-baseline-olmo-7b-v1"
     result_dir_remote: "exp2-dense-baseline-olmo-7b-v1"
     payloads:
@@ -237,7 +237,7 @@ experiments:
       - result_shard0of2.json
       - result_shard1of2.json
       - player_ids.json
-    per_pair_phi: false  # v0 no, v1 submitted with --save-per-pair-phi
+    per_pair_phi: true  # v0 no, v1 landed with --save-per-pair-phi (job 5575082-89)
     experiments_done: ["exp2", "exp4", "exp6"]
 
   exp2-phi35mini:
@@ -256,7 +256,7 @@ experiments:
     shards: 2
     gpu: "l40s:1"
     time: "05:00:00"
-    status: "RUNNING_PER_PAIR"
+    status: "DONE"  # 8 shards 5575082-89 COMPLETE
     result_dir_local: "results/exp2-dense-baseline-phi3.5-mini-v1"
     result_dir_remote: "exp2-dense-baseline-phi3.5-mini-v1"
     payloads:
@@ -264,7 +264,7 @@ experiments:
       - result_shard0of2.json
       - result_shard1of2.json
       - player_ids.json
-    per_pair_phi: false
+    per_pair_phi: true  # v1 landed with --save-per-pair-phi (job 5575082-89)
     experiments_done: ["exp2", "exp4", "exp6"]
 
   exp2-llama2:
@@ -283,7 +283,7 @@ experiments:
     shards: 2
     gpu: "l40s:1"
     time: "05:00:00"
-    status: "RUNNING_PER_PAIR"
+    status: "DONE"  # 8 shards 5575082-89 COMPLETE
     result_dir_local: "results/exp2-dense-crosscheck-llama-2-7b-v1"
     result_dir_remote: "exp2-dense-crosscheck-llama-2-7b-v1"
     payloads:
@@ -291,7 +291,7 @@ experiments:
       - result_shard0of2.json
       - result_shard1of2.json
       - player_ids.json
-    per_pair_phi: false
+    per_pair_phi: true  # v1 landed with --save-per-pair-phi (job 5575082-89)
     experiments_done: ["exp2", "exp4", "exp6"]
 
   exp2-llama31:
@@ -310,7 +310,7 @@ experiments:
     shards: 2
     gpu: "l40s:1"
     time: "05:00:00"
-    status: "RUNNING_PER_PAIR"
+    status: "DONE"  # 8 shards 5575082-89 COMPLETE
     result_dir_local: "results/exp2-dense-crosscheck-llama-3.1-8b-v1"
     result_dir_remote: "exp2-dense-crosscheck-llama-3.1-8b-v1"
     payloads:
@@ -318,7 +318,7 @@ experiments:
       - result_shard0of2.json
       - result_shard1of2.json
       - player_ids.json
-    per_pair_phi: false
+    per_pair_phi: true  # v1 landed with --save-per-pair-phi (job 5575082-89)
     experiments_done: ["exp2", "exp4", "exp6"]
 
   # ==========================================================================

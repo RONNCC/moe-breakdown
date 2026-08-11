@@ -218,31 +218,45 @@ scp -r login-ice.pace.gatech.edu:/home/hice1/sghose7/scratch/moe-breakdown-bias-
   moe-expt-bias/expt-bias-1/results/
 ```
 
-### Currently-pending jobs (as of 2026-08-10, cluster-wide GPU-minute backlog)
+### Job status (as of 2026-08-11; PACE ICE in scheduled quarterly
+maintenance, 2026-08-11 06:00 -- 2026-08-13 23:59)
 
 - **sbatch 5575070 — COMPLETE**: GPT-OSS-120B exp1 re-run at 5000 pairs
   landed and is integrated (`s04` confirms $H=0.8789$ vs. the certified
   2000-pair $H=0.8765$, $\Delta H=+0.0024$, within CI; Table 1 + Appendix A).
-- **5575538** — Exp3 collectivity, Mixtral-8x7B refresh: PENDING at last poll
-  (redundant; the paper already uses the verified July capture, not blocking).
-- **5575743** — Exp3 collectivity, DBRX-132B: PENDING (resubmitted this
-  session after a `slurm.time` bug — the original config's `03:00:00` was too
-  short for Exp3's ~9.6 min/pair cost and timed out; fixed to `04:00:00`,
-  10 pairs).
-- **5575744** — Exp3 collectivity, GPT-OSS-120B: PENDING (same `slurm.time`
-  fix, `08:00:00`, 10 pairs).
-- **5575745** — Exp6 ladder extension, GPT-OSS-120B: PENDING (same fix; the
-  only remaining gap in the causal-ablation evidence chain).
-- **5575752** — Exp8 same-mechanism LOO, OLMoE-1B-7B per-pair capture:
-  PENDING (resubmitted with `--save-per-pair-phi`; the prior per-pair job
-  5575255 only wrote a summary `result.json`, no `per_pair_phi.npy`).
+- **5575538 — CANCELLED**: Exp3 collectivity, Mixtral-8x7B refresh
+  (mis-submitted: requested `gres/gpu=4` x `06:00:00` = 1440 GPU-min,
+  exceeding the `coc-ice` 960 GPU-min/job cap, so it could never run; not
+  blocking, the July capture is already verified non-degenerate and used in
+  the paper).
+- **5575743 -> 5575799** — Exp3 collectivity, DBRX-132B: was **RUNNING**
+  (node-pinned, `--time=01:10:00`, after a `slurm.time` fix — the original
+  config's `03:00:00` was too short for Exp3's ~9.6 min/pair cost and timed
+  out) when the cluster entered the maintenance window; final state unknown
+  until the cluster reopens.
+- **5575744 -> 5575791** — Exp3 collectivity, GPT-OSS-120B: was **RUNNING**
+  (node-pinned, `--time=01:10:00`, same `slurm.time` fix, `08:00:00` request,
+  10 pairs) when the cluster entered the maintenance window; final state
+  unknown until the cluster reopens.
+- **5575745 -> 5575800** — Exp6 ladder extension, GPT-OSS-120B: was
+  **RUNNING** (node-pinned, `--time=01:00:00`, same fix) when the cluster
+  entered the maintenance window; final state unknown until the cluster
+  reopens; this is the only remaining gap in the causal-ablation evidence
+  chain.
+- **5575752 -> 5575798 — COMPLETED**: Exp8 same-mechanism LOO, OLMoE-1B-7B
+  per-pair capture (node-pinned, `--time=01:10:00`; the prior per-pair job
+  5575255 only wrote a summary `result.json`, no `per_pair_phi.npy`):
+  $H=0.7361$, Gini$=0.6239$, $n_{pairs}=100$; per-pair CI integrated into
+  Appendix B.
 
-All PENDING jobs are queued (not running) due to a cluster-wide GPU-minute
-backlog at last poll — `scontrol show reservation` shows no active
-reservation despite the scheduler reporting `ReqNodeNotAvail, Reserved for
-maintenance`; not a submission error on our side. Re-poll with
-`squeue -u sghose7` (VPN must be off). See `CLUSTER-STATUS.md` for full queue
-history.
+The `ReqNodeNotAvail, Reserved for maintenance` reason seen earlier this
+session was **not** a GPU-minute backlog or scheduler bug: it is a real,
+non-admin-visible PACE quarterly-maintenance reservation, since directly
+confirmed by the login banner on `login-ice.pace.gatech.edu` (maintenance
+2026-08-11 06:00 -- 2026-08-13 23:59; login itself is refused cluster-wide,
+not just job scheduling). First action once the cluster reopens: `sacct -j
+5575799,5575791,5575800 --format=JobID,State,ExitCode,Elapsed -X -n`. See
+`CLUSTER-STATUS.md` for the full root-cause writeup and queue history.
 
 ## 5. Paper compilation
 
