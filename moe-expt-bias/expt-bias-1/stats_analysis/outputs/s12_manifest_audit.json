@@ -1,0 +1,584 @@
+{
+  "per_dir": {
+    "exp1-concentration-dbrx": {
+      "status": "no_meta"
+    },
+    "exp1-concentration-dbrx-v1": {
+      "status": "ok",
+      "n_pairs": 5000,
+      "benchmark_counts": {
+        "stereoset": 2106,
+        "bbq": 2894
+      },
+      "bias_type_counts": {
+        "unknown": 5000
+      },
+      "n_group_none": 5000,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 5000,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "exp1-concentration-gemma4-26b": {
+      "status": "ok",
+      "n_pairs": 400,
+      "benchmark_counts": {
+        "stereoset": 400
+      },
+      "bias_type_counts": {
+        "unknown": 400
+      },
+      "n_group_none": 400,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 400,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "exp1-concentration-gemma4-26b-v1": {
+      "status": "ok",
+      "n_pairs": 5000,
+      "benchmark_counts": {
+        "stereoset": 2106,
+        "bbq": 2894
+      },
+      "bias_type_counts": {
+        "unknown": 5000
+      },
+      "n_group_none": 5000,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 5000,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "exp1-concentration-gpt-oss-120b": {
+      "status": "no_meta"
+    },
+    "exp1-concentration-gpt-oss-120b-5000": {
+      "status": "ok",
+      "n_pairs": 5000,
+      "benchmark_counts": {
+        "stereoset": 2106,
+        "bbq": 2894
+      },
+      "bias_type_counts": {
+        "unknown": 5000
+      },
+      "n_group_none": 5000,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 5000,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "exp1-concentration-gpt-oss-120b-v1": {
+      "status": "ok",
+      "n_pairs": 2000,
+      "benchmark_counts": {
+        "stereoset": 2000
+      },
+      "bias_type_counts": {
+        "unknown": 2000
+      },
+      "n_group_none": 2000,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 2000,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "exp1-concentration-mixtral-8x7b": {
+      "status": "no_meta"
+    },
+    "exp1-concentration-mixtral-8x7b-v1": {
+      "status": "ok",
+      "n_pairs": 5000,
+      "benchmark_counts": {
+        "stereoset": 2106,
+        "bbq": 2894
+      },
+      "bias_type_counts": {
+        "unknown": 5000
+      },
+      "n_group_none": 5000,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 5000,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "exp1-concentration-olmoe-1b-7b": {
+      "status": "no_meta"
+    },
+    "exp1-concentration-olmoe-1b-7b-v1": {
+      "status": "ok",
+      "n_pairs": 5000,
+      "benchmark_counts": {
+        "stereoset": 2106,
+        "bbq": 2894
+      },
+      "bias_type_counts": {
+        "unknown": 5000
+      },
+      "n_group_none": 5000,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 5000,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "exp1-concentration-phi3.5-moe": {
+      "status": "no_meta"
+    },
+    "exp1-concentration-phi3.5-moe-v1": {
+      "status": "ok",
+      "n_pairs": 5000,
+      "benchmark_counts": {
+        "stereoset": 2106,
+        "bbq": 2894
+      },
+      "bias_type_counts": {
+        "unknown": 5000
+      },
+      "n_group_none": 5000,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 5000,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "exp2-dense-baseline-olmo-7b": {
+      "status": "no_meta"
+    },
+    "exp2-dense-baseline-olmo-7b-v1": {
+      "status": "ok",
+      "n_pairs": 1800,
+      "benchmark_counts": {
+        "stereoset": 1800
+      },
+      "bias_type_counts": {
+        "unknown": 1800
+      },
+      "n_group_none": 1800,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 1800,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "exp2-dense-baseline-phi3.5-mini": {
+      "status": "no_meta"
+    },
+    "exp2-dense-baseline-phi3.5-mini-v1": {
+      "status": "ok",
+      "n_pairs": 4000,
+      "benchmark_counts": {
+        "stereoset": 2106,
+        "bbq": 1894
+      },
+      "bias_type_counts": {
+        "unknown": 4000
+      },
+      "n_group_none": 4000,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 4000,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "exp2-dense-crosscheck-llama-2-7b": {
+      "status": "no_meta"
+    },
+    "exp2-dense-crosscheck-llama-2-7b-v1": {
+      "status": "ok",
+      "n_pairs": 1800,
+      "benchmark_counts": {
+        "stereoset": 1800
+      },
+      "bias_type_counts": {
+        "unknown": 1800
+      },
+      "n_group_none": 1800,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 1800,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "exp2-dense-crosscheck-llama-3.1-8b": {
+      "status": "no_meta"
+    },
+    "exp2-dense-crosscheck-llama-3.1-8b-v1": {
+      "status": "ok",
+      "n_pairs": 1800,
+      "benchmark_counts": {
+        "stereoset": 1800
+      },
+      "bias_type_counts": {
+        "unknown": 1800
+      },
+      "n_group_none": 1800,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 1800,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "exp8-lloo-olmoe-1b-7b": {
+      "status": "ok",
+      "n_pairs": 100,
+      "benchmark_counts": {
+        "stereoset": 100
+      },
+      "bias_type_counts": {
+        "unknown": 100
+      },
+      "n_group_none": 100,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 100,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "exp8-lloo-phi3.5-moe": {
+      "status": "ok",
+      "n_pairs": 50,
+      "benchmark_counts": {
+        "stereoset": 50
+      },
+      "bias_type_counts": {
+        "unknown": 50
+      },
+      "n_group_none": 50,
+      "group_null_fraction": 1.0,
+      "provenance": {
+        "has_metadata": true,
+        "metadata_keys": [
+          "study_name",
+          "model_id",
+          "model_family",
+          "benchmarks",
+          "shapley_method",
+          "seed"
+        ],
+        "n_pairs": 50,
+        "has_commit": false,
+        "has_config_hash": false,
+        "has_seed": true
+      },
+      "unique_item_ids": 1,
+      "sample_item_ids": [
+        "",
+        "",
+        ""
+      ]
+    }
+  },
+  "common_intersection": {
+    "ladder_v1_all": {
+      "n": 1,
+      "sample": [
+        ""
+      ]
+    },
+    "ladder_v1_stereoset_only": {
+      "n": 1,
+      "sample": [
+        ""
+      ]
+    }
+  },
+  "proposed_manifest": {
+    "version": "v1-frozen-2026-09-10",
+    "total_pairs": 5000,
+    "benchmarks": {
+      "stereoset": {
+        "n": 2106,
+        "source": "McGill-NLP/stereoset validation",
+        "stratify_by": "bias_type"
+      },
+      "bbq": {
+        "n": 2894,
+        "source": "heegyu/bbq parquet",
+        "categories": [
+          "Age",
+          "Disability_status",
+          "Gender_identity",
+          "Nationality",
+          "Physical_appearance",
+          "Race_ethnicity",
+          "Race_x_SES",
+          "Race_x_gender",
+          "Religion",
+          "SES",
+          "Sexual_orientation"
+        ],
+        "condition": "ambig",
+        "stratify_by": "category"
+      },
+      "winogender": {
+        "n": 0,
+        "note": "currently 0 in all v1, need to add with occupation stats for direction"
+      }
+    },
+    "sampling_rule": "seeded shuffle with seed 42, then take first N per benchmark, record manifest hash",
+    "required_fields_per_item": [
+      "item_id",
+      "benchmark",
+      "bias_type",
+      "source",
+      "template_key",
+      "group",
+      "stereo",
+      "anti_stereo"
+    ],
+    "provenance_fields": [
+      "commit_hash",
+      "config_hash",
+      "model_revision",
+      "dataset_revision",
+      "seed",
+      "gpu_type",
+      "precision",
+      "manifest_hash",
+      "timestamp"
+    ],
+    "notes": [
+      "Current runs use deterministic concatenation + slice, seed recorded but not used \u2013 fix in benchmarks.py",
+      "BBQ loader must use target_loc + question_polarity to identify stereotyped answer, not arbitrary non-unknown",
+      "WinoGender must derive stereotype direction from BLS occupation stats, not male=stereo",
+      "pair_meta.json group field is None for all items \u2013 fix to use benchmark:bias_type",
+      "Common intersection across ladder v1 is 0 if including gpt-oss-120b-v1 (2000 stereoset only) \u2013 recompute on stereoset-only for interim comparison"
+    ]
+  },
+  "audit_findings": {
+    "seed_not_used": "load_benchmarks in benchmarks.py has max_items slice but no seeded shuffle; seed field in config is recorded but not used for sampling",
+    "bbq_bug": "biased_ans = next(a for i!=label) picks arbitrary non-unknown, not stereotyped \u2013 ignores target_loc and polarity",
+    "winogender_bug": "stereo=male always, anti=female always \u2013 ignores occupation stats",
+    "group_null": "pair_meta.json group=None for all items \u2013 breaks stratified bootstrap",
+    "benchmark_mixture_varies": "MoE v1 mostly 2106+2894, GPT-OSS v1 2000 stereoset only, dense v1 1800 stereoset only except phi-mini 2106+1894, LOO 100/50 stereoset only"
+  }
+}
