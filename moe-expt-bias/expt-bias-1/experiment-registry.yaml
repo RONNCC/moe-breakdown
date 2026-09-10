@@ -9,7 +9,7 @@ meta:
   remote_root: "/storage/ice1/0/2/sghose7/moe-breakdown-bias-runs/expt-bias-1"
   local_results: "results/"
   kaggle_dataset: "sghose0/moe-bias-routing-shapley-perpair-phi"
-  last_updated: "2026-08-10"
+  last_updated: "2026-09-10"
 
 # ---------------------------------------------------------------------------
 # Experiment Definitions
@@ -359,8 +359,8 @@ experiments:
     id: "exp3-dbrx"
     config: "configs/study.dbrx.concentration.yaml"
     job_id: 5575799  # was 5575743, blocked by cluster maintenance-window reservation; resubmitted node-pinned (atl1-1-03-012-28-0, --time=01:10:00)
-    status: "UNKNOWN"  # node-pinned submit entered the 08-11 06:00 maintenance window; final state needs sacct on reopen (see CLUSTER-STATUS.md)
-    gpu: "a100:2"
+    status: "UNKNOWN"  # 2026-09-10: kept UNKNOWN; maintenance ended 2026-08-13 23:59, no sacct re-poll on record since 08-11 (see CLUSTER-STATUS.md)
+    gpu: "h100:4"
     time: "04:00:00"
     max_pairs: 10  # reduced from 20 to fit revised time budget
     max_layers: 2
@@ -369,8 +369,8 @@ experiments:
     id: "exp3-gpt-oss"
     config: "configs/study.gpt-oss-120b.concentration.yaml"
     job_id: 5575791  # was 5575744, blocked by cluster maintenance-window reservation; resubmitted node-pinned (atl1-1-03-013-3-0, --time=01:10:00)
-    status: "UNKNOWN"  # node-pinned submit entered the 08-11 06:00 maintenance window; final state needs sacct on reopen (see CLUSTER-STATUS.md)
-    gpu: "a100:2"
+    status: "UNKNOWN"  # 2026-09-10: kept UNKNOWN; maintenance ended 2026-08-13 23:59, no sacct re-poll on record since 08-11 (see CLUSTER-STATUS.md)
+    gpu: "h100:2"
     time: "08:00:00"
     max_pairs: 10  # reduced from 20 to fit revised time budget
     max_layers: 2
@@ -488,29 +488,41 @@ experiments:
 
   exp8-mixtral:
     id: "exp8-mixtral"
-    status: "PENDING"  # config authored + discovery/ablation code fixed this session (config.yaml: study.mixtral-8x7b.lloo.yaml); not yet submitted, blocked on cluster access
+    config: "configs/study.mixtral-8x7b.lloo.yaml"
+    status: "NOT-SUBMITTED"  # 2026-09-10: ready, not submitted; blocked on cluster access (config authored + discovery/ablation code fixed; study.mixtral-8x7b.lloo.yaml)
     n_pairs: 50
+    gpu: "h100:4"
+    time: "01:00:00"
     result_path: "results/exp8-lloo-mixtral-8x7b/result.json"
     per_pair: true
 
   exp8-dbrx:
     id: "exp8-dbrx"
-    status: "PENDING"  # config.yaml: study.dbrx.lloo.yaml; required fixing discover_dense_ffn_layers (.ffn attr, transformer.blocks path) -- see GAP-ANALYSIS.md
+    config: "configs/study.dbrx.lloo.yaml"
+    status: "NOT-SUBMITTED"  # 2026-09-10: ready, not submitted; blocked on cluster access (required fixing discover_dense_ffn_layers .ffn attr, transformer.blocks path -- see GAP-ANALYSIS.md)
     n_pairs: 50
+    gpu: "h100:4"
+    time: "01:30:00"
     result_path: "results/exp8-lloo-dbrx/result.json"
     per_pair: true
 
   exp8-gpt-oss:
     id: "exp8-gpt-oss"
-    status: "PENDING"  # config.yaml: study.gpt-oss-120b.lloo.yaml; required fixing zero_forward tuple-return arity -- see GAP-ANALYSIS.md
+    config: "configs/study.gpt-oss-120b.lloo.yaml"
+    status: "NOT-SUBMITTED"  # 2026-09-10: ready, not submitted; blocked on cluster access (required fixing zero_forward tuple-return arity -- see GAP-ANALYSIS.md)
     n_pairs: 30
+    gpu: "h100:2"
+    time: "04:00:00"
     result_path: "results/exp8-lloo-gpt-oss-120b/result.json"
     per_pair: true
 
   exp8-gemma4-26b:
     id: "exp8-gemma4-26b"
-    status: "PENDING"  # config.yaml: study.gemma4-26b.lloo.yaml; required implementing compound branch-ablation (shared_expert + moe summed FFN) in shapley.compute_dense_layer_contrast -- landed 2026-08-11 (see GAP-ANALYSIS.md); not yet submitted, blocked on cluster access
+    config: "configs/study.gemma4-26b.lloo.yaml"
+    status: "NOT-SUBMITTED"  # 2026-09-10: ready, not submitted; blocked on cluster access (compound branch-ablation landed 2026-08-11, see GAP-ANALYSIS.md)
     n_pairs: 30
+    gpu: "h100:1"
+    time: "03:00:00"
     result_path: "results/exp8-lloo-gemma4-26b/result.json"
     per_pair: true
 
@@ -636,6 +648,8 @@ paper_integration:
   exp6: "COMPLETE for 6/7 models (Sec 1.3/5.6 + Appendix B); GPT-OSS-120B job 5575800 RUNNING (node-pinned; only remaining gap)"
   exp7: "COMPLETE (Mixtral, OLMoE, Phi-3.5-MoE all null, |rho|<=0.24; Appendix B)"
   exp8: "COMPLETE for both models (Appendix B): Phi-3.5-MoE per-pair CI H in [0.842,0.941]; OLMoE per-pair CI H in [0.692,0.921] (job 5575798, node-pinned)"
+  notes_2026_09_10_stats_blockers: "2026-09-10 reviewer findings, landed claims unchanged: Gemma CI miss, t5 d, dense comparability, observed power, SUPPORTED label, Spearman r2, multiplicity"
+  notes_2026_09_10_venue_citations: "2026-09-10 venue/citation pass pending: 8 missing cites (Covert21, Sundararajan17, Lundberg18 interaction, Zhou22, Nangia20, Zhao18, Gallegos24, Frantar23); fig gaps (no CIs, Fig3 Description, Fig4 N-comparability, Fig5 n=4 boxplot); repro gaps (Kaggle 8 vs 15 files, run metadata fields, .aux hygiene)"
 
 # ---------------------------------------------------------------------------
 # Kaggle Dataset Contents
@@ -651,11 +665,16 @@ kaggle:
     - exp1-concentration-gpt-oss-120b-v1_per_pair_phi.npy
     - exp1-concentration-gemma4-26b_per_pair_phi.npy
     - exp5-demographic-specificity-olmoe-1b-7b-v1_per_pair_phi.npy
+    - exp1-concentration-gpt-oss-120b-5000_per_pair_phi.npy
+    - exp2-dense-baseline-olmo-7b-v1_per_pair_phi.npy
+    - exp2-dense-baseline-phi3.5-mini-v1_per_pair_phi.npy
+    - exp2-dense-crosscheck-llama-2-7b-v1_per_pair_phi.npy
+    - exp2-dense-crosscheck-llama-3.1-8b-v1_per_pair_phi.npy
+    - exp8-lloo-olmoe-1b-7b_per_pair_phi.npy
+    - exp8-lloo-phi3.5-moe_per_pair_phi.npy
   missing_metadata_per_experiment:
     - result.json
     - pair_meta.json
     - player_ids.json
     - phi.npy (aggregated)
     - routing_freq.npy
-
-# Generated 2026-08-10. Update this registry on every experiment submission/completion.

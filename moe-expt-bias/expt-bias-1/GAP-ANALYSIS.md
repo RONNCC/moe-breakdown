@@ -347,3 +347,61 @@ confirmed maintenance window closing the login service outright, not just
 job scheduling). No further paper- or repo-side gaps found after this
 pass; the only remaining open items are the three GPU jobs blocked on the
 PACE maintenance window per Section 5 above.
+
+---
+
+## 7. Sept-10 refresh: cluster-open status and reviewer punchlist (2026-09-10)
+
+**Date**: 2026-09-10. Append-only; Sections 0-6 untouched history.
+
+### 7.1 Cluster-open status and first action
+
+- Maintenance window ended 2026-08-13 23:59. No sacct re-poll on record since 08-11.
+- Three jobs UNKNOWN at last poll: 5575799 (DBRX Exp3), 5575791 (GPT-OSS Exp3), 5575800 (GPT-OSS Exp6). OLMoE Exp8 per-pair (5575798) already COMPLETED and integrated.
+- Exp8 LLOO ladder extension: 4 configs ready, NOT-SUBMITTED (`configs/study.{mixtral-8x7b,dbrx,gpt-oss-120b,gemma4-26b}.lloo.yaml`).
+- First action on cluster reopen (exact):
+- `sacct -j 5575799,5575791,5575800 --format=JobID,State,ExitCode,Elapsed -X -n`
+- Pull results if COMPLETED; resubmit plain `sbatch` (no node-pinning) if TIMEOUT/CANCELLED/NODE_FAIL.
+
+### 7.2 Sept-10 20-item punchlist (condensed)
+
+Experiment rows:
+1. Exp3 DBRX (job 5575799) UNKNOWN; integrate synergy fraction into Sec 5.5/App B on landing.
+2. Exp3 GPT-OSS (job 5575791) UNKNOWN; same integration.
+3. Exp6 GPT-OSS (job 5575800) UNKNOWN; update Sec 5.6/App B from six models to full ladder plus dense control on landing.
+4. Exp8 LLOO x4 NOT-SUBMITTED; fire via `submit_slurm_study.py --config configs/study.{mixtral-8x7b,dbrx,gpt-oss-120b,gemma4-26b}.lloo.yaml --save-per-pair-phi` after sacct triage.
+5. GPT-OSS gaps: Exp3/Exp6 placeholders remain only PENDING items in causal/collectivity chain.
+
+Stats blockers:
+6. Gemma CI miss: add CIs or flag null-bias uninterpretable everywhere claim appears.
+7. t5 d: report Cohen d for top-5-share alongside entropy/Gini in Sec 5.4.
+8. Dense comparability: state dense vs MoE comparability caveat (different mechanism, matched families only).
+9. Observed power: relabel post-hoc power; report observed power only, no design claim.
+10. SUPPORTED label: rename H1 SUPPORTED to qualified wording (directionally consistent, underpowered).
+11. Spearman r2: report r-squared alongside rho_H where trend claimed.
+12. Multiplicity: disclose multiple-comparison handling or flag uncorrected tests.
+
+Venue items:
+13. 8 missing cites: Covert21, Sundararajan17, Lundberg18 interaction, Zhou22, Nangia20, Zhao18, Gallegos24, Frantar23.
+14. Fig fixes: no CIs on figs; Fig3 Description; Fig4 N-comparability note; Fig5 n=4 boxplot replace or flag.
+
+Repro items:
+15. Kaggle v3: registry shows 8 vs 15 files on disk; publish v3 covering all payloads.
+16. Run metadata fields: record seed, config hash, commit, GPU type per run.
+17. .aux hygiene: remove or gitignore LaTeX .aux build artifacts.
+18-20. Rolled into priority order below: recompile gate, final commit plus push, re-audit every deliverable.
+
+### 7.3 Proposals: new rung and within-model k-sweep
+
+- New rung: add one more MoE rung to grow ladder n=6 toward n~8-9. Power rationale: Monte Carlo Sec 6.4 needs n~12-13 at rho_H=0.754, n~8-9 at rho_H=0.872; each added rung cuts sampling noise.
+- Within-model k-sweep: vary top-k or active-expert count inside one model family, same checkpoints, same pairs. Tests routing-structure mechanism without new weights; adds powered within-model points alongside ladder.
+
+### 7.4 Priority order
+
+1. sacct triage jobs 5575799/5575791/5575800.
+2. Submit Exp8 LLOO x4.
+3. Close GPT-OSS Exp3/Exp6 gaps.
+4. Stats fixes (items 6-12).
+5. Cites and figs (items 13-14).
+6. Kaggle v3 plus registry plus metadata plus aux (items 15-17).
+7. Recompile gate: 2x pdflatex clean, 0 undefined refs, vision-check, then commit plus push.

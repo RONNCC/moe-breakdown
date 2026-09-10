@@ -242,3 +242,50 @@ instead. Version 2 (2026-08-11) added the 4 dense v1 baselines
 5000-pair stability replication, and the two Exp8 same-mechanism LOO
 captures (OLMoE, Phi-3.5-MoE) --- all payloads generated so far are now
 published in one snapshot.
+
+## Status update, 2026-09-10 --- maintenance over, 3 UNKNOWN jobs need sacct, 7 submit lines ready
+
+Maintenance window (2026-08-11 06:00 -- 2026-08-13 23:59) ended 2026-08-13
+23:59. No sacct re-poll on record since 2026-08-11. Node-pinning workaround
+no longer needed: use plain `sbatch` via the submit scripts (configs carry
+QOS-max `slurm.time` already).
+
+Three jobs UNKNOWN until re-polled (healthy + RUNNING at last pre-maintenance
+poll): **5575799** (Exp3 DBRX), **5575791** (Exp3 GPT-OSS), **5575800**
+(Exp6 GPT-OSS). First action from a login node:
+
+```bash
+sacct -j 5575799,5575791,5575800 --format=JobID,State,ExitCode,Elapsed -X -n; squeue -u sghose7
+```
+
+If any show `TIMEOUT`/`CANCELLED`/`NODE_FAIL` (or no result on disk),
+resubmit with the exact lines below from `moe-expt-bias/expt-bias-1` on a
+login node (plain sbatch, no `--nodelist`). Configs already carry the
+time-limit fix (DBRX 4xH100 `04:00:00`, GPT-OSS-120B 2xH100 `08:00:00`).
+QOS `coc-ice` cap is 960 GPU-min/job (4 GPUs x 4h or 2 GPUs x 8h); all
+lines below fit it.
+
+```bash
+cd moe-expt-bias/expt-bias-1
+python3 scripts/submit_slurm_experiment3.py --config configs/study.dbrx.concentration.yaml --max-pairs 10 --max-layers 2
+python3 scripts/submit_slurm_experiment3.py --config configs/study.gpt-oss-120b.concentration.yaml --max-pairs 10 --max-layers 2
+python3 scripts/submit_slurm_experiment6.py --config configs/study.gpt-oss-120b.concentration.yaml --max-pairs 30 --routing-freq-pairs 60
+```
+
+Exp8 LLOO ladder extension: 4 configs ready, NOT-SUBMITTED (all with
+`--save-per-pair-phi`). Resource fit under the 960 GPU-min cap:
+
+| Config | Pairs | GPU | Time |
+|---|---|---|---|
+| study.mixtral-8x7b.lloo.yaml | 50 | 4xH100 | 01:00:00 |
+| study.dbrx.lloo.yaml | 50 | 4xH100 | 01:30:00 |
+| study.gpt-oss-120b.lloo.yaml | 30 | 2xH100 | 04:00:00 |
+| study.gemma4-26b.lloo.yaml | 30 | 1xH100 | 03:00:00 |
+
+```bash
+cd moe-expt-bias/expt-bias-1
+python3 scripts/submit_slurm_study.py --config configs/study.mixtral-8x7b.lloo.yaml --save-per-pair-phi
+python3 scripts/submit_slurm_study.py --config configs/study.dbrx.lloo.yaml --save-per-pair-phi
+python3 scripts/submit_slurm_study.py --config configs/study.gpt-oss-120b.lloo.yaml --save-per-pair-phi
+python3 scripts/submit_slurm_study.py --config configs/study.gemma4-26b.lloo.yaml --save-per-pair-phi
+```
