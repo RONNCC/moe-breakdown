@@ -1,8 +1,8 @@
 # PhD-Style Gap Analysis: MoE-Bias Study (expt-bias-1)
 
-**Date**: 2026-08-10 (updated post statistical-audit / paper-integration-II session)
-**Paper status**: 11-page ACM draft at `moe-expt-bias-2/moe_bias_report_acm_v2.tex` (compiles clean, verified via 2x pdflatex + page-image inspection of pages 3, 5, 6, 8, 10, 11)
-**Repo**: `/Users/ronnie.ghose/src/priv/gatech/research-projs/moe-breakdown`
+**Date**: 2026-09-10 (updated after fourth-pass ML-review audit; historical sections retain their original session dates)
+**Paper status**: 11-page ACM draft at `moe-expt-bias-2/moe_bias_report_acm_v2.tex` (the prior compile/visual check is recorded below; the new acceptance blockers in Section 8 require resolution before submission)
+**Repo**: repository root (this checkout: `/home/user/moe-breakdown`; do not rely on the historical machine-specific path)
 
 ---
 
@@ -405,3 +405,178 @@ Repro items:
 5. Cites and figs (items 13-14).
 6. Kaggle v3 plus registry plus metadata plus aux (items 15-17).
 7. Recompile gate: 2x pdflatex clean, 0 undefined refs, vision-check, then commit plus push.
+
+---
+
+## 8. Fourth-pass NeurIPS/ICML-style review: construct validity and acceptance blockers (2026-09-10)
+
+### 8.1 Overall assessment
+
+**Provisional recommendation: major revision / reject in current form.** The project has unusually good run tracking, transparent null results, and several useful robustness checks. However, a source-level review found issues deeper than the outstanding GPU jobs. The central reported object is not a Shapley value, the benchmark adapter does not preserve the native constructs for BBQ or WinoGender, and the compared runs do not share the benchmark mixture claimed in the paper. These are acceptance-blocking construct-validity problems: more models, more pairs, and tighter confidence intervals cannot repair them without re-estimation.
+
+The most defensible paper after repair may be narrower and stronger: **an audit showing that an observational routing-contrast heuristic is diffuse and does not recover causal expert importance**, rather than a paper claiming a routing-Shapley decomposition of social bias. Experiment 7's null proxy/exact agreement and Experiment 6's mixed deletion curves are central results under that framing, not secondary caveats.
+
+### 8.2 Acceptance-blocking findings newly identified
+
+#### A. The primary estimator is not a Shapley estimator (**fatal unless renamed or replaced**)
+
+`compute_routing_contrast` in `src/moe_bias_shapley/shapley.py` computes
+
+```text
+(mean_router_weight_stereo - mean_router_weight_anti) * whole-pair_bias_gap
+```
+
+and never defines or evaluates a coalition value function `v(S)`. A Shapley value is a weighted average of marginal coalition differences `v(S union {i}) - v(S)`; the routing-contrast score therefore does not inherit Shapley efficiency, symmetry, dummy, or additivity. Calling it “routing-Shapley,” saying it is “computed over coalitions,” or presenting it as a decomposition/partition of the output gap is mathematically unsupported. “RGIS-style” is also not enough: an importance-sampling Shapley approximation must still estimate coalition marginals and document its proposal distribution and weights.
+
+This is not a semantic nit. Experiment 7 reports near-zero agreement between the proxy and exact causal Shapley rankings on all tested models. That evidence directly falsifies the interpretation of the primary score as an approximation to the target estimand within the tested budget.
+
+**Required action:** choose one of two paths.
+
+1. **Rename/reframe path (recommended):** replace “Shapley” for Exp1/Exp5 with “routing-contrast heuristic/score”; remove all Shapley-axiom and payoff-partition claims; retitle the paper; make proxy invalidation the headline; reserve “Shapley” for the actual coalition intervention experiments. Report fidelity to causal effects rather than implying it.
+2. **Estimator replacement path:** define `v(S)` precisely (including router renormalization, shared experts, token/layer scope, and absent-expert semantics), estimate genuine interventional Shapley values with uncertainty on a tractable preregistered subset, and rerun the primary analysis. Validate local accuracy/efficiency numerically.
+
+Reference context: Lundberg and Lee define SHAP through coalition-conditioned marginal contributions and local accuracy; Covert, Lundberg, and Lee stress that a removal explanation requires explicit choices of removal operator, behavior, and summary ([NeurIPS 2017](https://proceedings.neurips.cc/paper/7062-a-unified-approach-to-interpreting-model-predictions.pdf); [JMLR 2021](https://jmlr.org/papers/volume22/20-1316/20-1316.pdf)).
+
+#### B. BBQ conversion does not identify the stereotyped answer (**rerun required**)
+
+In `benchmarks.load_bbq`, `label` is correctly identified as the unknown answer for ambiguous items, but `biased_ans` is then set to the **first arbitrary non-unknown answer**. BBQ has two non-unknown group answers; which one aligns with the stereotype depends on `target_loc`/answer metadata and `question_polarity`. The loader ignores both. Consequently, an unknown fraction of “stereo” prompts are non-target answers, and positive/negative question variants can have reversed interpretation.
+
+**Required action:** reconstruct the target answer using the official answer metadata (`target_loc`, or an equivalent derivation from `answer_info`) and question polarity; unit-test all answer permutations; reproduce the official BBQ ambiguous-context bias score on frozen model logits before using the adapter for attribution. Retain both target and non-target contrasts rather than selecting an arbitrary distractor. All Exp1, Exp2, Exp5, and causal runs containing BBQ must then be rerun or explicitly excluded.
+
+The official BBQ repository states that `target_loc` is the answer-option index used to compute bias score and that ambiguous and disambiguated conditions answer different questions ([NYU BBQ repository](https://github.com/nyu-mll/BBQ)).
+
+#### C. WinoGender labels male as stereotypical unconditionally (**rerun or remove**)
+
+`load_winogender` always writes the male-pronoun sentence to `stereo` and the female-pronoun sentence to `anti_stereo`. Male is not intrinsically the stereotyped member for every occupation, and the source benchmark evaluates occupational gender correlations rather than this fixed direction. The code comment acknowledges that the implementation is not native WinoGender scoring but does not solve the sign problem.
+
+**Required action:** derive stereotype direction from the released occupation statistics/metadata, or treat the pair as an unsigned counterfactual sensitivity test and never call its sign a stereotype gap. Add neutral-pronoun and participant/occupation referent controls. Report WinoGender separately before pooling.
+
+#### D. The paper's “common prompt battery” does not exist in the saved runs (**re-estimation required**)
+
+Inspection of tracked `pair_meta.json` files gives:
+
+- Five 5000-pair MoE v1 captures: 2,106 StereoSet + 2,894 BBQ + **0 WinoGender**.
+- GPT-OSS v1 (2,000 pairs): **2,000 StereoSet only**.
+- Dense v1 captures: OLMo/Llama-2/Llama-3.1 each **1,800 StereoSet only**; Phi-3.5-Mini 2,106 StereoSet + 1,894 BBQ.
+
+The cause is deterministic concatenation followed by `pairs[:max_items]` in `load_benchmarks`; the configured `seed` is recorded but never used for benchmark sampling. Thus model comparisons conflate architecture with benchmark composition, and claims that all runs use StereoSet/BBQ/WinoGender are false. The signed aggregate can also change with arbitrary dataset order and cap.
+
+**Required action:** create a frozen item manifest shared by every model, balanced or explicitly weighted by benchmark/category, with stable IDs and a documented sampling rule. Run all models on the same items. At minimum, recompute existing comparisons on their exact common intersection (currently StereoSet-only) and report per-benchmark estimates and heterogeneity. Do not describe the current first-`N` selection as seeded sampling.
+
+#### E. The advertised stratified bootstrap is actually one stratum (**recompute CIs**)
+
+`s04_bootstrap_cis.py::load_pair_meta` evaluates `e.get("group", e.get("benchmark", "unknown"))`. Every saved entry has a present but null `group`, so the benchmark fallback is never taken; `str(None)` assigns every pair to one stratum. This was verified on all tracked v1 manifests. Therefore the paper's repeated “stratified by prompt group” statement is inaccurate, and benchmark/category composition uncertainty is not represented.
+
+**Required action:** treat null/empty group as missing and fall back to benchmark, preferably benchmark × bias category; add a test with null groups; recompute every CI. Because prompts generated from the same StereoSet context or BBQ template are related, consider a cluster bootstrap at source-item/template level rather than an IID pair bootstrap. Compare percentile with BCa/studentized intervals or explain the choice.
+
+#### F. The bias payoff is not benchmark-native and mixes incomparable quantities
+
+`_sequence_logprob` scores mean teacher-forced log probability over each **entire completed string**. For BBQ this includes context, question, and an answer of variable token length, diluting answer evidence and introducing lexical/length effects. StereoSet's native evaluation also includes an unrelated option and reports language-model and stereotype components; the loader discards the unrelated sentence. The final pooled signed mean mixes sentence association, QA unknown-vs-group preference, and a non-native pronoun contrast.
+
+**Required action:** score conditional completion log probability only (same prefix, answer tokens only; length convention preregistered), reproduce each benchmark's native aggregate metrics, and keep constructs separate in the main analysis. Add prompt-format/tokenization sensitivity and an unrelated/meaningfulness control for StereoSet. Report the pooled result only as a prespecified meta-analysis with weights and heterogeneity, not as a raw mean. StereoSet's LMS/SS/ICAT design explicitly uses the unrelated option to separate meaningful language modeling from stereotype preference ([StereoSet paper](https://arxiv.org/pdf/2004.09456)).
+
+### 8.3 Major statistical and experimental gaps
+
+#### G. Cross-model sparsity is observational and heavily confounded
+
+The six points differ simultaneously in total experts, active experts, layers, expert width, shared-expert design, model scale, training corpus, load-balancing objective, instruction tuning, precision, and model family. `k/N` also repeats at 0.25 and is partly constructed by summing slots over layers. Spearman correlation across six non-exchangeable architectures cannot identify a causal effect of sparsity. Model-level permutation assumes exchangeability that is not credible across related model families and heterogeneous measurement protocols.
+
+**Required action:** phrase H1 as an observational cross-architecture association. The decisive experiment is a controlled top-`k` study on checkpoints trained with multiple `k` values (ideally several training seeds), not merely changing `k` at inference on one fixed checkpoint. An inference-time `k` sweep is still useful as a mechanism stress test, but it changes both compute and distribution relative to training and must not be presented as equivalent to trained sparsity. Factorial controls should separately vary total `N`, active `k`, expert capacity, and load-balancing.
+
+Routing design itself can alter load balance and specialization, so `k/N` is not a sufficient architecture descriptor; Expert Choice explicitly documents under/over-specialization and load-balancing effects ([NeurIPS 2022](https://proceedings.neurips.cc/paper_files/paper/2022/file/2f00ecd787b432c1d36f3de9800728eb-Paper-Conference.pdf)).
+
+#### H. Player cardinality/partition makes entropy and top-5 comparisons non-identifiable
+
+Dividing entropy by `log(N)` bounds it in `[0,1]`; it does **not** make expert-level and layer-level partitions equivalent. Splitting one causal component into many correlated players can increase normalized entropy without changing the function. Fixed top-5 share is especially mechanical (5/32 dense layers versus 5/256–4608 MoE experts), as the draft partially acknowledges. Zero padding to `max_experts` and cross-layer flattening add further architecture dependence.
+
+**Required action:** do not infer an architectural localizability gap from unlike partitions. Complete Exp8 for all models and compare the same intervention unit; add matched-cardinality aggregation/subsampling, per-layer expert entropy followed by a hierarchical summary, effective support size `exp(H_raw)`, and top-`q` mass at common fractions. Include synthetic split/merge controls demonstrating how metrics move when the represented function is unchanged. The dense/MoE result is currently a measurement-granularity result, not evidence of physical localization.
+
+#### I. “Bias magnitude parity” is not established
+
+The reported parity test uses one signed `mean_bias_gap` per model. Signed averaging can cancel positive and negative categories, and the runs have different benchmark mixtures (Section 8.2D). Calling this “absolute contrastive bias-gap magnitude” conflicts with the source field, which is `np.mean(gaps)`, not `np.mean(abs(gaps))`. Failure to reject with 4 versus 5 heterogeneous model summaries is not equivalence.
+
+**Required action:** retract “statistically indistinguishable/parity” until rerun on a common item set. Report signed and absolute item-level effects by benchmark/category, uncertainty, and a smallest effect size of interest. If parity is a claim, use an equivalence test or interval against that margin; do not interpret a large null-hypothesis p-value as evidence of equality.
+
+#### J. Multiplicity and post-selection are not controlled
+
+The draft tests H and Gini across multiple overlapping subsets, reports top fractions, localizability ratios, bias magnitude, two matched families, layers, cohorts, and several ablation fractions. “Every defensible subset” is post hoc and the subsets are strongly dependent. No family of confirmatory hypotheses or multiplicity policy is declared.
+
+**Required action:** designate one primary endpoint, one primary model set, and one exclusion policy before the next run. Mark all other analyses exploratory; report all tests in a machine-readable table and control FDR/FWER where claims depend on them. Prefer effect intervals to “supported/rejected” labels. Do not report `rho^2` as variance explained for a six-point Spearman rank statistic; it has no useful regression interpretation here.
+
+#### K. Post-hoc power is circular
+
+Power simulated at the observed `rho` is optimistic and unstable at `n=6`; the stronger no-GPT effect is selected after inspecting the data. The statement that 8–13 rungs “would be needed” is therefore not a defensible prospective design calculation.
+
+**Required action:** label it a sensitivity analysis only. Plan future sample size using a smallest scientifically meaningful effect and uncertainty over effect size, or simulate the proposed hierarchical/controlled design. Increasing pair count improves within-model precision but does not increase the number of independent architectures.
+
+### 8.4 Causal/interpretability gaps
+
+#### L. Zero ablation is an out-of-distribution intervention and “capability” is under-measured
+
+Zeroing 10–50% of expert outputs creates states not seen during training, can cause generic residual-stream disruption, and does not model how a deployed system might renormalize or reroute around unavailable experts. Perplexity measured on the same bias prompts is not “general language capability.” A single random ranking is also a weak null, and normalized disparity drop becomes unstable when the baseline signed gap is small.
+
+**Required action:** add many size-matched random sets with confidence bands; compare zeroing, router masking with weight renormalization, mean-output replacement, and matched-magnitude noise; measure held-out general capability (at least a clean LM corpus plus several task suites); report deletion AUC with paired uncertainty and absolute gap changes, not only ratios. Repeat on independent prompt samples and seeds. Interpret ablation as a specific intervention, not literal removal of stored social bias.
+
+Removal-based explanation literature requires the missingness operator to be explicit, and warns that different removal choices answer different questions ([Covert et al., JMLR 2021](https://jmlr.org/papers/volume22/20-1316/20-1316.pdf)). Recent preprint evidence also directly reports that population routing statistics need not predict token-level interventional importance; this supports the project's reframed null but should be cited as concurrent, non-peer-reviewed work ([Engmann et al., arXiv:2606.10703](https://arxiv.org/abs/2606.10703)).
+
+#### M. The “synergy fraction” needs validation and uncertainty
+
+The ratio `sum(abs(Phi_ij)) / (sum(abs(phi_i)) + sum(abs(Phi_ij)))` is not automatically a conserved fraction of output attribution. Depending on the interaction-index convention, main and pairwise effects can overlap or interactions can be counted twice. Results use 20 pairs, two cherry-prone depth locations, no CIs, and four models, yet the prose says “universal” and uses Gemma's null-bias run as mechanistic evidence. DBRX's ablation reversal cannot be explained by DBRX synergy because that run has not landed.
+
+**Required action:** specify the exact interaction index and normalization; verify efficiency on synthetic additive and interacting games; clarify diagonal/main-effect allocation and double counting; bootstrap prompts; sample multiple layers selected a priori; correlate interaction mass with causal-ranking fidelity across model/layer cells. Replace “universal” and causal explanations with descriptive language until replicated. Shapley-Taylor is one principled interaction decomposition to compare against ([Sundararajan, Najmi, ICML 2020](https://arxiv.org/abs/1902.05622)).
+
+#### N. Exp5's null does not test demographic specialization
+
+The expert-index permutation destroys coordinate alignment and naturally raises JS distance; observing a lower cohort-to-pooled distance is not evidence against demographic structure. Each cohort is also included in its pooled comparator, biasing distance downward. The correct label-permutation null is acknowledged as unavailable. Exp5 uses one model, no WinoGender, uneven and sometimes tiny cohort counts, and routing-contrast rather than validated causal attribution.
+
+**Required action:** treat the current Exp5 result as inconclusive. Persist item-level labels, use leave-one-cohort-out pooled references, permute cohort labels within benchmark/template strata, enforce minimum cohort sizes, and report shrinkage estimates with multiplicity control. Replicate across models and evaluate stability on held-out items. Since the estimator is not causal, call this routing-profile heterogeneity unless causal interventions validate it.
+
+### 8.5 Scope, literature, and reproducibility gaps
+
+#### O. Fairness construct and harm model are underspecified
+
+The paper moves from likelihood preference on U.S.-centric intrinsic benchmarks to claims about “social bias,” “fairness,” “alignment,” and viable mitigation. It does not specify a deployment context, affected population, or downstream harm, and Gemma's near-zero signed score is called proof that post-training alignment is a “robust defense.” That conclusion is not supported by three adapted intrinsic benchmarks.
+
+**Required action:** scope claims to stereotype-association behavior on the evaluated English datasets. State who/what the measurement is intended to protect and which harms it does not measure. Remove claims of general safety/alignment or mitigation success. Add disaggregated category results and limitations for binary gender, U.S. cultural specificity, prompt toxicity, and instruction/base model comparability. Blodgett et al. explicitly recommend connecting “bias” measures to harms, affected groups, and normative reasoning ([ACL 2020](https://aclanthology.org/2020.acl-main.485/)).
+
+#### P. Related work misses the closest methodological competitors
+
+The bibliography covers basic MoE and benchmark papers but does not engage deeply with removal-based explanation validity, attribution sanity checks, interaction indices, expert pruning/causal audits, or benchmark construct critiques. Add at least:
+
+- Covert, Lundberg, and Lee, *Explaining by Removing* (JMLR 2021).
+- Sundararajan and Najmi, *The Many Shapley Values for Model Explanation* / Sundararajan et al., *Shapley-Taylor* (clarify the exact value and interaction game used).
+- Adebayo et al., *Sanity Checks for Saliency Maps* (NeurIPS 2018), adapted as parameter/label randomization controls.
+- Hooker et al., *ROAR* (NeurIPS 2019), for removal-induced distribution shift.
+- Zhou et al., *Expert Choice Routing* (NeurIPS 2022), for routing/load-balance confounds.
+- Blodgett et al. (ACL 2020) and benchmark-validity work, for construct scope.
+- Concurrent MoE interpretability papers should be labeled preprints and contrasted rather than used as settled motivation. For example, MoE-X argues that a specially trained architecture can be intrinsically interpretable, which does not imply that off-the-shelf experts are localizable ([arXiv:2503.07639](https://arxiv.org/abs/2503.07639)); Engmann et al. report observational-routing/causal-importance disagreement ([arXiv:2606.10703](https://arxiv.org/abs/2606.10703)).
+
+#### Q. Reproducibility is not yet submission-grade
+
+There is no automated test suite for benchmark semantics or Shapley axioms; model/dataset revisions are not pinned by immutable hashes; the runner records a seed it does not use; configs and result files do not consistently record code commit, config hash, package lock hash, GPU, precision, model revision, dataset revision, and item-manifest hash. The paper's self-reference `MoE-Bias-Research-Group (2026)` is not an independently retrievable scholarly source. Generated LaTeX files are tracked, and data availability lacks a durable anonymous URL/checksum manifest.
+
+**Required action:** add unit/integration tests for every loader and metric; save an immutable item manifest; record all provenance fields; provide a one-command CPU smoke reproduction plus analysis-only reproduction; publish checksums and an anonymous artifact link; remove or replace the placeholder self-citation. Keep only the source PDF if the venue requires it and ignore `.aux/.log/.out` artifacts.
+
+### 8.6 Revised experiment priority (supersedes Section 7.4 for scientific validity)
+
+1. **Freeze claims and rename the primary estimator** unless a genuine coalition estimator will replace it.
+2. **Repair and test benchmark adapters** (BBQ target/polarity; WinoGender direction; conditional completion scoring; StereoSet meaningfulness control).
+3. **Create one common, stratified item manifest** and rerun/recompute the common-intersection baseline before spending compute on new rungs.
+4. **Fix bootstrap stratification** and rerun all uncertainty analyses; add benchmark/category heterogeneity.
+5. **Run same-unit causal attribution (Exp8) and robust ablation controls** before extending the observational ladder.
+6. **Only then** triage/complete Exp3/Exp6 GPU jobs and consider new models or trained-`k` controls.
+7. Rewrite title/abstract/method/results around the estimator actually computed; run a claim-to-artifact audit and double-blind reproducibility check.
+
+### 8.7 Minimum viable resubmission package
+
+A credible revision should include, at minimum:
+
+- a mathematically correct estimator name and explicit estimand;
+- verified native benchmark scoring plus a shared item manifest;
+- per-benchmark/category results and corrected cluster-bootstrap CIs;
+- primary analysis on comparable units/items, with one prespecified endpoint;
+- causal fidelity with robust random/intervention controls and real capability evaluation;
+- toned-down fairness and causal language;
+- tests and immutable provenance sufficient for independent reproduction.
+
+Until A–F are resolved, the open GPU items in Sections 2–7 are **not the critical path**: they would add precision or breadth to a mis-specified measurement pipeline.
