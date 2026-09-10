@@ -241,7 +241,19 @@ def compute_routing_contrast(
 
         if save_per_pair:
             per_pair_phi[i] = phi_pair.flatten()
-            pair_meta.append({"index": i, "benchmark": pair.source, "group": pair_group})
+            # FIXED 2026-09-10: persist full provenance for manifest audit and per-benchmark analysis
+            # Previously only benchmark and group, with group=None for Exp1, breaking stratification
+            # and making item_id-based intersection impossible. Now include bias_type, item_id, target.
+            pair_meta.append({
+                "index": i,
+                "benchmark": pair.source,
+                "bias_type": getattr(pair, 'bias_type', 'unknown'),
+                "target": getattr(pair, 'target', ''),
+                "item_id": getattr(pair, 'item_id', ''),
+                "group": pair_group,
+                "stereo": pair.stereo[:200] if len(pair.stereo)>200 else pair.stereo,  # truncated for size
+                "extra": getattr(pair, 'extra', {}),
+            })
 
         if (i + 1) % 25 == 0:
             log.info("routing_contrast: processed %d/%d pairs", i + 1, len(pairs))
@@ -675,7 +687,15 @@ def compute_dense_layer_contrast(
                 per_pair_phi[i, layer.layer_index] = full_gap - ablated_gap
 
         if save_per_pair:
-            pair_meta.append({"index": i, "benchmark": pair.source, "group": None})
+            pair_meta.append({
+                "index": i,
+                "benchmark": pair.source,
+                "bias_type": getattr(pair, 'bias_type', 'unknown'),
+                "target": getattr(pair, 'target', ''),
+                "item_id": getattr(pair, 'item_id', ''),
+                "group": None,
+                "extra": getattr(pair, 'extra', {}),
+            })
 
         if (i + 1) % 10 == 0:
             log.info("dense_loo: processed %d/%d pairs", i + 1, len(pairs))

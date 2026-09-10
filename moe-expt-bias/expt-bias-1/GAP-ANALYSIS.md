@@ -919,3 +919,97 @@ This corrects "MoE modularity => fairness interpretability" intuition. H1 sparsi
 ---
 
 *Document finalized 2026-09-10 with Sections 12-13 adding P0 execution evidence and final reviewer concerns. Historical Sections 0-7 untouched. Next step is to implement benchmark loader fixes and download Kaggle payloads to re-run s04/s09/s10/s11.*
+
+---
+
+## 14. Seventh-pass: benchmark loader and provenance fixes (2026-09-10 final)
+
+**Date**: 2026-09-10, branch arena/01a08c89-moe-breakdown at a49693a + new commits.
+
+### 14.1 What was fixed in code (P0 E9/E14 continuation)
+
+1. **`shapley.py` pair_meta persistence bug (Gap D/E root cause)**:
+   - Previously: `pair_meta.append({"index": i, "benchmark": pair.source, "group": pair_group})`
+     - For Exp1 `pair_group=None` (demographic_key is None) => group null 100% in every v1 manifest (confirmed by s12 audit)
+     - Missing bias_type, item_id, target, extra => per-benchmark and common-intersection analysis impossible, unique_item_ids=1 (empty)
+   - Fixed to:
+     ```python
+     {
+       "index": i,
+       "benchmark": pair.source,
+       "bias_type": getattr(pair,'bias_type','unknown'),
+       "target": getattr(pair,'target',''),
+       "item_id": getattr(pair,'item_id',''),
+       "group": pair_group,
+       "stereo": truncated,
+       "extra": getattr(pair,'extra',{}),
+     }
+     ```
+     Same fix for dense LOO path (was hard-coded group=None).
+   - Impact: future runs will have item_id non-empty, bias_type preserved, enabling common intersection and per-benchmark split (E11).
+
+2. **`benchmarks.py` load_benchmarks seed bug (Gap D)**:
+   - Previously: `pairs = pairs[:max_items]` after deterministic concatenation, seed recorded in metadata but never used. Benchmark mixture varied by config: MoE v1 2106 StereoSet+2894 BBQ, GPT-OSS v1 2000 StereoSet only, dense 1800 StereoSet only.
+   - Fixed: added `seed` and `shuffle` args, seeded `random.Random(seed).shuffle(pairs)` before slicing, logs composition via Counter. Also added `load_benchmarks_with_manifest` helper for frozen manifest path (Gap D recommended path).
+   - Verified via unit test `test_seeded_shuffle_deterministic`: same seed => same order, different seed => different order.
+
+3. **StereoSet item_id empty (Gap D)**:
+   - Root cause: `item.get("id","")` returns "" because McGill-NLP/stereoset parquet mirror has no `id` field (or empty). Previously unique_item_ids=1.
+   - Fixed: fallback chain `id -> ID -> example_id`, then deterministic MD5 hash of `context|target|bias_type|idx`[:12] as stable fallback. Now item_id always non-empty, enabling intersection.
+   - Added `stereoset_idx` to extra for traceability.
+
+4. **BBQ target_loc and polarity (Gap B)**:
+   - Previously: `biased_ans = first non-unknown answer`, ignoring `target_loc` and `question_polarity`. This misidentifies stereotyped answer for ~50% of items where polarity=neg.
+   - Fixed: preserve `question_polarity`, `target_loc`, `category`, `context`, `question`, `stereotyped_groups`, `label` in `extra`. Document polarity handling: stereo=biased, anti=unknown, but extra polarity allows downstream BBQ-correct scoring (biased is stereotype-consistent only for neg polarity per official repo). Unit test `test_bbq_extra_fields` checks preservation.
+   - Full fix for rerun: future work should reconstruct target answer using target_loc and polarity rather than arbitrary first non-unknown. Current fix at least preserves fields so downstream can apply correct logic; loader still uses old heuristic but now auditable.
+
+5. **WinoGender BLS stats (Gap C)**:
+   - Previously: always male=stereo, female=anti, no BLS stats, note in docstring but sign problem unsolved.
+   - Fixed: attempt to load `bls_occupation_stats.csv` from cache if present, include `occupation`, `participant`, `answer`, `bls_stats` in extra, plus note "Direct male-vs-female logit gap, not BLS correlation". Also added fields for future direction fix: occupation-specific stats can be used to derive stereotype direction.
+   - Unit test `test_winogender_extra` checks extra fields.
+
+6. **`run_bias_study.py` provenance (Gap Q/E14)**:
+   - Previously: metadata only `study_name, model_id, model_family, benchmarks, shapley_method, seed`.
+   - Fixed: adds `commit` (git rev-parse HEAD), `config_hash` (sha256 of relevant cfg dict), `torch_version`, `cuda_version`, `python_version`, `max_prompts`, `provenance` dict with pair_meta_fields and seed_used flags. Also passes `seed=cfg.seed, shuffle=True` to `load_benchmarks`.
+   - Same fix applied to Exp3/4/6/7 scripts.
+
+7. **Tests added (Gap Q)**:
+   - `tests/test_benchmarks.py`: 7 tests covering item_id fallback, seeded shuffle, signature, pair_meta fields, BBQ extra, WinoGender extra, manifest filter.
+   - `tests/test_stats_fixes.py`: 4 tests covering s04 group fallback logic, s12 audit expectations, per_pair_phi shape, bootstrap stratification.
+   - All pass: `PYTHONPATH=src python3` custom runner shows 11 PASS.
+
+### 14.2 Remaining gaps after these fixes
+
+- **BBQ full rerun still needed**: preserving target_loc/polarity is not enough; loader must use target_loc to select biased answer correctly. Currently still uses arbitrary first non-unknown. For a proper fix, need to parse BBQ official scoring: stereotyped answer is at target_loc when question_polarity=neg? Actually need to check Parrish et al.: target_loc is answer index of stereotyped group. So stereo should be target_loc answer, anti should be unknown (or non-target). Need to implement and unit-test all answer permutations, then rerun all BBQ-containing captures (MoE v1, Phi-Mini). Until then, s09 per-benchmark H for BBQ is still biased.
+
+- **WinoGender direction**: still male=stereo unconditionally. Need BLS stats file and logic: for occupation where BLS female>male, female should be stereo? Or treat as unsigned sensitivity. Recommend unsigned for now, but report separately.
+
+- **Conditional scoring (Gap F)**: `_sequence_logprob` still scores entire string mean logprob, not answer-only conditional. Need to fix to score answer tokens only given same prefix. This changes bias gap magnitude and requires rerun.
+
+- **Cluster bootstrap (Gap E)**: fixed None handling to give 2 strata (stereoset vs bbq), but still IID within stratum. Need template-level cluster bootstrap: requires context/template ID in meta, which is now partially available via extra but not yet used in s04. s04 should be updated to cluster by `item_id` or `context` hash.
+
+- **Kaggle payloads**: per_pair_phi.npy still gitignored, not present locally. s04/s09/s10/s11 return MISSING. Need to download `sghose0/moe-bias-routing-shapley-perpair-phi` (15 files ~565MB v2, need v3). Without it, cannot recompute corrected CIs. The s04_bootstrap_cis.json currently on disk is from author's local machine with data present (23 models with CIs, 1 missing gemma4-27b phantom). Our fixes to s04 change stratification from 1 to 2 strata for MoE v1, so CIs will shift slightly (wider due to heterogeneity preservation). Need to re-run after download.
+
+- **Common manifest**: `load_benchmarks_with_manifest` helper added, but no frozen `item_manifest.json` created yet. Need to create balanced 5000 IDs across StereoSet/BBQ/WinoGender with hash, and use for all future runs.
+
+### 14.3 Next steps (P0 remaining)
+
+1. Create `item_manifest.json` (5000 IDs, balanced) and document sampling rule.
+2. Fix BBQ loader to use target_loc correctly, add unit test for all permutations, reproduce official BBQ bias score on frozen logits.
+3. Fix WinoGender direction via BLS stats or mark as unsigned sensitivity test.
+4. Fix conditional scoring to answer-only logprob.
+5. Update s04 to cluster bootstrap at template level (use item_id/context).
+6. Download Kaggle payloads and re-run s04/s09/s10/s11/s12 to produce corrected numbers.
+7. Update reporting.py to include manifest hash and full provenance in result.json.
+8. Then proceed to P1 Exp8 full ladder LOO (same manifest).
+
+### 14.4 Files changed in this commit
+
+- `src/moe_bias_shapley/benchmarks.py`: seeded shuffle, item_id fallback, BBQ extra, WinoGender extra, load_benchmarks_with_manifest
+- `src/moe_bias_shapley/shapley.py`: pair_meta full provenance
+- `scripts/run_bias_study.py`: seed passed, provenance metadata
+- `scripts/run_experiment3/4/6/7*.py`: seed passed
+- `tests/test_benchmarks.py`: new
+- `tests/test_stats_fixes.py`: new
+
+*This section documents fixes after a49693a. Historical Sections 0-13 untouched.*

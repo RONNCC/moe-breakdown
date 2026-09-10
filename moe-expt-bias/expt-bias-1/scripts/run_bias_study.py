@@ -72,7 +72,8 @@ def run_study(
         log.info("[dry-run] Would load model, load benchmarks, compute attribution, and save to %s", out_dir)
         return
 
-    pairs = load_benchmarks(cfg.benchmarks, max_items=cfg.max_prompts)
+    # FIXED 2026-09-10: pass seed and enable shuffle for reproducibility (previously seed unused)
+    pairs = load_benchmarks(cfg.benchmarks, max_items=cfg.max_prompts, seed=cfg.seed, shuffle=True)
     if not pairs:
         raise RuntimeError("No prompt pairs loaded — check benchmark config")
 
@@ -100,6 +101,25 @@ def run_study(
             router_capture=router_capture,
         )
 
+    # FIXED 2026-09-10: add provenance for reproducibility (Gap from s12 audit)
+    import hashlib, json, subprocess
+    try:
+        commit = subprocess.check_output(["git","rev-parse","HEAD"], cwd=str(ROOT), timeout=5).decode().strip()
+    except Exception:
+        commit = "unknown"
+    try:
+        cfg_dict = {"model_id": cfg.model_id, "benchmarks": cfg.benchmarks, "max_prompts": cfg.max_prompts, "shapley_method": cfg.shapley_method, "seed": cfg.seed}
+        config_hash = hashlib.sha256(json.dumps(cfg_dict, sort_keys=True).encode()).hexdigest()[:12]
+    except Exception:
+        config_hash = "unknown"
+    try:
+        import torch
+        torch_version = torch.__version__
+        cuda_version = torch.version.cuda if hasattr(torch.version,'cuda') else "unknown"
+    except Exception:
+        torch_version = "unknown"
+        cuda_version = "unknown"
+
     metadata = {
         "study_name": cfg.study_name,
         "model_id": cfg.model_id,
@@ -107,6 +127,17 @@ def run_study(
         "benchmarks": cfg.benchmarks,
         "shapley_method": cfg.shapley_method,
         "seed": cfg.seed,
+        "max_prompts": cfg.max_prompts,
+        "commit": commit,
+        "config_hash": config_hash,
+        "torch_version": torch_version,
+        "cuda_version": cuda_version,
+        "python_version": sys.version,
+        "provenance": {
+            "pair_meta_fields": ["index","benchmark","bias_type","item_id","group","target"],
+            "load_benchmarks_seed_used": True,
+            "shuffled": True,
+        }
     }
     shard_tag: str | None = None
     if num_shards > 1:

@@ -149,7 +149,7 @@ def main(argv: list[str] | None = None) -> int:
                   args.max_pairs, args.max_layers, out_dir)
         return 0
 
-    pairs = load_benchmarks(cfg.benchmarks, max_items=args.max_pairs)
+    pairs = load_benchmarks(cfg.benchmarks, max_items=args.max_pairs, seed=cfg.seed, shuffle=True)
     if not pairs:
         raise RuntimeError("No prompt pairs loaded")
 
