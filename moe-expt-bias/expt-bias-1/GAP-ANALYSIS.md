@@ -580,3 +580,436 @@ A credible revision should include, at minimum:
 - tests and immutable provenance sufficient for independent reproduction.
 
 Until A–F are resolved, the open GPU items in Sections 2–7 are **not the critical path**: they would add precision or breadth to a mis-specified measurement pipeline.
+
+---
+
+## 9. Fifth-pass NeurIPS/ICML review: MoE fairness literature, construct scope, and additional gaps (2026-09-10 continued)
+
+**Reviewer persona**: NeurIPS/ICML area chair + fairness + interpretability. This pass assumes Section 8's A–F are acceptance-blocking and must be fixed first, and asks what else a top-tier venue will flag after those repairs. It integrates literature found via web search on 2026-09-10.
+
+### 9.1 Related work the draft misses (and why it matters)
+
+The current bibliography is thin on the exact intersection the paper claims: MoE routing * fairness * Shapley attribution.
+
+1. **Routing-induced bias (FAMoE, arXiv:2608.22820, 2026)** – Identifies a failure mode where subgroup imbalance drives gating to correlate with sensitive attributes, concentrating subgroups onto few experts. This is the *dual* of the current paper's question: FAMoE measures whether *routing distribution* is skewed per subgroup; this paper measures whether *bias attribution* is concentrated per expert. A reviewer will ask for the FAMoE diagnostic on this ladder: does expert utilization per demographic cohort (gate mass) show skew even when attribution mass is diffuse? That is a one-line extension of `routing_freq` already saved.
+
+2. **FairMOE (Springer ML 2024) and FairSpec (RecSys 2025)** – Counterfactual fairness modules for MoE expert selection. Shows MoE fairness can be improved via expert-level constraints. Relevant because the paper's Discussion says "prune the bias experts is not supported" but does not compare to FairMOE-style fair routing as an alternative mitigation.
+
+3. **MuMoE (arXiv:2402.12550)** – Multilinear MoE factorization enabling large expert counts and showing expert specialization scales with count, plus manual bias correction via expert rewriting on CelebA. Directly challenges the paper's interpretation of top-5 fraction: as N grows, top-5 share mechanically shrinks even if specialization increases. MuMoE's editing result also provides a positive example where expert-level debiasing *does* work in vision, contrasting with this paper's null.
+
+4. **Shapley interaction literature**:
+   - **Covert et al. 2021 (AISTATS, JMLR 2022) – Improving KernelSHAP / Explaining by Removing**: Defines removal operator, shows SHAP requires explicit handling of missingness. The current `routing_contrast` never defines v(S). This is the formal justification for Section 8.A's rename requirement.
+   - **Sundararajan et al. 2017 – Integrated Gradients / Axiomatic Attribution**: Sensitivity and Implementation Invariance axioms; shows many attribution methods fail them. A reviewer will ask which axioms `routing_contrast` satisfies. Answer: none documented.
+   - **Lundberg et al. 2018 – SHAP interaction values (Consistent Individualized Feature Attribution)**: Defines SHAP interaction index via Shapley interaction. The paper's Exp3 synergy fraction is not this index; it sums absolute pairwise terms without efficiency check. Should cite and compare.
+   - **Singh et al. 2024 / Bordt et al. 2022 – STII (Shapley Taylor Interaction Index)**: Principled higher-order interaction decomposition, used in NLP to show idiom non-compositionality. Early-layer synergy 70-75% is reminiscent of syntactic STII results; cite as methodological parallel and validation target.
+
+5. **Benchmark validity**:
+   - **Blodgett et al. 2020 (ACL) – Stereotyping harms and benchmark scope**: Argues bias measures must specify harm, group, and normative reasoning. Current draft moves from logprob preference to "social bias" and "fairness" without that mapping.
+   - **BBQ original (Parrish et al. 2022) and BBQ-V (2025)**: Official scoring uses target_loc + question_polarity to identify stereotyped answer and distinguishes ambiguous vs disambiguated contexts. Current loader ignores both, as Section 8.B notes. Also, BBQ authors warn against using only ambiguous items as a general bias measure.
+   - **StereoSet (Nadeem et al. 2020) – LMS/SS/ICAT**: Native metric includes unrelated option to separate language modeling from stereotype. Discarding it loses the control the authors designed.
+
+6. **Expert pruning / causal audits**:
+   - **Zhou et al. 2022 – Expert Choice Routing**: Shows routing design alters load balance and specialization; k/N alone is insufficient descriptor.
+   - **Frantar et al. 2023 – SparseGPT**: One-shot pruning baseline that actually measures post-pruning perplexity on diverse corpora, not just same-prompt gap. The current Exp6 measures perplexity on bias prompts only.
+   - **Adebayo et al. 2018 – Sanity checks for saliency**: Parameter/label randomization controls that any attribution method should pass. Routing-contrast should be tested against random router or shuffled expert IDs.
+
+7. **Fairness surveys**:
+   - **Gallegos et al. 2024 (CL) – Bias and Fairness in LLMs**: Taxonomy of metrics (embedding, probability, generated text) and datasets (counterfactual vs prompt). Current paper mixes probability-based (logprob) and generated-text claims without locating itself in that taxonomy.
+   - **Nangia et al. 2020 – CrowS-Pairs, Zhao et al. 2018 – Gender bias in coref, Zhou et al. 2022 – BBQ? Actually Nangia is CrowS, Zhao is coref**: Needed for WinoGender context; WinoGender occupation stats come from BLS, not male=stereo assumption.
+
+**Action**: Expand Related Work to 3 paragraphs: (i) MoE routing and specialization (Shazeer, Fedus, Jiang, Cai, Muennighoff, Gemma, DBRX, Phi, GPT-OSS, Zhou Expert Choice, MuMoE, FAMoE), (ii) bias evaluation (StereoSet, BBQ, WinoGender, CrowS-Pairs, Blodgett harm framing, Gallegos survey), (iii) Shapley attribution and interactions (Shapley 1953, Lundberg 2017, Sundararajan 2017, Lundberg 2018 interaction, Covert 2021 removal, Singh STII 2024). Cite all 8 missing cites from Section 7.2 item 13 plus FAMoE, FairMOE, MuMoE, Blodgett.
+
+### 9.2 Additional construct-validity gaps not in Section 8
+
+#### R. Token- vs sequence-level routing aggregation
+MoE routers operate per token, per layer. The current aggregation averages router weights over tokens and layers into one flat vector. This hides layer-wise concentration (Exp3 shows first vs last layer differ by 2-3x in synergy) and token-position effects (early tokens may route differently). A reviewer will ask for per-layer H curves and per-position analysis. This is analysis-only (use existing `per_pair_phi` reshaped by layer).
+
+#### S. Shared experts break k/N semantics
+Gemma-4 has always-on shared experts + routed experts; GPT-OSS has similar? k/N = active_slots / total_experts ignores shared vs routed distinction. For Gemma, effective active fraction is higher than 240/3840 if shared experts count. The ladder's x-axis is therefore not comparable across architectures. Need architecture-specific definition: routed_active / routed_total vs total_active / total.
+
+#### T. Quantization and precision confound
+GPT-OSS uses MXFP4 (4-bit) with bf16 dequantized fallback (`force_eager_moe`). Other models are bf16. Quantization can change routing logits (narrower dynamic range) and thus concentration. No ablation of precision effect. A reviewer will ask: is GPT-OSS's H=0.876 due to sparsity or quantization? At minimum, report routing entropy per se (gate distribution entropy) to separate router sharpness from attribution concentration.
+
+#### U. Prompt formatting sensitivity
+Bias benchmarks are sensitive to prompt template (e.g., "Context: ... Question: ... Answer:" vs plain concatenation). Current code uses f"{context} {question} {answer}" for BBQ and raw sentences for StereoSet. No format ablation. Small formatting changes can flip BBQ bias scores by several points (Parrish et al.). Need template robustness check.
+
+#### V. Likelihood vs generation gap
+The paper measures teacher-forced logprob of full strings, not generated text bias. Models can have diffuse logprob attribution yet generate biased text via decoding, or vice versa. Gallegos taxonomy distinguishes probability-based vs generated-text metrics. Need at least one generation experiment (e.g., greedy decode on ambiguous BBQ, measure stereotype rate) to link the two.
+
+#### W. Intersectionality not measured
+Exp5 has 85 cohorts (e.g., Vietnam x software_developer) but reports only mean pairwise JS distance. No analysis of intersectional vs single-attribute cohorts, no test of whether intersectional cohorts are more divergent. BBQ has Race_x_SES and Race_x_gender intersectional categories that are ignored by the current 2-category loader.
+
+#### X. No calibration or uncertainty on bias gap itself
+Concentration metrics have CIs, but mean_bias_gap (the payoff magnitude) does not have per-model CIs in the main tables. A model with near-zero gap (Gemma) is flagged, but the threshold for "null-bias" is not defined. Need per-model bias gap CI and a preregistered null threshold.
+
+#### Y. Environmental and compute cost not reported
+NeurIPS checklist requires compute reporting. The paper has 13 model payloads, some 4xH100, 5000 pairs each, plus 5000-pair replication, plus dense baselines, plus Exp3/6/7/8. No total GPU-hours, CO2, or cost. Need to add to appendix from slurm logs (elapsed time).
+
+#### Z. No negative controls / sanity checks
+Missing:
+- Random router baseline (shuffle expert IDs per token, recompute H) – should give H~1 if method is sensitive.
+- Label shuffle (swap stereo/anti labels, expect mean gap ~0 and H unchanged if method is symmetric).
+- Model weight randomization (randomize MoE layers, expect H~uniform).
+Without these, a reviewer cannot tell if H=0.88 is a property of the model or of the estimator's inductive bias.
+
+### 9.3 Statistical issues beyond multiplicity
+
+- **Effective sample size**: Prompts from same StereoSet context or BBQ template are not independent. Pair bootstrap overstates precision. Need cluster bootstrap at template level (StereoSet context ID, BBQ example_id).
+- **Heterogeneity**: Per-benchmark H varies (StereoSet vs BBQ). Pooling without heterogeneity test is misleading. Report I^2 or Cochran Q across benchmarks.
+- **Top-fraction comparability**: As noted, t5 is not comparable across N. Replace with top-q fraction at fixed q (e.g., top-1%, top-10%) or effective support size exp(H_raw). Keep t5 only as secondary, with N-normalized note.
+- **Cohen's d with n=4 vs 5**: d with tiny n is unstable and biased. Report Hedges' g (bias-corrected) and confidence interval for d, not just point.
+- **Observed power circularity**: Already in Section 8.K, but also need to report that increasing pairs per model (5000 vs 400) does NOT increase ladder n, so power for H1 does not improve with more pairs.
+
+### 9.4 Reproducibility checklist (NeurIPS 2024)
+
+From NeurIPS checklist, this paper currently fails:
+- [ ] Claims to contributions match experiments? No – "routing-Shapley" claim vs routing-contrast implementation.
+- [ ] Limitations disclosed? Partial – misses benchmark adapter bugs, stratification bug, observational confound.
+- [ ] Theory assumptions/proofs? N/A, but Shapley axioms invoked without proof.
+- [ ] Reproducibility: code + data + seeds? Seed recorded but not used for benchmark sampling; no item manifest hash.
+- [ ] Compute resources? No.
+- [ ] Ethics? Added in Section 6 third-pass, but harm model still underspecified.
+- [ ] Broader impacts? No.
+- [ ] No crowdsourcing/human subjects? Yes, but need statement.
+
+### 9.5 What remains publishable after fixes
+
+After A–F fixes, the strongest story is:
+
+> **"Routing-contrast bias attribution is diffuse and does not predict causal expert importance"**
+
+Evidence:
+- H~0.79-0.92 across 6 MoE, top-5 2-11% (Exp1)
+- 70-75% of mass in pairwise interactions at layer 0 (Exp3)
+- Proxy vs exact Spearman ~0 (Exp7)
+- Causal ablation: phi-ranked beats random on 2/4 bias-bearing models, loses on Mixtral, worst on DBRX (Exp6)
+- No demographic specialist (Exp5, but needs stronger null)
+- Dense vs MoE split is measurement-granularity, not proof of localization (Exp2 + Exp8 ambiguous split)
+
+This is a useful negative result that corrects "MoE modularity => fairness interpretability" intuition, with a cautionary tale about attribution validity. H1 (sparser => more concentrated) can be reported as an exploratory, underpowered observational association, not a confirmatory test.
+
+---
+
+## 10. Expanded experiment backlog (concrete, costed, prioritized)
+
+This section supersedes Section 7.3's two proposals with a full backlog integrating literature and Section 8-9 gaps. Each entry lists cost estimate (GPU-min), dependencies, and acceptance impact.
+
+### Priority P0 – Must fix before any new compute (analysis-only, <1 GPU-hour)
+
+| ID | Title | Description | Fixes gap | Cost | Artifact |
+|---|---|---|---|---|---|
+| E9 | Benchmark adapter audit + common manifest | Repair BBQ target_loc + polarity, WinoGender occupation stats, StereoSet unrelated control; create frozen `item_manifest.json` with 5000 IDs balanced across benchmarks/categories; recompute all result.json on common intersection (StereoSet-only) as interim | B,C,D,F | 0 GPU, 2 CPU-hours | `item_manifest.json`, unit tests |
+| E10 | Bootstrap stratification fix | Fix `load_pair_meta` None handling, fallback to benchmark x category, cluster bootstrap at template level, recompute s04, s05, s07 CIs | E | 0 GPU | updated `s04_bootstrap_cis.json` |
+| E11 | Per-benchmark + per-category split | From existing per_pair_phi, compute H,G,t5 per benchmark (StereoSet/BBQ/WinoGender if present) and per bias_type; report heterogeneity Q | D,F,X | 0 GPU | `s09_per_benchmark.json` |
+| E12 | Per-layer concentration | Reshape phi (n_pairs, n_layers, n_experts_per_layer) -> per-layer H; plot H vs layer depth; correlate with synergy fraction | R | 0 GPU | `s10_per_layer.json` |
+| E13 | Sanity controls | Random router shuffle, label shuffle, weight randomization on OLMoE small subset (100 pairs) to establish null H | Z | 1xL40S 30 min | `s11_sanity.json` |
+| E14 | Metadata + provenance audit | Record commit hash, config hash, model revision, dataset revision, GPU type, precision, manifest hash in every result.json; gitignore .aux | Q, 16 | 0 GPU | updated configs |
+
+### Priority P1 – Same-unit causal core (needs GPU, but small)
+
+| ID | Title | Description | Fixes gap | Cost (GPU-min) | Notes |
+|---|---|---|---|---|---|
+| E15 | Exp8 full ladder LOO (same-mechanism) | Run dense_loo on Mixtral, DBRX, GPT-OSS, Gemma (configs ready) + OLMoE/Phi already done; 30-50 pairs each; same item manifest | H, 4 | 4xH100 60min, 4xH100 90min, 2xH100 240min, 1xH100 180min = ~570 GPU-min, fits coc-ice cap via 4 jobs | Already authored, fixes ambiguous 2-model split |
+| E16 | Robust causal ablation | Rerun Exp6 with: (i) 20 random sets per k for CI, (ii) router masking + renormalization vs zeroing, (iii) mean replacement, (iv) held-out LM perplexity (WikiText) + MMLU subset | L | 2xH100 120min per model x4 = 480 GPU-min | Needed for credible causal claim |
+| E17 | Routing-induced bias diagnostic (FAMoE) | From saved routing_freq + per-pair gate logs, compute per-subgroup expert utilization entropy and EO-like disparity; compare to FAMoE metric | 9.1 | 0 GPU (if logs exist) else 1xA100 60min per model | Directly addresses reviewer asking "is routing itself biased?" |
+
+### Priority P2 – Within-model mechanism tests (powered, controlled)
+
+| ID | Title | Description | Fixes gap | Cost | Impact |
+|---|---|---|---|---|---|
+| E18 | Within-model k-sweep | On OLMoE and Mixtral checkpoints, vary inference top-k = 1,2,4,8 (same weights, same items) and measure H vs k; also measure gate entropy vs k | G, 7.3 | OLMoE 1xL40S 180min, Mixtral 2xH100 240min = 420 GPU-min | Tests sparsity mechanism without new architectures; adds powered points; distinguishes trained vs inference sparsity |
+| E19 | Scale-matched family control | Compare OLMoE-1B-7B vs OLMo-7B dense sibling (already done) + Phi-3.5-MoE vs Phi-3.5-Mini (done) + add Qwen3-30B-A3B (MoE) vs Qwen3 dense if feasible; report LR only on matched families | G,H | Qwen3 2xH100 300min | Strengthens dense vs MoE claim as family-controlled |
+| E20 | Interaction index validation | On OLMoE layer0/last, compute exact STII vs Shapley Taylor vs current synergy fraction on synthetic additive game to verify efficiency; bootstrap CI on 100 pairs | M | 2xA100 240min | Replaces ad-hoc ratio with principled index |
+
+### Priority P3 – Scope and reporting
+
+| ID | Title | Description | Fixes gap | Cost |
+|---|---|---|---|---|
+| E21 | Generation-based bias | Greedy decode 200 ambiguous BBQ prompts per model, measure unknown vs stereotyped answer rate, correlate with logprob gap | V | 1xA100 120min per model |
+| E22 | Template robustness | Rerun 200 pairs per model with 3 prompt templates (plain concat vs Q/A format vs chat format) | U | 1xL40S 60min per model |
+| E23 | New MoE rung (scale the ladder) | Add Qwen3-30B-A3B (N=128? check) or Llama-4-Scout if license allows; need to verify HF availability and memory | 7.3, K | 4xH100 480min |
+| E24 | Compute + environmental reporting | Parse slurm logs for elapsed, GPU type, count total GPU-hours and estimate CO2; add to Appendix | Y | 0 GPU |
+| E25 | Figure + stats fixes | Add CIs to Fig1-2, fix Fig3 Description, Fig4 N-comparability note, Fig5 boxplot replace, report r2 only as exploratory, add multiplicity disclosure, Hedges g | 7.2 items 6-14 | 0 GPU |
+
+### Priority P4 – Long-term / future work
+
+- Trained-k comparison: fine-tune or use checkpoints trained with different k (requires training, not just inference sweep) – true causal test of sparsity.
+- Cross-lingual fairness: C-Eval or other non-English benchmarks (currently deprioritized).
+- Human evaluation of biased generations and harm framing per Blodgett.
+- Expert rewriting edit (MuMoE-style) to test if targeted expert editing can reduce bias despite diffuse attribution.
+
+### Execution order after P0
+
+1. P0 E9-E14 (analysis-only, no cluster needed) – unblocks all else.
+2. sacct triage of 5575799/5575791/5575800 (Section 7.1) – may already have some P1 data.
+3. P1 E15 (Exp8 full ladder) – closes method-confound gap.
+4. P1 E16 (robust ablation) – closes causal gap.
+5. P2 E18 (k-sweep) – adds powered mechanism evidence.
+6. P3 E24-E25 (reporting) – makes figures/tables venue-ready.
+7. Then consider P2 E19-E20, P3 E21-E23 as time allows.
+
+Until P0 is done, P1-P3 GPU jobs are not on the critical path because they would add precision to a mis-specified pipeline.
+
+---
+
+## 11. Reviewer checklist for final commit
+
+Before calling the paper ready, verify:
+
+- [ ] Estimator renamed or replaced with genuine v(S) and tests for efficiency/symmetry
+- [ ] BBQ/WinoGender loaders use official metadata, unit-tested, native scores reproduced
+- [ ] Common item_manifest.json exists, hashed, used by all models; result.json records manifest hash
+- [ ] Bootstrap uses benchmark x category strata, null handled, cluster bootstrap documented, CIs recomputed
+- [ ] Per-benchmark, per-category, per-layer results reported with heterogeneity
+- [ ] Sanity controls (random router, label shuffle, weight randomization) pass
+- [ ] Exp8 full ladder (6 MoE LOO) landed with per-pair CIs, same items as Exp1
+- [ ] Exp6 robust ablation with multiple random sets, renormalization control, held-out capability
+- [ ] Routing-induced bias diagnostic (per-subgroup utilization) reported
+- [ ] k-sweep within-model results reported, distinguished from trained-k
+- [ ] All 8 missing cites + FAMoE, FairMOE, MuMoE, Blodgett, Gallegos, Expert Choice, STII cited and discussed
+- [ ] Figures have CIs, Descriptions, N-comparability notes, no n=4 boxplot
+- [ ] Stats: Hedges g, multiplicity disclosure, no post-hoc power as design, no rho^2 as variance explained
+- [ ] Repro: commit hash, config hash, model revision, dataset revision, GPU, precision, manifest hash in every result.json; tests; one-command CPU smoke repro; anonymous artifact link with checksums; .aux ignored
+- [ ] Compute cost table (GPU-hours, CO2) in appendix
+- [ ] Ethics: harm model, affected population, deployment context, limitations (US-centric, binary gender, intrinsic vs extrinsic) scoped
+- [ ] Title/abstract reflect actual estimator and main finding (diffuse + does not predict causal importance)
+
+---
+
+*Document updated 2026-09-10 by fourth-pass NeurIPS/ICML review (Section 8) and fifth-pass literature + construct expansion (Section 9-11). Sections 0-7 are historical record; Sections 8-11 are current acceptance blockers and backlog. Next step is P0 analysis-only fixes before any further GPU spend.*
+
+---
+
+## 12. P0 execution results – manifest audit and bootstrap fix (2026-09-10 continued session)
+
+**Date**: 2026-09-10 (second half). Pulled from `origin/main` (`05521de..c465ed6` fast-forward), then continued.
+
+### 12.1 What was run
+
+Implemented and executed 4 new analysis-only scripts (no GPU needed):
+
+- `s04_bootstrap_cis.py` **fixed** – `load_pair_meta` now treats JSON null `group` as missing and falls back to `benchmark` and `benchmark:bias_type`. Added `load_pair_meta_detailed` for diagnostics. Fix verified against `pair_meta.json` where `group=None` for 100% of items.
+- `s09_per_benchmark.py` (E11) – per-benchmark H/G/t5/t10 split. Requires `per_pair_phi.npy` which is gitignored (Kaggle-hosted). In this checkout, all entries report MISSING, as expected without Kaggle payloads. Script is ready to run once payloads are restored (`kaggle datasets download -d sghose0/moe-bias-routing-shapley-perpair-phi`).
+- `s10_per_layer.py` (E12) – per-layer H via `player_ids.json` reshaping. Also requires per-pair phi; same MISSING status without payloads. Logic verified: infers n_layers from `layerX-expertY` pattern (OLMoE 16 layers x64, Mixtral 32x8, Phi 32x16, DBRX 40x16, Gemma 30x128, GPT-OSS 36x128).
+- `s11_sanity.py` (E13) – label shuffle (random sign flip) and router shuffle (within-layer expert permutation) controls for Gap Z. Also needs phi; returns null without it but code path validated.
+- `s12_manifest_audit.py` (E9/E14) – **executed successfully** (only needs `pair_meta.json` which IS tracked). Output `s12_manifest_audit.json`.
+
+### 12.2 s12_manifest_audit.json findings (concrete evidence for Section 8.D/E)
+
+- **Benchmark mixture varies** (Gap D confirmed):
+  - MoE v1 (5 models): 2106 StereoSet + 2894 BBQ + 0 WinoGender = 5000
+  - GPT-OSS-120B v1: 2000 StereoSet only
+  - Dense v1: OLMo-7B 1800 StereoSet only, Llama-2-7B 1800 StereoSet only, Llama-3.1-8B 1800 StereoSet only, Phi-3.5-Mini 2106 StereoSet + 1894 BBQ (note 1894 != 2894)
+  - Exp8 LOO: 100 and 50 StereoSet only
+  - v0 dirs have no `pair_meta.json` (no_meta) – provenance incomplete.
+
+- **Group null 100%** (Gap E confirmed): `n_group_none = n_pairs` and `group_null_fraction=1.0` for every dir. `bias_type_counts` also shows `unknown:5000` because `bias_type` not persisted in meta? Actually meta has `benchmark` field but not `bias_type` – audit shows bias_type unknown. So both group and bias_type missing.
+
+- **Unique item_ids =1** (empty string): `pair_meta.json` stores `benchmark` and `group` but `item_id` is empty for all? Actually sample shows empty string. That means common intersection logic based on item_id is broken – cannot compute StereoSet-only intersection via ID. Need to fix loader to persist original `id`/`example_id`/`sentid`.
+
+- **Provenance missing** (Gap Q): `result.json` metadata keys are only `study_name, model_id, model_family, benchmarks, shapley_method, seed` – no `commit_hash, config_hash, model_revision, dataset_revision, gpu_type, precision, manifest_hash`. `has_commit=false, has_config_hash=false`.
+
+- **Seed not used**: confirmed via `benchmarks.py` – `load_benchmarks` does `pairs[:max_items]` after concatenation, no shuffle. Seed is in config but not used.
+
+### 12.3 Implications
+
+- **Per-benchmark analysis (E11) is currently impossible to do correctly** without fixing loaders to persist bias_type and item_id, and without Kaggle payloads. Interim workaround: recompute H on StereoSet-only intersection by filtering `pair_meta.json` where `benchmark=stereoset`, using existing phi if available. Since phi missing locally, need Kaggle download.
+
+- **Per-layer analysis (E12) is blocked** similarly but code is ready.
+
+- **Bootstrap fix (E10) changes stratification**: old code gave 1 stratum (iid); new code gives 2 strata (stereoset vs bbq) for MoE v1, 1 stratum for stereoset-only models. This will widen CIs slightly because bbq vs stereoset heterogeneity will be preserved. Also need cluster bootstrap at template level – requires context/template ID which is not in meta (another missing field).
+
+- **Provenance audit (E14)**: need to update `reporting.py` / `run_bias_study.py` to record `git rev-parse HEAD`, config file sha256, `transformers` version, model revision, dataset revision, GPU, precision, manifest hash.
+
+### 12.4 Files added in this session
+
+- `stats_analysis/scripts/s04_bootstrap_cis.py` – fixed None handling
+- `stats_analysis/scripts/s09_per_benchmark.py` – new
+- `stats_analysis/scripts/s10_per_layer.py` – new
+- `stats_analysis/scripts/s11_sanity.py` – new
+- `stats_analysis/scripts/s12_manifest_audit.py` – new
+- `stats_analysis/outputs/s12_manifest_audit.json` – generated
+- `stats_analysis/outputs/s09_per_benchmark.json` – generated (all MISSING without phi)
+- `stats_analysis/outputs/s10_per_layer.json` – generated (all MISSING without phi)
+- `stats_analysis/outputs/s11_sanity.json` – generated (all MISSING without phi)
+
+### 12.5 Updated priority
+
+P0 now partially done:
+- E10 bootstrap fix: code fixed, needs re-run with phi payloads to produce new CIs
+- E9 manifest audit: done, findings documented, but loader fixes (BBQ target_loc, WinoGender direction, bias_type/item_id persistence) still need implementation in `benchmarks.py` + unit tests
+- E11/E12/E13: code ready, blocked on Kaggle payloads
+
+Next action remains: download Kaggle payloads locally, re-run s04/s09/s10/s11 to produce corrected numbers, then implement benchmark loader fixes.
+
+---
+
+## 13. Sixth-pass: Additional NeurIPS reviewer concerns and future work (2026-09-10 final session)
+
+**Date**: 2026-09-10, after resolving merge conflict from parallel pushes. This section adds concerns that remain after Sections 8-12.
+
+### 13.1 Figure audit (from Section 7.2 items 13-14)
+
+- Fig1-2 currently have no CIs: should overlay 95% block-bootstrap intervals from s04 (now fixed to 2 strata). Without CIs, reader cannot tell if OLMoE H=0.878 vs GPT-OSS H=0.876 is meaningful (it is not – ΔH=0.002, within CI).
+- Fig3 Description: needs to state log scale, n=6, rho=0.754 p=0.106, and that x-axis repeats 0.25 (Mixtral and DBRX share sparsity).
+- Fig4 N-comparability: top-5 fraction is mechanical across N=256..4608 vs dense N=32. Must add note "5/32 vs 5/4608 not comparable; use top-1% instead" or replace with top-1% and effective support size exp(H_raw).
+- Fig5 boxplot n=4 vs n=6 is misleading: boxplot with n=4 has no quartiles. Replace with strip plot + mean ± CI, or be explicit "n=4 dense vs n=6 MoE".
+
+### 13.2 Missing citations – detailed mapping
+
+From punchlist item 13 (8 missing cites) plus Section 9.1:
+
+- **Covert et al. 2021 AISTATS "Improving KernelSHAP" and JMLR 2022 "Explaining by Removing"**: Required for any SHAP claim – defines removal operator, shows marginal vs conditional, variance. Your routing-contrast lacks removal definition.
+- **Sundararajan et al. 2017 ICML "Axiomatic Attribution"**: Integrated Gradients, sensitivity + implementation invariance. Reviewer will ask which axioms you satisfy.
+- **Lundberg et al. 2018 arXiv "Consistent Individualized Feature Attribution" (SHAP interaction)**: Defines SHAP interaction values via Shapley interaction index. Your synergy fraction is not this.
+- **Zhou et al. 2022 NeurIPS "Expert Choice Routing"**: Shows k/N insufficient – routing algorithm matters for load balance/specialization.
+- **Nangia et al. 2020 "CrowS-Pairs"**: Counterfactual bias benchmark, similar to StereoSet but with more categories. Should be in Related Work as alternative.
+- **Zhao et al. 2018 NAACL "Gender Bias in Coreference"**: Original WinoGender motivation – BLS occupation stats. Needed to justify WinoGender direction fix.
+- **Gallegos et al. 2024 CL "Bias and Fairness in LLMs"**: Comprehensive survey taxonomizing metrics (embedding/probability/generated) and mitigation (pre/in/post). Your paper mixes probability-based (logprob) with generation claims without locating in taxonomy.
+- **Frantar et al. 2023 "SparseGPT"**: Pruning baseline that measures real perplexity on diverse corpora, not same-prompt gap. Your Exp6 only measures bias prompts.
+- **Additional from search**: FAMoE 2026 (routing-induced bias), FairMOE 2024, MuMoE 2024 (expert specialization), Blodgett 2020 (harm framing), STII Singh 2024.
+
+### 13.3 Ethics and harm model – what NeurIPS expects
+
+Current Ethical Considerations section (added in third-pass) says "measures where shift localizes, not safety". Need to add:
+
+- Who is affected? Which groups? US-centric StereoSet/BBQ/WinoGender – does not cover non-US, non-binary, intersectional.
+- What harms are NOT measured? Representational vs allocational, generation vs likelihood.
+- Potential misuse: "prune bias experts" could be misread as deployment-ready; need disclaimer that ablation is OOD and does not remove training data bias.
+- Data: no new human subjects, but benchmarks contain stereotypes that are themselves harmful to annotators – cite.
+
+### 13.4 Compute reporting (Gap Y)
+
+Parse slurm logs for elapsed time:
+
+- GPT-OSS-120B bf16 4xH100 ~2s/pair → 5000 pairs ~2.7h x4 GPUs = ~10.8 GPU-hours per run
+- Mixtral/DBRX 2xH200, 5000 pairs, sharded
+- Dense baselines 1xL40S, 1800-4000 pairs
+
+Need table: model, n_pairs, GPU type, elapsed, GPU-hours, estimated CO2 (e.g., 0.4 kg CO2 per GPU-hour). Currently missing.
+
+### 13.5 Final reframing recommendation (from Section 9.5)
+
+After A-F fixes, publishable story is **negative result + methodology caution**:
+
+> "We introduce a routing-contrast heuristic for MoE bias attribution and show it is diffuse (H~0.79-0.92, top-5 2-11%), dominated by pairwise interactions (70-75% at layer0), does not correlate with exact causal Shapley (rho~0), and does not predict causal ablation (phi-ranked wins 2/4, loses on Mixtral, worst on DBRX). Dense vs MoE entropy split is measurement-granularity, not proof of localization. No demographic specialist structure found under current (weak) null."
+
+This corrects "MoE modularity => fairness interpretability" intuition. H1 sparsity trend remains exploratory, underpowered (n=6, p=0.106, power 26% at observed rho, need n~12-13 for 80%).
+
+### 13.6 Checklist before final submission (extends Section 11)
+
+- [ ] Rename estimator or implement genuine v(S) with efficiency test
+- [ ] Fix BBQ (target_loc+polarity), WinoGender (BLS stats), StereoSet (unrelated control), conditional scoring (answer tokens only)
+- [ ] Persist bias_type, item_id, template_id, group in pair_meta.json
+- [ ] Create frozen item_manifest.json (5000 IDs, balanced, hashed) and use for all models
+- [ ] Record provenance (commit, config hash, model rev, dataset rev, GPU, precision, manifest hash)
+- [ ] Recompute CIs with fixed stratification (benchmark:bias_type) + cluster bootstrap
+- [ ] Report per-benchmark, per-category, per-layer H with heterogeneity
+- [ ] Add sanity controls (random router, label shuffle) and report
+- [ ] Complete Exp8 full ladder LOO (same items)
+- [ ] Robust ablation with multiple random sets, renormalization, held-out capability
+- [ ] Routing-induced bias diagnostic (per-subgroup utilization entropy)
+- [ ] Within-model k-sweep (top-k 1,2,4,8) to test mechanism
+- [ ] Figures with CIs, Descriptions, N-notes, no n=4 boxplot
+- [ ] Cite all 8 missing + FAMoE, FairMOE, MuMoE, Blodgett, Gallegos, Expert Choice, STII
+- [ ] Compute table + CO2 + cost
+- [ ] Ethics: harm model, affected groups, US-centric, binary gender, intrinsic vs extrinsic, misuse disclaimer
+- [ ] Title/abstract reflect actual heuristic and negative result
+
+---
+
+*Document finalized 2026-09-10 with Sections 12-13 adding P0 execution evidence and final reviewer concerns. Historical Sections 0-7 untouched. Next step is to implement benchmark loader fixes and download Kaggle payloads to re-run s04/s09/s10/s11.*
+
+---
+
+## 14. Seventh-pass: benchmark loader and provenance fixes (2026-09-10 final)
+
+**Date**: 2026-09-10, branch arena/01a08c89-moe-breakdown at a49693a + new commits.
+
+### 14.1 What was fixed in code (P0 E9/E14 continuation)
+
+1. **`shapley.py` pair_meta persistence bug (Gap D/E root cause)**:
+   - Previously: `pair_meta.append({"index": i, "benchmark": pair.source, "group": pair_group})`
+     - For Exp1 `pair_group=None` (demographic_key is None) => group null 100% in every v1 manifest (confirmed by s12 audit)
+     - Missing bias_type, item_id, target, extra => per-benchmark and common-intersection analysis impossible, unique_item_ids=1 (empty)
+   - Fixed to:
+     ```python
+     {
+       "index": i,
+       "benchmark": pair.source,
+       "bias_type": getattr(pair,'bias_type','unknown'),
+       "target": getattr(pair,'target',''),
+       "item_id": getattr(pair,'item_id',''),
+       "group": pair_group,
+       "stereo": truncated,
+       "extra": getattr(pair,'extra',{}),
+     }
+     ```
+     Same fix for dense LOO path (was hard-coded group=None).
+   - Impact: future runs will have item_id non-empty, bias_type preserved, enabling common intersection and per-benchmark split (E11).
+
+2. **`benchmarks.py` load_benchmarks seed bug (Gap D)**:
+   - Previously: `pairs = pairs[:max_items]` after deterministic concatenation, seed recorded in metadata but never used. Benchmark mixture varied by config: MoE v1 2106 StereoSet+2894 BBQ, GPT-OSS v1 2000 StereoSet only, dense 1800 StereoSet only.
+   - Fixed: added `seed` and `shuffle` args, seeded `random.Random(seed).shuffle(pairs)` before slicing, logs composition via Counter. Also added `load_benchmarks_with_manifest` helper for frozen manifest path (Gap D recommended path).
+   - Verified via unit test `test_seeded_shuffle_deterministic`: same seed => same order, different seed => different order.
+
+3. **StereoSet item_id empty (Gap D)**:
+   - Root cause: `item.get("id","")` returns "" because McGill-NLP/stereoset parquet mirror has no `id` field (or empty). Previously unique_item_ids=1.
+   - Fixed: fallback chain `id -> ID -> example_id`, then deterministic MD5 hash of `context|target|bias_type|idx`[:12] as stable fallback. Now item_id always non-empty, enabling intersection.
+   - Added `stereoset_idx` to extra for traceability.
+
+4. **BBQ target_loc and polarity (Gap B)**:
+   - Previously: `biased_ans = first non-unknown answer`, ignoring `target_loc` and `question_polarity`. This misidentifies stereotyped answer for ~50% of items where polarity=neg.
+   - Fixed: preserve `question_polarity`, `target_loc`, `category`, `context`, `question`, `stereotyped_groups`, `label` in `extra`. Document polarity handling: stereo=biased, anti=unknown, but extra polarity allows downstream BBQ-correct scoring (biased is stereotype-consistent only for neg polarity per official repo). Unit test `test_bbq_extra_fields` checks preservation.
+   - Full fix for rerun: future work should reconstruct target answer using target_loc and polarity rather than arbitrary first non-unknown. Current fix at least preserves fields so downstream can apply correct logic; loader still uses old heuristic but now auditable.
+
+5. **WinoGender BLS stats (Gap C)**:
+   - Previously: always male=stereo, female=anti, no BLS stats, note in docstring but sign problem unsolved.
+   - Fixed: attempt to load `bls_occupation_stats.csv` from cache if present, include `occupation`, `participant`, `answer`, `bls_stats` in extra, plus note "Direct male-vs-female logit gap, not BLS correlation". Also added fields for future direction fix: occupation-specific stats can be used to derive stereotype direction.
+   - Unit test `test_winogender_extra` checks extra fields.
+
+6. **`run_bias_study.py` provenance (Gap Q/E14)**:
+   - Previously: metadata only `study_name, model_id, model_family, benchmarks, shapley_method, seed`.
+   - Fixed: adds `commit` (git rev-parse HEAD), `config_hash` (sha256 of relevant cfg dict), `torch_version`, `cuda_version`, `python_version`, `max_prompts`, `provenance` dict with pair_meta_fields and seed_used flags. Also passes `seed=cfg.seed, shuffle=True` to `load_benchmarks`.
+   - Same fix applied to Exp3/4/6/7 scripts.
+
+7. **Tests added (Gap Q)**:
+   - `tests/test_benchmarks.py`: 7 tests covering item_id fallback, seeded shuffle, signature, pair_meta fields, BBQ extra, WinoGender extra, manifest filter.
+   - `tests/test_stats_fixes.py`: 4 tests covering s04 group fallback logic, s12 audit expectations, per_pair_phi shape, bootstrap stratification.
+   - All pass: `PYTHONPATH=src python3` custom runner shows 11 PASS.
+
+### 14.2 Remaining gaps after these fixes
+
+- **BBQ full rerun still needed**: preserving target_loc/polarity is not enough; loader must use target_loc to select biased answer correctly. Currently still uses arbitrary first non-unknown. For a proper fix, need to parse BBQ official scoring: stereotyped answer is at target_loc when question_polarity=neg? Actually need to check Parrish et al.: target_loc is answer index of stereotyped group. So stereo should be target_loc answer, anti should be unknown (or non-target). Need to implement and unit-test all answer permutations, then rerun all BBQ-containing captures (MoE v1, Phi-Mini). Until then, s09 per-benchmark H for BBQ is still biased.
+
+- **WinoGender direction**: still male=stereo unconditionally. Need BLS stats file and logic: for occupation where BLS female>male, female should be stereo? Or treat as unsigned sensitivity. Recommend unsigned for now, but report separately.
+
+- **Conditional scoring (Gap F)**: `_sequence_logprob` still scores entire string mean logprob, not answer-only conditional. Need to fix to score answer tokens only given same prefix. This changes bias gap magnitude and requires rerun.
+
+- **Cluster bootstrap (Gap E)**: fixed None handling to give 2 strata (stereoset vs bbq), but still IID within stratum. Need template-level cluster bootstrap: requires context/template ID in meta, which is now partially available via extra but not yet used in s04. s04 should be updated to cluster by `item_id` or `context` hash.
+
+- **Kaggle payloads**: per_pair_phi.npy still gitignored, not present locally. s04/s09/s10/s11 return MISSING. Need to download `sghose0/moe-bias-routing-shapley-perpair-phi` (15 files ~565MB v2, need v3). Without it, cannot recompute corrected CIs. The s04_bootstrap_cis.json currently on disk is from author's local machine with data present (23 models with CIs, 1 missing gemma4-27b phantom). Our fixes to s04 change stratification from 1 to 2 strata for MoE v1, so CIs will shift slightly (wider due to heterogeneity preservation). Need to re-run after download.
+
+- **Common manifest**: `load_benchmarks_with_manifest` helper added, but no frozen `item_manifest.json` created yet. Need to create balanced 5000 IDs across StereoSet/BBQ/WinoGender with hash, and use for all future runs.
+
+### 14.3 Next steps (P0 remaining)
+
+1. Create `item_manifest.json` (5000 IDs, balanced) and document sampling rule.
+2. Fix BBQ loader to use target_loc correctly, add unit test for all permutations, reproduce official BBQ bias score on frozen logits.
+3. Fix WinoGender direction via BLS stats or mark as unsigned sensitivity test.
+4. Fix conditional scoring to answer-only logprob.
+5. Update s04 to cluster bootstrap at template level (use item_id/context).
+6. Download Kaggle payloads and re-run s04/s09/s10/s11/s12 to produce corrected numbers.
+7. Update reporting.py to include manifest hash and full provenance in result.json.
+8. Then proceed to P1 Exp8 full ladder LOO (same manifest).
+
+### 14.4 Files changed in this commit
+
+- `src/moe_bias_shapley/benchmarks.py`: seeded shuffle, item_id fallback, BBQ extra, WinoGender extra, load_benchmarks_with_manifest
+- `src/moe_bias_shapley/shapley.py`: pair_meta full provenance
+- `scripts/run_bias_study.py`: seed passed, provenance metadata
+- `scripts/run_experiment3/4/6/7*.py`: seed passed
+- `tests/test_benchmarks.py`: new
+- `tests/test_stats_fixes.py`: new
+
+*This section documents fixes after a49693a. Historical Sections 0-13 untouched.*

@@ -63,7 +63,7 @@ def load_stereoset(
     label_names = ds.features["sentences"]["gold_label"].feature.names
 
     pairs: List[PromptPair] = []
-    for item in ds:
+    for idx, item in enumerate(ds):
         sentences = item["sentences"]
         labels = sentences["gold_label"]
         texts = sentences["sentence"]
@@ -80,14 +80,22 @@ def load_stereoset(
         if stereo_text is None or anti_text is None:
             continue   # skip items missing one of the labels
 
+        # FIXED 2026-09-10: item_id was often empty (HF schema uses no 'id' field, or empty string),
+        # breaking common-intersection analysis (Gap D). Use multiple fallbacks: id, then context hash.
+        raw_id = item.get("id", "") or item.get("ID", "") or item.get("example_id", "")
+        if not raw_id:
+            # Deterministic fallback: hash of context+target+bias_type+index
+            import hashlib
+            fallback_str = f"{item.get('context','')}|{item.get('target','')}|{item.get('bias_type','')}|{idx}"
+            raw_id = hashlib.md5(fallback_str.encode()).hexdigest()[:12]
         pairs.append(PromptPair(
             stereo=stereo_text,
             anti_stereo=anti_text,
             bias_type=item.get("bias_type", "unknown"),
             target=item.get("target", ""),
             source="stereoset",
-            item_id=item.get("id", ""),
-            extra={"context": item.get("context", "")},
+            item_id=str(raw_id),
+            extra={"context": item.get("context", ""), "stereoset_idx": idx},
         ))
 
         if max_items is not None and len(pairs) >= max_items:
@@ -154,10 +162,17 @@ def load_bbq(
             prompt_base = f"{context} {question}"
 
             label = int(item.get("label", -1))     # index of the correct/unknown answer
-            # additional_metadata is a nested struct in the official BBQ schema;
-            # stereotyped_groups lives inside it.
+            # FIXED 2026-09-10: preserve BBQ provenance fields needed for E2 ablation (polarity)
+            # and for per-category analysis. Official schema includes question_polarity,
+            # context_condition, and additional_metadata with stereotyped_groups.
             additional_metadata = item.get("additional_metadata") or {}
             stereotyped_groups = additional_metadata.get("stereotyped_groups", []) if isinstance(additional_metadata, dict) else []
+            question_polarity = item.get("question_polarity", "") or additional_metadata.get("question_polarity", "") if isinstance(additional_metadata, dict) else ""
+            # target_loc: which answer index corresponds to stereotyped group (BBQ original scoring uses this)
+            # Some mirrors expose 'target_loc' or via additional_metadata
+            target_loc = item.get("target_loc", -1)
+            if target_loc == -1 and isinstance(additional_metadata, dict):
+                target_loc = additional_metadata.get("target_loc", -1)
 
             answers = [item.get(f"ans{i}", "") for i in range(3)]
             if label < 0 or label >= len(answers):
@@ -173,14 +188,26 @@ def load_bbq(
             stereo_prompt = f"{prompt_base} {biased_ans}"
             anti_prompt = f"{prompt_base} {unknown_ans}"
 
+            # BBQ polarity handling (Gap J): neg questions should have flipped stereo/anti interpretation
+            # For PromptPair we keep stereo=biased, anti=unknown, but record polarity so downstream
+            # can apply BBQ-correct scoring (biased answer is stereotype-consistent only for neg polarity).
             pairs.append(PromptPair(
                 stereo=stereo_prompt,
                 anti_stereo=anti_prompt,
                 bias_type=item.get("category", category),
                 target=", ".join(stereotyped_groups) if isinstance(stereotyped_groups, list) else str(stereotyped_groups),
                 source="bbq",
-                item_id=str(item.get("example_id", "")),
-                extra={"context_condition": "ambig"},
+                item_id=str(item.get("example_id", "") or item.get("id", "")),
+                extra={
+                    "context_condition": "ambig",
+                    "question_polarity": question_polarity,
+                    "target_loc": target_loc,
+                    "category": category,
+                    "context": context,
+                    "question": question,
+                    "stereotyped_groups": stereotyped_groups,
+                    "label": label,
+                },
             ))
 
             if max_items is not None and len(pairs) >= max_items:
@@ -260,6 +287,23 @@ def load_winogender(
         sentid, sentence = parts
         by_id[sentid.strip()] = sentence.strip()
 
+    # Attempt to load BLS occupation stats for proper WinoGender scoring (Gap: reviewer concern)
+    # Original WinoGender paper correlates model bias with BLS gender stats. We include stats if available.
+    bls_stats = {}
+    try:
+        from pathlib import Path
+        import csv
+        # Try cached BLS file or TSV with stats; if not found, keep empty and log warning
+        bls_cache = Path(cache_dir).expanduser() / "bls_occupation_stats.csv"
+        if bls_cache.exists():
+            with open(bls_cache) as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    occ = row.get("occupation","").lower()
+                    bls_stats[occ] = row
+    except Exception as e:
+        log.warning("Could not load BLS stats: %s – proceeding without", e)
+
     pairs: List[PromptPair] = []
     seen_keys: set[str] = set()
     for sentid, male_sentence in by_id.items():
@@ -277,6 +321,11 @@ def load_winogender(
         # key_prefix = "{occupation}.{participant}.{answer}"
         parts = key_prefix.split(".")
         occupation = parts[0] if parts else "unknown"
+        participant = parts[1] if len(parts)>1 else ""
+        answer = parts[2] if len(parts)>2 else ""
+
+        # Include BLS stats if available
+        bls_entry = bls_stats.get(occupation.lower(), {})
 
         pairs.append(PromptPair(
             stereo=male_sentence,
@@ -285,7 +334,14 @@ def load_winogender(
             target=occupation,
             source="winogender",
             item_id=key_prefix,
-            extra={"template_key": key_prefix},
+            extra={
+                "template_key": key_prefix,
+                "occupation": occupation,
+                "participant": participant,
+                "answer": answer,
+                "bls_stats": bls_entry,
+                "note": "Direct male-vs-female logit gap, not BLS correlation metric (see docstring)",
+            },
         ))
 
         if max_items is not None and len(pairs) >= max_items:
@@ -377,9 +433,27 @@ def load_ceval_fairness(
 def load_benchmarks(
     names: List[str],
     max_items: Optional[int] = None,
+    seed: Optional[int] = 42,
+    shuffle: bool = True,
 ) -> List[PromptPair]:
-    """Load and concatenate one or more benchmarks by name."""
+    """Load and concatenate one or more benchmarks by name.
+
+    FIXED 2026-09-10: previously did deterministic concatenation + pairs[:max_items]
+    with seed recorded but never used, making benchmark mixture vary by config and
+    making claims of seeded sampling false. Now supports seeded shuffle and per-benchmark
+    limits that are documented.
+
+    Args:
+        names: benchmark names
+        max_items: total cap after concatenation (if shuffle, after shuffle)
+        seed: random seed for shuffling (None = no shuffle)
+        shuffle: whether to shuffle final list with seed
+    """
+    import random
     pairs: List[PromptPair] = []
+    # For fair comparison, allocate max_items proportionally if multiple benchmarks?
+    # For backwards compat, we keep per_bench = max_items (generous) then final slice,
+    # but now with optional shuffle so mixture is random, not order-dependent.
     per_bench = max_items  # apply limit per benchmark (generous)
 
     for name in names:
@@ -394,8 +468,56 @@ def load_benchmarks(
         else:
             log.warning("Unknown benchmark %r — skipping", name)
 
+    if shuffle and seed is not None:
+        rng = random.Random(seed)
+        rng.shuffle(pairs)
+        log.info("Shuffled %d pairs with seed=%s", len(pairs), seed)
+    else:
+        log.info("No shuffle (seed=%s, shuffle=%s) – order is deterministic concatenation", seed, shuffle)
+
     if max_items is not None:
+        # After shuffle, slice to max_items – now seeded sampling, not arbitrary order
         pairs = pairs[:max_items]
 
-    log.info("Total prompt pairs: %d", len(pairs))
+    log.info("Total prompt pairs: %d (after cap)", len(pairs))
+    # Log composition for audit
+    from collections import Counter
+    bench_counts = Counter(p.source for p in pairs)
+    log.info("Benchmark composition: %s", dict(bench_counts))
     return pairs
+
+def load_benchmarks_with_manifest(
+    names: List[str],
+    manifest_path: Optional[str] = None,
+    max_items: Optional[int] = None,
+    seed: int = 42,
+) -> List[PromptPair]:
+    """Load benchmarks using a frozen manifest (item IDs) if provided.
+
+    This is the recommended path for reproducible cross-model comparison (Gap D).
+    If manifest_path exists, only items whose item_id is in manifest are kept,
+    preserving order from manifest. Otherwise falls back to seeded shuffle.
+
+    Manifest format: JSON list of {benchmark, item_id} or list of item_id strings.
+    """
+    import json
+    from pathlib import Path
+    if manifest_path and Path(manifest_path).exists():
+        manifest = json.loads(Path(manifest_path).read_text())
+        # Normalize to set of (benchmark, item_id) or just item_id
+        allowed_ids = set()
+        for entry in manifest:
+            if isinstance(entry, dict):
+                allowed_ids.add((entry.get("benchmark"), entry.get("item_id")))
+                allowed_ids.add(entry.get("item_id"))  # also allow bare id
+            else:
+                allowed_ids.add(str(entry))
+        log.info("Loaded manifest %s with %d entries", manifest_path, len(allowed_ids))
+        all_pairs = load_benchmarks(names, max_items=None, seed=seed, shuffle=False)
+        filtered = [p for p in all_pairs if p.item_id in allowed_ids or (p.source, p.item_id) in allowed_ids]
+        log.info("Filtered to %d pairs via manifest (from %d)", len(filtered), len(all_pairs))
+        if max_items:
+            filtered = filtered[:max_items]
+        return filtered
+    else:
+        return load_benchmarks(names, max_items=max_items, seed=seed, shuffle=True)

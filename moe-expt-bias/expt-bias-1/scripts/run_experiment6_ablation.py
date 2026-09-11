@@ -121,8 +121,8 @@ def main(argv: list[str] | None = None) -> int:
     device = str(next(model.parameters()).device)
 
     # Pairs for routing_freq computation (can be more than ablation pairs for better freq estimate).
-    freq_pairs = load_benchmarks(cfg.benchmarks, max_items=args.routing_freq_pairs)
-    ablation_pairs = load_benchmarks(cfg.benchmarks, max_items=args.max_pairs)
+    freq_pairs = load_benchmarks(cfg.benchmarks, max_items=args.routing_freq_pairs, seed=cfg.seed, shuffle=True)
+    ablation_pairs = load_benchmarks(cfg.benchmarks, max_items=args.max_pairs, seed=cfg.seed, shuffle=True)
     if not ablation_pairs:
         raise RuntimeError("No prompt pairs loaded — check benchmark config")
 

@@ -84,7 +84,7 @@ def main(argv: list[str] | None = None) -> int:
     log.info("Loaded %d ranked players from %s (controls: %s)",
               len(ranked_player_ids), result_dir, list(controls))
 
-    pairs = load_benchmarks(cfg.benchmarks, max_items=args.max_pairs)
+    pairs = load_benchmarks(cfg.benchmarks, max_items=args.max_pairs, seed=cfg.seed, shuffle=True)
     if not pairs:
         raise RuntimeError("No prompt pairs loaded — check benchmark config")
 

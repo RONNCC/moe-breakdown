@@ -92,27 +92,81 @@ def concentration_metrics(p: np.ndarray) -> dict[str, float]:
 
 
 def load_pair_meta(exp_dir: Path) -> np.ndarray | None:
-    """Per-pair group/benchmark ids for block (stratified) resampling."""
+    """Per-pair group/benchmark ids for block (stratified) resampling.
+
+    FIXED 2026-09-10: original version did e.get("group", e.get("benchmark")) which
+    returns None when "group" key exists but value is None (JSON null). Then
+    str(None) = "None" collapses every pair into one stratum, breaking the
+    claimed "stratified by group" bootstrap. Fixed to treat None/empty as missing
+    and fall back to benchmark, then to benchmark x bias_type if available.
+    Returns (codes, n_unique_groups, group_names) for richer logging, but
+    keeps backwards compat by returning just codes; caller can inspect file.
+    """
     meta_file = exp_dir / "pair_meta.json"
     if not meta_file.exists():
         return None
     d = json.loads(meta_file.read_text())
-    # Accept list of dicts or dict-of-pairs; group field may be
-    # "benchmark", "group", or "benchmark_group".
     if isinstance(d, list):
         pairs = d
     elif isinstance(d, dict):
         pairs = list(d.values()) if d and isinstance(next(iter(d.values())), dict) else list(d)
+    else:
+        return None
     groups = []
     for e in pairs:
         if isinstance(e, dict):
-            groups.append(str(e.get("group", e.get("benchmark", "unknown"))))
+            g = e.get("group")
+            if g is None or (isinstance(g, str) and (g.strip() == "" or g == "None")):
+                g = None
+            b = e.get("benchmark")
+            if b is None or (isinstance(b, str) and b.strip() == ""):
+                b = "unknown"
+            bias_type = e.get("bias_type") or e.get("category") or ""
+            if g is not None:
+                if b != "unknown" and b not in str(g):
+                    groups.append(f"{b}:{g}")
+                else:
+                    groups.append(str(g))
+            else:
+                if bias_type and bias_type != "unknown":
+                    groups.append(f"{b}:{bias_type}")
+                else:
+                    groups.append(str(b))
         else:
             groups.append(str(e))
     if len(groups) != len(pairs):
         return None
     _, codes = np.unique(groups, return_inverse=True)
     return codes
+
+def load_pair_meta_detailed(exp_dir: Path):
+    """Detailed version returning group names for diagnostics (E10)."""
+    meta_file = exp_dir / "pair_meta.json"
+    if not meta_file.exists():
+        return None, None
+    d = json.loads(meta_file.read_text())
+    if isinstance(d, list):
+        pairs = d
+    elif isinstance(d, dict):
+        pairs = list(d.values()) if d and isinstance(next(iter(d.values())), dict) else list(d)
+    else:
+        return None, None
+    groups = []
+    for e in pairs:
+        if isinstance(e, dict):
+            g = e.get("group")
+            if g is None or (isinstance(g, str) and (g.strip() == "" or g == "None")):
+                g = None
+            b = e.get("benchmark") or "unknown"
+            bt = e.get("bias_type") or e.get("category") or ""
+            if g is not None:
+                groups.append(f"{b}:{g}" if b != "unknown" and b not in str(g) else str(g))
+            else:
+                groups.append(f"{b}:{bt}" if bt else str(b))
+        else:
+            groups.append(str(e))
+    uniq, codes = np.unique(groups, return_inverse=True)
+    return codes, uniq.tolist()
 
 
 def find_pair_phi(exp_dir: Path) -> Path | None:
