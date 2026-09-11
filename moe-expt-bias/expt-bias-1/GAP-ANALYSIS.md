@@ -1277,3 +1277,68 @@ Until P0 (esp. manifest + BBQ fix + rename) lands, P1–P3 still add precision t
 ---
 
 *Document extended 2026-09-11 by eighth-pass literature-grounded review (Section 15), consolidated re-inventory (Section 16), updated backlog (Section 17), and agent cheat sheet (Section 18). Sections 0–14 are preserved as historical record; Sections 15–18 are current. Next step remains P0 E9–E14c before further GPU spend.*
+
+---
+
+## 19. Ninth-pass: actionable revision for the "bias is non-localizable even with surgery / router skewing" thesis (2026-09-11)
+
+**Why this pass exists**: The user reports "I feel like you didn't do the things" and explicitly offers more GPU if it strengthens the paper. Prior passes (Sections 8–18) were exhaustive but left the *action* buried under 1200 lines of history. This section is the **one-page, reviewer-clean, costed answer** to: *what is the paper really trying to prove, where does it actually fail, and what exact GPU should be run next*.
+
+### 19.1 What the paper is *actually* trying to prove (and how it says it)
+
+The draft's core claim (abstract + Introduction + `study_design_C1_C4.md` RQ1–RQ3) is:
+
+> Using a **combination of Shapley-style methods** (routing-contrast heuristic at scale + exact lesion Shapley on small coalitions + Shapley interaction values + leave-one-out) to attribute **social bias** (StereoSet/BBQ/WinoGender gap → `V`) to **experts** in **6 MoE LLMs (6B–132B)**, bias attribution is **diffuse, synergy-dominated, and non-predictive of causal effect** — therefore **surgical expert ablation and router-level skewing do not localize or remove bias without destroying capability**.
+
+Four complementary attributions are already in the codebase:
+
+| Method | Where in code | Scale | What it tests |
+|---|---|---|---|
+| **Routing-contrast** `Δrouting_weight × gap` | `shapley.py:compute_routing_contrast` | 5000 pairs × 6 MoE + 4 dense | Observation: is attribution concentrated? (H1) |
+| **Exact lesion Shapley** (2^K coalitions) | `shapley.py:compute_exact_shapley_for_pair` + `_build_coalition_payoff_cache` | 50 pairs × few layers | Causality: does routing-contrast rank predict true causal rank? (Exp7) |
+| **Shapley Interaction Value (SIV)** | `shapley.py:compute_shapley_interactions_for_pair` | 20 pairs × 2 layers | Mechanism: is bias pairwise synergy vs individual? (Exp3) |
+| **Ablation curves** (proxy / frequency / random) | `shapley.py:compute_ablation_curve` | 30–60 pairs × 3 MoE | Surgery: does removing top-phi experts reduce gap surgically? (Exp6/Exp4) |
+| **Layer-LOO** (dense) | `shapley.py:compute_dense_layer_contrast` | 1800–4000 pairs × 4 dense + 2 MoE | Granularity control: does dense vs MoE split survive same mechanism? (Exp2/Exp8) |
+
+**The missing complementary method the thesis promises but never runs**: **router skewing** (scale router logits toward/away from high-phi experts without ablating, then renormalize). Surgery zeros experts (OOD); skewing keeps capacity but reroutes. If skewing *also* fails, non-localizability is routing-invariant — a much stronger claim than "zero ablation hurts perplexity."
+
+### 19.2 Honest appraisal of the current evidence (NeurIPS reviewer lens)
+
+**What is already strong and should be kept**:
+
+- **Diffuseness is real**: `H≈0.88–0.92`, `t5` 2–11%, `t10%` 35–66% across *all* MoE rungs, stable across shards (Mixtral/DBRX shard ΔH ≤0.004) and across 400→5000 pairs (ΔH ≤0.022 except DBRX). Dense controls `H≈0.63–0.76` separate cleanly. This is not a metric floor.
+- **Proxy ≠ causal**: Exp7 `ρ∈[−0.085,+0.058]` on Mixtral/OLMoE/Phi with exact 2^K lesions is a clean, honest null — rare in MoE papers — and directly falsifies "routing-contrast is a cheap Shapley proxy."
+- **Synergy signal**: 70–74% early-layer interaction mass via exact SIV is mechanistically interesting and MoE-specific (dense has no comparable 2^K).
+
+**What is not yet reviewer-proof for "surgery / skewing fails"**:
+
+1. **Surgery claim is OOD and under-controlled**: Zero-ablation of 10% experts is a state never seen in training; it *must* hurt PPL. Only 1 random baseline, no renormalization/mean/noise controls, and capability measured on bias prompts (not held-out WikiText/MMLU). Reviewer will say: "You showed zero ablation is OOD, not that bias is inseparable."
+2. **No router-skewing experiment at all**: Thesis says "even if you do specific surgery on them or router skewing" — second half has zero data. This is the single easiest way to strengthen the paper with new GPU and is cheap (same hooks as ablation).
+3. **Exp8 ambiguous**: 2-point LOO split (`H=0.736` in dense band vs `0.899` in MoE band) is not a trend; 4 configs are written and smoke-tested but never run.
+4. **Pipeline validity flags (A–F) still open**: Whole-string logprob, BBQ/WinoGender bugs, no common prompt battery. Even a perfect surgery/skewing experiment on a mis-specified `V` and mixed benchmark set will be dismissed.
+
+**Was prior GAP-ANALYSIS (Sections 0–14) good?** Yes — exceptionally thorough on validity (A–F) and stats (E–K). Its flaws: (i) 1100+ lines with duplicated history, burying the action; (ii) under-weighted the *positive-control* lesson from literature (MSA finds language experts where you find bias diffuse — frame as bias-specific, not universal); (iii) no explicit router-skewing spec despite thesis promising it. Sections 15–18 fix (ii); this section fixes (i) and (iii).
+
+### 19.3 What to run next (the only GPU that directly hardens the thesis)
+
+> **Rule**: No new science until Tier 0 validity is re-established; otherwise reviewers reject on pipeline before reading results.
+
+**Tier 0 (validity, ~6 GPU-hours, must be first)**
+- Freeze `item_manifest.json` (5000 balanced, hashed) + fix scoring to **answer-tokens-conditional** + BBQ `target_loc`/`polarity` + WinoGender unsigned/BLS. Rerun **OLMoE + Mixtral routing-contrast on common manifest** (1×L40S 3h + 4×H100 1h). If `H` stays `≈0.88–0.92`, diffuseness survives correct `V`.
+
+**Tier 1 (thesis-hardening, ~30 GPU-hours, do in this order)**
+
+1. **T1.1 Robust surgery** (E16, 480 GPU-min): 20 randoms + 3 operators (zero, **renorm**, mean) + held-out WikiText/MMLU, deletion AUC CI, 4 models (OLMoE, Phi, Mixtral, DBRX). Proves surgery fails *even without OOD*.
+2. **T1.2 Router skewing** (new, 360 GPU-min): **New contribution** — skew logits `logits + α·(−|phi|)` with `α∈{0.5,1,2}`, renormalize, same `Δgap`/PPL/MMLU. First test of "router skewing also fails." Cheap (same hooks as ablation, no training). **If skewing also fails, non-localizability is routing-invariant.**
+3. **T1.3 LOO full ladder** (E15, 570 GPU-min): 4 ready configs (Mixtral/DBRX/GPT-OSS/Gemma LOO, 30–50 pairs). Closes granularity confound; turns ambiguous `n=2` into trend.
+4. **T1.4 MSA Modes** (E18b, 180 GPU-min): 50 pairs × 2 layers × 200 Monte-Carlo orderings, per-token/per-output Shapley (Dixit) + STII validation, 2 models. Shows averaging didn't hide localization; mechanism.
+
+**Tier 1 total**: ~1590 GPU-min (~26.5 GPU-hours, 7–8 sbatch jobs, all under 960 cap). Cost at PACE ICE: <1% of a typical NeurIPS paper's budget.
+
+**Tier 2 (nice-to-have, after Tier 0/1)**: within-model `k`-sweep, AGER/oracle-router positive control (LoRA-per-attribute), generation-based BBQ, regularization audit (0 GPU).
+
+**What NOT to run**: Another 5000-pair ladder rung before Tier 0 — `n=6→7` barely moves power and wastes the validity fix.
+
+**Cross-links**: Full literature context → `LITERATURE_CONTEXT.md` (8 papers, implications). Full costed submit lines + reporting spec → `GPU_EXPERIMENT_PLAN.md` (T0–T2 with exact `sbatch` commands and success criteria).
+
+*If you can run only one weekend, run Tier 0 (OLMoE+Mixtral rerun) + T1.1 (renorm surgery) + T1.2 (router skewing) + T1.3 (4×LOO). That is the minimal resubmission that turns "diffuse observation" into "causal, routing-invariant non-localizability."*
