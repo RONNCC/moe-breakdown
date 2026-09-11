@@ -1013,3 +1013,267 @@ This corrects "MoE modularity => fairness interpretability" intuition. H1 sparsi
 - `tests/test_stats_fixes.py`: new
 
 *This section documents fixes after a49693a. Historical Sections 0-13 untouched.*
+
+---
+
+## 15. Eighth-pass: literature-grounded NeurIPS/ICML review integrating the 8 requested papers (2026-09-11)
+
+**Reviewer persona**: NeurIPS/ICML senior AC with MoE + interpretability + fairness expertise. This pass re-evaluates Sections 8–14 against the 8 papers the user requested, asks whether that prior audit over- or under-called gaps, and extracts actionable context for future agents. **Core thesis under test**: *social bias in MoE LLMs is non-localizable — even targeted surgery (expert ablation) and router skewing fail to isolate it — demonstrated via a ladder of Shapley-style attributions on LLMs*. Every gap below is judged against that thesis, not against a generic MoE survey.
+
+### 15.1 What the 8 papers actually say — and why each matters here
+
+#### 15.1.1 Dixit et al. 2025 — *Who Does What in Deep Learning? Multidimensional Game-Theoretic Attribution* ([arXiv:2506.19732](https://arxiv.org/abs/2506.19732))
+**Core contribution**: Introduces **Multiperturbation Shapley-value Analysis (MSA)** with **Shapley Modes**. Standard SHAP attributes *inputs* → single scalar; MSA perturbs (lesions) *neural units* in combinatorial coalitions and returns a full **output-dimensional contribution map** per unit (pixel-wise for GANs, token/logit-wise for LLMs). Monte-Carlo over orderings approximates `φ_i = E_R[ v(S_i(R) ∪ {i}) − v(S_i(R)) ]` where `v(S)` is payoff with only units in `S` intact. Applied from MLPs to **56B Mixtral-8×7B** (the same family as this study's densest rung) and DCGANs. Findings: (i) regularisation concentrates compute into hubs, (ii) **language-specific experts emerge inside Mixtral**, (iii) inverted pixel hierarchy in GANs. Open-source package released.
+
+**Relevance to this study**:
+- Provides the *gold-standard definition* Section 8.A demands: a Shapley value requires a coalition payoff `v(S)` evaluated under perturbation. `compute_routing_contrast` (`Δrouting_weight * whole-gap`) is explicitly **not** MSA — it never evaluates `v(S)`. Framing it as "routing-Shapley" collapses the distinction Dixit formalizes.
+- Shows **specialization is possible but task-specific**: language *does* localize to experts in the same model where this paper finds bias *diffuse*. That sharpens the thesis: *bias diffuseness is a property of social bias, not proof that MoE never specializes*. Reviewers will weaponize this contrast unless cited.
+- Shapley **Modes** expose what this study collapses: per-token/per-output aggregation. Current `phi` averages over all tokens and layers into one flat vector, hiding layer-wise (Exp3: 70% → 28% synergy shift) and positional effects MSA maps explicitly.
+
+**New / sharpened gap (AA) — *No multidimensional attribution***: No per-token, per-position, or per-output-dimension Shapley Mode is reported; aggregating before attribution may artificially inflate `H`. **Fix**: report per-layer `H` (already coded as `s10`), plus per-token-position and per-bias-type Modes on a 50-pair subset via true MSA lesioning (using `compute_exact_shapley_for_pair` sampled coalitions with Monte-Carlo, as Dixit does). Cost: 1×A100 few hours.
+
+#### 15.1.2 Dixit, Shrey — *Beyond Feature Attribution: Quantifying Neural Unit Contributions using Multidimensional Shapley Analysis* (Hamburg MSc thesis, [edoc 292](https://edoc.sub.uni-hamburg.de/informatik/volltexte/2025/292/pdf/Thesis_Shrey_IAS.pdf))
+**Core contribution**: Full thesis behind 15.1.1. Adds three controlled findings: (i) **large weights ≠ high Shapley contribution** without regularisation, (ii) regularisation (L1/L2/dropout) concentrates computation, (iii) synthetic STII-like interaction analysis; plus end-to-end scaling to Mixtral-8×7B revealing redundant experts and language/knowledge/arithmetic experts.
+
+**Relevance**:
+- Directly **refutes a naive proxy reading** of this study's `routing_freq` controls: frequency ≈ weight magnitude, which thesis shows is uncorrelated with causal contribution in unregularised nets. Exp6's "frequency ablation matches phi" is therefore not a surprise — it is predicted if `routing_contrast` tracks frequency, not causality.
+- Implies **controlled regularisation experiment missing**: MoE ladder varies training recipes, load-balancing losses, and `k/N` simultaneously. Without fixing regularisation, `H` differences are not attributable to sparsity. This deepens Gap G (observational sparsity).
+
+**New gap (AB) — *Regularisation / load-balance confound not isolated***: Ladder entangles `k/N`, total `N`, hidden size, dataset, *and* load-balancing regulariser. **Fix**: within-family regularisation sweep (e.g., OLMoE checkpoints with different load-balance coefficients, if released) or at minimum report router entropy / auxiliary-loss coefficients per model and correlate with `H`. Zero GPU if logs exist.
+
+#### 15.1.3 Nath 2026 — *Explainable multilingual NMT with adapters and MoE: Indic languages* ([Springer IJST 10772-026-10267-8](https://link.springer.com/article/10.1007/s10772-026-10267-8))
+**Core contribution**: Transformer + **language-conditioned adapters** + sparse MoE; trained on Assamese/Bodo/Khasi/Manipuri/Mizo/Nepali. Diagnostics: attention viz + **SHAP + LIME** token- and layer-wise. Result: adapters preserve family-specific specialization while sharing parameters; attribution-guided routing **stabilizes expert utilization**; family-conditioned MoE + explainability improves both BLEU and trustworthiness. Follow-up preprint (AGER-MNMT) adds **Attribution-Guided Expert Router** that feeds token-level attribution into routing.
+
+**Relevance**:
+- Shows MoE *can* be made interpretable/localizable **if conditioned on an explicit semantic signal** (language/family). Our thesis — *bias is non-localizable in off-the-shelf MoE without such conditioning* — is strengthened by this positive control, but only if we cite it as such. Otherwise reviewer sees contradiction ("Nath localizes language with MoE, you claim bias never localizes — which is it?").
+- Demonstrates **layer- and token-level attribution workflow** missing here (we aggregate). Their SHAP/LIME are post-hoc but scoped correctly (per-language-family).
+- Proposes a **testable alternative mitigation**: attribution-guided routing (AGER). Our Discussion says "pruning failed → retraining needed" but never tests routing-level regularization, which Nath shows works.
+
+**New gap (AC) — *Missing conditioned-routing positive control***: No experiment where experts are explicitly conditioned on demographic attribute (as adapters are on language). **Fix**: train or prompt-condition a demographic-aware router (e.g., prefix "You are evaluating gender bias…") and re-measure `H`; or implement AGER-style auxiliary loss tying routing to attribution on a small fine-tune split. Validates that diffuseness is not just "MoE can never specialize." Cost: fine-tune, ~8×A100 hours, future-work if compute-limited.
+
+#### 15.1.4 Sharma, Henderson & Ghosh 2022 — *FEAMOE: Fair, Explainable and Adaptive Mixture of Experts* ([arXiv:2210.04995](https://arxiv.org/abs/2210.04995))
+**Core contribution**: MoE of **linear experts** with fairness constraints (demographic parity / equalized odds variants), adaptive gating that handles **drift in fairness *and* accuracy** over time on HMDA (Home Mortgage) streaming data. Shows: (i) mixture-of-linear stays competitive with DNNs while fairer, (ii) fairness drifts even when accuracy stable, (iii) fast Shapley explanations via linear structure.
+
+**Relevance**:
+- Makes explicit what our paper hand-waves: **fairness is not static**. Bias concentration `H` is snapshot; FEAMOE shows gating correlates with sensitive attributes over time. Reviewer will ask: does `H` drift across checkpoints / data splits?
+- Shows **fairness-constrained MoE as alternative mitigation** — our "single-expert pruning fails → need systemic retraining" should be contrasted with FEAMOE-style fair routing (constraint on gate, not ablation). Linear-expert Shapley speed is irrelevant to LLM scale but the fairness-drift point transfers.
+- Fairness definitions are formal (group fairness); our `gap = logp(stereo) − logp(anti)` is never mapped to a standard fairness criterion (cf. Gallegos survey, Blodgett).
+
+**New gap (AD) — *No drift / stability analysis of H***: `H` reported once per model; no split-half across time, no subsampling stability of top-k. **Fix**: report `H` stability across bootstrap resamples (already do for CI) and across prompt shards; if possible, evaluate `H` on two checkpoints of same model (e.g., base vs instruct) to mimic FEAMOE drift test. Zero extra GPU with existing `per_pair_phi`.
+
+#### 15.1.5 *Stability-aware Shapley-guided MoE for event-aligned EEG anomaly early warning* ([SciDirect S0031320326017243](https://www.sciencedirect.com/science/article/pii/S0031320326017243), Pattern Recognition 2026)
+**Core contribution** (inferred from title + EEG Shapley literature; paper behind paywall, search-verified): Uses stability-aware feature selection to guide MoE gating for EEG event-aligned anomaly detection; Shapley values score channel/time stability, MoE aggregates.
+
+**Relevance**:
+- "Stability-aware" is exactly what Exp5 lacks: **per-cohort `phi` not stability-filtered**. Current Exp5 reports mean `D_JS = 0.221` across 85 cohorts with uneven `n`; no shrinkage, no stability gating. The EEG paper's lesson (corroborated by our `s11_sanity` gap Z): filter to features/experts that are stable across folds before claiming subgroup-specific subnetworks.
+- Suggests **stability-weighted JS**: weight cohorts/experts by cross-fold stability of `phi`.
+
+**New gap (AE) — *Exp5 not stability-aware***: Cohort JS not regularized for small-n or unstable experts. **Fix**: bootstrap per-cohort `phi` stability (already E13 code) and report stability-filtered JS + leave-one-cohort-out pooled reference (as Section 8.N demands). Zero GPU.
+
+#### 15.1.6 Shen et al. 2025 — *CALM: Culturally Self-Aware Language Models* ([NeurIPS 2025](https://proceedings.neurips.cc/paper_files/paper/2025/hash/ab378fb084f313a204432f0a1e697bae-Abstract-Conference.html))
+**Core contribution**: Endows LLMs with **cultural self-awareness** via (i) disentangling task semantics from explicit cultural concepts + latent signals into contrastive cultural clusters, (ii) cross-attention alignment, (iii) **culture-specific MoE** routing along communicative dimensions, (iv) residual fusion + self-prompted reflective correction loop. Beats SOTA on cross-cultural commonsense/value/hate benchmarks; models culture as internal adaptive state, not static background.
+
+**Relevance**:
+- Strongest conceptual parallel to our RQ3: **experts *can* encode cultural specialization *if* architecture is explicitly disentangled and routed per culture**. Off-the-shelf MoE diffuse → CALM specialized is exactly the "conditioned vs generic" contrast of 15.1.3. Supports reframing our finding as "generic routing does not cultural-specialize for bias."
+- Highlights our **construct scope bug**: StereoSet/BBQ/WinoGender are US-centric, binary-gender, English-only. CALM evaluates multi-cultural, multi-lingual, value-laden. Reviewer will cite CALM to argue our harm model is culturally narrow (Gap O).
+- Their "explicit vs latent cultural signals" split maps to our failure to separate **routing structure vs bias magnitude** (professor's criticism) — we now quantify `d=0.011` parity, but CALM shows deeper disentanglement is possible.
+
+**New gap (AF) — *Cultural scope and disentanglement not evaluated***: No non-US, non-English, non-binary evaluation; no disentangling of task vs cultural features. **Fix**: scope claims to "US-centric intrinsic stereotype benchmarks" (already in Limitations after Section 6), add CALM as *future architecture* comparison, and as zero-GPU diagnostic, tag prompts by cultural dimension (e.g., BBQ religion vs gender) and report per-dimension `H`.
+
+#### 15.1.7 Psalta, Tsironis & Karantzalos 2025 — *What really matters for person re-identification? Mixture-of-Experts Framework for Semantic Attribute Importance* ([arXiv:2512.08697](https://arxiv.org/abs/2512.08697))
+**Core contribution**: **MoSAIC-ReID** — Transformer ReID with **LoRA experts each aligned to one semantic attribute** (clothing color, backpack, hat…), **oracle router** enabling controlled attribution, plus GLMs / statistical tests / feature-importance to quantify which attributes truly matter. Finding: upper/lower clothing colors dominate; infrequent accessories (hat) have limited effect despite intuition; oracle routing + ablation provides causal attribute importance, not just correlation.
+
+**Relevance**:
+- **Methodological gold standard for this paper's claim**: If you want to argue "bias not localizable to experts," first show you *can* localize *something* when experts are semantically aligned. MoSAIC does that for ReID; we should replicate for bias: assign experts → demographic attributes, train oracle router, then test if even with aligned experts bias remains diffuse (stronger evidence than diffuse-in-unaligned-model).
+- Validates **exact experimental scaffold** we use: expert ablation + oracle routing + statistical tests. Their GLM / hypothesis-test layer is missing from our Exp6/Exp7 (single ρ, single random control).
+- Their "infrequent cues have limited effect despite intuition" mirrors our **top-5 mechanical artifact** warning: rare experts *look* unimportant under `t5` even if causal.
+
+**New gap (AG) — *No semantically aligned expert / oracle-router control***: Ladder MoEs have generic experts; no test where experts are *forced* to be demographic specialists. **Fix**: LoRA-per-attribute fine-tune on 200-pair contrastive split (gender-expert, race-expert, etc.) with oracle router, measure `H` and ablation efficacy — same recipe as MoSAIC. If still diffuse, `H0` strengthened; if localized, thesis gains architecture nuance. Cost: ~4×A100 hours, future-work.
+
+#### 15.1.8 *Scalable and Interpretable Mixture of Experts Models* (survey, [Preprints 202507.0283](https://www.preprints.org/frontend/manuscript/e3bf99140fe60909b4c55b415af609fc/download_pub))
+**Core contribution**: Mathematically rigorous survey covering MoE foundations, optimization, generalization, **attribution methods leveraging modular structure**, quantitative interpretability metrics, and applications (NLP/CV/RL/healthcare). Formalizes explainability via modular attribution, discusses trustworthiness challenges.
+
+**Relevance**:
+- Provides **taxonomy to locate this paper**: our `H`/`G`/`t5` are one of several modular attribution metrics; survey's formalism (efficiency, load-balance-aware attribution) should be cited to justify metric choice and contrast with alternatives (e.g., attention-rollout, ROAR).
+- Highlights **optimization confound**: MoE generalization depends on routing objective (load-balance loss), not just `k/N`. Validates Gap S (shared experts) and Gap G (sparsity conflated).
+- Useful as *Related Work backbone*: 3-paragraph structure proposed in Section 9.1 maps cleanly onto survey's sections.
+
+**No new gap**, but **elevates priority of existing gaps G, S, T, J**: survey makes them standard checklist items, not nitpicks.
+
+### 15.2 Cross-cutting synthesis: what the 8-paper set changes about the review
+
+| Prior audit claim (Sections 8–9) | Literature verdict | Revised severity |
+|---|---|---|
+| **A. Routing-contrast ≠ Shapley** — fatal | **Confirmed and sharpened** by MSA (15.1.1) + FEAMOE linearity. MSA shows exact lesion Shapley is tractable and multimodal; our heuristic cannot claim axioms. Remains **blocker** unless renamed. | **Blocker (unchanged)** |
+| **B. BBQ target_loc/polarity bug** | **Confirmed**; Nath/CALM/BBQ papers reinforce that benchmark-native scoring matters. Thesis adds that small prompt-format shifts flip scores. | **Blocker (unchanged)** |
+| **C. WinoGender male=stereo fixed** | **Confirmed**; CALM shows cultural/gender specialization requires explicit conditioning, not fixed direction. | **Blocker (unchanged)** |
+| **D. No common prompt battery** | **Confirmed**; Psalta/MoSAIC shows oracle routing + same items is the standard for controlled attribution; MSA requires same perturbation set. | **Blocker (unchanged)** |
+| **E. Bootstrap 1 stratum** | **Confirmed**; stability-aware EEG paper adds that even after fixing to 2 strata, need stability weighting. | **Blocker (recomputed) → Major after fix** |
+| **F. Whole-string logprob, not answer-conditional** | **Confirmed**; Nath's token-level SHAP and Psalta's attribute decoding both score completions, not full strings. | **Blocker (unchanged)** |
+| **G. Observational sparsity** | **Deepened** by Thesis (weight≠importance) + survey optimization view: `k/N` conflates regularisation, `N`, and routing algorithm. Inference-time `k`-sweep ≠ trained `k`. | **Major → Blocker for causal language** |
+| **H. Player cardinality makes H/top-5 incomparable** | **Deepened** by MoSAIC rare-attribute lesson: `t5` mechanically low when `N` large. MSA per-layer Modes fix it. | **Major (unchanged)** |
+| **I. Bias magnitude parity overclaimed** | **Confirmed**; FEAMOE shows fairness vs accuracy drift independently; signed mean cancels. | **Major (unchanged)** |
+| **J. Multiplicity not controlled** | **Deepened** by Psalta's GLM/test framework and survey's metric taxonomy: need preregistered primary endpoint. | **Major (unchanged)** |
+| **L. Zero ablation OOD** | **Deepened** by Thesis (hubs) + CALM reflective loop: OOD ablation ≠ learned rerouting. Need renormalization/mean-replacement controls (E16). | **Major → Blocker for "surgery fails" claim** |
+| **M. Synergy fraction ad-hoc** | **Deepened** by MSA interactions (thesis) and Shapley-Taylor / STII: need efficiency-checked index with CIs. | **Major (unchanged)** |
+| **O. Harm model underspecified** | **Deepened** by CALM multi-cultural evaluation and FEAMOE formal fairness: current US-centric intrinsic logprob gaps ≠ deployment harm. | **Major → Blocker for "fairness/alignment" language** |
+| *Inferences from diffuse H to "no localization"* | **Qualified by 15.1.1–15.1.3**: MSA and Nath *do* find localized language/translation experts in same models — so diffuse bias is a **bias-specific**, not general-MoE, finding. Must be framed as such, otherwise reviewer cites MSA as counterexample. | **Framing blocker** |
+
+**Meta-assessment of prior agent work (Sections 8–14)**: Prior passes were **exceptionally thorough** on construct validity (A–F), statistics (E, G–K), and causal gaps (L–N), and correctly flagged the rename/re-estimation bottleneck. Code fixes in Section 14 (seed shuffle, `pair_meta` persistence, `item_id` fallback) are genuine and tested. **What prior work missed or under-weighted** and this pass adds: (i) **multidimensionality** (MSA Modes, AC), (ii) **regularisation/weight-vs-importance** confound (AB), (iii) **conditioned-routing positive controls as existence proofs** (AC/AG), (iv) **fairness-drift / stability-aware perspective** (AD/AE), (v) **cultural disentanglement scope** (AF), and (vi) that **diffuseness is bias-specific, not architecture-universal** — a framing point that turns MSA from a hostile citation into a supporting one. No prior gap is retracted; several are upgraded to framing blockers.
+
+### 15.3 What remains publishable — refined thesis (integrated with literature)
+
+> **"On six open MoEs, a routing-contrast heuristic for social bias is diffuse (`H≈0.88–0.92`, `t5` 2–11%), dominated by pairwise synergy at early layers (70–75% interaction mass via exact SIV on 20-pair subsamples), uncorrelated with causal lesion Shapley rankings (`ρ≈0` on Mixtral/OLMoE/Phi via exact 2^K coalitions, Exp7), and not predictive of ablation efficacy (phi-ranked debias beats random on 2/4 bias-bearing models, loses on Mixtral, worst on DBRX; frequency-matched controls are competitive). Layer-matched LOO (Exp8: 2/6 models; 4 configs ready) suggests the dense-vs-MoE entropy gap attenuates but persists under same mechanism, indicating a granularity-plus-architecture effect, not pure method artifact. Bias is substrate-entangled: removing bias-correlated experts at 10% budget incurs 22–233% perplexity increase (selectivity 0.24–1.35, negative for Mixtral). No demographic routing specialist survives stability-aware scrutiny (Exp5 `D_JS` heterogeneity is routing-structure, not causal, under weak null). Consistent with MSA [15.1.1] finding language-specialized experts in the same MoE family, this suggests bias diffuseness is a property of social-stereotype encoding, not evidence that MoE never specializes."**
+
+This is a **negative-result + methods-caution** paper — exactly the niche NeurIPS/ICML now rewards for interpretability — *if* Sections 8.A–F are resolved and the MSA/Nath/CALM/Psalta contrasts are cited to pre-empt "but MoE *does* specialize" reviewers.
+
+---
+
+## 16. Revised consolidated gap inventory (supersedes Sections 7.2 & 8–9 for prioritization)
+
+**Severity key**: 🔴 **Blocker** = reject-conditional, must fix before claiming result; 🟠 **Major** = weakens claim, needs fix or explicit limitation + downgraded language; 🟡 **Minor** = polish / checklist.
+
+### 16.1 Construct & estimator validity
+
+| ID | Gap (with prior mapping) | Severity | Status | Literature anchor | Concrete fix (cost) |
+|---|---|---|---|---|---|
+| **A** | Primary estimator not Shapley; no `v(S)`; "routing-Shapley" / payoff-partition language unsound (8.A) | 🔴 | **Open** (renamed in Methods prose of draft Sep-10, but Related Work + abstract still imply decomposition; code path unchanged) | MSA (Dixit 25) thesis §4; Covert JMLR 22 §3 | **Rename to "routing-contrast heuristic" everywhere**, reserve "Shapley" for Exp3/Exp7 lesions; add `v(S)` definition for lesions; test efficiency `Σφ ≈ V(full)−V(∅)` on 20 pairs. **0 GPU** (text) + 1×A100 1h (efficiency test) |
+| **F** | Whole-string teacher-forced logprob; mixes context/question/answer length; discards StereoSet unrelated (8.F) | 🔴 | **Open** | Parrish BBQ; Nadeem StereoSet; Nath token-level SHAP | Score **answer tokens only** conditional on shared prefix, preregister length normalization; reproduce native LMS/SS/BBQ bias scores; add unrelated-length control. **Rerun required** |
+| **B** | BBQ `biased_ans = first non-unknown` ignores `target_loc` + `question_polarity` (8.B) | 🔴 | **Partially fixed** — `extra` now preserves fields but loader still picks arbitrary distractor (14.2) | Parrish BBQ repo `target_loc`; Nath multilingual QA | Use `target_loc` to select stereotype answer; unit-test all 6 permutations; rerun BBQ-containing captures. **Rerun** |
+| **C** | WinoGender male=stereo fixed; no BLS occupation stats (8.C) | 🔴 | **Partially fixed** — BLS cache + extra fields, sign still fixed (14.2) | Zhao 18; Rudinger 18; CALM gender culturally conditioned | Derive direction from BLS stats **or** mark unsigned sensitivity, report separately, add neutral/participant controls. **Rerun or re-label** |
+| **R** | Token- vs sequence-level aggregation hides per-layer/per-position structure (9.R) | 🟠 | **Partially fixed** — `s10_per_layer` coded, needs phi | MSA Shapley Modes (15.1.1) | Run `s10` + per-position heatmap on 50 pairs. **0 GPU** once phi restored |
+| **S** | Shared experts break `k/N` semantics (Gemma `shared_expert+moe`, GPT-OSS) (9.S) | 🟠 | **Open** | Survey §3; Gemma config | Define `k_routed/N_routed` vs `k_total/N_total`; add footnote, recompute ladder `x` two ways. **0 GPU** |
+| **T** | Quantization confound (GPT-OSS MXFP4 vs bf16) (9.T) | 🟠 | **Open** — flagged but not ablated | Thesis weight≠importance | Report routing entropy per se; run GPT-OSS bf16-dequantized vs MXFP4 same prompts (or at least document bit-width `extra` in metadata). **1×H100 2h** |
+| **AA** | No multidimensional (Shapley-Mode) attribution; premature averaging (15.1.1) | 🟠 | **Open** | MSA | Add per-bias-type / per-layer Modes on 50-pair MSA sample. **1×A100 3h** |
+| **AB** | Regularisation / load-balance objective confounds sparsity (15.1.2) | 🟠 | **Open** | Thesis Ch.2; survey §4 | Tabulate aux-loss coefficients, router entropy; correlate with `H`. **0 GPU** |
+
+### 16.2 Data & measurement pipeline
+
+| ID | Gap | Severity | Status | Anchor | Fix |
+|---|---|---|---|---|---|
+| **D** | No common prompt battery; `pairs[:max_items]` after deterministic concat; claimed seeded sampling false (8.D) | 🔴 | **Partially fixed** — `benchmarks.py` now shuffles with seed + `load_benchmarks_with_manifest`, but **no manifest frozen** and **no rerun on common items** (14.2) | Psalta oracle-routing standard; MSA same-perturbation set | Freeze `item_manifest.json` (5000 IDs, balanced StereoSet/BBQ/WinoGender, hashed), rerun or at least re-analyse on StereoSet-only intersection with heterogeneity `Q`. **Rerun** |
+| **E** | Bootstrap 1 stratum (null `group` → `str(None)`) (8.E) | 🔴→🟠 | **Code fixed** (`s04` now benchmark×bias_type fallback) but **CIs not recomputed with phi** (12.2) | EEG stability-aware | Re-run `s04` + `s05` with fixed stratification; upgrade to cluster bootstrap at template level (`extra.context` hash). **0 GPU** once payloads restored |
+| **X** | No CI / null threshold on `mean_bias_gap` itself (9.X) | 🟠 | **Open** | FEAMOE drift | Add per-model gap CI to Table 3; define preregistered null threshold (e.g., `|gap|<0.05`). **0 GPU** |
+| **Y** | Compute / CO2 not reported (9.Y) | 🟡→🟠 | **Open** | NeurIPS checklist | Parse slurm logs → table (model, `n_pairs`, GPU, elapsed, GPU-h, est. CO2). **0 GPU** |
+| **U** | Prompt template sensitivity not tested (9.U) | 🟡 | **Open** | Parrish BBQ; Nath adapters | 3-template ablation (plain concat vs Q/A vs chat) on 200 pairs × 2 models. **1×L40S 2h** |
+| **V** | Likelihood vs generation gap (9.V) | 🟠 | **Open** | Gallegos taxonomy | Greedy-decode 200 ambiguous BBQ, measure stereotype rate vs logprob `gap`. **1×A100 2h/model** |
+| **W** | Intersectionality not measured (9.W) | 🟡 | **Open** | BBQ `Race_x_SES`/`Race_x_gender`; CALM intersectional | Compare `D_JS` on intersectional vs single-attribute cohorts. **0 GPU** |
+| **Z** | No sanity / negative controls (9.Z) | 🟠→🔴 for causal claim | **Coded** (`s11_sanity.py`) but returns MISSING without phi | Adebayo sanity; Psalta controls | Run `s11` (random router, label shuffle, weight random) on OLMoE 100 pairs. **1×L40S 30 min** |
+
+### 16.3 Statistical inference
+
+| ID | Gap | Severity | Status | Fix |
+|---|---|---|---|---|
+| **G** | Sparsity ladder observational, heavily confounded; `k/N` repeats 0.25 (8.G) | 🟠→🔴 if causal verb used | **Open** — text says "observational" in Limitations but figures/caption imply mechanism | Rephrase H1 as exploratory association; run **within-model `k`-sweep** (OLMoE top-`k`=1,2,4,8 inference) as powered mechanism test, noting inference ≠ trained; ideally add a second rung per family. **OLMoE 1×L40S 3h + Mixtral 2×H100 4h** |
+| **H** | Player cardinality `N` incomparability: `H/logN` and `t5` mechanical (8.H) | 🟠 | **Partially fixed** — `top10pct` added, but paper still foregrounds `t5` | Foreground `top10pct` + `exp(H_raw)` effective support; add synthetic split/merge controls; complete Exp8 full ladder LOO (same `N` via layer-level). **Exp8 full ladder = E15** |
+| **I** | Bias magnitude parity overclaimed (`p=0.992` ≠ equivalence) (8.I) | 🟠 | **Open** — `s07` parity `p` stays large, no equivalence interval | Replace with equivalence test (TOST) vs preregistered margin or retract to "no evidence of difference." **0 GPU** |
+| **J** | Multiplicity / post-selection not controlled (8.J) | 🟠 | **Open** | Declare one primary endpoint (`H` on paper-valid-4, StereoSet-only), FDR table for rest. **0 GPU** |
+| **K** | Post-hoc power circular (simulated at observed `ρ`) (8.K) | 🟡 | **Fixed in spirit** — labeled sensitivity analysis, but still cited as design | Keep as sensitivity only; future `n` planned on smallest meaningful `ρ=0.6`. **0 GPU** |
+| **—** | Effective `n` overstates (prompts clustered by template) | 🟠 | **Open** | Cluster bootstrap at source-item level (needs `context`/`example_id` in `pair_meta`, now added for future runs). **0 GPU** |
+
+### 16.4 Causal / mechanistic
+
+| ID | Gap | Severity | Status | Anchor | Fix |
+|---|---|---|---|---|---|
+| **L** | Zero ablation OOD; single random baseline; capability only on bias prompts (8.L) | 🔴 for "surgery fails" headline | **Open** — Exp6 has 3 conditions but single random, no renormalization | Thesis hub concentration; CALM rerouting; Covert removal; Psalta oracle | E16 robust ablation: 20 random sets + **router masking + renormalization** vs zero vs mean vs noise; held-out WikiText/MMLU capability; deletion AUC with CI. **~480 GPU-min** |
+| **M** | Synergy fraction ad-hoc, no CI, `n=20`, cherry layers, "universal" language (8.M) | 🟠 | **Open** | Shapley-Taylor (Sundararajan Najmi); MSA interactions | Specify STII vs SIV; efficiency check on synthetic game; bootstrap `n=100`; sample ≥4 layers a priori; correlate synergy with `ρ` fidelity. **2×A100 4h** |
+| **N** | Exp5 null invalid (permutes expert ids, not labels; pool includes cohort) (8.N) | 🟠→🔴 if demographic-specificity is headline | **Open pending phi** | EEG stability-aware; Psalta attribute tests | Leave-one-cohort-out pool, label permutation within benchmark strata, min-`n` shrinkage, replicate on 2 models + held-out split. **0 GPU** once phi |
+| **AC/AG** | No conditioned/aligned-router positive control — diffuse-in-unaligned-MoE never contrasted with "MoE when *can* localize" (15.1.3/15.1.7) | 🟠 | **Open** | Nath AGER; Psalta MoSAIC | AGER-style fine-tune or LoRA-per-attribute + oracle router (200 pairs). **~8 GPU-h** (future-work if limited) |
+| **AD/AE** | No drift / stability-aware reporting (15.1.4/15.1.5) | 🟡 | **Open** | FEAMOE; EEG stability | Report `H` drift across checkpoints / stability-filtered JS. **0 GPU** |
+
+### 16.5 Scope, literature, reproducibility
+
+| ID | Gap | Severity | Status | Fix |
+|---|---|---|---|---|
+| **O** | Harm model underspecified; Gemma "alignment defense" overclaimed; US-centric, binary, intrinsic-vs-extrinsic not scoped (8.O) | 🔴 if fairness language stays | **Partially fixed** — Ethics section added Sec 6, still lacks demographic/allocational scope, misuse disclaimer, stereotype-harm citation | Add Blodgett harm framing, deployment context, limitations (non-US, non-binary, intrinsic logprob ≠ generation harm), and Gemma caveat. **0 GPU** |
+| **P** | Related Work misses closest competitors (8.P) | 🟠→🔴 at venue | **Open** — draft cites OLMoE/Mixtral/DBRX/Phi but not Covert21, Sundararajan17, Lundberg18-interaction, Zhou22, Nangia20, Zhao18, Gallegos24, Frantar23, plus MSA/Nath/FEAMOE/CALM/Psalta/survey | Expand to 3-para structure (§9.1) and add all 8 missing + 6 literature anchors; label preprints as preprints. **0 GPU** |
+| **Q** | Repro not submission-grade: no bench/Shapley axiom tests, revisions not pinned, runner seed unused, provenance incomplete (8.Q) | 🟠 | **Partially fixed** — seed now used, `pair_meta` persistence fixed, provenance fields added, 2 test files landed (14) but manifest hash / model/dataset rev / GPU/precision still missing from `result.json` | Add manifest hash + model/dataset rev + GPU/precision + package lock hash; add axiom tests (efficiency, symmetry on synthetic game); publish checksums + anonymous artifact; gitignore `.aux`. **0 GPU** expected |
+
+**Net assessment vs Sections 8–9**: No gap retracted. Gaps **G, L, O, P** upgraded to framing blockers because literature now gives reviewers canonical counters (MSA specialization, FEAMOE fair MoE, CALM cultural scope, Psalta oracle). Gaps **AA–AG** are *new* but mostly 🟠/future-work; they sharpen rather than reopen the pipeline — fixing A–F still dominates. The prior agent's prioritization (P0 = fix pipeline before new GPU) remains correct.
+
+---
+
+## 17. Updated experiment backlog — literature-motivated delta (2026-09-11)
+
+*Supersedes Section 10 only where it conflicts; otherwise extends it. Letters AA–AG map to 16.1–16.5.*
+
+### P0 — Must fix before new GPU (analysis-only, <1 GPU-h) — *unchanged order, plus two literature docs*
+
+| ID | Title | Fixes | Artifact | Cost |
+|---|---|---|---|---|
+| E9 | Benchmark adapter audit + common manifest (15.1.1–15.1.4) — target_loc+polarity, WinoGender BLS/unsigned, answer-conditional scoring, `item_manifest.json` (5000 balanced, hashed) | B,C,D,F | `item_manifest.json`, unit tests, StereoSet-only interim `H` table | 0 GPU, 2 CPU-h |
+| E10 | Bootstrap stratification fix + cluster bootstrap | E | recomputed `s04/s05/s07` | 0 GPU |
+| E11 | Per-benchmark / per-category split + heterogeneity `Q`/`I²` | D,F,X,AF | `s09_per_benchmark.json` | 0 GPU |
+| E12 | Per-layer `H` + per-position heatmap prep | R,AA | `s10_per_layer.json` | 0 GPU |
+| E13 | Sanity controls (random router, label/label-shuffle, weight random) | Z | `s11_sanity.json` | 1×L40S 30 min |
+| E14 | Provenance + metadata audit | Q | `reporting.py` patch, `.gitignore` | 0 GPU |
+| **E14b** | **Literature Related-Work expansion** (new, zero-GPU) — add MSA thesis + survey taxonomy 3-para structure, label preprints | P, §15 framing | updated `Related Work` | 0 GPU |
+| **E14c** | **Harm-model & scope framing** (new, zero-GPU) — Blodgett harm, deployment context, disaggregated tables, Gemma caveat | O,AF | updated `Discussion/Limitations` | 0 GPU |
+
+### P1 — Same-unit causal core (small GPU)
+
+| ID | Title | Fixes | GPU-min | Notes |
+|---|---|---|---|---|
+| E15 | Exp8 full ladder LOO (Mixtral, DBRX, GPT-OSS, Gemma) same manifest | H,4 | ~570 | Configs ready; closes granularity confound |
+| E16 | Robust causal ablation — 20 random sets, renormalization/mean/noise controls, held-out WikiText+MMLU, deletion AUC CI | L | ~480 | "Surgery fails" only credible after this |
+| E17 | Routing-induced bias diagnostic (FAMoE per-subgroup gate entropy) | §9.1.1 | 0 if logs else 60 | Answers "is routing itself skewed?" |
+
+### P2 — Mechanism tests (powered, controlled) — *literature Delta*
+
+| ID | Title | Fixes | Cost | Why now elevated |
+|---|---|---|---|---|
+| E18 | Within-model `k`-sweep (OLMoE top-1/2/4/8 inference; gate-entropy vs `H`) | G | 420 GPU-min | Tests sparsity mechanism without new architectures; Thesis says don't conflate trained vs inference |
+| **E18b** | **Multidimensional MSA sample** — Shapley Modes on 50 pairs × 2 layers (Monte-Carlo lesions, cf. MSA) → per-token/per-output contribution | AA,M | 180 GPU-min | Directly answers reviewer citing MSA: shows averaging hides structure |
+| E20 | Interaction-index validation — STII vs Shapley-Taylor vs ad-hoc synergy on synthetic additive/interacting game; bootstrap CI ×100 pairs | M | 240 GPU-min | Replaces ratio with principled index |
+| **E26** | **Regularisation / router-entropy audit** (new) — tabulate load-balance coeff, router entropy per model, correlate with `H` | AB,S,T | 0 GPU | Zero-cost check the Thesis "weight≠importance" confound |
+| **E27** | **Positive-control: AGER / oracle-router pilot** (new, optional) — LoRA-per-attribute (gender/race) + oracle router on 200 pairs à la MoSAIC-ReID | AC,AG | ~480 GPU-min | Turns "MoE never localizes" into "bias diffuse even when MoE *can* localize" — stronger thesis |
+| E19 | Scale-matched family control (Qwen3-30B-A3B if license allows) | G,H | 300 GPU-min | Ladder power `n→7–8` |
+
+### P3 — Scope & reporting (polish) — *adds literature citations*
+
+| ID | Title | Fixes | Cost |
+|---|---|---|---|
+| E21 | Generation-based bias (greedy decode 200 ambiguous BBQ) vs logprob gap | V | 120 GPU-min/model |
+| E22 | Template robustness (3 prompt formats × 200 pairs) | U | 60 GPU-min/model |
+| E24 | Compute + CO₂ table from slurm logs | Y | 0 GPU |
+| E25 | Figure fixes (CIs, Description, N-note, replace `n=4` boxplot, Hedges’g) | §13.1 | 0 GPU |
+| E28 | Cross-cultural tag split (BBQ religion/gender, StereoSet profession/race) per CALM dims | AF,W | 0 GPU |
+
+### P4 — Long-term / future work — *now includes MoSAIC-style programme*
+
+- Trained-`k` comparison (checkpoints trained at multiple `k`) — true causal sparsity test.
+- Expert rewriting edit (MuMoE-style) — targeted expert editing despite diffuse `H`.
+- Full AGER training (Nath) — attribution-guided router fine-tune for bias mitigation, contrasted with pruning.
+- Multilingual fairness (C-Eval) once policy allows.
+
+**Execution order after P0** (revised): P0 E9–E14c → sacct triage → P1 E15 → P1 E16 → P2 E18+E18b+E26 (zero/low cost) → P2 E27 (if time) → P3 E24/E25 → then E19/E20/E21/E22.
+
+Until P0 (esp. manifest + BBQ fix + rename) lands, P1–P3 still add precision to a mis-specified pipeline — **that priority has not changed**.
+
+---
+
+## 18. Agent context sheet — distilled takeaways from the 8 papers (for future agent runs)
+
+*Copy-paste this into the next agent's prompt or keep at hand. Each bullet is the one line a reviewer will use against you, and the one-line rebuttal you must have.*
+
+1. **MSA (Dixit et al. 2506.19732) + Thesis (Hamburg 2025, edoc 292)**: Lesion Shapley on Mixtral-8×7B *does* find localized language experts — so your diffuse-bias finding is **bias-specific, not "MoE never specializes."** Cite as supporting contrast; adopt their exact `v(S)` lesion definition and report **Shapley Modes** (per-token/per-output) to show averaging wasn't hiding structure. Also: weight magnitude ≠ causal importance → your `routing_freq` control is expected to mimic `phi` if `phi` tracks frequency.
+
+2. **Nath 2026 (IJST, Indic NMT) / AGER-MNMT**: Adapters + MoE + SHAP/LIME **can** localize *when conditioned on language/family*; AGER shows attribution-guided routing stabilizes experts. Your generic MoE diffuse result stands, but you must (a) show token/layer attribution workflow, (b) discuss attribution-guided router as *alternative mitigation* to pruning, and (c) run a **conditioned-router positive control** if you want the strongest claim.
+
+3. **FEAMOE (Sharma 2210.04995)**: MoE of *linear* experts with fairness constraints handles **fairness drift** while staying explainable via fast Shapley. Takeaway: fairness is **temporal, definition-dependent**; snapshot `H` + informal `gap` ≠ fairness guarantee. Map your `gap` to a formal fairness criterion and test drift (even just across shards/checkpoints).
+
+4. **Stability-aware Shapley-guided MoE (Pattern Recognition 2026, EEG)**: Lesson is **stability filtering** before claiming specialization. Your Exp5 `D_JS` must be stability-weighted, with leave-one-cohort-out pools and label permutation — otherwise `D_JS=0.221` is routing-structure heterogeneity, not demographic specialization.
+
+5. **CALM (NeurIPS 2025, Shen et al.)**: Culture-aware MoE that *disentangles* task vs explicit/latent cultural signals into contrastive clusters + culture-routed MoE + reflective loop — **beats generic MoE cross-culturally**. Means your US-centric, binary, English-only, intrinsic-logprob construct is narrow. Scope to "US-centric intrinsic stereotype gap" and add per-cultural-dimension split; cite CALM as future architecture that *might* localize cultural bias if explicitly routed.
+
+6. **MoSAIC-ReID (Psalta 2512.08697)**: **LoRA-per-attribute + oracle router + ablation + GLM/tests** is the template for causal attribute importance (color >> hat). Replicate that scaffold for bias: *even when* experts are forced per attribute with oracle routing, does bias stay diffuse? That's the decisive test your ladder alone cannot give. Also copy their statistical layering (not just `ρ`).
+
+7. **Scalable & Interpretable MoE survey (Preprints 202507.0283)**: Gives the **formal taxonomy** your Related Work should be structured around (foundations / optimization / attribution-via-modularity / metrics). Use it to justify `H/G/t10pct/exp(H)` choices, discuss load-balance / shared-expert / quantization nuances, and checklist your optimization assumptions.
+
+8. **Cross-paper meta-lesson**: Three independent lines (MSA, Nath, CALM/Psalta) **converge**: MoE *can* specialize when **conditioned or trained to**; generic off-the-shelf MoE *appears* diffuse for bias. Your paper's strongest, reviewer-proof contribution is therefore **not** "surgical debiasing via top-`k` ablation fails" alone (needs E16 robustness), but **"observation: routing-contrast diffuse + does not predict causality; mechanism: synergy dominates early layers; scope: bias-specific, not Architecture-universal, and mitigation requires routing-level, not expert-level, intervention."** Frame accordingly and every one of these papers becomes supporting, not hostile.
+
+*For the paper itself, add these 8 to Related Work plus the 8 venues already missing (Covert 21/22, Sundararajan 17, Lundberg 18-interaction, Zhou 22, Nangia 20, Zhao 18, Gallegos 24, Frantar 23), total +16; clearly label arXiv/preprint vs peer-reviewed.*
+
+---
+
+*Document extended 2026-09-11 by eighth-pass literature-grounded review (Section 15), consolidated re-inventory (Section 16), updated backlog (Section 17), and agent cheat sheet (Section 18). Sections 0–14 are preserved as historical record; Sections 15–18 are current. Next step remains P0 E9–E14c before further GPU spend.*
